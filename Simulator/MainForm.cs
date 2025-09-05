@@ -20,6 +20,20 @@ namespace Simulator
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            treeView1.Nodes.Clear();
+            var rootNode = new TreeNode("Библиотека");
+            treeView1.Nodes.Add(rootNode);
+            var logicaNode = new TreeNode("Логика");
+            logicaNode.Nodes.Add(new TreeNode("NOT") { Tag = typeof(Model.Logic.NOT) });
+            logicaNode.Nodes.Add(new TreeNode("AND") { Tag = typeof(Model.Logic.AND) });
+            logicaNode.Nodes.Add(new TreeNode("OR") { Tag = typeof(Model.Logic.OR) });
+            logicaNode.Nodes.Add(new TreeNode("XOR") { Tag = typeof(Model.Logic.XOR) });
+            rootNode.Nodes.Add(logicaNode);
+            var triggerNode = new TreeNode("Триггеры");
+            rootNode.Nodes.Add(triggerNode);
+            triggerNode.Nodes.Add(new TreeNode("RS-триггер") { Tag = typeof(Model.Trigger.RS) });
+            rootNode.ExpandAll();
+
             timerInterface.Enabled = true;
             timerSimulation.Enabled = true;
         }

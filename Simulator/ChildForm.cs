@@ -39,17 +39,29 @@ namespace Simulator
 
         private void ChildForm_Load(object sender, EventArgs e)
         {
-            var rs = module.Items.OfType<Model.Trigger.RS>().FirstOrDefault();
-            var not = module.Items.OfType<Model.Logic.NOT>().FirstOrDefault();
-            if (rs != null && not != null)
-            {
-                not.ResultChanged += (o, e) => 
-                {
-                    checkBox1.Checked = not.Out; 
-                };
-                button1.Click += (o, e) => { rs.S = true; };
-                button2.Click += (o, e) => { rs.R = true; };
-            }
+            //var rs = module.Items.OfType<Model.Trigger.RS>().FirstOrDefault();
+            //var not = module.Items.OfType<Model.Logic.NOT>().FirstOrDefault();
+            //if (rs != null && not != null)
+            //{
+            //    not.ResultChanged += (o, e) => 
+            //    {
+            //        checkBox1.Checked = not.Out; 
+            //    };
+            //    button1.Click += (o, e) => { rs.S = true; };
+            //    button2.Click += (o, e) => { rs.R = true; };
+            //}
+            //treeView1.Nodes.Clear();
+            //var rootNode = new TreeNode("Библиотека");
+            //treeView1.Nodes.Add(rootNode);
+            //var logicaNode = new TreeNode("Логика");
+            //logicaNode.Nodes.Add(new TreeNode("NOT") { Tag = typeof(Model.Logic.NOT) });
+            //logicaNode.Nodes.Add(new TreeNode("AND") { Tag = typeof(Model.Logic.AND) });
+            //logicaNode.Nodes.Add(new TreeNode("OR") { Tag = typeof(Model.Logic.OR) });
+            //rootNode.Nodes.Add(logicaNode);
+            //var triggerNode = new TreeNode("Триггеры");
+            //rootNode.Nodes.Add(triggerNode);
+            //triggerNode.Nodes.Add(new TreeNode("RS-триггер") { Tag = typeof(Model.Trigger.RS) });
+            //rootNode.ExpandAll();
         }
 
         private void ChildForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -62,7 +74,14 @@ namespace Simulator
         {
             module.Items.ForEach(item =>
             {
-                item.Calculate();
+                try
+                {
+                    item.Calculate();
+                }
+                catch 
+                { 
+
+                }
             });
         }
     }
