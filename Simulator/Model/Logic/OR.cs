@@ -2,9 +2,23 @@
 {
     public class OR : ICalculate
     {
+        private bool @out;
+
         public bool Inp1 { get; set; }
         public bool Inp2 { get; set; }
-        public bool Out { get; set; }
+        public bool Out 
+        { 
+            get => @out;
+            set
+            {
+                if (@out != value) return;
+                @out = value;
+                OutputChanged?.Invoke(this, new ResultEventArgs(value));
+            }
+        }
+
+        public event ResultEventHandler? OutputChanged;
+
         public void Calculate()
         {
             Out = Inp1 || Inp2;
