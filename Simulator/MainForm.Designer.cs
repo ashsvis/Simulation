@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             menuMainStrip = new MenuStrip();
             файлToolStripMenuItem = new ToolStripMenuItem();
@@ -59,16 +60,24 @@
             поискToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             опрограммеToolStripMenuItem = new ToolStripMenuItem();
+            окноToolStripMenuItem = new ToolStripMenuItem();
+            поГоризонталиToolStripMenuItem = new ToolStripMenuItem();
+            воВертикалиToolStripMenuItem = new ToolStripMenuItem();
+            каскадомToolStripMenuItem = new ToolStripMenuItem();
+            упорядочитьСвернутыеToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem1 = new ToolStripSeparator();
             statusMainStrip = new StatusStrip();
+            timerInterface = new System.Windows.Forms.Timer(components);
             menuMainStrip.SuspendLayout();
             SuspendLayout();
             // 
             // menuMainStrip
             // 
-            menuMainStrip.Items.AddRange(new ToolStripItem[] { файлToolStripMenuItem, изменитьToolStripMenuItem, инструментыToolStripMenuItem, справкаToolStripMenuItem });
+            menuMainStrip.Items.AddRange(new ToolStripItem[] { файлToolStripMenuItem, изменитьToolStripMenuItem, инструментыToolStripMenuItem, справкаToolStripMenuItem, окноToolStripMenuItem });
             menuMainStrip.Location = new Point(0, 0);
+            menuMainStrip.MdiWindowListItem = окноToolStripMenuItem;
             menuMainStrip.Name = "menuMainStrip";
-            menuMainStrip.Size = new Size(800, 24);
+            menuMainStrip.Size = new Size(1002, 24);
             menuMainStrip.TabIndex = 1;
             menuMainStrip.Text = "menuStrip1";
             // 
@@ -87,6 +96,7 @@
             создатьToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
             создатьToolStripMenuItem.Size = new Size(233, 22);
             создатьToolStripMenuItem.Text = "&Создать";
+            создатьToolStripMenuItem.Click += создатьToolStripMenuItem_Click;
             // 
             // открытьToolStripMenuItem
             // 
@@ -270,19 +280,63 @@
             опрограммеToolStripMenuItem.Size = new Size(158, 22);
             опрограммеToolStripMenuItem.Text = "&О программе…";
             // 
+            // окноToolStripMenuItem
+            // 
+            окноToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { поГоризонталиToolStripMenuItem, воВертикалиToolStripMenuItem, каскадомToolStripMenuItem, упорядочитьСвернутыеToolStripMenuItem, toolStripMenuItem1 });
+            окноToolStripMenuItem.Name = "окноToolStripMenuItem";
+            окноToolStripMenuItem.Size = new Size(48, 20);
+            окноToolStripMenuItem.Text = "&Окно";
+            // 
+            // поГоризонталиToolStripMenuItem
+            // 
+            поГоризонталиToolStripMenuItem.Name = "поГоризонталиToolStripMenuItem";
+            поГоризонталиToolStripMenuItem.Size = new Size(207, 22);
+            поГоризонталиToolStripMenuItem.Text = "По горизонтали";
+            поГоризонталиToolStripMenuItem.Click += поГоризонталиToolStripMenuItem_Click;
+            // 
+            // воВертикалиToolStripMenuItem
+            // 
+            воВертикалиToolStripMenuItem.Name = "воВертикалиToolStripMenuItem";
+            воВертикалиToolStripMenuItem.Size = new Size(207, 22);
+            воВертикалиToolStripMenuItem.Text = "Во вертикали";
+            воВертикалиToolStripMenuItem.Click += воВертикалиToolStripMenuItem_Click;
+            // 
+            // каскадомToolStripMenuItem
+            // 
+            каскадомToolStripMenuItem.Name = "каскадомToolStripMenuItem";
+            каскадомToolStripMenuItem.Size = new Size(207, 22);
+            каскадомToolStripMenuItem.Text = "Каскадом";
+            каскадомToolStripMenuItem.Click += каскадомToolStripMenuItem_Click;
+            // 
+            // упорядочитьСвернутыеToolStripMenuItem
+            // 
+            упорядочитьСвернутыеToolStripMenuItem.Name = "упорядочитьСвернутыеToolStripMenuItem";
+            упорядочитьСвернутыеToolStripMenuItem.Size = new Size(207, 22);
+            упорядочитьСвернутыеToolStripMenuItem.Text = "Упорядочить свернутые";
+            упорядочитьСвернутыеToolStripMenuItem.Click += упорядочитьСвернутыеToolStripMenuItem_Click;
+            // 
+            // toolStripMenuItem1
+            // 
+            toolStripMenuItem1.Name = "toolStripMenuItem1";
+            toolStripMenuItem1.Size = new Size(204, 6);
+            // 
             // statusMainStrip
             // 
-            statusMainStrip.Location = new Point(0, 428);
+            statusMainStrip.Location = new Point(0, 561);
             statusMainStrip.Name = "statusMainStrip";
-            statusMainStrip.Size = new Size(800, 22);
+            statusMainStrip.Size = new Size(1002, 22);
             statusMainStrip.TabIndex = 2;
             statusMainStrip.Text = "statusStrip1";
+            // 
+            // timerInterface
+            // 
+            timerInterface.Tick += timerInterface_Tick;
             // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1002, 583);
             Controls.Add(statusMainStrip);
             Controls.Add(menuMainStrip);
             IsMdiContainer = true;
@@ -331,5 +385,12 @@
         private ToolStripMenuItem поискToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripMenuItem опрограммеToolStripMenuItem;
+        private System.Windows.Forms.Timer timerInterface;
+        private ToolStripMenuItem окноToolStripMenuItem;
+        private ToolStripMenuItem поГоризонталиToolStripMenuItem;
+        private ToolStripMenuItem воВертикалиToolStripMenuItem;
+        private ToolStripMenuItem упорядочитьСвернутыеToolStripMenuItem;
+        private ToolStripSeparator toolStripMenuItem1;
+        private ToolStripMenuItem каскадомToolStripMenuItem;
     }
 }
