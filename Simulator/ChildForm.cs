@@ -156,14 +156,15 @@ namespace Simulator
         {
             var graphics = e.Graphics;
             if (graphics == null) return;
-            graphics.SmoothingMode = SmoothingMode.HighQuality;
-            graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            //graphics.SmoothingMode = SmoothingMode.HighQuality;
+            //graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
+            using var brush = new SolidBrush(zoomPad.BackColor);
+            using var pen = new Pen(zoomPad.ForeColor, 0);
             foreach (var item in items)
             {
                 var rect = new RectangleF(item.Location, new SizeF(50f, 80f));
-                graphics.FillRectangle(Brushes.White, rect);
-                using var pen = new Pen(Color.Black, 0);
+                graphics.FillRectangle(brush, rect);
                 graphics.DrawRectangles(pen, [rect]);
             }
         }

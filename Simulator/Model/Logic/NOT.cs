@@ -1,4 +1,6 @@
-﻿namespace Simulator.Model.Logic
+﻿using System.ComponentModel;
+
+namespace Simulator.Model.Logic
 {
     public class NOT : ICalculate
     {
@@ -9,7 +11,13 @@
         {
         }
 
+        [Category("1.Общие"), DisplayName("Функция")]
+        public string Function => "НЕ";
+
+        [Category("1.Общие"), DisplayName("Имя")]
         public string? Name { get; set; }
+
+        [Category("2.Входы"), DisplayName("Вход")]
         public bool Inp { get; set; } = false;
 
         public void SetValueLinkToInp(GetLinkValueMethod? getInp)
@@ -17,6 +25,7 @@
             this.getInp = getInp;
         }
 
+        [Category("3.Выходы"), DisplayName("Выход")]
         public bool Out 
         {
             get => @out;

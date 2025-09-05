@@ -3,6 +3,7 @@
     public interface ICalculate
     {
         string? Name { get; set; }
+        string Function { get; }
         void Calculate();
         GetLinkValueMethod? GetResultLink();
         event ResultCalculateEventHandler? ResultChanged; 

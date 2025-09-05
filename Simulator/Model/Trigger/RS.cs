@@ -1,4 +1,6 @@
-﻿namespace Simulator.Model.Trigger
+﻿using System.ComponentModel;
+
+namespace Simulator.Model.Trigger
 {
     public class RS : ICalculate
     {
@@ -10,8 +12,16 @@
         {
         }
 
+        [Category("1.Общие"), DisplayName("Функция")]
+        public string Function => "RS-триггер";
+
+        [Category("1.Общие"), DisplayName("Имя")]
         public string? Name { get; set; }
+
+        [Category("2.Входы"), DisplayName("Установка (S)")]
         public bool S { get; set; } = false;
+
+        [Category("2.Входы"), DisplayName("Сброс (R)")]
         public bool R { get; set; } = false;
 
         public void SetValueLinkToS(GetLinkValueMethod? getInp)
@@ -24,6 +34,7 @@
             this.getR = getInp;
         }
 
+        [Category("3.Выходы"), DisplayName("Состояние (Q)")]
         public bool Q 
         { 
             get => q;

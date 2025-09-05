@@ -1,4 +1,6 @@
-﻿namespace Simulator.Model.Logic
+﻿using System.ComponentModel;
+
+namespace Simulator.Model.Logic
 {
     public class AND : ICalculate
     {
@@ -10,8 +12,16 @@
         {
         }
 
+        [Category("1.Общие"), DisplayName("Функция")]
+        public string Function => "И";
+
+        [Category("1.Общие"), DisplayName("Имя")]
         public string? Name { get; set; }
+
+        [Category("2.Входы"), DisplayName("Вход 1")]
         public bool Inp1 { get; set; } = false;
+
+        [Category("2.Входы"), DisplayName("Вход 2")]
         public bool Inp2 { get; set; } = false;
 
         public void SetValueLinkToInp1(GetLinkValueMethod? getInp)
@@ -24,6 +34,7 @@
             this.getInp2 = getInp;
         }
 
+        [Category("3.Выходы"), DisplayName("Выход")]
         public bool Out 
         { 
             get => @out;
