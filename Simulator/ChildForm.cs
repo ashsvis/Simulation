@@ -1,4 +1,5 @@
 ﻿using Simulator.Model;
+using Simulator.View;
 using System.Diagnostics;
 using Module = Simulator.Model.Module;
 
@@ -39,29 +40,7 @@ namespace Simulator
 
         private void ChildForm_Load(object sender, EventArgs e)
         {
-            //var rs = module.Items.OfType<Model.Trigger.RS>().FirstOrDefault();
-            //var not = module.Items.OfType<Model.Logic.NOT>().FirstOrDefault();
-            //if (rs != null && not != null)
-            //{
-            //    not.ResultChanged += (o, e) => 
-            //    {
-            //        checkBox1.Checked = not.Out; 
-            //    };
-            //    button1.Click += (o, e) => { rs.S = true; };
-            //    button2.Click += (o, e) => { rs.R = true; };
-            //}
-            //treeView1.Nodes.Clear();
-            //var rootNode = new TreeNode("Библиотека");
-            //treeView1.Nodes.Add(rootNode);
-            //var logicaNode = new TreeNode("Логика");
-            //logicaNode.Nodes.Add(new TreeNode("NOT") { Tag = typeof(Model.Logic.NOT) });
-            //logicaNode.Nodes.Add(new TreeNode("AND") { Tag = typeof(Model.Logic.AND) });
-            //logicaNode.Nodes.Add(new TreeNode("OR") { Tag = typeof(Model.Logic.OR) });
-            //rootNode.Nodes.Add(logicaNode);
-            //var triggerNode = new TreeNode("Триггеры");
-            //rootNode.Nodes.Add(triggerNode);
-            //triggerNode.Nodes.Add(new TreeNode("RS-триггер") { Tag = typeof(Model.Trigger.RS) });
-            //rootNode.ExpandAll();
+
         }
 
         private void ChildForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -78,11 +57,45 @@ namespace Simulator
                 {
                     item.Calculate();
                 }
-                catch 
-                { 
+                catch
+                {
 
                 }
             });
+        }
+
+        private void zoomPad_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data != null)
+            {
+                if (e.Data.GetDataPresent(typeof(Element)))
+                    e.Effect = DragDropEffects.Copy;
+            }
+            else
+                e.Effect = DragDropEffects.None;
+        }
+
+        private void zoomPad_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data == null) return;
+            if (e.Data.GetData(typeof(Element)) is Element item && item.Type != null)
+            {
+                zoomPad.Invalidate();
+            }
+        }
+
+        private void zoomPad_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data == null) return;
+            if (e.Effect == DragDropEffects.Copy)
+            {
+                if (e.Data.GetData(typeof(Element)) is Element item && item.Type != null)
+                {
+                    item.Instance = Activator.CreateInstance(item.Type);
+                    item.Location = zoomPad.PointToClient(new Point(e.X, e.Y));
+                    zoomPad.Invalidate();
+                }
+            }
         }
     }
 }

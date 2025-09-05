@@ -71,7 +71,7 @@
             timerInterface = new System.Windows.Forms.Timer(components);
             timerSimulation = new System.Windows.Forms.Timer(components);
             panel1 = new Panel();
-            treeView1 = new TreeView();
+            tvLibrary = new TreeView();
             menuMainStrip.SuspendLayout();
             panel1.SuspendLayout();
             SuspendLayout();
@@ -343,28 +343,29 @@
             // 
             // panel1
             // 
-            panel1.Controls.Add(treeView1);
+            panel1.Controls.Add(tvLibrary);
             panel1.Dock = DockStyle.Left;
             panel1.Location = new Point(0, 24);
             panel1.Name = "panel1";
             panel1.Size = new Size(156, 537);
             panel1.TabIndex = 4;
             // 
-            // treeView1
+            // tvLibrary
             // 
-            treeView1.BackColor = SystemColors.WindowFrame;
-            treeView1.Dock = DockStyle.Fill;
-            treeView1.ForeColor = SystemColors.Window;
-            treeView1.FullRowSelect = true;
-            treeView1.HideSelection = false;
-            treeView1.LineColor = Color.WhiteSmoke;
-            treeView1.Location = new Point(0, 0);
-            treeView1.Name = "treeView1";
+            tvLibrary.BackColor = SystemColors.WindowFrame;
+            tvLibrary.Dock = DockStyle.Fill;
+            tvLibrary.ForeColor = SystemColors.Window;
+            tvLibrary.FullRowSelect = true;
+            tvLibrary.HideSelection = false;
+            tvLibrary.LineColor = Color.WhiteSmoke;
+            tvLibrary.Location = new Point(0, 0);
+            tvLibrary.Name = "tvLibrary";
             treeNode1.Name = "Узел0";
             treeNode1.Text = "Библиотека";
-            treeView1.Nodes.AddRange(new TreeNode[] { treeNode1 });
-            treeView1.Size = new Size(156, 537);
-            treeView1.TabIndex = 1;
+            tvLibrary.Nodes.AddRange(new TreeNode[] { treeNode1 });
+            tvLibrary.Size = new Size(156, 537);
+            tvLibrary.TabIndex = 1;
+            tvLibrary.MouseDown += tvLibrary_MouseDown;
             // 
             // MainForm
             // 
@@ -430,6 +431,6 @@
         private ToolStripMenuItem каскадомToolStripMenuItem;
         private System.Windows.Forms.Timer timerSimulation;
         private Panel panel1;
-        private TreeView treeView1;
+        private TreeView tvLibrary;
     }
 }

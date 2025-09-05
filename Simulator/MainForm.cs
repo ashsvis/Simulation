@@ -1,3 +1,5 @@
+using Simulator.Model;
+
 namespace Simulator
 {
     public partial class MainForm : Form
@@ -20,9 +22,9 @@ namespace Simulator
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            treeView1.Nodes.Clear();
+            tvLibrary.Nodes.Clear();
             var rootNode = new TreeNode("Библиотека");
-            treeView1.Nodes.Add(rootNode);
+            tvLibrary.Nodes.Add(rootNode);
             var logicaNode = new TreeNode("Логика");
             logicaNode.Nodes.Add(new TreeNode("NOT") { Tag = typeof(Model.Logic.NOT) });
             logicaNode.Nodes.Add(new TreeNode("AND") { Tag = typeof(Model.Logic.AND) });
@@ -105,6 +107,35 @@ namespace Simulator
         private void timerSimulation_Tick(object sender, EventArgs e)
         {
             SimulationTick?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void tvLibrary_MouseDown(object sender, MouseEventArgs e)
+        {
+            var node = tvLibrary.GetNodeAt(e.X, e.Y);
+            if (node != null && e.Button == MouseButtons.Left)
+            {
+                tvLibrary.SelectedNode = null;
+                tvLibrary.SelectedNode = node;
+                if (node.Tag is Type type)
+                {
+                    try
+                    {
+                        var module = new Element() { Type = type }; //Activator.CreateInstance(typeof(Element));
+                        if (module != null)
+                        {
+                            var ret = tvLibrary.DoDragDrop(module, DragDropEffects.Copy);
+                            if (ret == DragDropEffects.None)
+                            {
+                                Cursor = Cursors.Default;
+                            }
+                        }                            
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Вставка модуля", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
     }
 }

@@ -6,6 +6,10 @@
         private GetLinkValueMethod? getS;
         private GetLinkValueMethod? getR;
 
+        public RS()
+        {
+        }
+
         public string? Name { get; set; }
         public bool S { get; set; } = false;
         public bool R { get; set; } = false;

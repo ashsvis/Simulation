@@ -28,13 +28,31 @@
         /// </summary>
         private void InitializeComponent()
         {
+            zoomPad = new Simulator.View.ZoomControl();
             SuspendLayout();
+            // 
+            // zoomPad
+            // 
+            zoomPad.AllowDrop = true;
+            zoomPad.Dock = DockStyle.Fill;
+            zoomPad.Location = new Point(0, 0);
+            zoomPad.MaxZoom = 20F;
+            zoomPad.MinZoom = 0.1F;
+            zoomPad.Name = "zoomPad";
+            zoomPad.Size = new Size(800, 450);
+            zoomPad.TabIndex = 0;
+            zoomPad.ZoomScale = 1D;
+            zoomPad.ZoomSensitivity = 0.2F;
+            zoomPad.DragDrop += zoomPad_DragDrop;
+            zoomPad.DragEnter += zoomPad_DragEnter;
+            zoomPad.DragOver += zoomPad_DragOver;
             // 
             // ChildForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(zoomPad);
             Name = "ChildForm";
             StartPosition = FormStartPosition.WindowsDefaultBounds;
             Text = "Дочерняя форма";
@@ -44,5 +62,7 @@
         }
 
         #endregion
+
+        private View.ZoomControl zoomPad;
     }
 }

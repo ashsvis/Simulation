@@ -6,6 +6,10 @@
         private GetLinkValueMethod? getInp1;
         private GetLinkValueMethod? getInp2;
 
+        public OR()
+        {
+        }
+
         public string? Name { get; set; }
         public bool Inp1 { get; set; } = false;
         public bool Inp2 { get; set; } = false;

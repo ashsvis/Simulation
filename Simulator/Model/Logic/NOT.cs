@@ -5,6 +5,10 @@
         private bool @out = true;
         private GetLinkValueMethod? getInp;
 
+        public NOT()
+        {
+        }
+
         public string? Name { get; set; }
         public bool Inp { get; set; } = false;
 
