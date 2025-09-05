@@ -38,6 +38,7 @@
             Name = "ChildForm";
             StartPosition = FormStartPosition.WindowsDefaultBounds;
             Text = "Дочерняя форма";
+            FormClosing += ChildForm_FormClosing;
             ResumeLayout(false);
         }
 

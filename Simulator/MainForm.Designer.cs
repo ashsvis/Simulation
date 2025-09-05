@@ -68,6 +68,7 @@
             toolStripMenuItem1 = new ToolStripSeparator();
             statusMainStrip = new StatusStrip();
             timerInterface = new System.Windows.Forms.Timer(components);
+            timerSimulation = new System.Windows.Forms.Timer(components);
             menuMainStrip.SuspendLayout();
             SuspendLayout();
             // 
@@ -332,6 +333,10 @@
             // 
             timerInterface.Tick += timerInterface_Tick;
             // 
+            // timerModel
+            // 
+            timerSimulation.Tick += timerSimulation_Tick;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -392,5 +397,6 @@
         private ToolStripMenuItem упорядочитьСвернутыеToolStripMenuItem;
         private ToolStripSeparator toolStripMenuItem1;
         private ToolStripMenuItem каскадомToolStripMenuItem;
+        private System.Windows.Forms.Timer timerSimulation;
     }
 }

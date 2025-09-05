@@ -21,6 +21,7 @@ namespace Simulator
         private void MainForm_Load(object sender, EventArgs e)
         {
             timerInterface.Enabled = true;
+            timerSimulation.Enabled = true;
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -46,7 +47,7 @@ namespace Simulator
 
         private void CreateNewChildForm()
         {
-            var childForm = new ChildForm() { MdiParent = this, WindowState = FormWindowState.Maximized };
+            var childForm = new ChildForm(this) { MdiParent = this, WindowState = FormWindowState.Maximized };
             childForm.Show();
         }
 
@@ -78,6 +79,18 @@ namespace Simulator
         private void упорядочитьСвернутыеToolStripMenuItem_Click(object sender, EventArgs e)
         {
             LayoutMdi(MdiLayout.ArrangeIcons);
+        }
+
+        public event EventHandler? SimulationTick;
+
+        /// <summary>
+        /// Таймер моделирования (100 мс)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void timerSimulation_Tick(object sender, EventArgs e)
+        {
+            SimulationTick?.Invoke(this, EventArgs.Empty);
         }
     }
 }
