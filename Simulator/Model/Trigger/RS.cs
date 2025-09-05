@@ -2,10 +2,24 @@
 {
     public class RS : ICalculate
     {
-        private bool q;
+        private bool q = false;
+        private GetLinkValueMethod? getS;
+        private GetLinkValueMethod? getR;
 
-        public bool S { get; set; }
-        public bool R { get; set; }
+        public string? Name { get; set; }
+        public bool S { get; set; } = false;
+        public bool R { get; set; } = false;
+
+        public void SetValueLinkToS(GetLinkValueMethod? getInp)
+        {
+            this.getS = getInp;
+        }
+
+        public void SetValueLinkToR(GetLinkValueMethod? getInp)
+        {
+            this.getR = getInp;
+        }
+
         public bool Q 
         { 
             get => q;
@@ -13,17 +27,28 @@
             {
                 if (q == value) return;
                 q = value;
-                ResultChanged?.Invoke(this, new ResultEventArgs(nameof(Q), value));
+                ResultChanged?.Invoke(this, new ResultCalculateEventArgs(nameof(Q), value));
             }
         }
 
-        public event ResultEventHandler? ResultChanged;
+        public event ResultCalculateEventHandler? ResultChanged;
 
         public void Calculate()
         {
-            Q = !R && (S || Q);
-            R = false;
-            S = false;
+            var r = getR != null ? (bool)getR() : R;
+            var s = getS != null ? (bool)getS() : S;
+
+            if (r || s)
+            {
+                Q = !r && (s || Q);
+                R = false;
+                S = false;
+            }
+        }
+
+        public GetLinkValueMethod? GetResultLink()
+        {
+            return () => Q;
         }
     }
 }

@@ -2,22 +2,19 @@
 {
     public interface ICalculate
     {
+        string? Name { get; set; }
         void Calculate();
-        event ResultEventHandler? ResultChanged; 
+        GetLinkValueMethod? GetResultLink();
+        event ResultCalculateEventHandler? ResultChanged; 
     }
 
-    public delegate void ResultEventHandler(object sender, ResultEventArgs args);
+    public delegate object GetLinkValueMethod();
+    public delegate void ResultCalculateEventHandler(object sender, ResultCalculateEventArgs args);
 
-    public class ResultEventArgs : EventArgs
+    public class ResultCalculateEventArgs(string propname, object value) : EventArgs
     {
-        public ResultEventArgs(string propname, object value)
-        {
-            Result = value;
-            Propname = propname;
-        }
-
-        public string? Propname { get; set; } 
-        public object? Result { get; set; }
+        public string? Propname { get; set; } = propname;
+        public object? Result { get; set; } = value;
 
     }
 }

@@ -3,8 +3,16 @@
     public class NOT : ICalculate
     {
         private bool @out = true;
+        private GetLinkValueMethod? getInp;
 
-        public bool Inp { get; set; }
+        public string? Name { get; set; }
+        public bool Inp { get; set; } = false;
+
+        public void SetValueLinkToInp(GetLinkValueMethod? getInp)
+        {
+            this.getInp = getInp;
+        }
+
         public bool Out 
         {
             get => @out;
@@ -12,15 +20,21 @@
             {
                 if (@out == value) return;
                 @out = value;
-                ResultChanged?.Invoke(this, new ResultEventArgs(nameof(Out), value));
+                ResultChanged?.Invoke(this, new ResultCalculateEventArgs(nameof(Out), value));
             }
         }
 
-        public event ResultEventHandler? ResultChanged;
+        public event ResultCalculateEventHandler? ResultChanged;
 
         public void Calculate()
         {
-            Out = !Inp;
+            Out = getInp != null ? !(bool)getInp() : !Inp;
+        }
+
+        public GetLinkValueMethod? GetResultLink()
+        {
+            return () => Out;
         }
     }
+
 }
