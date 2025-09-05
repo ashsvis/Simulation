@@ -11,13 +11,13 @@
             get => @out;
             set
             {
-                if (@out != value) return;
+                if (@out == value) return;
                 @out = value;
-                OutputChanged?.Invoke(this, new ResultEventArgs(value));
+                ResultChanged?.Invoke(this, new ResultEventArgs(value, nameof(Out)));
             }
         }
 
-        public event ResultEventHandler? OutputChanged;
+        public event ResultEventHandler? ResultChanged;
 
         public void Calculate()
         {

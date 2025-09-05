@@ -1,4 +1,5 @@
-﻿using Module = Simulator.Model.Module;
+﻿using System.Diagnostics;
+using Module = Simulator.Model.Module;
 
 namespace Simulator
 {
@@ -18,11 +19,26 @@ namespace Simulator
             module.Items.Add(new Model.Logic.NOT());
             module.Items.Add(new Model.Logic.AND());
             module.Items.Add(new Model.Logic.OR());
-            module.Items.Add(new Model.Trigger.RS());
+            var rs = new Model.Trigger.RS();
+            module.Items.Add(rs);
+            module.Items.ForEach(item => item.ResultChanged += Item_OutputChanged);
+
+            rs.S = true;
+        }
+
+        private void Item_OutputChanged(object sender, Model.ResultEventArgs args)
+        {
+            Debug.WriteLine($"{Name}.{sender.GetType().Name}.{args.Propname} is {args.Result}");
+        }
+
+        private void ChildForm_Load(object sender, EventArgs e)
+        {
+
         }
 
         private void ChildForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            module.Items.ForEach(item => item.ResultChanged -= Item_OutputChanged);
             mainForm.SimulationTick -= MainForm_SimulationTick;
         }
 
