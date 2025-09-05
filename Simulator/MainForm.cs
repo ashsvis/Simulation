@@ -64,7 +64,19 @@ namespace Simulator
         private void CreateNewChildForm()
         {
             var childForm = new ChildForm(this) { MdiParent = this, WindowState = FormWindowState.Maximized };
+            childForm.ElementSelected += ChildForm_ElementSelected;
+            childForm.FormClosed += ChildForm_FormClosed;
             childForm.Show();
+        }
+
+        private void ChildForm_FormClosed(object? sender, FormClosedEventArgs e)
+        {
+            pgProperties.SelectedObject = null;
+        }
+
+        private void ChildForm_ElementSelected(object? sender, EventArgs e)
+        {
+            pgProperties.SelectedObject = sender;
         }
 
         /// <summary>
@@ -120,7 +132,7 @@ namespace Simulator
                 {
                     try
                     {
-                        var module = new Element() { Type = type }; //Activator.CreateInstance(typeof(Element));
+                        var module = new Element() { Type = type };
                         if (module != null)
                         {
                             var ret = tvLibrary.DoDragDrop(module, DragDropEffects.Copy);

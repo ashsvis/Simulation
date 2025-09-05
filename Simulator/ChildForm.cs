@@ -11,7 +11,7 @@ namespace Simulator
     {
         private readonly MainForm mainForm;
 
-        private readonly Module module = new();
+        //private readonly Module module = new();
         private readonly List<Element> items = [];
 
         private Point firstMouseDown;
@@ -23,25 +23,27 @@ namespace Simulator
             this.mainForm = mainForm;
             mainForm.SimulationTick += MainForm_SimulationTick;
 
-            module.Items.Clear();
-            var not = new Model.Logic.NOT();
-            module.Items.Add(not);
-            var and = new Model.Logic.AND();
-            module.Items.Add(and);
-            var or = new Model.Logic.OR();
-            module.Items.Add(or);
-            var rs = new Model.Trigger.RS();
-            module.Items.Add(rs);
+            //module.Items.Clear();
+            //var not = new Model.Logic.NOT();
+            //module.Items.Add(not);
+            //var and = new Model.Logic.AND();
+            //module.Items.Add(and);
+            //var or = new Model.Logic.OR();
+            //module.Items.Add(or);
+            //var rs = new Model.Trigger.RS();
+            //module.Items.Add(rs);
 
-            module.Items.ForEach(item => item.ResultChanged += Item_ResultChanged);
+            //module.Items.ForEach(item => item.ResultChanged += Item_ResultChanged);
 
-            not.SetValueLinkToInp(rs.GetResultLink());
-            or.SetValueLinkToInp2(not.GetResultLink());
+            //not.SetValueLinkToInp(rs.GetResultLink());
+            //or.SetValueLinkToInp2(not.GetResultLink());
         }
 
         private void Item_ResultChanged(object sender, Model.ResultCalculateEventArgs args)
         {
-            Debug.WriteLine($"{Name}.{sender.GetType().Name}.{args.Propname} is {args.Result}");
+            ElementSelected?.Invoke(sender, EventArgs.Empty);
+
+            //Debug.WriteLine($"{Name}.{sender.GetType().Name}.{args.Propname} is {args.Result}");
         }
 
         private void ChildForm_Load(object sender, EventArgs e)
@@ -51,17 +53,22 @@ namespace Simulator
 
         private void ChildForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            module.Items.ForEach(item => item.ResultChanged -= Item_ResultChanged);
+            items.ForEach(item =>
+            {
+                if (item.Instance is ICalculate instance)
+                    instance.ResultChanged -= Item_ResultChanged;
+            });
             mainForm.SimulationTick -= MainForm_SimulationTick;
         }
 
         private void MainForm_SimulationTick(object? sender, EventArgs e)
         {
-            module.Items.ForEach(item =>
+            items.ForEach(item =>
             {
                 try
                 {
-                    item.Calculate();
+                    if (item.Instance is ICalculate instance)
+                        instance.Calculate();
                 }
                 catch
                 {
@@ -99,8 +106,11 @@ namespace Simulator
                 {
                     item.Instance = Activator.CreateInstance(item.Type);
                     item.Location = PrepareMousePosition(zoomPad.PointToClient(new Point(e.X, e.Y)));
+                    if (item.Instance is ICalculate instance)
+                        instance.ResultChanged += Item_ResultChanged;
                     items.Add(item);
                     zoomPad.Invalidate();
+                    ElementSelected?.Invoke(item.Instance, EventArgs.Empty);
                 }
             }
         }
@@ -167,10 +177,14 @@ namespace Simulator
                 if (TryGetModule(e.Location, out target) &&
                     target != null && target.Instance != null)
                 {
-
+                    ElementSelected?.Invoke(target.Instance, EventArgs.Empty);
                 }
+                else
+                    ElementSelected?.Invoke(null, EventArgs.Empty);
             }
         }
+
+        public event EventHandler ElementSelected;
 
         private void zoomPad_MouseMove(object sender, MouseEventArgs e)
         {
