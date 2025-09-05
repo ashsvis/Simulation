@@ -10,14 +10,14 @@
 
     public class ResultEventArgs : EventArgs
     {
-        public ResultEventArgs(object value, string propname)
+        public ResultEventArgs(string propname, object value)
         {
             Result = value;
             Propname = propname;
         }
 
-        public object? Result { get; set; }
         public string? Propname { get; set; } 
+        public object? Result { get; set; }
 
     }
 }

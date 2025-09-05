@@ -9,11 +9,11 @@
         public bool Q 
         { 
             get => q;
-            set
+            private set
             {
                 if (q == value) return;
                 q = value;
-                ResultChanged?.Invoke(this, new ResultEventArgs(value, nameof(Q)));
+                ResultChanged?.Invoke(this, new ResultEventArgs(nameof(Q), value));
             }
         }
 

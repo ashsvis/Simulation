@@ -16,14 +16,19 @@ namespace Simulator
             mainForm.SimulationTick += MainForm_SimulationTick;
 
             module.Items.Clear();
-            module.Items.Add(new Model.Logic.NOT());
-            module.Items.Add(new Model.Logic.AND());
-            module.Items.Add(new Model.Logic.OR());
+            var not = new Model.Logic.NOT();
+            module.Items.Add(not);
+            var and = new Model.Logic.AND();
+            module.Items.Add(and);
+            var or = new Model.Logic.OR();
+            module.Items.Add(or);
             var rs = new Model.Trigger.RS();
             module.Items.Add(rs);
             module.Items.ForEach(item => item.ResultChanged += Item_OutputChanged);
 
             rs.S = true;
+            not.Inp = rs.Q;
+            or.Inp1 = not.Out;
         }
 
         private void Item_OutputChanged(object sender, Model.ResultEventArgs args)
