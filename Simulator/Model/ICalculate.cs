@@ -4,6 +4,8 @@
     {
         string? Name { get; set; }
         string Function { get; }
+        bool[] Inputs { get; }
+        bool[] Outputs { get; }
         void Calculate();
         GetLinkValueMethod? GetResultLink();
         event ResultCalculateEventHandler? ResultChanged; 

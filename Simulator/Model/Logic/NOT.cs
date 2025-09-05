@@ -37,6 +37,12 @@ namespace Simulator.Model.Logic
             }
         }
 
+        [Browsable(false)]
+        public bool[] Inputs => [false];
+
+        [Browsable(false)]
+        public bool[] Outputs => [true];
+
         public event ResultCalculateEventHandler? ResultChanged;
 
         public void Calculate()

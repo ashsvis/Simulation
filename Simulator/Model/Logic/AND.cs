@@ -54,6 +54,12 @@ namespace Simulator.Model.Logic
         [Category("Инверсия"), DisplayName("выхода")]
         public bool InverseOut { get; set; } = false;
 
+        [Browsable(false)]
+        public bool[] Inputs => [InverseInp1, InverseInp2];
+
+        [Browsable(false)]
+        public bool[] Outputs => [InverseOut];
+
         public event ResultCalculateEventHandler? ResultChanged;
 
         public void Calculate()

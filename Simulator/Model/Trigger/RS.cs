@@ -46,6 +46,12 @@ namespace Simulator.Model.Trigger
             }
         }
 
+        [Browsable(false)]
+        public bool[] Inputs => [false, false];
+
+        [Browsable(false)]
+        public bool[] Outputs => [false];
+
         public event ResultCalculateEventHandler? ResultChanged;
 
         public void Calculate()
