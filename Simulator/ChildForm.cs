@@ -1,6 +1,8 @@
 ﻿using Simulator.Model;
 using Simulator.View;
 using System.Diagnostics;
+using System.Drawing.Drawing2D;
+using System.Reflection;
 using Module = Simulator.Model.Module;
 
 namespace Simulator
@@ -10,6 +12,10 @@ namespace Simulator
         private readonly MainForm mainForm;
 
         private readonly Module module = new();
+        private readonly List<Element> items = [];
+
+        private Point firstMouseDown;
+        private Point mousePosition;
 
         public ChildForm(MainForm mainForm)
         {
@@ -92,10 +98,88 @@ namespace Simulator
                 if (e.Data.GetData(typeof(Element)) is Element item && item.Type != null)
                 {
                     item.Instance = Activator.CreateInstance(item.Type);
-                    item.Location = zoomPad.PointToClient(new Point(e.X, e.Y));
+                    item.Location = PrepareMousePosition(zoomPad.PointToClient(new Point(e.X, e.Y)));
+                    items.Add(item);
                     zoomPad.Invalidate();
                 }
             }
+        }
+
+        /// <summary>
+        /// Перерасчёт позиции мыши при масштабировании и панарамировании
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        private PointF PrepareMousePosition(PointF p)
+        {
+            PointF[] arr = [p];
+            Matrix matrix = new();
+
+            var zoom = (float)zoomPad.ZoomScale;
+            var origin = zoomPad.Origin;
+
+            matrix.Translate(origin.X, origin.Y);
+            matrix.Scale(1 / zoom, 1 / zoom);
+            matrix.TransformPoints(arr);
+            matrix.Dispose();
+            return new PointF(arr[0].X, arr[0].Y);
+        }
+
+        private bool TryGetModule(Point location, out Element? target)
+        {
+            var point = PrepareMousePosition(location);
+            for (var i = items.Count - 1; i >= 0; i--)
+            {
+                var item = items[i];
+                var rect = new RectangleF(item.Location, new SizeF(50f, 80f));
+                if (rect.Contains(point))
+                {
+                    target = items[i];
+                    return true;
+                }
+            }
+            target = null;
+            return false;
+        }
+
+        private void zoomPad_OnDraw(object sender, Simulator.View.ZoomControl.DrawEventArgs e)
+        {
+            var graphics = e.Graphics;
+            if (graphics == null) return;
+            graphics.SmoothingMode = SmoothingMode.HighQuality;
+            graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+            foreach (var item in items)
+            {
+                var rect = new RectangleF(item.Location, new SizeF(50f, 80f));
+                graphics.FillRectangle(Brushes.White, rect);
+                using var pen = new Pen(Color.Black, 0);
+                graphics.DrawRectangles(pen, [rect]);
+            }
+        }
+
+        private void zoomPad_MouseDown(object sender, MouseEventArgs e)
+        {
+            mousePosition = firstMouseDown = e.Location;
+            if (e.Button == MouseButtons.Left)
+            {
+                Element? target;
+                if (TryGetModule(e.Location, out target) &&
+                    target != null && target.Instance != null)
+                {
+
+                }
+            }
+        }
+
+        private void zoomPad_MouseMove(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void zoomPad_MouseUp(object sender, MouseEventArgs e)
+        {
+
         }
     }
 }

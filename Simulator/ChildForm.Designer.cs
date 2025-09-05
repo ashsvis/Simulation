@@ -43,9 +43,13 @@
             zoomPad.TabIndex = 0;
             zoomPad.ZoomScale = 1D;
             zoomPad.ZoomSensitivity = 0.2F;
+            zoomPad.OnDraw += zoomPad_OnDraw;
             zoomPad.DragDrop += zoomPad_DragDrop;
             zoomPad.DragEnter += zoomPad_DragEnter;
             zoomPad.DragOver += zoomPad_DragOver;
+            zoomPad.MouseDown += zoomPad_MouseDown;
+            zoomPad.MouseMove += zoomPad_MouseMove;
+            zoomPad.MouseUp += zoomPad_MouseUp;
             // 
             // ChildForm
             // 
