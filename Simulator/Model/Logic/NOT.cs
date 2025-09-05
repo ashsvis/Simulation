@@ -11,13 +11,13 @@ namespace Simulator.Model.Logic
         {
         }
 
-        [Category("1.Общие"), DisplayName("Функция")]
+        [Category(" Общие"), DisplayName("Функция")]
         public string Function => "НЕ";
 
-        [Category("1.Общие"), DisplayName("Имя")]
+        [Category(" Общие"), DisplayName("Имя")]
         public string? Name { get; set; }
 
-        [Category("2.Входы"), DisplayName("Вход")]
+        [Category("Входы"), DisplayName("Вход")]
         public bool Inp { get; set; } = false;
 
         public void SetValueLinkToInp(GetLinkValueMethod? getInp)
@@ -25,7 +25,7 @@ namespace Simulator.Model.Logic
             this.getInp = getInp;
         }
 
-        [Category("3.Выходы"), DisplayName("Выход")]
+        [Category("Выходы"), DisplayName("Выход")]
         public bool Out 
         {
             get => @out;

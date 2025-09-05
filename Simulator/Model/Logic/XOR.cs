@@ -12,16 +12,16 @@ namespace Simulator.Model.Logic
         {
         }
 
-        [Category("1.Общие"), DisplayName("Функция")]
-        public string Function => "Исключ. ИЛИ";
+        [Category(" Общие"), DisplayName("Функция")]
+        public string Function => "Искл.ИЛИ";
 
-        [Category("1.Общие"), DisplayName("Имя")]
+        [Category(" Общие"), DisplayName("Имя")]
         public string? Name { get; set; }
 
-        [Category("2.Входы"), DisplayName("Вход 1")]
+        [Category("Входы"), DisplayName("Вход 1")]
         public bool Inp1 { get; set; } = false;
 
-        [Category("2.Входы"), DisplayName("Вход 2")]
+        [Category("Входы"), DisplayName("Вход 2")]
         public bool Inp2 { get; set; } = false;
 
         public void SetValueLinkToInp1(GetLinkValueMethod? getInp)
@@ -34,7 +34,7 @@ namespace Simulator.Model.Logic
             this.getInp2 = getInp;
         }
 
-        [Category("3.Выходы"), DisplayName("Выход")]
+        [Category("Выходы"), DisplayName("Выход")]
         public bool Out
         {
             get => @out;
@@ -45,6 +45,14 @@ namespace Simulator.Model.Logic
                 ResultChanged?.Invoke(this, new ResultCalculateEventArgs(nameof(Out), value));
             }
         }
+
+        [Category("Инверсия"), DisplayName("входа 1")]
+        public bool InverseInp1 { get; set; } = false;
+
+        [Category("Инверсия"), DisplayName("входа 2")]
+        public bool InverseInp2 { get; set; } = false;
+        [Category("Инверсия"), DisplayName("выхода")]
+        public bool InverseOut { get; set; } = false;
 
         public event ResultCalculateEventHandler? ResultChanged;
 

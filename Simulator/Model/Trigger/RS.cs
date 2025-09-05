@@ -12,16 +12,16 @@ namespace Simulator.Model.Trigger
         {
         }
 
-        [Category("1.Общие"), DisplayName("Функция")]
+        [Category(" Общие"), DisplayName("Функция")]
         public string Function => "RS-триггер";
 
-        [Category("1.Общие"), DisplayName("Имя")]
+        [Category(" Общие"), DisplayName("Имя")]
         public string? Name { get; set; }
 
-        [Category("2.Входы"), DisplayName("Установка (S)")]
+        [Category("Входы"), DisplayName("Уст-ка (S)")]
         public bool S { get; set; } = false;
 
-        [Category("2.Входы"), DisplayName("Сброс (R)")]
+        [Category("Входы"), DisplayName("Сброс (R)")]
         public bool R { get; set; } = false;
 
         public void SetValueLinkToS(GetLinkValueMethod? getInp)
@@ -34,7 +34,7 @@ namespace Simulator.Model.Trigger
             this.getR = getInp;
         }
 
-        [Category("3.Выходы"), DisplayName("Состояние (Q)")]
+        [Category("Выходы"), DisplayName("Ячейка (Q)")]
         public bool Q 
         { 
             get => q;
