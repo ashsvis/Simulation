@@ -58,7 +58,9 @@ namespace Simulator.Model.Logic
 
         public void Calculate()
         {
-            Out = (getInp1 != null ? (bool)getInp1() : Inp1) || (getInp2 != null ? (bool)getInp2() : Inp2);
+            var inp1 = getInp1 != null ? (bool)getInp1() : Inp1;
+            var inp2 = getInp2 != null ? (bool)getInp2() : Inp2;
+            Out = ((inp1 ^ InverseInp1) || (inp2 ^ InverseInp2)) ^ InverseOut;
         }
 
         public GetLinkValueMethod? GetResultLink()
