@@ -27,12 +27,12 @@ namespace Simulator.Model.Trigger
         [Category("Входы"), DisplayName("Сброс (R)"), Description("Сброс (R)")]
         public bool R { get; set; } = false;
 
-        public void SetValueLinkToS(GetLinkValueMethod? getInp)
+        private void SetValueLinkToS(GetLinkValueMethod? getInp)
         {
             this.getS = getInp;
         }
 
-        public void SetValueLinkToR(GetLinkValueMethod? getInp)
+        private void SetValueLinkToR(GetLinkValueMethod? getInp)
         {
             this.getR = getInp;
         }
@@ -92,6 +92,19 @@ namespace Simulator.Model.Trigger
         public GetLinkValueMethod? GetResultLink()
         {
             return () => Q;
+        }
+
+        public void SetValueLinkToInp(int inputIndex, GetLinkValueMethod? getInp)
+        {
+            switch (inputIndex)
+            {
+                case 0:
+                    SetValueLinkToS(getInp);
+                    break;
+                case 1:
+                    SetValueLinkToR(getInp);
+                    break;
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Simulator.Model.Trigger;
+using System.ComponentModel;
 
 namespace Simulator.Model.Logic
 {
@@ -27,12 +28,12 @@ namespace Simulator.Model.Logic
         [Category("Входы"), DisplayName("Вход 2")]
         public bool Inp2 { get; set; } = false;
 
-        public void SetValueLinkToInp1(GetLinkValueMethod? getInp)
+        private void SetValueLinkToInp1(GetLinkValueMethod? getInp)
         {
             this.getInp1 = getInp;
         }
 
-        public void SetValueLinkToInp2(GetLinkValueMethod? getInp)
+        private void SetValueLinkToInp2(GetLinkValueMethod? getInp)
         {
             this.getInp2 = getInp;
         }
@@ -94,6 +95,19 @@ namespace Simulator.Model.Logic
         public GetLinkValueMethod? GetResultLink()
         {
             return () => Out;
+        }
+
+        public void SetValueLinkToInp(int inputIndex, GetLinkValueMethod? getInp)
+        {
+            switch (inputIndex)
+            {
+                case 0:
+                    SetValueLinkToInp1(getInp);
+                    break;
+                case 1:
+                    SetValueLinkToInp2(getInp);
+                    break;
+            }
         }
     }
 }

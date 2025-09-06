@@ -23,7 +23,7 @@ namespace Simulator.Model.Logic
         [Category("Входы"), DisplayName("Вход")]
         public bool Inp { get; set; } = false;
 
-        public void SetValueLinkToInp(GetLinkValueMethod? getInp)
+        private void SetValueLinkToInp(GetLinkValueMethod? getInp)
         {
             this.getInp = getInp;
         }
@@ -71,6 +71,11 @@ namespace Simulator.Model.Logic
         public GetLinkValueMethod? GetResultLink()
         {
             return () => Out;
+        }
+
+        public void SetValueLinkToInp(int inputIndex, GetLinkValueMethod? getInp)
+        {
+            SetValueLinkToInp(getInp);
         }
     }
 

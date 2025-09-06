@@ -15,10 +15,47 @@ namespace Simulator.Model
         private readonly Dictionary<int, RectangleF> targets = [];
         public Dictionary<int, RectangleF> Targets => targets;
 
+        private readonly Dictionary<int, PointF> pins = [];
+        public Dictionary<int, PointF> Pins => pins;
+
+        public bool TryGetOutput(PointF point, out int? output, out PointF? pin)
+        {
+            output = null;
+            pin = null;
+            foreach (var key in targets.Keys.Where(x => x >= 200 && x < 300))
+            {
+                var target = targets[key];
+                if (target.Contains(point))
+                {
+                    output = key - 200;
+                    pin = pins.TryGetValue(key, out PointF value) ? value : null;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool TryGetInput(PointF point, out int? input, out PointF? pin)
+        {
+            input = null;
+            pin = null;
+            foreach (var key in targets.Keys.Where(x => x >= 100 && x < 200))
+            {
+                var target = targets[key];
+                if (target.Contains(point))
+                {
+                    input = key - 100;
+                    pin = pins.TryGetValue(key, out PointF value) ? value : null;
+                    return true;
+                }
+            }
+            return false;
+        }
 
         private void CalculateTargets(Graphics graphics)
         {
             targets.Clear();
+            pins.Clear();
             using var font = new Font("Consolas", 8f);
             if (Instance is ICalculate instance)
             {
@@ -27,7 +64,6 @@ namespace Simulator.Model
                 var height = step + max * step * 4 + step;
                 var width = step + 1 * step * 4 + step;
                 Size = new SizeF(width, height);
-                //targets.Add(0, new RectangleF(Location, Size));
                 // входы
                 var y = step + Location.Y;
                 var x = -step + Location.X;
@@ -36,9 +72,11 @@ namespace Simulator.Model
                 {
                     y += step * 2;
                     // значение входа
-                    var ms = graphics.MeasureString("XXX", font);
-                    targets.Add(n++, new RectangleF(new PointF(x - ms.Width + step, y - ms.Height), ms));
+                    var ms = graphics.MeasureString("W", font);
+                    targets.Add(n, new RectangleF(new PointF(x - ms.Width + step, y - ms.Height), ms));
+                    pins.Add(n, new PointF(x, y));
                     y += step * 2;
+                    n++;
                 }
                 // выходы
                 y = step + Location.Y;
@@ -51,14 +89,12 @@ namespace Simulator.Model
                     else
                         y += step * 2;
                     // значение выхода
-                    var ms = graphics.MeasureString("XXX", font);
-                    targets.Add(n++, new RectangleF(new PointF(x, y - ms.Height), ms));
+                    var ms = graphics.MeasureString("W", font);
+                    targets.Add(n, new RectangleF(new PointF(x, y - ms.Height), ms));
+                    pins.Add(n, new PointF(x + step, y));
                     y += step * 2;
+                    n++;
                 }
-                // обозначение функции, текст по-центру, в верхней части рамки элемента
-                //using var format = new StringFormat();
-                //format.Alignment = StringAlignment.Center;
-                //graphics.DrawString(instance.FuncSymbol, font, fontbrush, new PointF(Location.X + width / 2, Location.Y), format);
             }
 
         }
@@ -76,7 +112,6 @@ namespace Simulator.Model
                 var step = 6f;
                 var height = step + max * step * 4 + step;
                 var width = step + 1 * step * 4 + step;
-                //Size = new SizeF(width, height);
                 var rect = new RectangleF(Location, Size);
                 graphics.FillRectangle(brush, rect);
                 graphics.DrawRectangles(pen, [rect]);
@@ -152,11 +187,20 @@ namespace Simulator.Model
                 format.Alignment = StringAlignment.Center;
                 graphics.DrawString(instance.FuncSymbol, font, fontbrush, new PointF(Location.X + width / 2, Location.Y), format);
                 // области выбора
-                using Pen tarpen = new Pen(Color.FromArgb(80, Color.Magenta), 0);
+                using Pen tarpen = new(Color.FromArgb(80, Color.Magenta), 0);
                 foreach (var key in targets.Keys)
                 {
                     var target = targets[key];
                     graphics.DrawRectangles(tarpen, [target]);
+                }
+                // точки привязки входов и выходов
+                using Pen pinpen = new(Color.FromArgb(255, Color.Black), 0);
+                foreach (var key in pins.Keys)
+                {
+                    var pt = pins[key];
+                    var r = new RectangleF(pt.X - 3, pt.Y - 3, 6, 6);
+                    graphics.DrawLine(pinpen, new PointF(r.X, r.Y), new PointF(r.X + r.Width, r.Y + r.Height));
+                    graphics.DrawLine(pinpen, new PointF(r.X + r.Width, r.Y), new PointF(r.X, r.Y + r.Height));
                 }
             }
         }

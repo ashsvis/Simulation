@@ -149,6 +149,24 @@ namespace Simulator
             return false;
         }
 
+        private bool TryGetPin(Point location, out Element? target, out int? pin, out PointF? point)
+        {
+            pin = null;
+            point = null;
+            target = null;
+            var pt = PrepareMousePosition(location);
+            for (var i = items.Count - 1; i >= 0; i--)
+            {
+                var item = items[i];
+                if (item.TryGetInput(pt, out pin, out point) || item.TryGetOutput(pt, out pin, out point))
+                {
+                    target = items[i];
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void zoomPad_OnDraw(object sender, Simulator.View.ZoomControl.DrawEventArgs e)
         {
             var graphics = e.Graphics;
@@ -163,7 +181,10 @@ namespace Simulator
                 item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor);
             }
             if (linkFirstPoint != null)
-                graphics.DrawLine(Pens.Red, Point.Ceiling((PointF)linkFirstPoint), mousePosition);
+            {
+                var mp = PrepareMousePosition(mousePosition);
+                graphics.DrawLine(Pens.Red, (PointF)linkFirstPoint, mp);
+            }
         }
 
         private Element? element;
@@ -185,6 +206,12 @@ namespace Simulator
                 {
                     ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
                 }
+                else if (TryGetPin(e.Location, out element, out pin, out PointF? point) &&
+                    element != null && element.Instance != null)
+                {
+                    linkFirstPoint = point;
+                    ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
+                }
                 else
                     ElementSelected?.Invoke(null, EventArgs.Empty);
             }
@@ -195,6 +222,8 @@ namespace Simulator
         private void zoomPad_MouseMove(object sender, MouseEventArgs e)
         {
             if (TryGetModule(e.Location, out _))
+                Cursor = Cursors.SizeAll;
+            else if (TryGetPin(e.Location, out _, out _, out _))
                 Cursor = Cursors.Hand;
             else
                 Cursor = Cursors.Default;

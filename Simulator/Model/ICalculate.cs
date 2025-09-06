@@ -14,6 +14,7 @@
         bool VisibleValues { get; set; }
         void Calculate();
         GetLinkValueMethod? GetResultLink();
+        void SetValueLinkToInp(int inputIndex, GetLinkValueMethod? getInp);
         event ResultCalculateEventHandler? ResultChanged; 
     }
 
