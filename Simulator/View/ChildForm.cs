@@ -149,17 +149,25 @@ namespace Simulator
             return false;
         }
 
-        private bool TryGetPin(Point location, out Element? target, out int? pin, out PointF? point)
+        private bool TryGetPin(Point location, out Element? target, out int? pin, out PointF? point, out bool? output)
         {
             pin = null;
             point = null;
             target = null;
+            output = null;
             var pt = PrepareMousePosition(location);
             for (var i = items.Count - 1; i >= 0; i--)
             {
                 var item = items[i];
-                if (item.TryGetInput(pt, out pin, out point) || item.TryGetOutput(pt, out pin, out point))
+                if (item.TryGetInput(pt, out pin, out point))
                 {
+                    output = false;
+                    target = items[i];
+                    return true;
+                }
+                if (item.TryGetOutput(pt, out pin, out point))
+                {
+                    output = true;
                     target = items[i];
                     return true;
                 }
@@ -189,8 +197,7 @@ namespace Simulator
 
         private Element? element;
         private int? pin;
-        private bool input;
-        private bool output;
+        private bool? output;
         private PointF? linkFirstPoint;
 
         private void zoomPad_MouseDown(object sender, MouseEventArgs e)
@@ -198,15 +205,13 @@ namespace Simulator
             mousePosition = firstMouseDown = e.Location;
             if (e.Button == MouseButtons.Left)
             {
-                input = false;
-                output = false;
                 linkFirstPoint = null;
                 if (TryGetModule(e.Location, out element) &&
                     element != null && element.Instance != null)
                 {
                     ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
                 }
-                else if (TryGetPin(e.Location, out element, out pin, out PointF? point) &&
+                else if (TryGetPin(e.Location, out element, out pin, out PointF? point, out output) &&
                     element != null && element.Instance != null)
                 {
                     linkFirstPoint = point;
@@ -223,7 +228,7 @@ namespace Simulator
         {
             if (TryGetModule(e.Location, out _))
                 Cursor = Cursors.SizeAll;
-            else if (TryGetPin(e.Location, out _, out _, out _))
+            else if (TryGetPin(e.Location, out _, out _, out _, out _))
                 Cursor = Cursors.Hand;
             else
                 Cursor = Cursors.Default;
@@ -253,8 +258,25 @@ namespace Simulator
         {
             if (e.Button == MouseButtons.Left)
             {
+                var elementFirst = element;
+                var pinFirst = pin;
+                var outputFirst = output;
+                var linkFirst = linkFirstPoint;
+                if (TryGetPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
+                    element != null && element.Instance != null && elementFirst != element && outputFirst != output)
+                {
+                    if (element.Instance is ICalculate target &&
+                        elementFirst?.Instance is ICalculate source)
+                    {
+                        if (pin != null && outputFirst == true && output == false)
+                            target.SetValueLinkToInp((int)pin, source.GetResultLink());
+                        else if (pinFirst != null && outputFirst == false && output == true)
+                            source.SetValueLinkToInp((int)pinFirst, target.GetResultLink());
+                    }
+                }
                 element = null;
                 pin = null;
+                output = null;
                 linkFirstPoint = null;
                 zoomPad.Invalidate();
             }
