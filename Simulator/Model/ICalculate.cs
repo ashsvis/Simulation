@@ -3,9 +3,12 @@
     public interface ICalculate
     {
         string? Name { get; set; }
-        string Function { get; }
-        bool[] Inputs { get; }
-        bool[] Outputs { get; }
+        string FuncName { get; }
+        string FuncSymbol { get; }
+        bool[] InverseInputs { get; }
+        bool[] InverseOutputs { get; }
+        string[] InputNames { get; }
+        string[] OutputNames { get; }
         void Calculate();
         GetLinkValueMethod? GetResultLink();
         event ResultCalculateEventHandler? ResultChanged; 

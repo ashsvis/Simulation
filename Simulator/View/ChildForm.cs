@@ -1,13 +1,10 @@
 ﻿using Simulator.Model;
 using Simulator.View;
-using System.Diagnostics;
 using System.Drawing.Drawing2D;
-using System.Reflection;
-using Module = Simulator.Model.Module;
 
 namespace Simulator
 {
-    public partial class ChildForm : Form
+    public partial class ChildForm : Form, IUpdateView
     {
         private readonly MainForm mainForm;
 
@@ -42,6 +39,7 @@ namespace Simulator
         private void Item_ResultChanged(object sender, Model.ResultCalculateEventArgs args)
         {
             ElementSelected?.Invoke(sender, EventArgs.Empty);
+            zoomPad.Invalidate();
 
             //Debug.WriteLine($"{Name}.{sender.GetType().Name}.{args.Propname} is {args.Result}");
         }
@@ -163,9 +161,10 @@ namespace Simulator
             using var pen = new Pen(zoomPad.ForeColor, 0);
             foreach (var item in items)
             {
-                var rect = new RectangleF(item.Location, new SizeF(50f, 80f));
-                graphics.FillRectangle(brush, rect);
-                graphics.DrawRectangles(pen, [rect]);
+                //var rect = new RectangleF(item.Location, new SizeF(50f, 80f));
+                //graphics.FillRectangle(brush, rect);
+                //graphics.DrawRectangles(pen, [rect]);
+                item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor);
             }
         }
 
@@ -195,6 +194,11 @@ namespace Simulator
         private void zoomPad_MouseUp(object sender, MouseEventArgs e)
         {
 
+        }
+
+        public void UpdateView()
+        {
+            zoomPad.Invalidate();
         }
     }
 }

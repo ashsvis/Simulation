@@ -13,7 +13,7 @@ namespace Simulator.Model.Logic
         }
 
         [Category(" Общие"), DisplayName("Функция")]
-        public string Function => "ИЛИ";
+        public string FuncName => "ИЛИ";
 
         [Category(" Общие"), DisplayName("Имя")]
         public string? Name { get; set; }
@@ -55,9 +55,18 @@ namespace Simulator.Model.Logic
         public bool InverseOut { get; set; } = false;
 
         [Browsable(false)]
-        public bool[] Inputs => [InverseInp1, InverseInp2];
+        public bool[] InverseInputs => [InverseInp1, InverseInp2];
         [Browsable(false)]
-        public bool[] Outputs => [InverseOut];
+        public bool[] InverseOutputs => [InverseOut];
+
+        [Browsable(false)]
+        public string[] InputNames => [string.Empty, string.Empty];
+
+        [Browsable(false)]
+        public string[] OutputNames => [string.Empty];
+
+        [Browsable(false)]
+        public string FuncSymbol => "1";
 
         public event ResultCalculateEventHandler? ResultChanged;
 

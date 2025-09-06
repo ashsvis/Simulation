@@ -30,7 +30,7 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            TreeNode treeNode1 = new TreeNode("Библиотека");
+            TreeNode treeNode2 = new TreeNode("Библиотека");
             menuMainStrip = new MenuStrip();
             файлToolStripMenuItem = new ToolStripMenuItem();
             создатьToolStripMenuItem = new ToolStripMenuItem();
@@ -71,18 +71,18 @@
             timerInterface = new System.Windows.Forms.Timer(components);
             timerSimulation = new System.Windows.Forms.Timer(components);
             panel1 = new Panel();
+            tableLayoutPanel1 = new TableLayoutPanel();
             splitContainer1 = new SplitContainer();
             tvLibrary = new TreeView();
-            pgProperties = new PropertyGrid();
-            tableLayoutPanel1 = new TableLayoutPanel();
+            pgProps = new PropertyGrid();
             pnLeftSize = new Panel();
             menuMainStrip.SuspendLayout();
             panel1.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
-            tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // menuMainStrip
@@ -359,49 +359,6 @@
             panel1.Size = new Size(209, 537);
             panel1.TabIndex = 4;
             // 
-            // splitContainer1
-            // 
-            splitContainer1.Dock = DockStyle.Fill;
-            splitContainer1.Location = new Point(3, 3);
-            splitContainer1.Name = "splitContainer1";
-            splitContainer1.Orientation = Orientation.Horizontal;
-            // 
-            // splitContainer1.Panel1
-            // 
-            splitContainer1.Panel1.Controls.Add(tvLibrary);
-            // 
-            // splitContainer1.Panel2
-            // 
-            splitContainer1.Panel2.Controls.Add(pgProperties);
-            splitContainer1.Size = new Size(194, 531);
-            splitContainer1.SplitterDistance = 265;
-            splitContainer1.TabIndex = 2;
-            // 
-            // tvLibrary
-            // 
-            tvLibrary.BackColor = SystemColors.WindowFrame;
-            tvLibrary.Dock = DockStyle.Fill;
-            tvLibrary.ForeColor = SystemColors.Window;
-            tvLibrary.FullRowSelect = true;
-            tvLibrary.HideSelection = false;
-            tvLibrary.LineColor = Color.WhiteSmoke;
-            tvLibrary.Location = new Point(0, 0);
-            tvLibrary.Name = "tvLibrary";
-            treeNode1.Name = "Узел0";
-            treeNode1.Text = "Библиотека";
-            tvLibrary.Nodes.AddRange(new TreeNode[] { treeNode1 });
-            tvLibrary.Size = new Size(194, 265);
-            tvLibrary.TabIndex = 1;
-            tvLibrary.MouseDown += tvLibrary_MouseDown;
-            // 
-            // pgProperties
-            // 
-            pgProperties.Dock = DockStyle.Fill;
-            pgProperties.Location = new Point(0, 0);
-            pgProperties.Name = "pgProperties";
-            pgProperties.Size = new Size(194, 262);
-            pgProperties.TabIndex = 0;
-            // 
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.ColumnCount = 2;
@@ -416,6 +373,50 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.Size = new Size(209, 537);
             tableLayoutPanel1.TabIndex = 3;
+            // 
+            // splitContainer1
+            // 
+            splitContainer1.Dock = DockStyle.Fill;
+            splitContainer1.Location = new Point(3, 3);
+            splitContainer1.Name = "splitContainer1";
+            splitContainer1.Orientation = Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            splitContainer1.Panel1.Controls.Add(tvLibrary);
+            // 
+            // splitContainer1.Panel2
+            // 
+            splitContainer1.Panel2.Controls.Add(pgProps);
+            splitContainer1.Size = new Size(194, 531);
+            splitContainer1.SplitterDistance = 264;
+            splitContainer1.TabIndex = 2;
+            // 
+            // tvLibrary
+            // 
+            tvLibrary.BackColor = SystemColors.WindowFrame;
+            tvLibrary.Dock = DockStyle.Fill;
+            tvLibrary.ForeColor = SystemColors.Window;
+            tvLibrary.FullRowSelect = true;
+            tvLibrary.HideSelection = false;
+            tvLibrary.LineColor = Color.WhiteSmoke;
+            tvLibrary.Location = new Point(0, 0);
+            tvLibrary.Name = "tvLibrary";
+            treeNode2.Name = "Узел0";
+            treeNode2.Text = "Библиотека";
+            tvLibrary.Nodes.AddRange(new TreeNode[] { treeNode2 });
+            tvLibrary.Size = new Size(194, 264);
+            tvLibrary.TabIndex = 1;
+            tvLibrary.MouseDown += tvLibrary_MouseDown;
+            // 
+            // pgProps
+            // 
+            pgProps.Dock = DockStyle.Fill;
+            pgProps.Location = new Point(0, 0);
+            pgProps.Name = "pgProps";
+            pgProps.Size = new Size(194, 263);
+            pgProps.TabIndex = 0;
+            pgProps.PropertyValueChanged += pgProps_PropertyValueChanged;
             // 
             // pnLeftSize
             // 
@@ -444,11 +445,11 @@
             menuMainStrip.ResumeLayout(false);
             menuMainStrip.PerformLayout();
             panel1.ResumeLayout(false);
+            tableLayoutPanel1.ResumeLayout(false);
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
-            tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -497,7 +498,7 @@
         private Panel panel1;
         private TreeView tvLibrary;
         private SplitContainer splitContainer1;
-        private PropertyGrid pgProperties;
+        private PropertyGrid pgProps;
         private TableLayoutPanel tableLayoutPanel1;
         private Panel pnLeftSize;
     }

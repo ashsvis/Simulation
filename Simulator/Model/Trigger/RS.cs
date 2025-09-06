@@ -13,7 +13,7 @@ namespace Simulator.Model.Trigger
         }
 
         [Category(" Общие"), DisplayName("Функция")]
-        public string Function => "RS-триггер";
+        public string FuncName => "RS-триггер";
 
         [Category(" Общие"), DisplayName("Имя")]
         public string? Name { get; set; }
@@ -47,10 +47,19 @@ namespace Simulator.Model.Trigger
         }
 
         [Browsable(false)]
-        public bool[] Inputs => [false, false];
+        public bool[] InverseInputs => [false, false];
 
         [Browsable(false)]
-        public bool[] Outputs => [false];
+        public bool[] InverseOutputs => [false];
+
+        [Browsable(false)]
+        public string[] InputNames => ["S", "R"];
+
+        [Browsable(false)]
+        public string[] OutputNames => ["Q"];
+
+        [Browsable(false)]
+        public string FuncSymbol => "RS";
 
         public event ResultCalculateEventHandler? ResultChanged;
 

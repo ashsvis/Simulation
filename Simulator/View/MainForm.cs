@@ -1,4 +1,5 @@
 using Simulator.Model;
+using Simulator.View;
 
 namespace Simulator
 {
@@ -71,12 +72,12 @@ namespace Simulator
 
         private void ChildForm_FormClosed(object? sender, FormClosedEventArgs e)
         {
-            pgProperties.SelectedObject = null;
+            pgProps.SelectedObject = null;
         }
 
         private void ChildForm_ElementSelected(object? sender, EventArgs e)
         {
-            pgProperties.SelectedObject = sender;
+            pgProps.SelectedObject = sender;
         }
 
         /// <summary>
@@ -140,13 +141,22 @@ namespace Simulator
                             {
                                 Cursor = Cursors.Default;
                             }
-                        }                            
+                        }
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message, "Вставка модуля", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
+            }
+        }
+
+        private void pgProps_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        {
+            foreach (var form in MdiChildren)
+            {
+                if (form is IUpdateView view)
+                    view.UpdateView();
             }
         }
     }
