@@ -9,6 +9,9 @@
         bool[] InverseOutputs { get; }
         string[] InputNames { get; }
         string[] OutputNames { get; }
+        object[] InputValues { get; }
+        object[] OutputValues { get; }
+        bool VisibleValues { get; set; }
         void Calculate();
         GetLinkValueMethod? GetResultLink();
         event ResultCalculateEventHandler? ResultChanged; 

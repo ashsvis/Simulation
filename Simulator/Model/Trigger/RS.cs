@@ -18,6 +18,9 @@ namespace Simulator.Model.Trigger
         [Category(" Общие"), DisplayName("Имя")]
         public string? Name { get; set; }
 
+        [Browsable(false), Category("Диагностика"), DisplayName("Показывать значения")]
+        public bool VisibleValues { get; set; } = true;
+
         [Category("Входы"), DisplayName("Уст-ка (S)")]
         public bool S { get; set; } = false;
 
@@ -57,6 +60,16 @@ namespace Simulator.Model.Trigger
 
         [Browsable(false)]
         public string[] OutputNames => ["Q"];
+
+        [Browsable(false)]
+        public object[] InputValues =>
+            [
+                getS != null ? (bool)getS() : S,
+                getR != null ? (bool)getR() : R
+            ];
+
+        [Browsable(false)]
+        public object[] OutputValues => [Q];
 
         [Browsable(false)]
         public string FuncSymbol => "RS";

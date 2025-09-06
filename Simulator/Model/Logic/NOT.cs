@@ -12,10 +12,13 @@ namespace Simulator.Model.Logic
         }
 
         [Category(" Общие"), DisplayName("Функция")]
-        public string FuncName => "НЕ";
+        public string FuncName => "Not";
 
         [Category(" Общие"), DisplayName("Имя")]
         public string? Name { get; set; }
+
+        [Browsable(false), Category("Диагностика"), DisplayName("Показывать значения")]
+        public bool VisibleValues { get; set; } = true;
 
         [Category("Входы"), DisplayName("Вход")]
         public bool Inp { get; set; } = false;
@@ -48,6 +51,12 @@ namespace Simulator.Model.Logic
 
         [Browsable(false)]
         public string[] OutputNames => [string.Empty];
+
+        [Browsable(false)]
+        public object[] InputValues => [getInp != null ? (bool)getInp() : Inp];
+
+        [Browsable(false)]
+        public object[] OutputValues => [Out];
 
         [Browsable(false)]
         public string FuncSymbol => "1";
