@@ -1,4 +1,6 @@
-﻿namespace Simulator.Model
+﻿using System.Drawing;
+
+namespace Simulator.Model
 {
     public class Element
     {
@@ -6,9 +8,64 @@
         public Type? Type { get; set; }
         public object? Instance { get; set; }
         public PointF Location { get; set; }
+        public SizeF Size { get; set; }
+
+        public RectangleF Bounds => new(Location, Size);
+
+        private readonly Dictionary<int, RectangleF> targets = [];
+        public Dictionary<int, RectangleF> Targets => targets;
+
+
+        private void CalculateTargets(Graphics graphics)
+        {
+            targets.Clear();
+            using var font = new Font("Consolas", 8f);
+            if (Instance is ICalculate instance)
+            {
+                var max = Math.Max(instance.InverseInputs.Length, instance.InverseOutputs.Length);
+                var step = 6f;
+                var height = step + max * step * 4 + step;
+                var width = step + 1 * step * 4 + step;
+                Size = new SizeF(width, height);
+                //targets.Add(0, new RectangleF(Location, Size));
+                // входы
+                var y = step + Location.Y;
+                var x = -step + Location.X;
+                var n = 100;
+                for (var i = 0; i < instance.InverseInputs.Length; i++)
+                {
+                    y += step * 2;
+                    // значение входа
+                    var ms = graphics.MeasureString("XXX", font);
+                    targets.Add(n++, new RectangleF(new PointF(x - ms.Width + step, y - ms.Height), ms));
+                    y += step * 2;
+                }
+                // выходы
+                y = step + Location.Y;
+                x = width + Location.X;
+                n = 200;
+                for (var i = 0; i < instance.InverseOutputs.Length; i++)
+                {
+                    if (instance.InverseOutputs.Length == 1)
+                        y = height / 2 + Location.Y;
+                    else
+                        y += step * 2;
+                    // значение выхода
+                    var ms = graphics.MeasureString("XXX", font);
+                    targets.Add(n++, new RectangleF(new PointF(x, y - ms.Height), ms));
+                    y += step * 2;
+                }
+                // обозначение функции, текст по-центру, в верхней части рамки элемента
+                //using var format = new StringFormat();
+                //format.Alignment = StringAlignment.Center;
+                //graphics.DrawString(instance.FuncSymbol, font, fontbrush, new PointF(Location.X + width / 2, Location.Y), format);
+            }
+
+        }
 
         public void Draw(Graphics graphics, Color foreColor, Color backColor)
         {
+            CalculateTargets(graphics);
             using var brush = new SolidBrush(backColor);
             using var pen = new Pen(foreColor, 1f);
             using var font = new Font("Consolas", 8f);
@@ -19,7 +76,8 @@
                 var step = 6f;
                 var height = step + max * step * 4 + step;
                 var width = step + 1 * step * 4 + step;
-                var rect = new RectangleF(Location, new SizeF(width, height));
+                //Size = new SizeF(width, height);
+                var rect = new RectangleF(Location, Size);
                 graphics.FillRectangle(brush, rect);
                 graphics.DrawRectangles(pen, [rect]);
                 // входы
@@ -28,10 +86,12 @@
                 for (var i = 0; i < instance.InverseInputs.Length; i++)
                 {
                     y += step * 2;
+                    // горизонтальная риска слева, напротив входа
                     graphics.DrawLine(pen, new PointF(x, y), new PointF(x + step, y));
                     if (instance.InverseInputs[i])
                     {
                         var r = new RectangleF(x + step / 2, y - step / 2, step, step);
+                        // рисуем кружок инверсии
                         graphics.FillEllipse(brush, r);
                         graphics.DrawEllipse(pen, r);
                     }
@@ -62,10 +122,12 @@
                         y = height / 2 + Location.Y;
                     else
                         y += step * 2;
+                    // горизонтальная риска справа, напротив выхода
                     graphics.DrawLine(pen, new PointF(x, y), new PointF(x + step, y));
                     if (instance.InverseOutputs[i])
                     {
                         var r = new RectangleF(x - step / 2, y - step / 2, step, step);
+                        // рисуем кружок инверсии
                         graphics.FillEllipse(brush, r);
                         graphics.DrawEllipse(pen, r);
                     }
@@ -85,10 +147,17 @@
                     }
                     y += step * 2;
                 }
-                // функция
+                // обозначение функции, текст по-центру, в верхней части рамки элемента
                 using var format = new StringFormat();
                 format.Alignment = StringAlignment.Center;
                 graphics.DrawString(instance.FuncSymbol, font, fontbrush, new PointF(Location.X + width / 2, Location.Y), format);
+                // области выбора
+                using Pen tarpen = new Pen(Color.FromArgb(80, Color.Magenta), 0);
+                foreach (var key in targets.Keys)
+                {
+                    var target = targets[key];
+                    graphics.DrawRectangles(tarpen, [target]);
+                }
             }
         }
     }

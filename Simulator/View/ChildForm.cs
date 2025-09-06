@@ -139,8 +139,7 @@ namespace Simulator
             for (var i = items.Count - 1; i >= 0; i--)
             {
                 var item = items[i];
-                var rect = new RectangleF(item.Location, new SizeF(50f, 80f));
-                if (rect.Contains(point))
+                if (item.Bounds.Contains(point))
                 {
                     target = items[i];
                     return true;
@@ -161,23 +160,30 @@ namespace Simulator
             using var pen = new Pen(zoomPad.ForeColor, 0);
             foreach (var item in items)
             {
-                //var rect = new RectangleF(item.Location, new SizeF(50f, 80f));
-                //graphics.FillRectangle(brush, rect);
-                //graphics.DrawRectangles(pen, [rect]);
                 item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor);
             }
+            if (linkFirstPoint != null)
+                graphics.DrawLine(Pens.Red, Point.Ceiling((PointF)linkFirstPoint), mousePosition);
         }
+
+        private Element? element;
+        private int? pin;
+        private bool input;
+        private bool output;
+        private PointF? linkFirstPoint;
 
         private void zoomPad_MouseDown(object sender, MouseEventArgs e)
         {
             mousePosition = firstMouseDown = e.Location;
             if (e.Button == MouseButtons.Left)
             {
-                Element? target;
-                if (TryGetModule(e.Location, out target) &&
-                    target != null && target.Instance != null)
+                input = false;
+                output = false;
+                linkFirstPoint = null;
+                if (TryGetModule(e.Location, out element) &&
+                    element != null && element.Instance != null)
                 {
-                    ElementSelected?.Invoke(target.Instance, EventArgs.Empty);
+                    ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
                 }
                 else
                     ElementSelected?.Invoke(null, EventArgs.Empty);
@@ -188,12 +194,41 @@ namespace Simulator
 
         private void zoomPad_MouseMove(object sender, MouseEventArgs e)
         {
+            if (TryGetModule(e.Location, out _))
+                Cursor = Cursors.Hand;
+            else
+                Cursor = Cursors.Default;
+            if (e.Button == MouseButtons.Left)
+            {
+                var mp = PrepareMousePosition(mousePosition);
+                var pt = PrepareMousePosition(e.Location);
+                var delta = new SizeF(pt.X - mp.X, pt.Y - mp.Y);
+                mousePosition = e.Location;
+                if (!delta.IsEmpty)
+                {
+                    if (element != null) 
+                    {
+                        if (pin == null)
+                            element.Location = PointF.Add(element.Location, delta);
+                        else
+                        {
 
+                        }
+                    }
+                    zoomPad.Invalidate();
+                }
+            }
         }
 
         private void zoomPad_MouseUp(object sender, MouseEventArgs e)
         {
-
+            if (e.Button == MouseButtons.Left)
+            {
+                element = null;
+                pin = null;
+                linkFirstPoint = null;
+                zoomPad.Invalidate();
+            }
         }
 
         public void UpdateView()

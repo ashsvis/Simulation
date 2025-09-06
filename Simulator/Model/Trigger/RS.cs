@@ -21,10 +21,10 @@ namespace Simulator.Model.Trigger
         [Browsable(false), Category("Диагностика"), DisplayName("Показывать значения")]
         public bool VisibleValues { get; set; } = true;
 
-        [Category("Входы"), DisplayName("Уст-ка (S)")]
+        [Category("Входы"), DisplayName("Уст-ка (S)"), Description("Установка (S)")]
         public bool S { get; set; } = false;
 
-        [Category("Входы"), DisplayName("Сброс (R)")]
+        [Category("Входы"), DisplayName("Сброс (R)"), Description("Сброс (R)")]
         public bool R { get; set; } = false;
 
         public void SetValueLinkToS(GetLinkValueMethod? getInp)
@@ -37,7 +37,7 @@ namespace Simulator.Model.Trigger
             this.getR = getInp;
         }
 
-        [Category("Выходы"), DisplayName("Ячейка (Q)")]
+        [Category("Выходы"), DisplayName("Ячейка (Q)"), Description("Ячейка хранения (Q)")]
         public bool Q 
         { 
             get => q;
