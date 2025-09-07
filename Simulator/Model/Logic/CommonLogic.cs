@@ -141,8 +141,22 @@ namespace Simulator.Model.Logic
                 return [.. list];
             } 
         }
-        public IFunction?[] LinkedInputSources => getLinkOutputSources;
 
+        public IFunction[] LinkedInputSources
+        {
+            get
+            {
+                List<IFunction> list = [];
+                for (var i = 0; i < getLinkOutputSources.Length; i++)
+                {
+                    if (getLinkOutputSources[i] is IFunction function)
+                        list.Add(function);
+                    else
+                        list.Add(null);
+                }
+                return [.. list];
+            }
+        }
 
         public event ResultCalculateEventHandler? ResultChanged;
 

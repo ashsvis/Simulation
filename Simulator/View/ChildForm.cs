@@ -203,9 +203,16 @@ namespace Simulator
                     {
                         if (input == true)
                         {
-                            //item.CalculateTargets(graphics);
-                            if (item.Pins.TryGetValue(n, out PointF targetPinPoint))
+                            if (item.Pins.TryGetValue(n + 100, out PointF targetPinPoint))
                             {
+                                if (function.LinkedInputSources[n] is IFunction source)
+                                {
+                                    var sourceItem = items.FirstOrDefault(y => y.Instance == source);
+                                    if (sourceItem != null && sourceItem.Pins.TryGetValue(200, out PointF sourcePinPoint))
+                                    {
+                                        graphics.DrawLine(Pens.Yellow, sourcePinPoint, targetPinPoint);
+                                    }
+                                }
                             }
                         }
                         n++;

@@ -15,7 +15,7 @@ namespace Simulator.Model
         object[] OutputValues { get; }
         bool VisibleValues { get; set; }
         bool[] LinkedInputs { get; }
-        IFunction[]? LinkedInputSources { get; }
+        IFunction[] LinkedInputSources { get; }
         void Calculate();
         GetLinkValueMethod? GetResultLink(int outputIndex);
         void SetValueToInp(int inputIndex, object? value);

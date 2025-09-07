@@ -5,15 +5,27 @@
         public Element() { }
         public Type? Type { get; set; }
         public object? Instance { get; set; }
-        public PointF Location { get; set; }
+        public PointF Location 
+        { 
+            get => location;
+            set
+            {
+                if (location == value) return;
+                location = value;
+                CalculateTargets();
+            }
+        }
+
         public SizeF Size { get; set; }
 
-        public RectangleF Bounds => new(Location, Size);
+        public RectangleF Bounds => new(location, Size);
 
         private readonly Dictionary<int, RectangleF> targets = [];
         public Dictionary<int, RectangleF> Targets => targets;
 
         private readonly Dictionary<int, PointF> pins = [];
+        private PointF location;
+
         public Dictionary<int, PointF> Pins => pins;
 
         public bool TryGetOutput(PointF point, out int? output, out PointF? pin)
@@ -50,11 +62,11 @@
             return false;
         }
 
-        public void CalculateTargets(Graphics graphics)
+        public void CalculateTargets()
         {
             targets.Clear();
             pins.Clear();
-            using var font = new Font("Consolas", 8f);
+            //using var font = new Font("Consolas", 8f);
             if (Instance is IFunction instance)
             {
                 var max = Math.Max(instance.InverseInputs.Length, instance.InverseOutputs.Length);
@@ -63,31 +75,31 @@
                 var width = step + 1 * step * 4 + step;
                 Size = new SizeF(width, height);
                 // входы
-                var y = step + Location.Y;
-                var x = -step + Location.X;
+                var y = step + location.Y;
+                var x = -step + location.X;
                 var n = 100;
                 for (var i = 0; i < instance.InverseInputs.Length; i++)
                 {
                     y += step * 2;
                     // значение входа
-                    var ms = graphics.MeasureString("W", font);
+                    var ms = new SizeF(step * 2, step * 2); //graphics.MeasureString("W", font);
                     targets.Add(n, new RectangleF(new PointF(x - ms.Width + step, y - ms.Height), ms));
                     pins.Add(n, new PointF(x, y));
                     y += step * 2;
                     n++;
                 }
                 // выходы
-                y = step + Location.Y;
-                x = width + Location.X;
+                y = step + location.Y;
+                x = width + location.X;
                 n = 200;
                 for (var i = 0; i < instance.InverseOutputs.Length; i++)
                 {
                     if (instance.InverseOutputs.Length == 1)
-                        y = height / 2 + Location.Y;
+                        y = height / 2 + location.Y;
                     else
                         y += step * 2;
                     // значение выхода
-                    var ms = graphics.MeasureString("W", font);
+                    var ms = new SizeF(step * 2, step * 2); //graphics.MeasureString("W", font);
                     targets.Add(n, new RectangleF(new PointF(x, y - ms.Height), ms));
                     pins.Add(n, new PointF(x + step, y));
                     y += step * 2;
@@ -99,7 +111,6 @@
 
         public void Draw(Graphics graphics, Color foreColor, Color backColor)
         {
-            CalculateTargets(graphics);
             using var brush = new SolidBrush(backColor);
             using var pen = new Pen(foreColor, 1f);
             using var font = new Font("Consolas", 8f);
@@ -110,12 +121,12 @@
                 var step = 6f;
                 var height = step + max * step * 4 + step;
                 var width = step + 1 * step * 4 + step;
-                var rect = new RectangleF(Location, Size);
+                var rect = new RectangleF(location, Size);
                 graphics.FillRectangle(brush, rect);
                 graphics.DrawRectangles(pen, [rect]);
                 // входы
-                var y = step + Location.Y;
-                var x = -step + Location.X;
+                var y = step + location.Y;
+                var x = -step + location.X;
                 for (var i = 0; i < instance.InverseInputs.Length; i++)
                 {
                     y += step * 2;
@@ -147,12 +158,12 @@
                     y += step * 2;
                 }
                 // выходы
-                y = step + Location.Y;
-                x = width + Location.X;
+                y = step + location.Y;
+                x = width + location.X;
                 for (var i = 0; i < instance.InverseOutputs.Length; i++)
                 {
                     if (instance.InverseOutputs.Length == 1)
-                        y = height / 2 + Location.Y;
+                        y = height / 2 + location.Y;
                     else
                         y += step * 2;
                     // горизонтальная риска справа, напротив выхода
@@ -183,8 +194,7 @@
                 // обозначение функции, текст по-центру, в верхней части рамки элемента
                 using var format = new StringFormat();
                 format.Alignment = StringAlignment.Center;
-                graphics.DrawString(instance.FuncSymbol, font, fontbrush, new PointF(Location.X + width / 2, Location.Y), format);
-                /*
+                graphics.DrawString(instance.FuncSymbol, font, fontbrush, new PointF(location.X + width / 2, location.Y), format);
                 // области выбора
                 using Pen tarpen = new(Color.FromArgb(80, Color.Magenta), 0);
                 foreach (var key in targets.Keys)
@@ -192,7 +202,6 @@
                     var target = targets[key];
                     graphics.DrawRectangles(tarpen, [target]);
                 }
-                */
                 // точки привязки входов и выходов
                 using Pen pinpen = new(Color.FromArgb(255, Color.Black), 0);
                 foreach (var key in pins.Keys)
