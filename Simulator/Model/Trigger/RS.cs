@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Simulator.Model.Logic;
+using System.ComponentModel;
 
 namespace Simulator.Model.Trigger
 {
@@ -13,7 +14,7 @@ namespace Simulator.Model.Trigger
         }
 
         [Category(" Общие"), DisplayName("Функция")]
-        public string FuncName => "RS-триггер";
+        public LogicFunction FuncName => LogicFunction.Rs;
 
         [Category(" Общие"), DisplayName("Имя")]
         public string? Name { get; set; }

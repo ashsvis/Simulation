@@ -1,7 +1,11 @@
-﻿using System.ComponentModel;
-
-namespace Simulator.Model.Logic
+﻿namespace Simulator.Model.Logic
 {
+    public class NOT : CommonLogic
+    {
+        public NOT() : base(LogicFunction.Not, 1) { }
+    }
+
+    /*
     public class NOT : IFunction
     {
         private bool @out = true;
@@ -12,7 +16,7 @@ namespace Simulator.Model.Logic
         }
 
         [Category(" Общие"), DisplayName("Функция")]
-        public string FuncName => "Not";
+        public LogicFunction FuncName => LogicFunction.Not;
 
         [Category(" Общие"), DisplayName("Имя")]
         public string? Name { get; set; }
@@ -78,5 +82,5 @@ namespace Simulator.Model.Logic
             SetValueLinkToInp(getInp);
         }
     }
-
+    */
 }

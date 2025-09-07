@@ -1,9 +1,11 @@
-﻿namespace Simulator.Model
+﻿using Simulator.Model.Logic;
+
+namespace Simulator.Model
 {
     public interface IFunction
     {
         string? Name { get; set; }
-        string FuncName { get; }
+        LogicFunction FuncName { get; }
         string FuncSymbol { get; }
         bool[] InverseInputs { get; }
         bool[] InverseOutputs { get; }

@@ -1,8 +1,11 @@
-﻿using Simulator.Model.Trigger;
-using System.ComponentModel;
-
-namespace Simulator.Model.Logic
+﻿namespace Simulator.Model.Logic
 {
+    public class XOR : CommonLogic
+    {
+        public XOR() : base(LogicFunction.Xor, 2) { }
+    }
+
+    /*
     public class XOR : IFunction
     {
         private bool @out = false;
@@ -14,7 +17,7 @@ namespace Simulator.Model.Logic
         }
 
         [Category(" Общие"), DisplayName("Функция")]
-        public string FuncName => "Xor";
+        public LogicFunction FuncName =>  LogicFunction.Xor;
 
         [Category(" Общие"), DisplayName("Имя")]
         public string? Name { get; set; }
@@ -110,4 +113,5 @@ namespace Simulator.Model.Logic
             }
         }
     }
+    */
 }
