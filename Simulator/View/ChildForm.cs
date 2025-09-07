@@ -175,6 +175,33 @@ namespace Simulator
             return false;
         }
 
+        private bool TryGetFreeInputPin(Point location, out Element? target, out int? pin, out PointF? point, out bool? output)
+        {
+            pin = null;
+            point = null;
+            target = null;
+            output = null;
+            var pt = PrepareMousePosition(location);
+            for (var i = items.Count - 1; i >= 0; i--)
+            {
+                var item = items[i];
+                if (item.TryGetInput(pt, out pin, out point) && 
+                    item.Instance is IFunction function && pin is int ipin && !function.LinkedInputs[ipin])
+                {
+                    output = false;
+                    target = items[i];
+                    return true;
+                }
+                if (item.TryGetOutput(pt, out pin, out point))
+                {
+                    output = true;
+                    target = items[i];
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void zoomPad_OnDraw(object sender, Simulator.View.ZoomControl.DrawEventArgs e)
         {
             var graphics = e.Graphics;
@@ -228,7 +255,7 @@ namespace Simulator
         {
             if (TryGetModule(e.Location, out _))
                 Cursor = Cursors.SizeAll;
-            else if (TryGetPin(e.Location, out _, out _, out _, out _))
+            else if (TryGetFreeInputPin(e.Location, out _, out _, out _, out _))
                 Cursor = Cursors.Hand;
             else
                 Cursor = Cursors.Default;
