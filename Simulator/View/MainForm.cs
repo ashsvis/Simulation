@@ -176,6 +176,7 @@ namespace Simulator
                 if (form is IUpdateView view)
                     view.UpdateView();
             }
+            pgProps.Refresh();
         }
     }
 }

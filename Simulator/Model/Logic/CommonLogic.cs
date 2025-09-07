@@ -2,7 +2,7 @@
 
 namespace Simulator.Model.Logic
 {
-    public class CommonLogic : IFunction
+    public class CommonLogic : FilterablePropertyBase, IFunction
     {
         private bool @out = false;
         private readonly bool[] getInputs;
@@ -77,6 +77,7 @@ namespace Simulator.Model.Logic
         public bool[] Inputs => getInputs;
 
         [Category("Входы"), DisplayName("Инверсия")]
+        [DynamicPropertyFilter(nameof(FuncName), "And,Or")]
         public bool[] InverseInputs => getInverseInputs;
 
         [Category("Выходы"), DisplayName("Выход")]
@@ -92,6 +93,7 @@ namespace Simulator.Model.Logic
         }
 
         [Category("Выходы"), DisplayName(" Инверсия"), DefaultValue(false)]
+        [DynamicPropertyFilter(nameof(FuncName), "And,Or")]
         public bool InverseOut { get; set; } = false;
 
         [Browsable(false)]
@@ -126,6 +128,7 @@ namespace Simulator.Model.Logic
         [Browsable(false)]
         public object[] OutputValues => [Out];
 
+        [Browsable(false)]
         public bool[] LinkedInputs 
         { 
             get 
@@ -142,6 +145,7 @@ namespace Simulator.Model.Logic
             } 
         }
 
+        [Browsable(false)]
         public IFunction[] LinkedInputSources
         {
             get
@@ -163,6 +167,11 @@ namespace Simulator.Model.Logic
         public void Calculate()
         {
             bool result = (bool)InputValues[0] ^ getInverseInputs[0];
+            if (logicFunction == LogicFunction.Rs)
+            {
+                getInverseInputs[0] = false;
+                getInverseInputs[1] = false;
+            }
             for (var i = 1; i < InputValues.Length; i++)
             {
                 var input = (bool)InputValues[i] ^ getInverseInputs[i];
@@ -171,10 +180,18 @@ namespace Simulator.Model.Logic
                     LogicFunction.And => result && input,
                     LogicFunction.Or => result || input,
                     LogicFunction.Xor => result ^ input,
+                    LogicFunction.Rs => CalcRsTrigger(result, input, @out),
                     _ => logicFunction == LogicFunction.Not && !result,
                 };
             }
+            if (logicFunction == LogicFunction.Rs)
+                InverseOut = false;
             Out = result ^ InverseOut;
+        }
+
+        private static bool CalcRsTrigger(bool s, bool r, bool q)
+        {
+            return !r && (s || q);
         }
 
         public GetLinkValueMethod? GetResultLink(int outputIndex)

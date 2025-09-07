@@ -1,8 +1,12 @@
 ﻿using Simulator.Model.Logic;
-using System.ComponentModel;
 
 namespace Simulator.Model.Trigger
 {
+    public class RS : CommonLogic
+    {
+        public RS() : base(LogicFunction.Rs, 2) { }
+    }
+    /*
     public class RS : IFunction
     {
         private bool q = false;
@@ -117,4 +121,5 @@ namespace Simulator.Model.Trigger
             throw new NotImplementedException();
         }
     }
+    */
 }
