@@ -77,6 +77,8 @@ namespace Simulator.Model.Trigger
 
         public bool[] LinkedInputs => [false, false];
 
+        public IFunction[] LinkedInputSources => throw new NotImplementedException();
+
         public event ResultCalculateEventHandler? ResultChanged;
 
         public void Calculate()

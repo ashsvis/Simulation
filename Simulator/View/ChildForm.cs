@@ -193,6 +193,26 @@ namespace Simulator
 
             using var brush = new SolidBrush(zoomPad.BackColor);
             using var pen = new Pen(zoomPad.ForeColor, 0);
+            // прорисовка связей
+            foreach (var item in items)
+            {
+                if (item.Instance is IFunction function && function.LinkedInputs.Any(x => x == true))
+                {
+                    var n = 0;
+                    foreach(var input in function.LinkedInputs)
+                    {
+                        if (input == true)
+                        {
+                            //item.CalculateTargets(graphics);
+                            if (item.Pins.TryGetValue(n, out PointF targetPinPoint))
+                            {
+                            }
+                        }
+                        n++;
+                    }
+                }
+            }
+            // пририсовка элементов
             foreach (var item in items)
             {
                 item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor);

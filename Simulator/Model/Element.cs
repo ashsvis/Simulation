@@ -50,7 +50,7 @@
             return false;
         }
 
-        private void CalculateTargets(Graphics graphics)
+        public void CalculateTargets(Graphics graphics)
         {
             targets.Clear();
             pins.Clear();
