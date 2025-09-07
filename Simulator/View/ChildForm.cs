@@ -238,7 +238,7 @@ namespace Simulator
                 {
                     ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
                 }
-                else if (TryGetPin(e.Location, out element, out pin, out PointF? point, out output) &&
+                else if (TryGetFreeInputPin(e.Location, out element, out pin, out PointF? point, out output) &&
                     element != null && element.Instance != null)
                 {
                     linkFirstPoint = point;
@@ -290,17 +290,25 @@ namespace Simulator
                 var outputFirst = output;
                 var linkFirst = linkFirstPoint;
                 if (TryGetPin(e.Location, out Element? elementSecond, out int? pinSecond, out PointF? linkSecondPoint, out bool? outputSecond) &&
-                    elementSecond != null && elementSecond.Instance != null && elementFirst != elementSecond && outputFirst != outputSecond)
+                    elementSecond?.Instance is IFunction target && elementFirst?.Instance is IFunction source)
                 {
-                    if (elementSecond.Instance is IFunction target && elementFirst?.Instance is IFunction source)
+                    if (elementFirst != elementSecond && outputFirst != outputSecond)
                     {
                         if (pinSecond != null && pinFirst != null && outputFirst == true && outputSecond == false)
                             target.SetValueLinkToInp((int)pinSecond, source.GetResultLink((int)pinFirst));
                         else if (pinSecond != null && pinFirst != null && outputFirst == false && outputSecond == true)
                             source.SetValueLinkToInp((int)pinFirst, target.GetResultLink((int)pinSecond));
                     }
+                    else if (elementFirst == elementSecond && outputFirst == outputSecond && outputSecond == false && pinSecond is int ipin)
+                    {
+                        // отпускание после нажатия на этом же входе
+                        var value = target.InputValues[ipin];
+                        if (value is bool bvalue)
+                            target.SetValueToInp(ipin, !bvalue);
+                    }
                 }
-                element = null;
+                else 
+                    element = null;
                 pin = null;
                 output = null;
                 linkFirstPoint = null;
