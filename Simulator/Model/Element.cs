@@ -57,7 +57,7 @@ namespace Simulator.Model
             targets.Clear();
             pins.Clear();
             using var font = new Font("Consolas", 8f);
-            if (Instance is ICalculate instance)
+            if (Instance is IFunction instance)
             {
                 var max = Math.Max(instance.InverseInputs.Length, instance.InverseOutputs.Length);
                 var step = 6f;
@@ -106,7 +106,7 @@ namespace Simulator.Model
             using var pen = new Pen(foreColor, 1f);
             using var font = new Font("Consolas", 8f);
             using var fontbrush = new SolidBrush(foreColor);
-            if (Instance is ICalculate instance)
+            if (Instance is IFunction instance)
             {
                 var max = Math.Max(instance.InverseInputs.Length, instance.InverseOutputs.Length);
                 var step = 6f;

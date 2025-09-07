@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace Simulator.Model.Logic
 {
-    public class XOR : ICalculate
+    public class XOR : IFunction
     {
         private bool @out = false;
         private GetLinkValueMethod? getInp1;
@@ -92,7 +92,7 @@ namespace Simulator.Model.Logic
             Out = ((inp1 ^ InverseInp1) ^ (inp2 ^ InverseInp2)) ^ InverseOut;
         }
 
-        public GetLinkValueMethod? GetResultLink()
+        public GetLinkValueMethod? GetResultLink(int outputIndex)
         {
             return () => Out;
         }

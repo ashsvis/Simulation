@@ -4,6 +4,6 @@
     {
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public List<ICalculate> Items { get; set; } = [];
+        public List<IFunction> Items { get; set; } = [];
     }
 }

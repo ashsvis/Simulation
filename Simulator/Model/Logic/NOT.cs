@@ -2,7 +2,7 @@
 
 namespace Simulator.Model.Logic
 {
-    public class NOT : ICalculate
+    public class NOT : IFunction
     {
         private bool @out = true;
         private GetLinkValueMethod? getInp;
@@ -68,7 +68,7 @@ namespace Simulator.Model.Logic
             Out = getInp != null ? !(bool)getInp() : !Inp;
         }
 
-        public GetLinkValueMethod? GetResultLink()
+        public GetLinkValueMethod? GetResultLink(int outputIndex)
         {
             return () => Out;
         }

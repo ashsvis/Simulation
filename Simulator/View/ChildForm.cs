@@ -53,7 +53,7 @@ namespace Simulator
         {
             items.ForEach(item =>
             {
-                if (item.Instance is ICalculate instance)
+                if (item.Instance is IFunction instance)
                     instance.ResultChanged -= Item_ResultChanged;
             });
             mainForm.SimulationTick -= MainForm_SimulationTick;
@@ -65,7 +65,7 @@ namespace Simulator
             {
                 try
                 {
-                    if (item.Instance is ICalculate instance)
+                    if (item.Instance is IFunction instance)
                         instance.Calculate();
                 }
                 catch
@@ -104,7 +104,7 @@ namespace Simulator
                 {
                     item.Instance = Activator.CreateInstance(item.Type);
                     item.Location = PrepareMousePosition(zoomPad.PointToClient(new Point(e.X, e.Y)));
-                    if (item.Instance is ICalculate instance)
+                    if (item.Instance is IFunction instance)
                         instance.ResultChanged += Item_ResultChanged;
                     items.Add(item);
                     zoomPad.Invalidate();
@@ -265,13 +265,13 @@ namespace Simulator
                 if (TryGetPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
                     element != null && element.Instance != null && elementFirst != element && outputFirst != output)
                 {
-                    if (element.Instance is ICalculate target &&
-                        elementFirst?.Instance is ICalculate source)
+                    if (element.Instance is IFunction target &&
+                        elementFirst?.Instance is IFunction source)
                     {
-                        if (pin != null && outputFirst == true && output == false)
-                            target.SetValueLinkToInp((int)pin, source.GetResultLink());
-                        else if (pinFirst != null && outputFirst == false && output == true)
-                            source.SetValueLinkToInp((int)pinFirst, target.GetResultLink());
+                        if (pin != null && pinFirst != null && outputFirst == true && output == false)
+                            target.SetValueLinkToInp((int)pin, source.GetResultLink((int)pinFirst));
+                        else if (pin != null && pinFirst != null && outputFirst == false && output == true)
+                            source.SetValueLinkToInp((int)pinFirst, target.GetResultLink((int)pin));
                     }
                 }
                 element = null;

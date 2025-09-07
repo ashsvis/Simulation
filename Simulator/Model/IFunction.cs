@@ -1,6 +1,6 @@
 ﻿namespace Simulator.Model
 {
-    public interface ICalculate
+    public interface IFunction
     {
         string? Name { get; set; }
         string FuncName { get; }
@@ -13,7 +13,7 @@
         object[] OutputValues { get; }
         bool VisibleValues { get; set; }
         void Calculate();
-        GetLinkValueMethod? GetResultLink();
+        GetLinkValueMethod? GetResultLink(int outputIndex);
         void SetValueLinkToInp(int inputIndex, GetLinkValueMethod? getInp);
         event ResultCalculateEventHandler? ResultChanged; 
     }

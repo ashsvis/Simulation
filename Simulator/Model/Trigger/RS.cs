@@ -2,7 +2,7 @@
 
 namespace Simulator.Model.Trigger
 {
-    public class RS : ICalculate
+    public class RS : IFunction
     {
         private bool q = false;
         private GetLinkValueMethod? getS;
@@ -89,7 +89,7 @@ namespace Simulator.Model.Trigger
             }
         }
 
-        public GetLinkValueMethod? GetResultLink()
+        public GetLinkValueMethod? GetResultLink(int outputIndex)
         {
             return () => Q;
         }

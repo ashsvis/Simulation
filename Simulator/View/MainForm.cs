@@ -31,6 +31,7 @@ namespace Simulator
             logicaNode.Nodes.Add(new TreeNode("AND") { Tag = typeof(Model.Logic.AND) });
             logicaNode.Nodes.Add(new TreeNode("OR") { Tag = typeof(Model.Logic.OR) });
             logicaNode.Nodes.Add(new TreeNode("XOR") { Tag = typeof(Model.Logic.XOR) });
+            logicaNode.Nodes.Add(new TreeNode("Логика") { Tag = typeof(Model.Logic.LogicFunction) });
             rootNode.Nodes.Add(logicaNode);
             var triggerNode = new TreeNode("Триггеры");
             rootNode.Nodes.Add(triggerNode);
@@ -39,6 +40,8 @@ namespace Simulator
 
             timerInterface.Enabled = true;
             timerSimulation.Enabled = true;
+
+            CreateNewChildForm();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
