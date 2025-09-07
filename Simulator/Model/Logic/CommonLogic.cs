@@ -112,7 +112,15 @@ namespace Simulator.Model.Logic
             {
                 List<object> list = [];
                 for (var i = 0; i < getInputs.Length; i++)
-                    list.Add(getLinkInputs[i] ?? (object)getInputs[i]);
+                {
+                    if (getLinkInputs[i] is GetLinkValueMethod method)
+                    {
+                        bool value = (bool)method();
+                        list.Add(value);
+                    }
+                    else
+                        list.Add(getInputs[i]);
+                }
                 return [.. list];
             }
         }
