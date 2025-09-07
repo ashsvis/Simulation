@@ -22,7 +22,7 @@ namespace Simulator
 
         private void Item_ResultChanged(object sender, Model.ResultCalculateEventArgs args)
         {
-            ElementSelected?.Invoke(sender, EventArgs.Empty);
+            //ElementSelected?.Invoke(sender, EventArgs.Empty);
             zoomPad.Invalidate();
         }
 

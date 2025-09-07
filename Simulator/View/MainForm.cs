@@ -138,6 +138,7 @@ namespace Simulator
         private void timerSimulation_Tick(object sender, EventArgs e)
         {
             SimulationTick?.Invoke(this, EventArgs.Empty);
+            pgProps.Refresh();
         }
 
         private void tvLibrary_MouseDown(object sender, MouseEventArgs e)
