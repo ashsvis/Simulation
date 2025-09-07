@@ -75,6 +75,8 @@ namespace Simulator.Model.Trigger
         [Browsable(false)]
         public string FuncSymbol => "RS";
 
+        public bool[] LinkedInputs => [false, false];
+
         public event ResultCalculateEventHandler? ResultChanged;
 
         public void Calculate()
@@ -106,6 +108,11 @@ namespace Simulator.Model.Trigger
                     SetValueLinkToR(getInp);
                     break;
             }
+        }
+
+        public void SetValueToInp(int inputIndex, object? value)
+        {
+            throw new NotImplementedException();
         }
     }
 }

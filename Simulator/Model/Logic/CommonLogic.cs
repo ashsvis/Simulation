@@ -11,7 +11,7 @@ namespace Simulator.Model.Logic
         private readonly string[] getInputNames;
         private readonly LogicFunction logicFunction;
 
-        public CommonLogic() : this(LogicFunction.Rs, 3)
+        public CommonLogic() : this(LogicFunction.None, 1)
         { 
         }
 
@@ -53,19 +53,14 @@ namespace Simulator.Model.Logic
         { 
             get 
             {
-                switch (logicFunction)
+                return logicFunction switch
                 {
-                    case LogicFunction.And:
-                        return "&";
-                    case LogicFunction.Not:
-                    case LogicFunction.Or:
-                        return "1";
-                    case LogicFunction.Xor:
-                        return "=1";
-                    case LogicFunction.Rs:
-                        return "RS";
-                }
-                return "";
+                    LogicFunction.And => "&",
+                    LogicFunction.Not or LogicFunction.Or => "1",
+                    LogicFunction.Xor => "=1",
+                    LogicFunction.Rs => "RS",
+                    _ => "",
+                };
             } 
         }
 
@@ -128,6 +123,22 @@ namespace Simulator.Model.Logic
         [Browsable(false)]
         public object[] OutputValues => [Out];
 
+        public bool[] LinkedInputs 
+        { 
+            get 
+            {
+                List<bool> list = [];
+                for (var i = 0; i < getInputs.Length; i++)
+                {
+                    if (getLinkInputs[i] is GetLinkValueMethod _)
+                        list.Add(true);
+                    else
+                        list.Add(false);
+                }
+                return [.. list];
+            } 
+        }
+
         public event ResultCalculateEventHandler? ResultChanged;
 
         public void Calculate()
@@ -158,6 +169,13 @@ namespace Simulator.Model.Logic
             {
                 getLinkInputs[inputIndex] = getInp;
             }
+        }
+
+        public void SetValueToInp(int inputIndex, object? value)
+        {
+            if (inputIndex >= 0 && inputIndex < getLinkInputs.Length &&
+                value != null && getLinkInputs[inputIndex] == null)
+                getInputs[inputIndex] = (bool)value;
         }
     }
 

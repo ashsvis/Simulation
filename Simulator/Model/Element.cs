@@ -136,8 +136,8 @@ namespace Simulator.Model
                         var ms = graphics.MeasureString(instance.InputNames[i], font);
                         graphics.DrawString(instance.InputNames[i], font, fontbrush, new PointF(x + step, y - ms.Height / 2));
                     }
-                    // значение входа
-                    if (instance.VisibleValues)
+                    // значение входа - отображаются только не связанные (свободные) входы
+                    if (instance.VisibleValues && !instance.LinkedInputs[i])
                     {
                         var value = instance.InputValues[i];
                         var text = value != null && value.GetType() == typeof(bool) ? (bool)value ? "T" : "F" : $"{value}";
@@ -186,6 +186,7 @@ namespace Simulator.Model
                 using var format = new StringFormat();
                 format.Alignment = StringAlignment.Center;
                 graphics.DrawString(instance.FuncSymbol, font, fontbrush, new PointF(Location.X + width / 2, Location.Y), format);
+                /*
                 // области выбора
                 using Pen tarpen = new(Color.FromArgb(80, Color.Magenta), 0);
                 foreach (var key in targets.Keys)
@@ -202,6 +203,7 @@ namespace Simulator.Model
                     graphics.DrawLine(pinpen, new PointF(r.X, r.Y), new PointF(r.X + r.Width, r.Y + r.Height));
                     graphics.DrawLine(pinpen, new PointF(r.X + r.Width, r.Y), new PointF(r.X, r.Y + r.Height));
                 }
+                */
             }
         }
     }
