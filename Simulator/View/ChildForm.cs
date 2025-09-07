@@ -262,16 +262,15 @@ namespace Simulator
                 var pinFirst = pin;
                 var outputFirst = output;
                 var linkFirst = linkFirstPoint;
-                if (TryGetPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
-                    element != null && element.Instance != null && elementFirst != element && outputFirst != output)
+                if (TryGetPin(e.Location, out Element? elementSecond, out int? pinSecond, out PointF? linkSecondPoint, out bool? outputSecond) &&
+                    elementSecond != null && elementSecond.Instance != null && elementFirst != elementSecond && outputFirst != outputSecond)
                 {
-                    if (element.Instance is IFunction target &&
-                        elementFirst?.Instance is IFunction source)
+                    if (elementSecond.Instance is IFunction target && elementFirst?.Instance is IFunction source)
                     {
-                        if (pin != null && pinFirst != null && outputFirst == true && output == false)
-                            target.SetValueLinkToInp((int)pin, source.GetResultLink((int)pinFirst));
-                        else if (pin != null && pinFirst != null && outputFirst == false && output == true)
-                            source.SetValueLinkToInp((int)pinFirst, target.GetResultLink((int)pin));
+                        if (pinSecond != null && pinFirst != null && outputFirst == true && outputSecond == false)
+                            target.SetValueLinkToInp((int)pinSecond, source.GetResultLink((int)pinFirst));
+                        else if (pinSecond != null && pinFirst != null && outputFirst == false && outputSecond == true)
+                            source.SetValueLinkToInp((int)pinFirst, target.GetResultLink((int)pinSecond));
                     }
                 }
                 element = null;
