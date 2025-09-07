@@ -8,7 +8,6 @@ namespace Simulator
     {
         private readonly MainForm mainForm;
 
-        //private readonly Module module = new();
         private readonly List<Element> items = [];
 
         private Point firstMouseDown;
@@ -19,29 +18,12 @@ namespace Simulator
             InitializeComponent();
             this.mainForm = mainForm;
             mainForm.SimulationTick += MainForm_SimulationTick;
-
-            //module.Items.Clear();
-            //var not = new Model.Logic.NOT();
-            //module.Items.Add(not);
-            //var and = new Model.Logic.AND();
-            //module.Items.Add(and);
-            //var or = new Model.Logic.OR();
-            //module.Items.Add(or);
-            //var rs = new Model.Trigger.RS();
-            //module.Items.Add(rs);
-
-            //module.Items.ForEach(item => item.ResultChanged += Item_ResultChanged);
-
-            //not.SetValueLinkToInp(rs.GetResultLink());
-            //or.SetValueLinkToInp2(not.GetResultLink());
         }
 
         private void Item_ResultChanged(object sender, Model.ResultCalculateEventArgs args)
         {
             ElementSelected?.Invoke(sender, EventArgs.Empty);
             zoomPad.Invalidate();
-
-            //Debug.WriteLine($"{Name}.{sender.GetType().Name}.{args.Propname} is {args.Result}");
         }
 
         private void ChildForm_Load(object sender, EventArgs e)
@@ -227,6 +209,8 @@ namespace Simulator
         private bool? output;
         private PointF? linkFirstPoint;
 
+        public event EventHandler? ElementSelected;
+
         private void zoomPad_MouseDown(object sender, MouseEventArgs e)
         {
             mousePosition = firstMouseDown = e.Location;
@@ -248,8 +232,6 @@ namespace Simulator
                     ElementSelected?.Invoke(null, EventArgs.Empty);
             }
         }
-
-        public event EventHandler ElementSelected;
 
         private void zoomPad_MouseMove(object sender, MouseEventArgs e)
         {
@@ -295,9 +277,9 @@ namespace Simulator
                     if (elementFirst != elementSecond && outputFirst != outputSecond)
                     {
                         if (pinSecond != null && pinFirst != null && outputFirst == true && outputSecond == false)
-                            target.SetValueLinkToInp((int)pinSecond, source.GetResultLink((int)pinFirst));
+                            target.SetValueLinkToInp((int)pinSecond, source, source.GetResultLink((int)pinFirst));
                         else if (pinSecond != null && pinFirst != null && outputFirst == false && outputSecond == true)
-                            source.SetValueLinkToInp((int)pinFirst, target.GetResultLink((int)pinSecond));
+                            source.SetValueLinkToInp((int)pinFirst, target, target.GetResultLink((int)pinSecond));
                     }
                     else if (elementFirst == elementSecond && outputFirst == outputSecond && outputSecond == false && pinSecond is int ipin)
                     {

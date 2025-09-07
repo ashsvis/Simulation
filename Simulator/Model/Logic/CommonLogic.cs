@@ -8,6 +8,7 @@ namespace Simulator.Model.Logic
         private readonly bool[] getInputs;
         private readonly bool[] getInverseInputs;
         private readonly GetLinkValueMethod?[] getLinkInputs;
+        private readonly IFunction?[] getLinkOutputs;
         private readonly string[] getInputNames;
         private readonly LogicFunction logicFunction;
 
@@ -21,6 +22,7 @@ namespace Simulator.Model.Logic
             getInputs = [];
             getInverseInputs = [];
             getLinkInputs = [];
+            getLinkOutputs = [];
             getInputNames = [];
             if (inputCount > 0)
             {
@@ -31,6 +33,7 @@ namespace Simulator.Model.Logic
                 getInputs = new bool[inputCount];
                 getInverseInputs = new bool[inputCount];
                 getLinkInputs = new GetLinkValueMethod?[inputCount];
+                getLinkOutputs = new IFunction?[inputCount];
                 getInputNames = new string[inputCount];
                 if (func == LogicFunction.Not)
                 {
@@ -163,11 +166,12 @@ namespace Simulator.Model.Logic
             return () => Out;
         }
 
-        public void SetValueLinkToInp(int inputIndex, GetLinkValueMethod? getInp)
+        public void SetValueLinkToInp(int inputIndex, IFunction source, GetLinkValueMethod? getInp)
         {
             if (inputIndex >= 0 && inputIndex < getLinkInputs.Length)
             {
                 getLinkInputs[inputIndex] = getInp;
+                getLinkOutputs[inputIndex] = source;
             }
         }
 

@@ -97,7 +97,7 @@ namespace Simulator.Model.Trigger
             return () => Q;
         }
 
-        public void SetValueLinkToInp(int inputIndex, GetLinkValueMethod? getInp)
+        public void SetValueLinkToInp(int inputIndex, IFunction source, GetLinkValueMethod? getInp)
         {
             switch (inputIndex)
             {

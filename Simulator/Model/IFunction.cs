@@ -18,7 +18,7 @@ namespace Simulator.Model
         void Calculate();
         GetLinkValueMethod? GetResultLink(int outputIndex);
         void SetValueToInp(int inputIndex, object? value);
-        void SetValueLinkToInp(int inputIndex, GetLinkValueMethod? getInp);
+        void SetValueLinkToInp(int inputIndex, IFunction source, GetLinkValueMethod? getInp);
         event ResultCalculateEventHandler? ResultChanged; 
     }
 

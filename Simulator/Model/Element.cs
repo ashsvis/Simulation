@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace Simulator.Model
+﻿namespace Simulator.Model
 {
     public class Element
     {
@@ -194,6 +192,7 @@ namespace Simulator.Model
                     var target = targets[key];
                     graphics.DrawRectangles(tarpen, [target]);
                 }
+                */
                 // точки привязки входов и выходов
                 using Pen pinpen = new(Color.FromArgb(255, Color.Black), 0);
                 foreach (var key in pins.Keys)
@@ -203,7 +202,6 @@ namespace Simulator.Model
                     graphics.DrawLine(pinpen, new PointF(r.X, r.Y), new PointF(r.X + r.Width, r.Y + r.Height));
                     graphics.DrawLine(pinpen, new PointF(r.X + r.Width, r.Y), new PointF(r.X, r.Y + r.Height));
                 }
-                */
             }
         }
     }
