@@ -44,7 +44,14 @@ namespace Simulator
             orNode.Nodes.Add(new TreeNode("OR6") { Tag = typeof(Model.Logic.OR6) });
             orNode.Nodes.Add(new TreeNode("OR7") { Tag = typeof(Model.Logic.OR7) });
             orNode.Nodes.Add(new TreeNode("OR8") { Tag = typeof(Model.Logic.OR8) });
-            logicaNode.Nodes.Add(new TreeNode("XOR") { Tag = typeof(Model.Logic.XOR) });
+            var xorNode = new TreeNode("XOR") { Tag = typeof(Model.Logic.XOR) };
+            logicaNode.Nodes.Add(xorNode);
+            xorNode.Nodes.Add(new TreeNode("XOR3") { Tag = typeof(Model.Logic.XOR3) });
+            xorNode.Nodes.Add(new TreeNode("XOR4") { Tag = typeof(Model.Logic.XOR4) });
+            xorNode.Nodes.Add(new TreeNode("XOR5") { Tag = typeof(Model.Logic.XOR5) });
+            xorNode.Nodes.Add(new TreeNode("XOR6") { Tag = typeof(Model.Logic.XOR6) });
+            xorNode.Nodes.Add(new TreeNode("XOR7") { Tag = typeof(Model.Logic.XOR7) });
+            xorNode.Nodes.Add(new TreeNode("XOR8") { Tag = typeof(Model.Logic.XOR8) });
             rootNode.Nodes.Add(logicaNode);
             var triggerNode = new TreeNode("Триггеры");
             rootNode.Nodes.Add(triggerNode);
@@ -57,6 +64,7 @@ namespace Simulator
             rootNode.ExpandAll();
             andNode.Collapse();
             orNode.Collapse();
+            xorNode.Collapse();
 
             timerInterface.Enabled = true;
             timerSimulation.Enabled = true;

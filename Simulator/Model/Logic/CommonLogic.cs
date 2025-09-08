@@ -28,7 +28,7 @@ namespace Simulator.Model.Logic
             {
                 if (func == LogicFunction.Not)
                     inputCount = 1;
-                else if (func == LogicFunction.Xor || func == LogicFunction.Rs)
+                else if (func == LogicFunction.Rs)
                     inputCount = 2;
                 getInputs = new bool[inputCount];
                 getInverseInputs = new bool[inputCount];
@@ -179,7 +179,7 @@ namespace Simulator.Model.Logic
                 {
                     LogicFunction.And => result && input,
                     LogicFunction.Or => result || input,
-                    LogicFunction.Xor => result ^ input,
+                    LogicFunction.Xor => CalcXor(InputValues),
                     LogicFunction.Rs => CalcRsTrigger(result, input, @out),
                     _ => logicFunction == LogicFunction.Not && !result,
                 };
@@ -187,6 +187,11 @@ namespace Simulator.Model.Logic
             if (logicFunction == LogicFunction.Rs)
                 InverseOut = false;
             Out = result ^ InverseOut;
+        }
+
+        private static bool CalcXor(object[] inputValues)
+        {
+            return inputValues.Count(x => (bool)x == true) == 1;
         }
 
         private static bool CalcRsTrigger(bool s, bool r, bool q)
