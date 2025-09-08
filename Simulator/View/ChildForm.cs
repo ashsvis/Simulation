@@ -84,7 +84,7 @@ namespace Simulator
             {
                 if (e.Data.GetData(typeof(Element)) is Element item && item.Type != null)
                 {
-                    item.Instance = Activator.CreateInstance(item.Type);
+                    item.Instance = (IFunction?)Activator.CreateInstance(item.Type);
                     item.Location = PrepareMousePosition(zoomPad.PointToClient(new Point(e.X, e.Y)));
                     if (item.Instance is IFunction instance)
                         instance.ResultChanged += Item_ResultChanged;
@@ -219,10 +219,13 @@ namespace Simulator
                     }
                 }
             }
-            // пририсовка элементов
+            // прорисовка элементов
             foreach (var item in items)
             {
-                item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor);
+                if (item.Instance is ICustomDraw)
+                    item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor, (item.Instance as ICustomDraw).CustomDraw);
+                else
+                    item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor);
             }
             if (linkFirstPoint != null)
             {

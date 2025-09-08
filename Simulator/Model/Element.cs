@@ -24,7 +24,7 @@
         public Dictionary<int, RectangleF> Targets => targets;
 
         private readonly Dictionary<int, PointF> pins = [];
-        private PointF location;
+        protected PointF location;
 
         public Dictionary<int, PointF> Pins => pins;
 
@@ -66,7 +66,6 @@
         {
             targets.Clear();
             pins.Clear();
-            //using var font = new Font("Consolas", 8f);
             if (Instance is IFunction instance)
             {
                 var max = Math.Max(instance.InverseInputs.Length, instance.InverseOutputs.Length);
@@ -82,7 +81,7 @@
                 {
                     y += step * 2;
                     // значение входа
-                    var ms = new SizeF(step * 2, step * 2); //graphics.MeasureString("W", font);
+                    var ms = new SizeF(step * 2, step * 2);
                     targets.Add(n, new RectangleF(new PointF(x - ms.Width + step, y - ms.Height), ms));
                     pins.Add(n, new PointF(x, y));
                     y += step * 2;
@@ -99,7 +98,7 @@
                     else
                         y += step * 2;
                     // значение выхода
-                    var ms = new SizeF(step * 2, step * 2); //graphics.MeasureString("W", font);
+                    var ms = new SizeF(step * 2, step * 2);
                     targets.Add(n, new RectangleF(new PointF(x, y - ms.Height), ms));
                     pins.Add(n, new PointF(x + step, y));
                     y += step * 2;
@@ -109,7 +108,7 @@
 
         }
 
-        public void Draw(Graphics graphics, Color foreColor, Color backColor)
+        public virtual void Draw(Graphics graphics, Color foreColor, Color backColor, CustomDraw? customDraw = null)
         {
             using var brush = new SolidBrush(backColor);
             using var pen = new Pen(foreColor, 1f);
@@ -124,6 +123,11 @@
                 var rect = new RectangleF(location, Size);
                 graphics.FillRectangle(brush, rect);
                 graphics.DrawRectangles(pen, [rect]);
+                // обозначение функции, текст по-центру, в верхней части рамки элемента
+                using var format = new StringFormat();
+                format.Alignment = StringAlignment.Center;
+                graphics.DrawString(instance.FuncSymbol, font, fontbrush, new PointF(location.X + width / 2, location.Y), format);
+                customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush);
                 // входы
                 var y = step + location.Y;
                 var x = -step + location.X;
@@ -191,10 +195,7 @@
                     }
                     y += step * 2;
                 }
-                // обозначение функции, текст по-центру, в верхней части рамки элемента
-                using var format = new StringFormat();
-                format.Alignment = StringAlignment.Center;
-                graphics.DrawString(instance.FuncSymbol, font, fontbrush, new PointF(location.X + width / 2, location.Y), format);
+                /*
                 // области выбора
                 using Pen tarpen = new(Color.FromArgb(80, Color.Magenta), 0);
                 foreach (var key in targets.Keys)
@@ -211,6 +212,7 @@
                     graphics.DrawLine(pinpen, new PointF(r.X, r.Y), new PointF(r.X + r.Width, r.Y + r.Height));
                     graphics.DrawLine(pinpen, new PointF(r.X + r.Width, r.Y), new PointF(r.X, r.Y + r.Height));
                 }
+                */
             }
         }
     }

@@ -52,7 +52,7 @@ namespace Simulator.Model.Logic
         public LogicFunction FuncName => logicFunction;
 
         [Browsable(false)]
-        public string FuncSymbol 
+        public virtual string FuncSymbol 
         { 
             get 
             {
@@ -84,7 +84,7 @@ namespace Simulator.Model.Logic
         public bool Out
         {
             get => @out;
-            private set
+            protected set
             {
                 if (@out == value) return;
                 @out = value;
@@ -164,7 +164,7 @@ namespace Simulator.Model.Logic
 
         public event ResultCalculateEventHandler? ResultChanged;
 
-        public void Calculate()
+        public virtual void Calculate()
         {
             bool result = (bool)InputValues[0] ^ getInverseInputs[0];
             if (logicFunction == LogicFunction.Rs)
@@ -214,15 +214,5 @@ namespace Simulator.Model.Logic
                 value != null && getLinkInputs[inputIndex] == null)
                 getInputs[inputIndex] = (bool)value;
         }
-    }
-
-    public enum LogicFunction
-    {
-        None,
-        Not,
-        And,
-        Or,
-        Xor,
-        Rs
     }
 }

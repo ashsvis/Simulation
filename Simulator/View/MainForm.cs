@@ -49,6 +49,9 @@ namespace Simulator
             var triggerNode = new TreeNode("Триггеры");
             rootNode.Nodes.Add(triggerNode);
             triggerNode.Nodes.Add(new TreeNode("RS-триггер") { Tag = typeof(Model.Trigger.RS) });
+            var generatorNode = new TreeNode("Генераторы");
+            rootNode.Nodes.Add(generatorNode);
+            generatorNode.Nodes.Add(new TreeNode("Одновибратор") { Tag = typeof(Model.Generator.PULSE) });
             rootNode.ExpandAll();
             andNode.Collapse();
             orNode.Collapse();
@@ -138,7 +141,7 @@ namespace Simulator
         private void timerSimulation_Tick(object sender, EventArgs e)
         {
             SimulationTick?.Invoke(this, EventArgs.Empty);
-            pgProps.Refresh();
+            //if (!pgProps.Focused) pgProps.Refresh();
         }
 
         private void tvLibrary_MouseDown(object sender, MouseEventArgs e)

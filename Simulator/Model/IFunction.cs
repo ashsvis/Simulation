@@ -32,4 +32,6 @@ namespace Simulator.Model
         public object? Result { get; set; } = value;
 
     }
+
+    public delegate void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush);
 }
