@@ -222,8 +222,8 @@ namespace Simulator
             // прорисовка элементов
             foreach (var item in items)
             {
-                if (item.Instance is ICustomDraw)
-                    item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor, (item.Instance as ICustomDraw).CustomDraw);
+                if (item.Instance is ICustomDraw inst)
+                    item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor, inst.CustomDraw);
                 else
                     item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor);
             }

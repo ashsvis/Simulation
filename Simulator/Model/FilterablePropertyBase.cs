@@ -10,10 +10,9 @@ namespace Simulator.Model
     {
 
         protected PropertyDescriptorCollection
-          GetFilteredProperties(Attribute[] attributes)
+          GetFilteredProperties(Attribute[]? attributes)
         {
-            PropertyDescriptorCollection pdc
-              = TypeDescriptor.GetProperties(this, attributes, true);
+            PropertyDescriptorCollection pdc = TypeDescriptor.GetProperties(this, attributes, true);
 
             PropertyDescriptorCollection finalProps = new([]);
 
@@ -24,14 +23,12 @@ namespace Simulator.Model
 
                 foreach (Attribute a in pd.Attributes)
                 {
-                    if (a is DynamicPropertyFilterAttribute)
+                    if (a is DynamicPropertyFilterAttribute attribute)
                     {
                         dynamic = true;
 
-                        DynamicPropertyFilterAttribute dpf =
-                         (DynamicPropertyFilterAttribute)a;
-
-                        PropertyDescriptor temp = pdc[dpf.PropertyName];
+                        DynamicPropertyFilterAttribute dpf = attribute;
+                        PropertyDescriptor? temp = pdc[dpf.PropertyName];
 
                         if (dpf.ShowOn.IndexOf($"{temp?.GetValue(this)}") > -1)
                             include = true;
@@ -52,7 +49,7 @@ namespace Simulator.Model
             return TypeDescriptor.GetConverter(this, true);
         }
 
-        public EventDescriptorCollection GetEvents(Attribute[] attributes)
+        public EventDescriptorCollection GetEvents(Attribute[]? attributes)
         {
             return TypeDescriptor.GetEvents(this, attributes, true);
         }
@@ -62,12 +59,12 @@ namespace Simulator.Model
             return TypeDescriptor.GetEvents(this, true);
         }
 
-        public string GetComponentName()
+        public string? GetComponentName()
         {
             return TypeDescriptor.GetComponentName(this, true);
         }
 
-        public object GetPropertyOwner(PropertyDescriptor pd)
+        public object GetPropertyOwner(PropertyDescriptor? pd)
         {
             return this;
         }
@@ -77,33 +74,32 @@ namespace Simulator.Model
             return TypeDescriptor.GetAttributes(this, true);
         }
 
-        public PropertyDescriptorCollection GetProperties(
-          Attribute[] attributes)
+        public PropertyDescriptorCollection GetProperties(Attribute[]? attributes)
         {
             return GetFilteredProperties(attributes);
         }
 
         PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties()
         {
-            return GetFilteredProperties(new Attribute[0]);
+            return GetFilteredProperties([]);
         }
 
-        public object GetEditor(Type editorBaseType)
+        public object? GetEditor(Type editorBaseType)
         {
             return TypeDescriptor.GetEditor(this, editorBaseType, true);
         }
 
-        public PropertyDescriptor GetDefaultProperty()
+        public PropertyDescriptor? GetDefaultProperty()
         {
             return TypeDescriptor.GetDefaultProperty(this, true);
         }
 
-        public EventDescriptor GetDefaultEvent()
+        public EventDescriptor? GetDefaultEvent()
         {
             return TypeDescriptor.GetDefaultEvent(this, true);
         }
 
-        public string GetClassName()
+        public string? GetClassName()
         {
             return TypeDescriptor.GetClassName(this, true);
         }
