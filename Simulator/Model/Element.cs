@@ -2,9 +2,23 @@
 {
     public class Element
     {
-        public Element() { }
+        public Element() 
+        { 
+        }
+
         public Type? Type { get; set; }
-        public object? Instance { get; set; }
+        
+        public object? Instance
+        {
+            get => instance;
+            set
+            {
+                instance = value;
+                if (instance is IFunction function)
+                    getLinkPointInputs = new GetLinkPointMethod?[function.InputValues.Length];
+            }
+        }
+
         public PointF Location 
         { 
             get => location;
@@ -22,15 +36,18 @@
 
         private readonly Dictionary<int, RectangleF> itargets = [];
         private readonly Dictionary<int, RectangleF> otargets = [];
-        public Dictionary<int, RectangleF> InputTargets => itargets;
-        public Dictionary<int, RectangleF> OutpotTargets => otargets;
+        //public Dictionary<int, RectangleF> InputTargets => itargets;
+        //public Dictionary<int, RectangleF> OutpotTargets => otargets;
 
         private readonly Dictionary<int, PointF> ipins = [];
         private readonly Dictionary<int, PointF> opins = [];
         protected PointF location;
 
         public Dictionary<int, PointF> InputPins => ipins;
-        public Dictionary<int, PointF> OutputPins => opins;
+        //public Dictionary<int, PointF> OutputPins => opins;
+
+        private GetLinkPointMethod?[] getLinkPointInputs = [];
+        private object? instance;
 
         public bool TryGetOutput(PointF point, out int? output, out PointF? pin)
         {
@@ -232,5 +249,38 @@
                 }
             }
         }
+
+        public GetLinkPointMethod GetResultLinkPoint(int pin)
+        {
+            return () => opins[pin];
+        }
+
+        public void SetValueLinkPointToInp(int pin, GetLinkPointMethod method)
+        {
+            if (pin >= 0 && pin < getLinkPointInputs.Length)
+            {
+                getLinkPointInputs[pin] = method;
+            }
+        }
+
+        public PointF[] OutputPoints
+        {
+            get
+            {
+                List<PointF> list = [];
+                for (var i = 0; i < getLinkPointInputs.Length; i++)
+                {
+                    if (getLinkPointInputs[i] is GetLinkPointMethod method)
+                    {
+                        PointF value = method();
+                        list.Add(value);
+                    }
+                    else
+                        list.Add(PointF.Empty);
+                }
+                return [.. list];
+            }
+        }
+
     }
 }

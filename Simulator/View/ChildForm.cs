@@ -201,21 +201,12 @@ namespace Simulator
                     var n = 0;
                     foreach(var input in function.LinkedInputs)
                     {
-                        if (input == true)
+                        if (input)
                         {
-                            if (item.InputPins.TryGetValue(n + 100, out PointF targetPinPoint))
+                            if (item.InputPins.TryGetValue(n, out PointF targetPinPoint))
                             {
-                                var sourcePinPoint = Point.Empty;
-
-                                //if (function.LinkedInputSources[n] is IFunction source)
-                                //{
-                                //    var sourceItem = items.FirstOrDefault(y => y.Instance == source);
-                                //    if (sourceItem != null && sourceItem.Pins.TryGetValue(200, out PointF sourcePinPoint))
-                                //    {
-                                        graphics.DrawLine(Pens.Yellow, sourcePinPoint, targetPinPoint);
-                                //Debug.WriteLine($"{sourcePinPoint} {targetPinPoint}");
-                                //    }
-                                //}
+                                var sourcePinPoint = item.OutputPoints[0];
+                                graphics.DrawLine(Pens.Yellow, sourcePinPoint, targetPinPoint);
                             }
                         }
                         n++;
@@ -311,9 +302,15 @@ namespace Simulator
                     {
                         // создание связей между элементами
                         if (pinSecond != null && pinFirst != null && outputFirst == true && outputSecond == false)
+                        {
                             target.SetValueLinkToInp((int)pinSecond, source.GetResultLink((int)pinFirst));
+                            elementSecond.SetValueLinkPointToInp((int)pinSecond, elementFirst.GetResultLinkPoint((int)pinFirst));
+                        }
                         else if (pinSecond != null && pinFirst != null && outputFirst == false && outputSecond == true)
+                        {
                             source.SetValueLinkToInp((int)pinFirst, target.GetResultLink((int)pinSecond));
+                            elementFirst.SetValueLinkPointToInp((int)pinFirst, elementSecond.GetResultLinkPoint((int)pinSecond));
+                        }
                     }
                     else if (elementFirst == elementSecond && outputFirst == outputSecond && outputSecond == false && pinSecond is int ipin)
                     {

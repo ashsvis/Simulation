@@ -92,8 +92,8 @@ namespace Simulator.Model.Logic
             }
         }
 
-        [Browsable(false)]
-        public PointF OutPoint { get; set; }
+        //[Browsable(false)]
+        //public PointF OutPoint { get; set; }
 
         [Category("Выходы"), DisplayName(" Инверсия"), DefaultValue(false)]
         [DynamicPropertyFilter(nameof(FuncName), "And,Or")]
@@ -131,8 +131,8 @@ namespace Simulator.Model.Logic
         [Browsable(false)]
         public object[] OutputValues => [Out];
 
-        [Browsable(false)]
-        public PointF[] OutputPoints { get; set; } = new PointF[1];
+        //[Browsable(false)]
+        //public PointF[] OutputPoints { get; set; } = new PointF[1];
         //public PointF[] OutputPoints
         //{
         //    get
@@ -229,24 +229,22 @@ namespace Simulator.Model.Logic
             return () => Out;
         }
 
-        public GetLinkPointMethod? GetResultPoint(int outputIndex)
-        {
-            return () => OutputPoints[outputIndex];
-        }
+        //public GetLinkPointMethod? GetResultPoint(int outputIndex)
+        //{
+        //    return () => OutputPoints[outputIndex];
+        //}
 
         /// <summary>
         /// Для создания связи записывается ссылка на метод,
         /// который потом вызывается для получения актуального значения
         /// </summary>
         /// <param name="inputIndex">номер входа</param>
-        /// <param name="source">Элемент-функция</param>
         /// <param name="getInp">Ссылка на метод, записываемая в целевом элементе, для этого входа</param>
-        public void SetValueLinkToInp(int inputIndex, /*IFunction source, */ GetLinkValueMethod? getInp)
+        public void SetValueLinkToInp(int inputIndex, GetLinkValueMethod? getInp)
         {
             if (inputIndex >= 0 && inputIndex < getLinkInputs.Length)
             {
                 getLinkInputs[inputIndex] = getInp;
-                //getLinkOutputSources[inputIndex] = source;
             }
         }
 
