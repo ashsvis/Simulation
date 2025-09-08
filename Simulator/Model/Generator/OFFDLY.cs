@@ -20,7 +20,7 @@ namespace Simulator.Model.Generator
         public override void Calculate()
         {
             bool input = (bool)InputValues[0];
-            if (input/* && !state*/)
+            if (input)
             {
                 time = DateTime.Now + TimeSpan.FromSeconds(WaitTime);
                 state = false;
