@@ -9,6 +9,7 @@
         Xor,
         Rs,
         Pulse,
-        OnDelay
+        OnDelay,
+        OffDelay
     }
 }

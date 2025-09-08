@@ -53,6 +53,7 @@ namespace Simulator
             rootNode.Nodes.Add(generatorNode);
             generatorNode.Nodes.Add(new TreeNode("Одновибратор") { Tag = typeof(Model.Generator.PULSE) });
             generatorNode.Nodes.Add(new TreeNode("Задержка фронта") { Tag = typeof(Model.Generator.ONDLY) });
+            generatorNode.Nodes.Add(new TreeNode("Задержка спада") { Tag = typeof(Model.Generator.OFFDLY) });
             rootNode.ExpandAll();
             andNode.Collapse();
             orNode.Collapse();
