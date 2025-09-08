@@ -1,5 +1,6 @@
 ﻿using Simulator.Model;
 using Simulator.View;
+using System.Diagnostics;
 using System.Drawing.Drawing2D;
 
 namespace Simulator
@@ -22,7 +23,6 @@ namespace Simulator
 
         private void Item_ResultChanged(object sender, Model.ResultCalculateEventArgs args)
         {
-            //ElementSelected?.Invoke(sender, EventArgs.Empty);
             zoomPad.Invalidate();
         }
 
@@ -205,14 +205,17 @@ namespace Simulator
                         {
                             if (item.Pins.TryGetValue(n + 100, out PointF targetPinPoint))
                             {
-                                if (function.LinkedInputSources[n] is IFunction source)
-                                {
-                                    var sourceItem = items.FirstOrDefault(y => y.Instance == source);
-                                    if (sourceItem != null && sourceItem.Pins.TryGetValue(200, out PointF sourcePinPoint))
-                                    {
+                                var sourcePinPoint = Point.Empty;
+
+                                //if (function.LinkedInputSources[n] is IFunction source)
+                                //{
+                                //    var sourceItem = items.FirstOrDefault(y => y.Instance == source);
+                                //    if (sourceItem != null && sourceItem.Pins.TryGetValue(200, out PointF sourcePinPoint))
+                                //    {
                                         graphics.DrawLine(Pens.Yellow, sourcePinPoint, targetPinPoint);
-                                    }
-                                }
+                                //Debug.WriteLine($"{sourcePinPoint} {targetPinPoint}");
+                                //    }
+                                //}
                             }
                         }
                         n++;
@@ -306,10 +309,11 @@ namespace Simulator
                 {
                     if (elementFirst != elementSecond && outputFirst != outputSecond)
                     {
+                        // создание связей между элементами
                         if (pinSecond != null && pinFirst != null && outputFirst == true && outputSecond == false)
-                            target.SetValueLinkToInp((int)pinSecond, source, source.GetResultLink((int)pinFirst));
+                            target.SetValueLinkToInp((int)pinSecond, source.GetResultLink((int)pinFirst));
                         else if (pinSecond != null && pinFirst != null && outputFirst == false && outputSecond == true)
-                            source.SetValueLinkToInp((int)pinFirst, target, target.GetResultLink((int)pinSecond));
+                            source.SetValueLinkToInp((int)pinFirst, target.GetResultLink((int)pinSecond));
                     }
                     else if (elementFirst == elementSecond && outputFirst == outputSecond && outputSecond == false && pinSecond is int ipin)
                     {

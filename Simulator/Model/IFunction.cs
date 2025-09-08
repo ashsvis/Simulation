@@ -15,15 +15,16 @@ namespace Simulator.Model
         object[] OutputValues { get; }
         bool VisibleValues { get; set; }
         bool[] LinkedInputs { get; }
-        IFunction[] LinkedInputSources { get; }
+        //IFunction[] LinkedInputSources { get; }
         void Calculate();
         GetLinkValueMethod? GetResultLink(int outputIndex);
         void SetValueToInp(int inputIndex, object? value);
-        void SetValueLinkToInp(int inputIndex, IFunction source, GetLinkValueMethod? getInp);
+        void SetValueLinkToInp(int inputIndex, /*IFunction source, */GetLinkValueMethod? getInp);
         event ResultCalculateEventHandler? ResultChanged; 
     }
 
     public delegate object GetLinkValueMethod();
+    public delegate PointF GetLinkPointMethod();
     public delegate void ResultCalculateEventHandler(object sender, ResultCalculateEventArgs args);
 
     public class ResultCalculateEventArgs(string propname, object value) : EventArgs

@@ -100,7 +100,8 @@
                     // значение выхода
                     var ms = new SizeF(step * 2, step * 2);
                     targets.Add(n, new RectangleF(new PointF(x, y - ms.Height), ms));
-                    pins.Add(n, new PointF(x + step, y));
+                    var pt = new PointF(x + step, y);
+                    pins.Add(n, pt);
                     y += step * 2;
                     n++;
                 }
