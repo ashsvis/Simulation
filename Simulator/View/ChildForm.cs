@@ -203,7 +203,7 @@ namespace Simulator
                     {
                         if (input == true)
                         {
-                            if (item.Pins.TryGetValue(n + 100, out PointF targetPinPoint))
+                            if (item.InputPins.TryGetValue(n + 100, out PointF targetPinPoint))
                             {
                                 var sourcePinPoint = Point.Empty;
 

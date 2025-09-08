@@ -20,25 +20,29 @@
 
         public RectangleF Bounds => new(location, Size);
 
-        private readonly Dictionary<int, RectangleF> targets = [];
-        public Dictionary<int, RectangleF> Targets => targets;
+        private readonly Dictionary<int, RectangleF> itargets = [];
+        private readonly Dictionary<int, RectangleF> otargets = [];
+        public Dictionary<int, RectangleF> InputTargets => itargets;
+        public Dictionary<int, RectangleF> OutpotTargets => otargets;
 
-        private readonly Dictionary<int, PointF> pins = [];
+        private readonly Dictionary<int, PointF> ipins = [];
+        private readonly Dictionary<int, PointF> opins = [];
         protected PointF location;
 
-        public Dictionary<int, PointF> Pins => pins;
+        public Dictionary<int, PointF> InputPins => ipins;
+        public Dictionary<int, PointF> OutputPins => opins;
 
         public bool TryGetOutput(PointF point, out int? output, out PointF? pin)
         {
             output = null;
             pin = null;
-            foreach (var key in targets.Keys.Where(x => x >= 200 && x < 300))
+            foreach (var key in otargets.Keys)
             {
-                var target = targets[key];
+                var target = otargets[key];
                 if (target.Contains(point))
                 {
-                    output = key - 200;
-                    pin = pins.TryGetValue(key, out PointF value) ? value : null;
+                    output = key;
+                    pin = opins.TryGetValue(key, out PointF value) ? value : null;
                     return true;
                 }
             }
@@ -49,13 +53,13 @@
         {
             input = null;
             pin = null;
-            foreach (var key in targets.Keys.Where(x => x >= 100 && x < 200))
+            foreach (var key in itargets.Keys)
             {
-                var target = targets[key];
+                var target = itargets[key];
                 if (target.Contains(point))
                 {
-                    input = key - 100;
-                    pin = pins.TryGetValue(key, out PointF value) ? value : null;
+                    input = key;
+                    pin = ipins.TryGetValue(key, out PointF value) ? value : null;
                     return true;
                 }
             }
@@ -64,8 +68,6 @@
 
         public void CalculateTargets()
         {
-            targets.Clear();
-            pins.Clear();
             if (Instance is IFunction instance)
             {
                 var max = Math.Max(instance.InverseInputs.Length, instance.InverseOutputs.Length);
@@ -76,21 +78,25 @@
                 // входы
                 var y = step + location.Y;
                 var x = -step + location.X;
-                var n = 100;
+                var n = 0;
+                itargets.Clear();
+                ipins.Clear();
                 for (var i = 0; i < instance.InverseInputs.Length; i++)
                 {
                     y += step * 2;
                     // значение входа
                     var ms = new SizeF(step * 2, step * 2);
-                    targets.Add(n, new RectangleF(new PointF(x - ms.Width + step, y - ms.Height), ms));
-                    pins.Add(n, new PointF(x, y));
+                    itargets.Add(n, new RectangleF(new PointF(x - ms.Width + step, y - ms.Height), ms));
+                    ipins.Add(n, new PointF(x, y));
                     y += step * 2;
                     n++;
                 }
                 // выходы
                 y = step + location.Y;
                 x = width + location.X;
-                n = 200;
+                n = 0;
+                otargets.Clear();
+                opins.Clear();
                 for (var i = 0; i < instance.InverseOutputs.Length; i++)
                 {
                     if (instance.InverseOutputs.Length == 1)
@@ -99,9 +105,9 @@
                         y += step * 2;
                     // значение выхода
                     var ms = new SizeF(step * 2, step * 2);
-                    targets.Add(n, new RectangleF(new PointF(x, y - ms.Height), ms));
+                    otargets.Add(n, new RectangleF(new PointF(x, y - ms.Height), ms));
                     var pt = new PointF(x + step, y);
-                    pins.Add(n, pt);
+                    opins.Add(n, pt);
                     y += step * 2;
                     n++;
                 }
@@ -196,24 +202,34 @@
                     }
                     y += step * 2;
                 }
-                /*
                 // области выбора
                 using Pen tarpen = new(Color.FromArgb(80, Color.Magenta), 0);
-                foreach (var key in targets.Keys)
+                foreach (var key in itargets.Keys)
                 {
-                    var target = targets[key];
-                    graphics.DrawRectangles(tarpen, [target]);
+                    var itarget = itargets[key];
+                    graphics.DrawRectangles(tarpen, [itarget]);
+                }
+                foreach (var key in otargets.Keys)
+                {
+                    var otarget = otargets[key];
+                    graphics.DrawRectangles(tarpen, [otarget]);
                 }
                 // точки привязки входов и выходов
                 using Pen pinpen = new(Color.FromArgb(255, Color.Black), 0);
-                foreach (var key in pins.Keys)
+                foreach (var key in ipins.Keys)
                 {
-                    var pt = pins[key];
+                    var pt = ipins[key];
                     var r = new RectangleF(pt.X - 3, pt.Y - 3, 6, 6);
                     graphics.DrawLine(pinpen, new PointF(r.X, r.Y), new PointF(r.X + r.Width, r.Y + r.Height));
                     graphics.DrawLine(pinpen, new PointF(r.X + r.Width, r.Y), new PointF(r.X, r.Y + r.Height));
                 }
-                */
+                foreach (var key in opins.Keys)
+                {
+                    var pt = opins[key];
+                    var r = new RectangleF(pt.X - 3, pt.Y - 3, 6, 6);
+                    graphics.DrawLine(pinpen, new PointF(r.X, r.Y), new PointF(r.X + r.Width, r.Y + r.Height));
+                    graphics.DrawLine(pinpen, new PointF(r.X + r.Width, r.Y), new PointF(r.X, r.Y + r.Height));
+                }
             }
         }
     }
