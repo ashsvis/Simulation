@@ -28,13 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             zoomPad = new Simulator.View.ZoomControl();
+            contextMenuStrip1 = new ContextMenuStrip(components);
+            сохранитьToolStripMenuItem = new ToolStripMenuItem();
+            contextMenuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // zoomPad
             // 
             zoomPad.AllowDrop = true;
+            zoomPad.BackColor = SystemColors.ControlDarkDark;
+            zoomPad.ContextMenuStrip = contextMenuStrip1;
             zoomPad.Dock = DockStyle.Fill;
+            zoomPad.ForeColor = SystemColors.Window;
             zoomPad.Location = new Point(0, 0);
             zoomPad.MaxZoom = 20F;
             zoomPad.MinZoom = 0.1F;
@@ -51,6 +58,19 @@
             zoomPad.MouseMove += zoomPad_MouseMove;
             zoomPad.MouseUp += zoomPad_MouseUp;
             // 
+            // contextMenuStrip1
+            // 
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { сохранитьToolStripMenuItem });
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(181, 48);
+            // 
+            // сохранитьToolStripMenuItem
+            // 
+            сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
+            сохранитьToolStripMenuItem.Size = new Size(180, 22);
+            сохранитьToolStripMenuItem.Text = "Сохранить";
+            сохранитьToolStripMenuItem.Click += сохранитьToolStripMenuItem_Click;
+            // 
             // ChildForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -62,11 +82,14 @@
             Text = "Дочерняя форма";
             FormClosing += ChildForm_FormClosing;
             Load += ChildForm_Load;
+            contextMenuStrip1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
 
         private View.ZoomControl zoomPad;
+        private ContextMenuStrip contextMenuStrip1;
+        private ToolStripMenuItem сохранитьToolStripMenuItem;
     }
 }

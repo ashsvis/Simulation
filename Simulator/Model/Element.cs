@@ -1,4 +1,7 @@
-﻿namespace Simulator.Model
+﻿using Simulator.Model.Logic;
+using System.Xml.Linq;
+
+namespace Simulator.Model
 {
     public class Element
     {
@@ -23,6 +26,24 @@
                 location = value;
                 CalculateTargets();
             }
+        }
+
+        public void Save(XElement xtem)
+        {
+            xtem.Add(new XElement("Id", Id));
+            xtem.Add(new XElement("Type", Instance?.GetType()));
+            xtem.Add(new XElement("Location", Location));
+            if (Instance is IFunction instance)
+            {
+                var xtance = new XElement("Instance");
+                xtem.Add(xtance);
+                instance.Save(xtance);
+            }
+        }
+
+        public void Load(string[] content)
+        {
+            //throw new NotImplementedException();
         }
 
         public SizeF Size { get; set; }

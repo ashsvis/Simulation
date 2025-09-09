@@ -1,4 +1,5 @@
 ﻿using Simulator.Model.Logic;
+using System.Xml.Linq;
 
 namespace Simulator.Model
 {
@@ -20,7 +21,9 @@ namespace Simulator.Model
         GetLinkValueMethod? GetResultLink(int outputIndex);
         void SetValueToInp(int inputIndex, object? value);
         void SetValueLinkToInp(int inputIndex, GetLinkValueMethod? getMethod, Guid sourceId, int outputPinIndex);
-        event ResultCalculateEventHandler? ResultChanged; 
+        void Save(XElement xtem);
+
+        event ResultCalculateEventHandler? ResultChanged;
     }
 
     public delegate object GetLinkValueMethod();

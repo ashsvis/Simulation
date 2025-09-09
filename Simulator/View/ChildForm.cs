@@ -1,6 +1,7 @@
 ﻿using Simulator.Model;
 using Simulator.View;
 using System.Drawing.Drawing2D;
+using System.Xml.Linq;
 
 namespace Simulator
 {
@@ -174,7 +175,7 @@ namespace Simulator
             for (var i = items.Count - 1; i >= 0; i--)
             {
                 var item = items[i];
-                if (item.TryGetInput(pt, out pin, out point) && 
+                if (item.TryGetInput(pt, out pin, out point) &&
                     item.Instance is IFunction function && pin is int ipin && !function.LinkedInputs[ipin])
                 {
                     output = false;
@@ -206,7 +207,7 @@ namespace Simulator
                 if (item.Instance is IFunction function && function.LinkedInputs.Any(x => x == true))
                 {
                     var n = 0;
-                    foreach(var isLinked in function.LinkedInputs)
+                    foreach (var isLinked in function.LinkedInputs)
                     {
                         if (isLinked)
                         {
@@ -252,7 +253,7 @@ namespace Simulator
                 Math.Min(sourcePinPoint.Y, targetPinPoint.Y),
                 Math.Abs(sourcePinPoint.X - targetPinPoint.X),
                 Math.Abs(sourcePinPoint.Y - targetPinPoint.Y));
-            
+
             //using var rectpen = new Pen(Color.Silver, 0);
             //rectpen.DashStyle = DashStyle.Dot;
             //graphics.DrawRectangles(rectpen, [rect]);
@@ -266,7 +267,7 @@ namespace Simulator
                 var bottom = sourcePinPoint.Y < targetPinPoint.Y
                     ? sourcePinPoint.X < targetPinPoint.X ? rect.Bottom : rect.Top
                     : sourcePinPoint.X < targetPinPoint.X ? rect.Top : rect.Bottom;
-                var leftshift = SnapToGrid(new PointF(sourcePinPoint.X + (targetBounds.Left - (sourceBounds.Right + Element.Step * 2)) / 2, 0)).X;   
+                var leftshift = SnapToGrid(new PointF(sourcePinPoint.X + (targetBounds.Left - (sourceBounds.Right + Element.Step * 2)) / 2, 0)).X;
                 graphics.DrawLines(linepen, [
                     new PointF(rect.Left, top),
                     new PointF(leftshift, top),
@@ -274,7 +275,7 @@ namespace Simulator
                     new PointF(rect.Right, bottom),
                 ]);
             }
-            else 
+            else
             {
                 var top = sourcePinPoint.Y > targetPinPoint.Y ? rect.Top : rect.Bottom;
                 var bottom = sourcePinPoint.Y > targetPinPoint.Y ? rect.Bottom : rect.Top;
@@ -282,7 +283,7 @@ namespace Simulator
                 var middle = SnapToGrid(new PointF(0, sourceBounds.Top - targetBounds.Bottom > 0
                     ? targetBounds.Bottom + (sourceBounds.Top - targetBounds.Bottom) / 2
                     : sourceBounds.Bottom + (targetBounds.Top - sourceBounds.Bottom) / 2)).Y;
-                var rightshift = rect.Left - Element.Step*2;
+                var rightshift = rect.Left - Element.Step * 2;
                 graphics.DrawLines(linepen, [
                     new PointF(rect.Right, bottom),
                     new PointF(leftshift, bottom),
@@ -343,7 +344,7 @@ namespace Simulator
                 mousePosition = e.Location;
                 if (!delta.IsEmpty)
                 {
-                    if (element != null) 
+                    if (element != null)
                     {
                         if (pin == null)
                             element.Location = PointF.Add(element.Location, delta);
@@ -392,7 +393,7 @@ namespace Simulator
                             target.SetValueToInp(ipin, !bvalue);
                     }
                 }
-                else 
+                else
                     element = null;
                 pin = null;
                 output = null;
@@ -404,6 +405,21 @@ namespace Simulator
         public void UpdateView()
         {
             zoomPad.Invalidate();
+        }
+
+        private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var root = new XElement("Module");
+            XDocument doc = new(new XComment("Конфигурация модуля"), root);
+            XElement xtems = new("Items");
+            root.Add(xtems);
+            foreach(var item in items)
+            {
+                XElement xtem = new("Item");
+                xtems.Add(xtem);
+                item.Save(xtem);
+            }
+            doc.Save("module.xml");
         }
     }
 }

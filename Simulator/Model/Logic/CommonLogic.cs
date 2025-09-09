@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace Simulator.Model.Logic
 {
@@ -10,13 +12,14 @@ namespace Simulator.Model.Logic
         private readonly GetLinkValueMethod?[] getLinkInputs;
         private readonly (Guid, int)[] getLinkSources;
         private readonly string[] getInputNames;
+        private readonly string[] getOutputNames;
         private readonly LogicFunction logicFunction;
 
         public CommonLogic() : this(LogicFunction.None, 1)
         { 
         }
 
-        public CommonLogic(LogicFunction func, int inputCount)
+        public CommonLogic(LogicFunction func, int inputCount, int outputCount = 1)
         {
             logicFunction = func;
             getInputs = [];
@@ -24,6 +27,7 @@ namespace Simulator.Model.Logic
             getLinkInputs = [];
             getLinkSources = [];
             getInputNames = [];
+            getOutputNames = [];
             if (inputCount > 0)
             {
                 if (func == LogicFunction.Not)
@@ -35,6 +39,7 @@ namespace Simulator.Model.Logic
                 getLinkInputs = new GetLinkValueMethod?[inputCount];
                 getLinkSources = new (Guid, int)[inputCount];
                 getInputNames = new string[inputCount];
+                getOutputNames = new string[outputCount];
                 if (func == LogicFunction.Not)
                 {
                     InverseOut = true;
@@ -43,6 +48,7 @@ namespace Simulator.Model.Logic
                 {
                     getInputNames[0] = "S";
                     getInputNames[1] = "R";
+                    getOutputNames[0] = "Q";
                 }
             }
 
@@ -103,7 +109,7 @@ namespace Simulator.Model.Logic
         public string[] InputNames => getInputNames;
 
         [Browsable(false)]
-        public string[] OutputNames => [string.Empty];
+        public string[] OutputNames => getOutputNames;
 
         [Browsable(false)]
         public object[] InputValues
@@ -210,6 +216,42 @@ namespace Simulator.Model.Logic
             if (inputIndex >= 0 && inputIndex < getLinkInputs.Length &&
                 value != null && getLinkInputs[inputIndex] == null)
                 getInputs[inputIndex] = (bool)value;
+        }
+
+        public void Save(XElement xtem)
+        {
+            if (!string.IsNullOrWhiteSpace(Name))
+                xtem.Add(new XAttribute("Name", Name));
+            XElement xinputs = new("Inputs");
+            xtem.Add(xinputs);
+            for (var i = 0; i < Inputs.Length; i++)
+            {
+                XElement xinput = new("Input");
+                xinputs.Add(xinput);
+                if (!string.IsNullOrWhiteSpace(InputNames[i]))
+                    xinput.Add(new XAttribute("Name", InputNames[i]));
+                if (InverseInputs[i])
+                    xinput.Add(new XAttribute("Invert", InverseInputs[i]));
+                if (Inputs[i])
+                    xinput.Add(new XAttribute("Value", Inputs[i]));
+                (Guid id, int output) = getLinkSources[i];
+                if (id != Guid.Empty)
+                {
+                    xinput.Add(new XElement("SourceId", id));
+                    xinput.Add(new XElement("OutputIndex", output));
+                }
+            }
+            XElement xoutputs = new("Outputs");
+            xtem.Add(xoutputs);
+            for (var i = 0; i < InverseOutputs.Length; i++)
+            {
+                XElement xoutput = new("Output");
+                xoutputs.Add(xoutput);
+                if (!string.IsNullOrWhiteSpace(OutputNames[i]))
+                    xoutput.Add(new XAttribute("Name", OutputNames[i]));
+                if (InverseOutputs[i])
+                    xoutput.Add(new XAttribute("Invert", InverseOutputs[i]));
+            }
         }
     }
 }
