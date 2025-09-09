@@ -22,6 +22,7 @@ namespace Simulator.Model
         void SetValueToInp(int inputIndex, object? value);
         void SetValueLinkToInp(int inputIndex, GetLinkValueMethod? getMethod, Guid sourceId, int outputPinIndex);
         void Save(XElement xtem);
+        void Load(XElement? xtem);
 
         event ResultCalculateEventHandler? ResultChanged;
     }

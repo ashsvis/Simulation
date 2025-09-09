@@ -32,7 +32,8 @@ namespace Simulator.Model
         {
             xtem.Add(new XElement("Id", Id));
             xtem.Add(new XElement("Type", Instance?.GetType()));
-            xtem.Add(new XElement("Location", Location));
+            xtem.Add(new XAttribute("X", Location.X));
+            xtem.Add(new XAttribute("Y", Location.Y));
             if (Instance is IFunction instance)
             {
                 var xtance = new XElement("Instance");
@@ -41,9 +42,16 @@ namespace Simulator.Model
             }
         }
 
-        public void Load(string[] content)
+        public void Load(XElement item, Type type)
         {
-            //throw new NotImplementedException();
+            if (!int.TryParse(item.Attribute("X")?.Value, out int x)) return;
+            if (!int.TryParse(item.Attribute("Y")?.Value, out int y)) return;
+            Instance = Activator.CreateInstance(type);
+            Location = new Point(x, y);
+            if (Instance is IFunction inst) 
+            {
+                inst.Load(item.Element("Instance"));
+            }
         }
 
         public SizeF Size { get; set; }

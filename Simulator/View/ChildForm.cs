@@ -199,8 +199,6 @@ namespace Simulator
             //graphics.SmoothingMode = SmoothingMode.HighQuality;
             //graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-            //using var brush = new SolidBrush(zoomPad.BackColor);
-            //using var pen = new Pen(zoomPad.ForeColor, 0);
             // прорисовка связей
             foreach (var item in items)
             {
@@ -413,13 +411,66 @@ namespace Simulator
             XDocument doc = new(new XComment("Конфигурация модуля"), root);
             XElement xtems = new("Items");
             root.Add(xtems);
-            foreach(var item in items)
+            foreach (var item in items)
             {
                 XElement xtem = new("Item");
                 xtems.Add(xtem);
                 item.Save(xtem);
             }
             doc.Save("module.xml");
+        }
+
+        private void загрузитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var file = "module.xml";
+            var xdoc = XDocument.Load(file);
+            try
+            {
+                items.Clear();
+                // загрузка функций и информации о связях
+                var xmodule = xdoc.Element("Module");
+                if (xmodule != null)
+                {
+                    var xtems = xmodule.Element("Items");
+                    if (xtems != null)
+                    {
+                        foreach (XElement item in xtems.Elements("Item"))
+                        {
+                            if (!Guid.TryParse(item.Element("Id")?.Value, out Guid id)) continue;
+                            var xtype = item.Element("Type");
+                            if (xtype == null) continue;
+                            Type? type = Type.GetType(xtype.Value);
+                            if (type == null) continue;
+                            var element = new Element { Id = id, };
+                            element.Load(item, type);
+                            items.Add(element);
+                        }
+                        // установление связей
+                        foreach (var item in items)
+                        {
+                            if (item.Instance is IFunction function)
+                            {
+                                var n = 0;
+                                foreach (var (id, output) in function.InputLinkSources)
+                                {
+                                    if (id != Guid.Empty)
+                                    {
+                                        var sourceItem = items.FirstOrDefault(x => x.Id == id);
+                                        if (sourceItem != null && sourceItem.Instance is IFunction source)
+                                            function.SetValueLinkToInp(n, source.GetResultLink(output), id, output);
+                                    }
+                                    n++;
+                                }
+                            }
+                        }
+                        UpdateView();
+                    }
+                }
+            }
+            catch (Exception ex)
+            { 
+                MessageBox.Show(ex.Message, "Чтение файла конфигурации", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

@@ -253,5 +253,43 @@ namespace Simulator.Model.Logic
                     xoutput.Add(new XAttribute("Invert", InverseOutputs[i]));
             }
         }
+
+        public void Load(XElement? xtem)
+        {
+            var n = 0;
+            var xinputs = xtem?.Element("Inputs");
+            if (xinputs != null)
+            {
+                foreach (XElement item in xinputs.Elements("Input"))
+                {
+                    var name = item.Attribute("Name")?.Value;
+                    if (name != null)
+                        InputNames[n] = name;
+                    if (bool.TryParse(item.Attribute("Invert")?.Value, out bool invert))
+                        InverseInputs[n] = invert;
+                    if (Guid.TryParse(item.Element("SourceId")?.Value, out Guid guid))
+                    {
+                        int outputIndex = 0;
+                        int.TryParse(item.Element("OutputIndex")?.Value, out outputIndex);
+                        getLinkSources[n] = (guid, outputIndex);
+                    }
+                    n++;
+                }
+            }
+            n = 0;
+            var xoutputs = xtem?.Element("Outputs");
+            if (xoutputs != null)
+            {
+                foreach (XElement item in xoutputs.Elements("Output"))
+                {
+                    var name = item.Attribute("Name")?.Value;
+                    if (name != null)
+                        OutputNames[n] = name;
+                    if (bool.TryParse(item.Attribute("Invert")?.Value, out bool invert))
+                        InverseOutputs[n] = invert;
+                    n++;
+                }
+            }
+        }
     }
 }

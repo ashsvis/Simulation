@@ -32,6 +32,7 @@
             zoomPad = new Simulator.View.ZoomControl();
             contextMenuStrip1 = new ContextMenuStrip(components);
             сохранитьToolStripMenuItem = new ToolStripMenuItem();
+            загрузитьToolStripMenuItem = new ToolStripMenuItem();
             contextMenuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -60,9 +61,9 @@
             // 
             // contextMenuStrip1
             // 
-            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { сохранитьToolStripMenuItem });
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { загрузитьToolStripMenuItem, сохранитьToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(181, 48);
+            contextMenuStrip1.Size = new Size(181, 70);
             // 
             // сохранитьToolStripMenuItem
             // 
@@ -70,6 +71,13 @@
             сохранитьToolStripMenuItem.Size = new Size(180, 22);
             сохранитьToolStripMenuItem.Text = "Сохранить";
             сохранитьToolStripMenuItem.Click += сохранитьToolStripMenuItem_Click;
+            // 
+            // загрузитьToolStripMenuItem
+            // 
+            загрузитьToolStripMenuItem.Name = "загрузитьToolStripMenuItem";
+            загрузитьToolStripMenuItem.Size = new Size(180, 22);
+            загрузитьToolStripMenuItem.Text = "Загрузить";
+            загрузитьToolStripMenuItem.Click += загрузитьToolStripMenuItem_Click;
             // 
             // ChildForm
             // 
@@ -91,5 +99,6 @@
         private View.ZoomControl zoomPad;
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem сохранитьToolStripMenuItem;
+        private ToolStripMenuItem загрузитьToolStripMenuItem;
     }
 }
