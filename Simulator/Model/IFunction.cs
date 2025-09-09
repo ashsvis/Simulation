@@ -15,10 +15,11 @@ namespace Simulator.Model
         object[] OutputValues { get; }
         bool VisibleValues { get; set; }
         bool[] LinkedInputs { get; }
+        (Guid, int)[] InputLinkSources { get; }
         void Calculate();
         GetLinkValueMethod? GetResultLink(int outputIndex);
         void SetValueToInp(int inputIndex, object? value);
-        void SetValueLinkToInp(int inputIndex, GetLinkValueMethod? getInp);
+        void SetValueLinkToInp(int inputIndex, GetLinkValueMethod? getMethod, Guid sourceId, int outputPinIndex);
         event ResultCalculateEventHandler? ResultChanged; 
     }
 

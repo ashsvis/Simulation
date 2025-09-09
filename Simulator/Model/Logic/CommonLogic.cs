@@ -8,7 +8,7 @@ namespace Simulator.Model.Logic
         private readonly bool[] getInputs;
         private readonly bool[] getInverseInputs;
         private readonly GetLinkValueMethod?[] getLinkInputs;
-        //private readonly IFunction?[] getLinkOutputSources;
+        private readonly (Guid, int)[] getLinkSources;
         private readonly string[] getInputNames;
         private readonly LogicFunction logicFunction;
 
@@ -22,7 +22,7 @@ namespace Simulator.Model.Logic
             getInputs = [];
             getInverseInputs = [];
             getLinkInputs = [];
-            //getLinkOutputSources = [];
+            getLinkSources = [];
             getInputNames = [];
             if (inputCount > 0)
             {
@@ -33,7 +33,7 @@ namespace Simulator.Model.Logic
                 getInputs = new bool[inputCount];
                 getInverseInputs = new bool[inputCount];
                 getLinkInputs = new GetLinkValueMethod?[inputCount];
-                //getLinkOutputSources = new IFunction?[inputCount];
+                getLinkSources = new (Guid, int)[inputCount];
                 getInputNames = new string[inputCount];
                 if (func == LogicFunction.Not)
                 {
@@ -92,9 +92,6 @@ namespace Simulator.Model.Logic
             }
         }
 
-        //[Browsable(false)]
-        //public PointF OutPoint { get; set; }
-
         [Category("Выходы"), DisplayName(" Инверсия"), DefaultValue(false)]
         [DynamicPropertyFilter(nameof(FuncName), "And,Or")]
         public bool InverseOut { get; set; } = false;
@@ -129,29 +126,10 @@ namespace Simulator.Model.Logic
         }
 
         [Browsable(false)]
+        public (Guid, int)[] InputLinkSources => getLinkSources;
+
+        [Browsable(false)]
         public object[] OutputValues => [Out];
-
-        //[Browsable(false)]
-        //public PointF[] OutputPoints { get; set; } = new PointF[1];
-        //public PointF[] OutputPoints
-        //{
-        //    get
-        //    {
-        //        List<PointF> list = [];
-        //        for (var i = 0; i < getInputs.Length; i++)
-        //        {
-        //            if (getLinkPointInputs[i] is GetLinkPointMethod method)
-        //            {
-        //                PointF value = method();
-        //                list.Add(value);
-        //            }
-        //            else
-        //                list.Add(PointF.Empty);
-        //        }
-        //        return [.. list];
-        //    }
-        //}
-
 
         [Browsable(false)]
         public bool[] LinkedInputs 
@@ -169,23 +147,6 @@ namespace Simulator.Model.Logic
                 return [.. list];
             } 
         }
-
-        //[Browsable(false)]
-        //public IFunction[] LinkedInputSources
-        //{
-        //    get
-        //    {
-        //        List<IFunction> list = [];
-        //        for (var i = 0; i < getLinkOutputSources.Length; i++)
-        //        {
-        //            if (getLinkOutputSources[i] is IFunction function)
-        //                list.Add(function);
-        //            else
-        //                list.Add(null);
-        //        }
-        //        return [.. list];
-        //    }
-        //}
 
         public event ResultCalculateEventHandler? ResultChanged;
 
@@ -229,22 +190,18 @@ namespace Simulator.Model.Logic
             return () => Out;
         }
 
-        //public GetLinkPointMethod? GetResultPoint(int outputIndex)
-        //{
-        //    return () => OutputPoints[outputIndex];
-        //}
-
         /// <summary>
         /// Для создания связи записывается ссылка на метод,
         /// который потом вызывается для получения актуального значения
         /// </summary>
         /// <param name="inputIndex">номер входа</param>
-        /// <param name="getInp">Ссылка на метод, записываемая в целевом элементе, для этого входа</param>
-        public void SetValueLinkToInp(int inputIndex, GetLinkValueMethod? getInp)
+        /// <param name="getMethod">Ссылка на метод, записываемая в целевом элементе, для этого входа</param>
+        public void SetValueLinkToInp(int inputIndex, GetLinkValueMethod? getMethod, Guid sourceId, int outputPinIndex)
         {
             if (inputIndex >= 0 && inputIndex < getLinkInputs.Length)
             {
-                getLinkInputs[inputIndex] = getInp;
+                getLinkInputs[inputIndex] = getMethod;
+                getLinkSources[inputIndex] = (sourceId, outputPinIndex);
             }
         }
 

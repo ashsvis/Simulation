@@ -1,6 +1,5 @@
 ﻿using Simulator.Model;
 using Simulator.View;
-using System.Diagnostics;
 using System.Drawing.Drawing2D;
 
 namespace Simulator
@@ -77,6 +76,14 @@ namespace Simulator
             }
         }
 
+        public static PointF SnapToGrid(PointF pointF)
+        {
+            float gridStep = Element.Step * 2;
+            return new PointF(
+                (float)Math.Round(pointF.X / gridStep) * gridStep,
+                (float)Math.Round(pointF.Y / gridStep) * gridStep);
+        }
+
         private void zoomPad_DragDrop(object sender, DragEventArgs e)
         {
             if (e.Data == null) return;
@@ -85,7 +92,7 @@ namespace Simulator
                 if (e.Data.GetData(typeof(Element)) is Element item && item.Type != null)
                 {
                     item.Instance = (IFunction?)Activator.CreateInstance(item.Type);
-                    item.Location = PrepareMousePosition(zoomPad.PointToClient(new Point(e.X, e.Y)));
+                    item.Location = SnapToGrid(PrepareMousePosition(zoomPad.PointToClient(new Point(e.X, e.Y))));
                     if (item.Instance is IFunction instance)
                         instance.ResultChanged += Item_ResultChanged;
                     items.Add(item);
@@ -184,29 +191,34 @@ namespace Simulator
             return false;
         }
 
-        private void zoomPad_OnDraw(object sender, Simulator.View.ZoomControl.DrawEventArgs e)
+        private void zoomPad_OnDraw(object sender, ZoomControl.DrawEventArgs e)
         {
             var graphics = e.Graphics;
             if (graphics == null) return;
             //graphics.SmoothingMode = SmoothingMode.HighQuality;
             //graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-            using var brush = new SolidBrush(zoomPad.BackColor);
-            using var pen = new Pen(zoomPad.ForeColor, 0);
+            //using var brush = new SolidBrush(zoomPad.BackColor);
+            //using var pen = new Pen(zoomPad.ForeColor, 0);
             // прорисовка связей
             foreach (var item in items)
             {
                 if (item.Instance is IFunction function && function.LinkedInputs.Any(x => x == true))
                 {
                     var n = 0;
-                    foreach(var input in function.LinkedInputs)
+                    foreach(var isLinked in function.LinkedInputs)
                     {
-                        if (input)
+                        if (isLinked)
                         {
                             if (item.InputPins.TryGetValue(n, out PointF targetPinPoint))
                             {
-                                var sourcePinPoint = item.OutputPoints[0];
-                                graphics.DrawLine(Pens.Yellow, sourcePinPoint, targetPinPoint);
+                                (Guid sourceId, int outputIndex) = function.InputLinkSources[n];
+                                var source = items.FirstOrDefault(x => x.Id == sourceId);
+                                if (source != null)
+                                {
+                                    var sourcePinPoint = source.OutputPins[outputIndex];
+                                    DrawLink(graphics, zoomPad.ForeColor, sourcePinPoint, targetPinPoint, source.Bounds, item.Bounds);
+                                }
                             }
                         }
                         n++;
@@ -224,7 +236,61 @@ namespace Simulator
             if (linkFirstPoint != null)
             {
                 var mp = PrepareMousePosition(mousePosition);
-                graphics.DrawLine(Pens.Red, (PointF)linkFirstPoint, mp);
+                using var pen = new Pen(Color.Silver, 0);
+                pen.DashStyle = DashStyle.Dash;
+                graphics.DrawLine(pen, (PointF)linkFirstPoint, mp);
+            }
+        }
+
+        // рисовка связи
+        private static void DrawLink(Graphics graphics, Color color, PointF sourcePinPoint, PointF targetPinPoint,
+            RectangleF sourceBounds, RectangleF targetBounds)
+        {
+            //graphics.DrawLine(Pens.Yellow, sourcePinPoint, targetPinPoint);
+            var rect = new RectangleF(
+                Math.Min(sourcePinPoint.X, targetPinPoint.X),
+                Math.Min(sourcePinPoint.Y, targetPinPoint.Y),
+                Math.Abs(sourcePinPoint.X - targetPinPoint.X),
+                Math.Abs(sourcePinPoint.Y - targetPinPoint.Y));
+            
+            //using var rectpen = new Pen(Color.Silver, 0);
+            //rectpen.DashStyle = DashStyle.Dot;
+            //graphics.DrawRectangles(rectpen, [rect]);
+
+            using var linepen = new Pen(color, 1);
+            if (sourcePinPoint.X < targetPinPoint.X)
+            {
+                var top = sourcePinPoint.Y < targetPinPoint.Y
+                ? sourcePinPoint.X < targetPinPoint.X ? rect.Top : rect.Bottom
+                : sourcePinPoint.X < targetPinPoint.X ? rect.Bottom : rect.Top;
+                var bottom = sourcePinPoint.Y < targetPinPoint.Y
+                    ? sourcePinPoint.X < targetPinPoint.X ? rect.Bottom : rect.Top
+                    : sourcePinPoint.X < targetPinPoint.X ? rect.Top : rect.Bottom;
+                var leftshift = SnapToGrid(new PointF(sourcePinPoint.X + (targetBounds.Left - (sourceBounds.Right + Element.Step * 2)) / 2, 0)).X;   
+                graphics.DrawLines(linepen, [
+                    new PointF(rect.Left, top),
+                    new PointF(leftshift, top),
+                    new PointF(leftshift, bottom),
+                    new PointF(rect.Right, bottom),
+                ]);
+            }
+            else 
+            {
+                var top = sourcePinPoint.Y > targetPinPoint.Y ? rect.Top : rect.Bottom;
+                var bottom = sourcePinPoint.Y > targetPinPoint.Y ? rect.Bottom : rect.Top;
+                var leftshift = rect.Right + Element.Step * 2;
+                var middle = SnapToGrid(new PointF(0, sourceBounds.Top - targetBounds.Bottom > 0
+                    ? targetBounds.Bottom + (sourceBounds.Top - targetBounds.Bottom) / 2
+                    : sourceBounds.Bottom + (targetBounds.Top - sourceBounds.Bottom) / 2)).Y;
+                var rightshift = rect.Left - Element.Step*2;
+                graphics.DrawLines(linepen, [
+                    new PointF(rect.Right, bottom),
+                    new PointF(leftshift, bottom),
+                    new PointF(leftshift, middle),
+                    new PointF(rightshift, middle),
+                    new PointF(rightshift, top),
+                    new PointF(rect.Left, top),
+                ]);
             }
         }
 
@@ -246,10 +312,14 @@ namespace Simulator
                 {
                     ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
                 }
-                else if (TryGetFreeInputPin(e.Location, out element, out pin, out PointF? point, out output) &&
-                    element != null && element.Instance != null)
+                else if (TryGetFreeInputPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
+                    element != null && element.Instance != null && output == false)
                 {
-                    linkFirstPoint = point;
+                    ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
+                }
+                else if (TryGetPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
+                    element != null && element.Instance != null && output == true)
+                {
                     ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
                 }
                 else
@@ -291,6 +361,10 @@ namespace Simulator
         {
             if (e.Button == MouseButtons.Left)
             {
+                if (element != null)
+                {
+                    element.Location = SnapToGrid(element.Location);
+                }
                 var elementFirst = element;
                 var pinFirst = pin;
                 var outputFirst = output;
@@ -303,13 +377,11 @@ namespace Simulator
                         // создание связей между элементами
                         if (pinSecond != null && pinFirst != null && outputFirst == true && outputSecond == false)
                         {
-                            target.SetValueLinkToInp((int)pinSecond, source.GetResultLink((int)pinFirst));
-                            elementSecond.SetValueLinkPointToInp((int)pinSecond, elementFirst.GetResultLinkPoint((int)pinFirst));
+                            target.SetValueLinkToInp((int)pinSecond, source.GetResultLink((int)pinFirst), elementFirst.Id, (int)pinFirst);
                         }
                         else if (pinSecond != null && pinFirst != null && outputFirst == false && outputSecond == true)
                         {
-                            source.SetValueLinkToInp((int)pinFirst, target.GetResultLink((int)pinSecond));
-                            elementFirst.SetValueLinkPointToInp((int)pinFirst, elementSecond.GetResultLinkPoint((int)pinSecond));
+                            source.SetValueLinkToInp((int)pinFirst, target.GetResultLink((int)pinSecond), elementSecond.Id, (int)pinSecond);
                         }
                     }
                     else if (elementFirst == elementSecond && outputFirst == outputSecond && outputSecond == false && pinSecond is int ipin)

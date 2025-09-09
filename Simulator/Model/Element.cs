@@ -2,22 +2,17 @@
 {
     public class Element
     {
+        public static float Step = 6f;
+
         public Element() 
         { 
         }
 
+        public Guid Id { get; set; } = Guid.NewGuid();
+
         public Type? Type { get; set; }
         
-        public object? Instance
-        {
-            get => instance;
-            set
-            {
-                instance = value;
-                if (instance is IFunction function)
-                    getLinkPointInputs = new GetLinkPointMethod?[function.InputValues.Length];
-            }
-        }
+        public object? Instance { get; set; }
 
         public PointF Location 
         { 
@@ -36,18 +31,13 @@
 
         private readonly Dictionary<int, RectangleF> itargets = [];
         private readonly Dictionary<int, RectangleF> otargets = [];
-        //public Dictionary<int, RectangleF> InputTargets => itargets;
-        //public Dictionary<int, RectangleF> OutpotTargets => otargets;
 
         private readonly Dictionary<int, PointF> ipins = [];
         private readonly Dictionary<int, PointF> opins = [];
         protected PointF location;
 
         public Dictionary<int, PointF> InputPins => ipins;
-        //public Dictionary<int, PointF> OutputPins => opins;
-
-        private GetLinkPointMethod?[] getLinkPointInputs = [];
-        private object? instance;
+        public Dictionary<int, PointF> OutputPins => opins;
 
         public bool TryGetOutput(PointF point, out int? output, out PointF? pin)
         {
@@ -88,7 +78,7 @@
             if (Instance is IFunction instance)
             {
                 var max = Math.Max(instance.InverseInputs.Length, instance.InverseOutputs.Length);
-                var step = 6f;
+                var step = Step;
                 var height = step + max * step * 4 + step;
                 var width = step + 1 * step * 4 + step;
                 Size = new SizeF(width, height);
@@ -134,7 +124,7 @@
 
         public virtual void Draw(Graphics graphics, Color foreColor, Color backColor, CustomDraw? customDraw = null)
         {
-            using var brush = new SolidBrush(backColor);
+            using var brush = new SolidBrush(Color.FromArgb(255, backColor));
             using var pen = new Pen(foreColor, 1f);
             using var font = new Font("Consolas", 8f);
             using var fontbrush = new SolidBrush(foreColor);
@@ -220,65 +210,33 @@
                     y += step * 2;
                 }
                 // области выбора
-                using Pen tarpen = new(Color.FromArgb(80, Color.Magenta), 0);
-                foreach (var key in itargets.Keys)
-                {
-                    var itarget = itargets[key];
-                    graphics.DrawRectangles(tarpen, [itarget]);
-                }
-                foreach (var key in otargets.Keys)
-                {
-                    var otarget = otargets[key];
-                    graphics.DrawRectangles(tarpen, [otarget]);
-                }
+                //using Pen tarpen = new(Color.FromArgb(80, Color.Magenta), 0);
+                //foreach (var key in itargets.Keys)
+                //{
+                //    var itarget = itargets[key];
+                //    graphics.DrawRectangles(tarpen, [itarget]);
+                //}
+                //foreach (var key in otargets.Keys)
+                //{
+                //    var otarget = otargets[key];
+                //    graphics.DrawRectangles(tarpen, [otarget]);
+                //}
                 // точки привязки входов и выходов
-                using Pen pinpen = new(Color.FromArgb(255, Color.Black), 0);
-                foreach (var key in ipins.Keys)
-                {
-                    var pt = ipins[key];
-                    var r = new RectangleF(pt.X - 3, pt.Y - 3, 6, 6);
-                    graphics.DrawLine(pinpen, new PointF(r.X, r.Y), new PointF(r.X + r.Width, r.Y + r.Height));
-                    graphics.DrawLine(pinpen, new PointF(r.X + r.Width, r.Y), new PointF(r.X, r.Y + r.Height));
-                }
-                foreach (var key in opins.Keys)
-                {
-                    var pt = opins[key];
-                    var r = new RectangleF(pt.X - 3, pt.Y - 3, 6, 6);
-                    graphics.DrawLine(pinpen, new PointF(r.X, r.Y), new PointF(r.X + r.Width, r.Y + r.Height));
-                    graphics.DrawLine(pinpen, new PointF(r.X + r.Width, r.Y), new PointF(r.X, r.Y + r.Height));
-                }
-            }
-        }
-
-        public GetLinkPointMethod GetResultLinkPoint(int pin)
-        {
-            return () => opins[pin];
-        }
-
-        public void SetValueLinkPointToInp(int pin, GetLinkPointMethod method)
-        {
-            if (pin >= 0 && pin < getLinkPointInputs.Length)
-            {
-                getLinkPointInputs[pin] = method;
-            }
-        }
-
-        public PointF[] OutputPoints
-        {
-            get
-            {
-                List<PointF> list = [];
-                for (var i = 0; i < getLinkPointInputs.Length; i++)
-                {
-                    if (getLinkPointInputs[i] is GetLinkPointMethod method)
-                    {
-                        PointF value = method();
-                        list.Add(value);
-                    }
-                    else
-                        list.Add(PointF.Empty);
-                }
-                return [.. list];
+                //using Pen pinpen = new(Color.FromArgb(255, Color.Black), 0);
+                //foreach (var key in ipins.Keys)
+                //{
+                //    var pt = ipins[key];
+                //    var r = new RectangleF(pt.X - 3, pt.Y - 3, 6, 6);
+                //    graphics.DrawLine(pinpen, new PointF(r.X, r.Y), new PointF(r.X + r.Width, r.Y + r.Height));
+                //    graphics.DrawLine(pinpen, new PointF(r.X + r.Width, r.Y), new PointF(r.X, r.Y + r.Height));
+                //}
+                //foreach (var key in opins.Keys)
+                //{
+                //    var pt = opins[key];
+                //    var r = new RectangleF(pt.X - 3, pt.Y - 3, 6, 6);
+                //    graphics.DrawLine(pinpen, new PointF(r.X, r.Y), new PointF(r.X + r.Width, r.Y + r.Height));
+                //    graphics.DrawLine(pinpen, new PointF(r.X + r.Width, r.Y), new PointF(r.X, r.Y + r.Height));
+                //}
             }
         }
 
