@@ -169,6 +169,8 @@ namespace Simulator.Model
                 // обозначение функции, текст по-центру, в верхней части рамки элемента
                 using var format = new StringFormat();
                 format.Alignment = StringAlignment.Center;
+                var msn = graphics.MeasureString(instance.Name, font);
+                graphics.DrawString(instance.Name, font, fontbrush, new PointF(location.X + width / 2, location.Y - msn.Height), format);
                 graphics.DrawString(instance.FuncSymbol, font, fontbrush, new PointF(location.X + width / 2, location.Y), format);
                 customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush);
                 // входы

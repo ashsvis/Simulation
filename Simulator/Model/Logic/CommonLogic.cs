@@ -254,10 +254,13 @@ namespace Simulator.Model.Logic
             }
         }
 
-        public void Load(XElement? xtem)
+        public void Load(XElement? xinstance)
         {
+            var instname = xinstance?.Attribute("Name")?.Value;
+            if (instname != null) 
+                Name = instname;
             var n = 0;
-            var xinputs = xtem?.Element("Inputs");
+            var xinputs = xinstance?.Element("Inputs");
             if (xinputs != null)
             {
                 foreach (XElement item in xinputs.Elements("Input"))
@@ -277,7 +280,7 @@ namespace Simulator.Model.Logic
                 }
             }
             n = 0;
-            var xoutputs = xtem?.Element("Outputs");
+            var xoutputs = xinstance?.Element("Outputs");
             if (xoutputs != null)
             {
                 foreach (XElement item in xoutputs.Elements("Output"))
