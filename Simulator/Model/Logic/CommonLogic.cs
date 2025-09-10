@@ -246,7 +246,8 @@ namespace Simulator.Model.Logic
                 if (id != Guid.Empty)
                 {
                     xinput.Add(new XElement("SourceId", id));
-                    xinput.Add(new XElement("OutputIndex", output));
+                    if (output > 0)
+                        xinput.Add(new XElement("OutputIndex", output));
                 }
             }
             if (customInputs)
