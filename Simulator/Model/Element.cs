@@ -163,10 +163,10 @@ namespace Simulator.Model
                 var rect = new RectangleF(location, Size);
                 if (Selected)
                 {
-                    for (var i = 7; i >= 3; i -= 2)
+                    for (var i = 5; i >= 3; i -= 2)
                     {
-                        using var selpen1 = new Pen(Color.FromArgb(100, Color.CadetBlue), i);
-                        graphics.DrawRectangles(selpen1, [rect]);
+                        using var selpen = new Pen(Color.FromArgb(110, Color.Yellow), i);
+                        graphics.DrawRectangles(selpen, [rect]);
                     }
                 }
                 graphics.FillRectangle(brush, rect);

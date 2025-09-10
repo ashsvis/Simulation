@@ -2,7 +2,6 @@
 using Simulator.View;
 using System.Drawing.Drawing2D;
 using System.Xml.Linq;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Simulator
 {
@@ -321,7 +320,11 @@ namespace Simulator
                     ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
                 }
                 else
+                {
+                    items.ForEach(item => item.Selected = false);
                     ElementSelected?.Invoke(null, EventArgs.Empty);
+                }
+                zoomPad.Invalidate();
             }
         }
 
