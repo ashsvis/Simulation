@@ -1,5 +1,7 @@
 ﻿using Simulator.Model.Logic;
 using System.ComponentModel;
+using System.Globalization;
+using System.Xml.Linq;
 
 namespace Simulator.Model.Generator
 {
@@ -11,10 +13,19 @@ namespace Simulator.Model.Generator
         public override string FuncSymbol => "^-^"; // Импульс
 
         private DateTime time;
+        private double waitTime = 1.0;
 
         [Category("Настройки"), DisplayName("Время"), Description("Время импульса, сек")]
-        public double WaitTime { get; set; } = 1.0;
-
+        public double WaitTime 
+        { 
+            get => waitTime;
+            set
+            {
+                if (Math.Abs(waitTime - value) < 0.0001) return;
+                if (waitTime < 0.1) waitTime = 0.1;
+                waitTime = value;
+            }
+        }
         public override void Calculate()
         {
             bool input = (bool)InputValues[0];
@@ -46,6 +57,26 @@ namespace Simulator.Model.Generator
             var ms = graphics.MeasureString(text, font);
             var pt = new PointF(rect.X + rect.Width / 2, rect.Y + rect.Height - ms.Height);
             graphics.DrawString(text, font, fontbrush, pt, format);
+        }
+
+        public override void Save(XElement xtem)
+        {
+            base.Save(xtem);
+            XElement? xtance = xtem.Element("Instance");
+            if (Math.Abs(WaitTime - 1.0) < 0.0001) return;
+            if (xtance == null )
+            {
+                xtance = new XElement("Instance");
+                xtem.Add(xtance);
+            }
+            xtance.Add(new XElement("WaitTime", WaitTime));
+        }
+
+        public override void Load(XElement? xtance)
+        {
+            base.Load(xtance);
+            if (double.TryParse(xtance?.Element("WaitTime")?.Value, CultureInfo.GetCultureInfo("en-US"), out double value))
+                WaitTime = value;
         }
     }
 }

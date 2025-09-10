@@ -1,5 +1,7 @@
 ﻿using Simulator.Model.Logic;
 using System.ComponentModel;
+using System.Globalization;
+using System.Xml.Linq;
 
 namespace Simulator.Model.Generator
 {
@@ -52,6 +54,26 @@ namespace Simulator.Model.Generator
             using var symfont = new Font(font.FontFamily, font.Size - 3, FontStyle.Italic);
             var symms = graphics.MeasureString("t1", symfont);
             graphics.DrawString("t1", symfont, fontbrush, new PointF(sym.Left, sym.Top + sym.Height / 2 - symms.Height * 1.2f), format);
+        }
+
+        public override void Save(XElement xtem)
+        {
+            base.Save(xtem);
+            XElement? xtance = xtem.Element("Instance");
+            if (Math.Abs(WaitTime - 1.0) < 0.0001) return;
+            if (xtance == null)
+            {
+                xtance = new XElement("Instance");
+                xtem.Add(xtance);
+            }
+            xtance.Add(new XElement("WaitTime", WaitTime));
+        }
+
+        public override void Load(XElement? xtance)
+        {
+            base.Load(xtance);
+            if (double.TryParse(xtance?.Element("WaitTime")?.Value, CultureInfo.GetCultureInfo("en-US"), out double value))
+                WaitTime = value;
         }
     }
 }

@@ -35,11 +35,7 @@ namespace Simulator.Model
             xtem.Add(new XAttribute("X", Location.X));
             xtem.Add(new XAttribute("Y", Location.Y));
             if (Instance is IFunction instance)
-            {
-                var xtance = new XElement("Instance");
-                xtem.Add(xtance);
-                instance.Save(xtance);
-            }
+                instance.Save(xtem);
         }
 
         public void Load(XElement item, Type type)
