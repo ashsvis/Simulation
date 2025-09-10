@@ -1,5 +1,4 @@
-﻿using Simulator.Model.Logic;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 
 namespace Simulator.Model
 {
@@ -10,6 +9,8 @@ namespace Simulator.Model
         public Element() 
         { 
         }
+
+        public bool Selected { get; set; }
 
         public Guid Id { get; set; } = Guid.NewGuid();
 
@@ -160,6 +161,14 @@ namespace Simulator.Model
                 var height = step + max * step * 4 + step;
                 var width = step + 1 * step * 4 + step;
                 var rect = new RectangleF(location, Size);
+                if (Selected)
+                {
+                    for (var i = 7; i >= 3; i -= 2)
+                    {
+                        using var selpen1 = new Pen(Color.FromArgb(100, Color.CadetBlue), i);
+                        graphics.DrawRectangles(selpen1, [rect]);
+                    }
+                }
                 graphics.FillRectangle(brush, rect);
                 graphics.DrawRectangles(pen, [rect]);
                 // обозначение функции, текст по-центру, в верхней части рамки элемента

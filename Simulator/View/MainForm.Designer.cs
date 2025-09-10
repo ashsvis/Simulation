@@ -30,7 +30,7 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            TreeNode treeNode2 = new TreeNode("Библиотека");
+            TreeNode treeNode1 = new TreeNode("Библиотека");
             menuMainStrip = new MenuStrip();
             файлToolStripMenuItem = new ToolStripMenuItem();
             создатьToolStripMenuItem = new ToolStripMenuItem();
@@ -394,7 +394,7 @@
             // 
             // tvLibrary
             // 
-            tvLibrary.BackColor = SystemColors.WindowFrame;
+            tvLibrary.BackColor = Color.FromArgb(64, 64, 64);
             tvLibrary.Dock = DockStyle.Fill;
             tvLibrary.ForeColor = SystemColors.Window;
             tvLibrary.FullRowSelect = true;
@@ -402,9 +402,9 @@
             tvLibrary.LineColor = Color.WhiteSmoke;
             tvLibrary.Location = new Point(0, 0);
             tvLibrary.Name = "tvLibrary";
-            treeNode2.Name = "Узел0";
-            treeNode2.Text = "Библиотека";
-            tvLibrary.Nodes.AddRange(new TreeNode[] { treeNode2 });
+            treeNode1.Name = "Узел0";
+            treeNode1.Text = "Библиотека";
+            tvLibrary.Nodes.AddRange(new TreeNode[] { treeNode1 });
             tvLibrary.Size = new Size(194, 264);
             tvLibrary.TabIndex = 1;
             tvLibrary.MouseDown += tvLibrary_MouseDown;

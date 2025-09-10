@@ -31,15 +31,15 @@
             components = new System.ComponentModel.Container();
             zoomPad = new Simulator.View.ZoomControl();
             contextMenuStrip1 = new ContextMenuStrip(components);
-            сохранитьToolStripMenuItem = new ToolStripMenuItem();
             загрузитьToolStripMenuItem = new ToolStripMenuItem();
+            сохранитьToolStripMenuItem = new ToolStripMenuItem();
             contextMenuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // zoomPad
             // 
             zoomPad.AllowDrop = true;
-            zoomPad.BackColor = SystemColors.ControlDarkDark;
+            zoomPad.BackColor = Color.FromArgb(64, 64, 64);
             zoomPad.ContextMenuStrip = contextMenuStrip1;
             zoomPad.Dock = DockStyle.Fill;
             zoomPad.ForeColor = SystemColors.Window;
@@ -63,21 +63,21 @@
             // 
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] { загрузитьToolStripMenuItem, сохранитьToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(181, 70);
-            // 
-            // сохранитьToolStripMenuItem
-            // 
-            сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
-            сохранитьToolStripMenuItem.Size = new Size(180, 22);
-            сохранитьToolStripMenuItem.Text = "Сохранить";
-            сохранитьToolStripMenuItem.Click += сохранитьToolStripMenuItem_Click;
+            contextMenuStrip1.Size = new Size(134, 48);
             // 
             // загрузитьToolStripMenuItem
             // 
             загрузитьToolStripMenuItem.Name = "загрузитьToolStripMenuItem";
-            загрузитьToolStripMenuItem.Size = new Size(180, 22);
+            загрузитьToolStripMenuItem.Size = new Size(133, 22);
             загрузитьToolStripMenuItem.Text = "Загрузить";
             загрузитьToolStripMenuItem.Click += загрузитьToolStripMenuItem_Click;
+            // 
+            // сохранитьToolStripMenuItem
+            // 
+            сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
+            сохранитьToolStripMenuItem.Size = new Size(133, 22);
+            сохранитьToolStripMenuItem.Text = "Сохранить";
+            сохранитьToolStripMenuItem.Click += сохранитьToolStripMenuItem_Click;
             // 
             // ChildForm
             // 

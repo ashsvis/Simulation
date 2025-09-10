@@ -125,8 +125,8 @@ namespace Simulator.View
             Transformation = g.Transform;
 
             // Paint whatever you need here
-            var brush = new SolidBrush(SystemColors.ControlDarkDark);
-            var pen = new Pen(SystemColors.Window);
+            var brush = new SolidBrush(BackColor);
+            var pen = new Pen(ForeColor);
 
             g.SmoothingMode = SmoothingMode.HighQuality;
             g.FillRectangle(brush, Origin.X, Origin.Y, (float)(width / ZoomScale), (float)(height / ZoomScale));

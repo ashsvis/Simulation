@@ -97,6 +97,8 @@ namespace Simulator
                     item.Location = SnapToGrid(PrepareMousePosition(zoomPad.PointToClient(new Point(e.X, e.Y))));
                     if (item.Instance is IFunction instance)
                         instance.ResultChanged += Item_ResultChanged;
+                    items.ForEach(item => item.Selected = false);
+                    item.Selected = true;
                     items.Add(item);
                     zoomPad.Invalidate();
                     ElementSelected?.Invoke(item.Instance, EventArgs.Empty);
@@ -308,18 +310,14 @@ namespace Simulator
             {
                 linkFirstPoint = null;
                 if (TryGetModule(e.Location, out element) &&
-                    element != null && element.Instance != null)
-                {
-                    ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
-                }
-                else if (TryGetFreeInputPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
-                    element != null && element.Instance != null && output == false)
-                {
-                    ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
-                }
-                else if (TryGetPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
+                    element != null && element.Instance != null ||
+                    TryGetFreeInputPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
+                    element != null && element.Instance != null && output == false ||
+                    TryGetPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
                     element != null && element.Instance != null && output == true)
                 {
+                    element.Selected = true;
+                    items.Where(item => item != element).ToList().ForEach(item => item.Selected = false);
                     ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
                 }
                 else
