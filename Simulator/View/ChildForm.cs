@@ -470,25 +470,7 @@ namespace Simulator
                                 }
                             }
                         }
-                        // установление записанных значений входов
-                        foreach (var item in items)
-                        {
-                            if (item.Instance is IFunction function)
-                            {
-                                for (var  (id, output) in function.InputLinkSources)
-                                {
-                                    if (id != Guid.Empty)
-                                    {
-                                        var sourceItem = items.FirstOrDefault(x => x.Id == id);
-                                        if (sourceItem != null && sourceItem.Instance is IFunction source)
-                                            function.SetValueLinkToInp(n, source.GetResultLink(output), id, output);
-                                    }
-                                }
-                            }
-                        }
-
-                        target.SetValueToInp(ipin, !bvalue);
-
+                        // подключение обрабочика событий по изменению
                         items.ForEach(item =>
                         {
                             if (item.Instance is IFunction instance)

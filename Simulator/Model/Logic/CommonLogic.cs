@@ -228,6 +228,7 @@ namespace Simulator.Model.Logic
             {
                 XElement xinput = new("Input");
                 xinputs.Add(xinput);
+                xinput.Add(new XAttribute("Index", i));
                 if (!string.IsNullOrWhiteSpace(InputNames[i]))
                     xinput.Add(new XAttribute("Name", InputNames[i]));
                 if (InverseInputs[i])
@@ -247,6 +248,7 @@ namespace Simulator.Model.Logic
             {
                 XElement xoutput = new("Output");
                 xoutputs.Add(xoutput);
+                xoutput.Add(new XAttribute("Index", i));
                 if (!string.IsNullOrWhiteSpace(OutputNames[i]))
                     xoutput.Add(new XAttribute("Name", OutputNames[i]));
                 if (InverseOutputs[i])
@@ -259,38 +261,41 @@ namespace Simulator.Model.Logic
             var instname = xinstance?.Attribute("Name")?.Value;
             if (instname != null) 
                 Name = instname;
-            var n = 0;
             var xinputs = xinstance?.Element("Inputs");
             if (xinputs != null)
             {
                 foreach (XElement item in xinputs.Elements("Input"))
                 {
-                    var name = item.Attribute("Name")?.Value;
-                    if (name != null)
-                        InputNames[n] = name;
-                    if (bool.TryParse(item.Attribute("Invert")?.Value, out bool invert))
-                        InverseInputs[n] = invert;
-                    if (Guid.TryParse(item.Element("SourceId")?.Value, out Guid guid))
+                    if (int.TryParse(item.Attribute("Index")?.Value, out int index))
                     {
-                        int outputIndex = 0;
-                        int.TryParse(item.Element("OutputIndex")?.Value, out outputIndex);
-                        getLinkSources[n] = (guid, outputIndex);
+                        var name = item.Attribute("Name")?.Value;
+                        if (name != null) InputNames[index] = name;
+                        if (bool.TryParse(item.Attribute("Invert")?.Value, out bool invert))
+                            InverseInputs[index] = invert;
+                        if (Guid.TryParse(item.Element("SourceId")?.Value, out Guid guid) && guid != Guid.Empty)
+                        {
+                            if (int.TryParse(item.Element("OutputIndex")?.Value, out int outputIndex))
+                                getLinkSources[index] = (guid, outputIndex);
+                            else
+                                getLinkSources[index] = (guid, 0);
+                        }
+                        else if (bool.TryParse(item.Attribute("Value")?.Value, out bool value))
+                            getInputs[index] = value;
                     }
-                    n++;
                 }
             }
-            n = 0;
             var xoutputs = xinstance?.Element("Outputs");
             if (xoutputs != null)
             {
                 foreach (XElement item in xoutputs.Elements("Output"))
                 {
-                    var name = item.Attribute("Name")?.Value;
-                    if (name != null)
-                        OutputNames[n] = name;
-                    if (bool.TryParse(item.Attribute("Invert")?.Value, out bool invert))
-                        InverseOutputs[n] = invert;
-                    n++;
+                    if (int.TryParse(item.Attribute("Index")?.Value, out int index))
+                    {
+                        var name = item.Attribute("Name")?.Value;
+                        if (name != null) OutputNames[index] = name;
+                        if (bool.TryParse(item.Attribute("Invert")?.Value, out bool invert))
+                            InverseOutputs[index] = invert;
+                    }
                 }
             }
         }
