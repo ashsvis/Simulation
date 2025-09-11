@@ -77,7 +77,6 @@ namespace Simulator
             timerInterface.Enabled = true;
             timerSimulation.Enabled = true;
 
-            CreateNewChildForm();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -204,6 +203,28 @@ namespace Simulator
         private void tsbHostClose_Click(object sender, EventArgs e)
         {
             Host.Close();
+        }
+
+        private void PanelForm_Leave(object sender, EventArgs e)
+        {
+            toolStripCaption.BackColor = SystemColors.InactiveCaption;
+            toolStripCaption.ForeColor = SystemColors.InactiveCaptionText;
+        }
+
+        private void PanelForm_Enter(object sender, EventArgs e)
+        {
+            toolStripCaption.BackColor = SystemColors.ActiveCaption;
+            toolStripCaption.ForeColor = SystemColors.ActiveCaptionText;
+        }
+
+        private void pnLeftSize_Paint(object sender, PaintEventArgs e)
+        {
+            var g = e.Graphics;
+            var r = ClientRectangle;
+            g.DrawLine(SystemPens.ControlDarkDark, new PointF(r.Left, r.Top), new PointF(r.Left, r.Bottom));
+            g.DrawLine(SystemPens.ControlDark, new PointF(r.Left + 1, r.Top), new PointF(r.Left + 1, r.Bottom));
+            g.DrawLine(SystemPens.ControlLight, new PointF(r.Left + 2, r.Top), new PointF(r.Left + 2, r.Bottom));
+            g.DrawLine(SystemPens.ControlLightLight, new PointF(r.Left + 3, r.Top), new PointF(r.Left + 3, r.Bottom));
         }
     }
 }

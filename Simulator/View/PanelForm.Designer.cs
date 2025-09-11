@@ -73,7 +73,11 @@
             panel1 = new Panel();
             tlpTools = new TableLayoutPanel();
             splitContainer1 = new SplitContainer();
+            tcTools = new TabControl();
+            tpLibrary = new TabPage();
             tvLibrary = new TreeView();
+            tpModiles = new TabPage();
+            tvModules = new TreeView();
             pgProps = new PropertyGrid();
             pnLeftSize = new Panel();
             toolStripCaption = new ToolStrip();
@@ -86,6 +90,9 @@
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
+            tcTools.SuspendLayout();
+            tpLibrary.SuspendLayout();
+            tpModiles.SuspendLayout();
             toolStripCaption.SuspendLayout();
             SuspendLayout();
             // 
@@ -388,14 +395,36 @@
             // 
             // splitContainer1.Panel1
             // 
-            splitContainer1.Panel1.Controls.Add(tvLibrary);
+            splitContainer1.Panel1.Controls.Add(tcTools);
             // 
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(pgProps);
-            splitContainer1.Size = new Size(194, 450);
+            splitContainer1.Size = new Size(199, 450);
             splitContainer1.SplitterDistance = 221;
             splitContainer1.TabIndex = 2;
+            // 
+            // tcTools
+            // 
+            tcTools.Controls.Add(tpLibrary);
+            tcTools.Controls.Add(tpModiles);
+            tcTools.Dock = DockStyle.Fill;
+            tcTools.Location = new Point(0, 0);
+            tcTools.Name = "tcTools";
+            tcTools.SelectedIndex = 0;
+            tcTools.Size = new Size(199, 221);
+            tcTools.TabIndex = 2;
+            // 
+            // tpLibrary
+            // 
+            tpLibrary.Controls.Add(tvLibrary);
+            tpLibrary.Location = new Point(4, 24);
+            tpLibrary.Name = "tpLibrary";
+            tpLibrary.Padding = new Padding(3);
+            tpLibrary.Size = new Size(191, 193);
+            tpLibrary.TabIndex = 0;
+            tpLibrary.Text = "Библиотека";
+            tpLibrary.UseVisualStyleBackColor = true;
             // 
             // tvLibrary
             // 
@@ -405,21 +434,45 @@
             tvLibrary.FullRowSelect = true;
             tvLibrary.HideSelection = false;
             tvLibrary.LineColor = Color.WhiteSmoke;
-            tvLibrary.Location = new Point(0, 0);
+            tvLibrary.Location = new Point(3, 3);
             tvLibrary.Name = "tvLibrary";
             treeNode1.Name = "Узел0";
             treeNode1.Text = "Библиотека";
             tvLibrary.Nodes.AddRange(new TreeNode[] { treeNode1 });
-            tvLibrary.Size = new Size(194, 221);
+            tvLibrary.Size = new Size(185, 187);
             tvLibrary.TabIndex = 1;
             tvLibrary.MouseDown += tvLibrary_MouseDown;
+            // 
+            // tpModiles
+            // 
+            tpModiles.Controls.Add(tvModules);
+            tpModiles.Location = new Point(4, 24);
+            tpModiles.Name = "tpModiles";
+            tpModiles.Padding = new Padding(3);
+            tpModiles.Size = new Size(192, 193);
+            tpModiles.TabIndex = 1;
+            tpModiles.Text = "Модули";
+            tpModiles.UseVisualStyleBackColor = true;
+            // 
+            // tvModules
+            // 
+            tvModules.BackColor = Color.FromArgb(64, 64, 64);
+            tvModules.Dock = DockStyle.Fill;
+            tvModules.ForeColor = SystemColors.Window;
+            tvModules.FullRowSelect = true;
+            tvModules.HideSelection = false;
+            tvModules.LineColor = Color.WhiteSmoke;
+            tvModules.Location = new Point(3, 3);
+            tvModules.Name = "tvModules";
+            tvModules.Size = new Size(186, 187);
+            tvModules.TabIndex = 2;
             // 
             // pgProps
             // 
             pgProps.Dock = DockStyle.Fill;
             pgProps.Location = new Point(0, 0);
             pgProps.Name = "pgProps";
-            pgProps.Size = new Size(194, 225);
+            pgProps.Size = new Size(199, 225);
             pgProps.TabIndex = 0;
             pgProps.PropertyValueChanged += pgProps_PropertyValueChanged;
             // 
@@ -427,10 +480,12 @@
             // 
             pnLeftSize.Cursor = Cursors.VSplit;
             pnLeftSize.Dock = DockStyle.Right;
-            pnLeftSize.Location = new Point(203, 3);
+            pnLeftSize.Location = new Point(205, 0);
+            pnLeftSize.Margin = new Padding(0);
             pnLeftSize.Name = "pnLeftSize";
-            pnLeftSize.Size = new Size(3, 450);
-            pnLeftSize.TabIndex = 3;
+            pnLeftSize.Size = new Size(4, 456);
+            pnLeftSize.TabIndex = 5;
+            pnLeftSize.Paint += pnLeftSize_Paint;
             // 
             // toolStripCaption
             // 
@@ -482,6 +537,8 @@
             Text = "Моделирование работы устройств";
             FormClosing += MainForm_FormClosing;
             Load += MainForm_Load;
+            Enter += PanelForm_Enter;
+            Leave += PanelForm_Leave;
             menuMainStrip.ResumeLayout(false);
             menuMainStrip.PerformLayout();
             panel1.ResumeLayout(false);
@@ -490,6 +547,9 @@
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
+            tcTools.ResumeLayout(false);
+            tpLibrary.ResumeLayout(false);
+            tpModiles.ResumeLayout(false);
             toolStripCaption.ResumeLayout(false);
             toolStripCaption.PerformLayout();
             ResumeLayout(false);
@@ -546,5 +606,9 @@
         private Panel pnLeftSize;
         private ToolStripButton tsbHostClose;
         private ToolStripLabel tslPanelCaption;
+        private TabControl tcTools;
+        private TabPage tpLibrary;
+        private TabPage tpModiles;
+        private TreeView tvModules;
     }
 }
