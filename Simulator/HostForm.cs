@@ -7,29 +7,11 @@ namespace Simulator
 {
     public partial class HostForm : Form
     {
-        private PanelForm[] panels;
+        private readonly PanelForm[] panels;
 
         public HostForm()
         {
             InitializeComponent();
-        }
-
-        private void RootForm_Resize(object sender, EventArgs e)
-        {
-            WindowState = FormWindowState.Minimized;
-        }
-
-        private void RootForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            // финализация
-        }
-
-        private void RootForm_Load(object sender, EventArgs e)
-        {
-            #region Защита от повторного запуска
-            //var process = RunningInstance();
-            //if (process != null) { Application.Exit(); return; }
-            #endregion
             Width = 0;
             Height = 1;
             var monitors = Screen.AllScreens;
@@ -49,7 +31,28 @@ namespace Simulator
                 };
                 panels[i].Show(this);
                 panels[i].Refresh();
+                // debug
+                if (monitors[i].Primary)
+                    break;
             }
+        }
+
+        private void RootForm_Resize(object sender, EventArgs e)
+        {
+            WindowState = FormWindowState.Minimized;
+        }
+
+        private void RootForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // финализация
+        }
+
+        private void RootForm_Load(object sender, EventArgs e)
+        {
+            #region Защита от повторного запуска
+            //var process = RunningInstance();
+            //if (process != null) { Application.Exit(); return; }
+            #endregion
         }
 
         //[EnvironmentPermission(SecurityAction.LinkDemand, Unrestricted = true)]
