@@ -1,6 +1,6 @@
 ﻿namespace Simulator
 {
-    partial class RootForm
+    partial class HostForm
     {
         /// <summary>
         /// Required designer variable.

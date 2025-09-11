@@ -1,6 +1,6 @@
 ﻿namespace Simulator
 {
-    partial class MainForm
+    partial class PanelForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PanelForm));
             TreeNode treeNode1 = new TreeNode("Библиотека");
             menuMainStrip = new MenuStrip();
             файлToolStripMenuItem = new ToolStripMenuItem();
@@ -71,24 +71,28 @@
             timerInterface = new System.Windows.Forms.Timer(components);
             timerSimulation = new System.Windows.Forms.Timer(components);
             panel1 = new Panel();
-            tableLayoutPanel1 = new TableLayoutPanel();
+            tlpTools = new TableLayoutPanel();
             splitContainer1 = new SplitContainer();
             tvLibrary = new TreeView();
             pgProps = new PropertyGrid();
             pnLeftSize = new Panel();
+            toolStripCaption = new ToolStrip();
+            tsbHostClose = new ToolStripButton();
+            tslPanelCaption = new ToolStripLabel();
             menuMainStrip.SuspendLayout();
             panel1.SuspendLayout();
-            tableLayoutPanel1.SuspendLayout();
+            tlpTools.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
+            toolStripCaption.SuspendLayout();
             SuspendLayout();
             // 
             // menuMainStrip
             // 
             menuMainStrip.Items.AddRange(new ToolStripItem[] { файлToolStripMenuItem, изменитьToolStripMenuItem, инструментыToolStripMenuItem, справкаToolStripMenuItem, окноToolStripMenuItem });
-            menuMainStrip.Location = new Point(0, 0);
+            menuMainStrip.Location = new Point(0, 25);
             menuMainStrip.MdiWindowListItem = окноToolStripMenuItem;
             menuMainStrip.Name = "menuMainStrip";
             menuMainStrip.Size = new Size(1002, 24);
@@ -336,9 +340,10 @@
             // 
             // statusMainStrip
             // 
-            statusMainStrip.Location = new Point(0, 561);
+            statusMainStrip.Location = new Point(0, 505);
             statusMainStrip.Name = "statusMainStrip";
             statusMainStrip.Size = new Size(1002, 22);
+            statusMainStrip.SizingGrip = false;
             statusMainStrip.TabIndex = 2;
             statusMainStrip.Text = "statusStrip1";
             // 
@@ -352,27 +357,27 @@
             // 
             // panel1
             // 
-            panel1.Controls.Add(tableLayoutPanel1);
+            panel1.Controls.Add(tlpTools);
             panel1.Dock = DockStyle.Left;
-            panel1.Location = new Point(0, 24);
+            panel1.Location = new Point(0, 49);
             panel1.Name = "panel1";
-            panel1.Size = new Size(209, 537);
+            panel1.Size = new Size(209, 456);
             panel1.TabIndex = 4;
             // 
-            // tableLayoutPanel1
+            // tlpTools
             // 
-            tableLayoutPanel1.ColumnCount = 2;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel1.Controls.Add(splitContainer1, 0, 0);
-            tableLayoutPanel1.Controls.Add(pnLeftSize, 1, 0);
-            tableLayoutPanel1.Dock = DockStyle.Fill;
-            tableLayoutPanel1.Location = new Point(0, 0);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 1;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(209, 537);
-            tableLayoutPanel1.TabIndex = 3;
+            tlpTools.ColumnCount = 2;
+            tlpTools.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tlpTools.ColumnStyles.Add(new ColumnStyle());
+            tlpTools.Controls.Add(splitContainer1, 0, 0);
+            tlpTools.Controls.Add(pnLeftSize, 1, 0);
+            tlpTools.Dock = DockStyle.Fill;
+            tlpTools.Location = new Point(0, 0);
+            tlpTools.Name = "tlpTools";
+            tlpTools.RowCount = 1;
+            tlpTools.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tlpTools.Size = new Size(209, 456);
+            tlpTools.TabIndex = 3;
             // 
             // splitContainer1
             // 
@@ -388,8 +393,8 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(pgProps);
-            splitContainer1.Size = new Size(194, 531);
-            splitContainer1.SplitterDistance = 264;
+            splitContainer1.Size = new Size(194, 450);
+            splitContainer1.SplitterDistance = 221;
             splitContainer1.TabIndex = 2;
             // 
             // tvLibrary
@@ -405,7 +410,7 @@
             treeNode1.Name = "Узел0";
             treeNode1.Text = "Библиотека";
             tvLibrary.Nodes.AddRange(new TreeNode[] { treeNode1 });
-            tvLibrary.Size = new Size(194, 264);
+            tvLibrary.Size = new Size(194, 221);
             tvLibrary.TabIndex = 1;
             tvLibrary.MouseDown += tvLibrary_MouseDown;
             // 
@@ -414,7 +419,7 @@
             pgProps.Dock = DockStyle.Fill;
             pgProps.Location = new Point(0, 0);
             pgProps.Name = "pgProps";
-            pgProps.Size = new Size(194, 263);
+            pgProps.Size = new Size(194, 225);
             pgProps.TabIndex = 0;
             pgProps.PropertyValueChanged += pgProps_PropertyValueChanged;
             // 
@@ -424,20 +429,55 @@
             pnLeftSize.Dock = DockStyle.Right;
             pnLeftSize.Location = new Point(203, 3);
             pnLeftSize.Name = "pnLeftSize";
-            pnLeftSize.Size = new Size(3, 531);
+            pnLeftSize.Size = new Size(3, 450);
             pnLeftSize.TabIndex = 3;
             // 
-            // MainForm
+            // toolStripCaption
+            // 
+            toolStripCaption.BackColor = SystemColors.ActiveCaption;
+            toolStripCaption.GripStyle = ToolStripGripStyle.Hidden;
+            toolStripCaption.Items.AddRange(new ToolStripItem[] { tsbHostClose, tslPanelCaption });
+            toolStripCaption.Location = new Point(0, 0);
+            toolStripCaption.Name = "toolStripCaption";
+            toolStripCaption.Size = new Size(1002, 25);
+            toolStripCaption.TabIndex = 6;
+            toolStripCaption.Text = "toolStrip1";
+            // 
+            // tsbHostClose
+            // 
+            tsbHostClose.Alignment = ToolStripItemAlignment.Right;
+            tsbHostClose.BackColor = Color.Firebrick;
+            tsbHostClose.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbHostClose.Image = Properties.Resources.cancel;
+            tsbHostClose.ImageTransparentColor = Color.Magenta;
+            tsbHostClose.Name = "tsbHostClose";
+            tsbHostClose.Size = new Size(23, 22);
+            tsbHostClose.Text = "Закрыть приложение";
+            tsbHostClose.Click += tsbHostClose_Click;
+            // 
+            // tslPanelCaption
+            // 
+            tslPanelCaption.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            tslPanelCaption.ForeColor = SystemColors.ActiveCaptionText;
+            tslPanelCaption.Image = Properties.Resources.system;
+            tslPanelCaption.Margin = new Padding(3, 1, 0, 2);
+            tslPanelCaption.Name = "tslPanelCaption";
+            tslPanelCaption.Size = new Size(224, 22);
+            tslPanelCaption.Text = "Моделирование работы устройств";
+            // 
+            // PanelForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1002, 583);
+            ClientSize = new Size(1002, 527);
             Controls.Add(panel1);
             Controls.Add(statusMainStrip);
             Controls.Add(menuMainStrip);
+            Controls.Add(toolStripCaption);
+            FormBorderStyle = FormBorderStyle.None;
             IsMdiContainer = true;
             MainMenuStrip = menuMainStrip;
-            Name = "MainForm";
+            Name = "PanelForm";
             StartPosition = FormStartPosition.Manual;
             Text = "Моделирование работы устройств";
             FormClosing += MainForm_FormClosing;
@@ -445,17 +485,20 @@
             menuMainStrip.ResumeLayout(false);
             menuMainStrip.PerformLayout();
             panel1.ResumeLayout(false);
-            tableLayoutPanel1.ResumeLayout(false);
+            tlpTools.ResumeLayout(false);
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
+            toolStripCaption.ResumeLayout(false);
+            toolStripCaption.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
+        private ToolStrip toolStripCaption;
         private MenuStrip menuMainStrip;
         private StatusStrip statusMainStrip;
         private ToolStripMenuItem файлToolStripMenuItem;
@@ -499,7 +542,9 @@
         private TreeView tvLibrary;
         private SplitContainer splitContainer1;
         private PropertyGrid pgProps;
-        private TableLayoutPanel tableLayoutPanel1;
+        private TableLayoutPanel tlpTools;
         private Panel pnLeftSize;
+        private ToolStripButton tsbHostClose;
+        private ToolStripLabel tslPanelCaption;
     }
 }

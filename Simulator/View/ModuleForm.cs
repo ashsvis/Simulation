@@ -7,14 +7,14 @@ namespace Simulator
 {
     public partial class ModuleForm : Form, IUpdateView
     {
-        private readonly MainForm mainForm;
+        private readonly PanelForm mainForm;
 
         private readonly List<Element> items = [];
 
         private Point firstMouseDown;
         private Point mousePosition;
 
-        public ModuleForm(MainForm mainForm)
+        public ModuleForm(PanelForm mainForm)
         {
             InitializeComponent();
             this.mainForm = mainForm;

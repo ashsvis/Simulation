@@ -5,11 +5,11 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Simulator
 {
-    public partial class RootForm : Form
+    public partial class HostForm : Form
     {
-        private MainForm[] panels;
+        private PanelForm[] panels;
 
-        public RootForm()
+        public HostForm()
         {
             InitializeComponent();
         }
@@ -33,18 +33,20 @@ namespace Simulator
             Width = 0;
             Height = 1;
             var monitors = Screen.AllScreens;
-            panels = new MainForm[monitors.Length];
+            panels = new PanelForm[monitors.Length];
             for (var i = 0; i < monitors.Length; i++)
             {
-                panels[i] = new MainForm(this, monitors[i].Primary, monitors[i].Bounds)
+                panels[i] = new PanelForm(this, monitors[i].Primary, monitors[i].WorkingArea)
                 {
                     Visible = false,
-                    Location = monitors[i].Bounds.Location,
-                    Size = monitors[i].Bounds.Size,
-                    WindowState = FormWindowState.Maximized,
+                    WindowState = FormWindowState.Normal,
+                    StartPosition = FormStartPosition.Manual,
+                    FormBorderStyle = FormBorderStyle.None,
+                    Location = monitors[i].WorkingArea.Location,
+                    Size = monitors[i].WorkingArea.Size,
                     MinimizeBox = false,
                     MaximizeBox = false,
-                }; //monitors[i].WorkingArea
+                };
                 panels[i].Show(this);
                 panels[i].Refresh();
             }

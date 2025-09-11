@@ -3,13 +3,13 @@ using Simulator.View;
 
 namespace Simulator
 {
-    public partial class MainForm : Form
+    public partial class PanelForm : Form
     {
-        public RootForm Host { get; }
+        public HostForm Host { get; }
         public bool IsPrimary { get; }
         public new Rectangle Bounds { get; }
 
-        public MainForm(RootForm host, bool isPrimary, Rectangle bounds)
+        public PanelForm(HostForm host, bool isPrimary, Rectangle bounds)
         {
             InitializeComponent();
             // восстановление состояния окна в начале сеанса работы
@@ -199,6 +199,11 @@ namespace Simulator
                     view.UpdateView();
             }
             pgProps.Refresh();
+        }
+
+        private void tsbHostClose_Click(object sender, EventArgs e)
+        {
+            Host.Close();
         }
     }
 }
