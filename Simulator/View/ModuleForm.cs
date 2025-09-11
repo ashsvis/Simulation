@@ -5,7 +5,7 @@ using System.Xml.Linq;
 
 namespace Simulator
 {
-    public partial class ChildForm : Form, IUpdateView
+    public partial class ModuleForm : Form, IUpdateView
     {
         private readonly MainForm mainForm;
 
@@ -14,7 +14,7 @@ namespace Simulator
         private Point firstMouseDown;
         private Point mousePosition;
 
-        public ChildForm(MainForm mainForm)
+        public ModuleForm(MainForm mainForm)
         {
             InitializeComponent();
             this.mainForm = mainForm;

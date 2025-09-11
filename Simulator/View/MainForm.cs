@@ -5,20 +5,28 @@ namespace Simulator
 {
     public partial class MainForm : Form
     {
-        public MainForm()
+        public RootForm Host { get; }
+        public bool IsPrimary { get; }
+        public new Rectangle Bounds { get; }
+
+        public MainForm(RootForm host, bool isPrimary, Rectangle bounds)
         {
             InitializeComponent();
             // восстановление состояния окна в начале сеанса работы
-            var location = Properties.Settings.Default.MainFormLocation;
-            var size = Properties.Settings.Default.MainFormSize;
-            if (location.IsEmpty || size.IsEmpty)
-                CenterToScreen();
-            else
-            {
-                Location = location;
-                Size = size;
-                WindowState = Properties.Settings.Default.MainFormMaximized ? FormWindowState.Maximized : FormWindowState.Normal;
-            }
+            //var location = Properties.Settings.Default.MainFormLocation;
+            //var size = Properties.Settings.Default.MainFormSize;
+            //if (location.IsEmpty || size.IsEmpty)
+            //    CenterToScreen();
+            //else
+            //{
+            //    Location = location;
+            //    Size = size;
+            //    WindowState = Properties.Settings.Default.MainFormMaximized ? FormWindowState.Maximized : FormWindowState.Normal;
+            //}
+
+            Host = host;
+            IsPrimary = isPrimary;
+            Bounds = bounds;
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -74,18 +82,18 @@ namespace Simulator
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-
+            Application.Exit();
             // сохранение состояния окна в конце сеанса работы
-            Properties.Settings.Default.MainFormMaximized = WindowState == FormWindowState.Maximized;
-            WindowState = FormWindowState.Normal;
-            Properties.Settings.Default.MainFormLocation = Location;
-            Properties.Settings.Default.MainFormSize = Size;
-            Properties.Settings.Default.Save();
+            //Properties.Settings.Default.MainFormMaximized = WindowState == FormWindowState.Maximized;
+            //WindowState = FormWindowState.Normal;
+            //Properties.Settings.Default.MainFormLocation = Location;
+            //Properties.Settings.Default.MainFormSize = Size;
+            //Properties.Settings.Default.Save();
         }
 
         private void выходToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Close();
+            Host.Close();
         }
 
         private void создатьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -95,7 +103,7 @@ namespace Simulator
 
         private void CreateNewChildForm()
         {
-            var childForm = new ChildForm(this) { MdiParent = this, WindowState = FormWindowState.Maximized };
+            var childForm = new ModuleForm(this) { MdiParent = this, WindowState = FormWindowState.Maximized };
             childForm.ElementSelected += ChildForm_ElementSelected;
             childForm.FormClosed += ChildForm_FormClosed;
             childForm.Show();

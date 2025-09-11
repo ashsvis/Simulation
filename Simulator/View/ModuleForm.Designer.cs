@@ -1,6 +1,6 @@
 ﻿namespace Simulator
 {
-    partial class ChildForm
+    partial class ModuleForm
     {
         /// <summary>
         /// Required designer variable.
