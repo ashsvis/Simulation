@@ -1,6 +1,4 @@
-﻿using Simulator.Model;
-
-namespace Simulator
+﻿namespace Simulator
 {
     public partial class HostForm : Form
     {
@@ -51,15 +49,10 @@ namespace Simulator
             #endregion
         }
 
-        public void SaveModel()
-        {
-            Project.Save("project.xml");
-        }
-
-        public void LoadModel()
-        {
-            Project.Load("project.xml");
-        }
+        //public void LoadModel()
+        //{
+        //    Project.Load("project.xml");
+        //}
 
         //[EnvironmentPermission(SecurityAction.LinkDemand, Unrestricted = true)]
         //private static Process RunningInstance()

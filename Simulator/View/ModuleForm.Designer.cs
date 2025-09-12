@@ -32,12 +32,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModuleForm));
             zoomPad = new Simulator.View.ZoomControl();
             contextMenuStrip1 = new ContextMenuStrip(components);
-            загрузитьToolStripMenuItem = new ToolStripMenuItem();
-            сохранитьToolStripMenuItem = new ToolStripMenuItem();
             toolStripModule = new ToolStrip();
             создатьToolStripButton = new ToolStripButton();
             открытьToolStripButton = new ToolStripButton();
-            сохранитьToolStripButton = new ToolStripButton();
+            tsbSave = new ToolStripButton();
             печатьToolStripButton = new ToolStripButton();
             toolStripSeparator = new ToolStripSeparator();
             вырезатьToolStripButton = new ToolStripButton();
@@ -45,7 +43,6 @@
             вставитьToolStripButton = new ToolStripButton();
             toolStripSeparator1 = new ToolStripSeparator();
             справкаToolStripButton = new ToolStripButton();
-            contextMenuStrip1.SuspendLayout();
             toolStripModule.SuspendLayout();
             SuspendLayout();
             // 
@@ -74,28 +71,13 @@
             // 
             // contextMenuStrip1
             // 
-            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { загрузитьToolStripMenuItem, сохранитьToolStripMenuItem });
             contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(134, 48);
-            // 
-            // загрузитьToolStripMenuItem
-            // 
-            загрузитьToolStripMenuItem.Name = "загрузитьToolStripMenuItem";
-            загрузитьToolStripMenuItem.Size = new Size(133, 22);
-            загрузитьToolStripMenuItem.Text = "Загрузить";
-            загрузитьToolStripMenuItem.Click += загрузитьToolStripMenuItem_Click;
-            // 
-            // сохранитьToolStripMenuItem
-            // 
-            сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
-            сохранитьToolStripMenuItem.Size = new Size(133, 22);
-            сохранитьToolStripMenuItem.Text = "Сохранить";
-            сохранитьToolStripMenuItem.Click += сохранитьToolStripMenuItem_Click;
+            contextMenuStrip1.Size = new Size(61, 4);
             // 
             // toolStripModule
             // 
             toolStripModule.GripStyle = ToolStripGripStyle.Hidden;
-            toolStripModule.Items.AddRange(new ToolStripItem[] { создатьToolStripButton, открытьToolStripButton, сохранитьToolStripButton, печатьToolStripButton, toolStripSeparator, вырезатьToolStripButton, копироватьToolStripButton, вставитьToolStripButton, toolStripSeparator1, справкаToolStripButton });
+            toolStripModule.Items.AddRange(new ToolStripItem[] { создатьToolStripButton, открытьToolStripButton, tsbSave, печатьToolStripButton, toolStripSeparator, вырезатьToolStripButton, копироватьToolStripButton, вставитьToolStripButton, toolStripSeparator1, справкаToolStripButton });
             toolStripModule.Location = new Point(0, 0);
             toolStripModule.Name = "toolStripModule";
             toolStripModule.RenderMode = ToolStripRenderMode.System;
@@ -106,33 +88,40 @@
             // создатьToolStripButton
             // 
             создатьToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            создатьToolStripButton.Enabled = false;
             создатьToolStripButton.Image = (Image)resources.GetObject("создатьToolStripButton.Image");
             создатьToolStripButton.ImageTransparentColor = Color.Magenta;
             создатьToolStripButton.Name = "создатьToolStripButton";
             создатьToolStripButton.Size = new Size(23, 22);
             создатьToolStripButton.Text = "&Создать";
+            создатьToolStripButton.Visible = false;
             // 
             // открытьToolStripButton
             // 
             открытьToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            открытьToolStripButton.Enabled = false;
             открытьToolStripButton.Image = (Image)resources.GetObject("открытьToolStripButton.Image");
             открытьToolStripButton.ImageTransparentColor = Color.Magenta;
             открытьToolStripButton.Name = "открытьToolStripButton";
             открытьToolStripButton.Size = new Size(23, 22);
             открытьToolStripButton.Text = "&Открыть";
+            открытьToolStripButton.Visible = false;
             // 
-            // сохранитьToolStripButton
+            // tsbSave
             // 
-            сохранитьToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            сохранитьToolStripButton.Image = (Image)resources.GetObject("сохранитьToolStripButton.Image");
-            сохранитьToolStripButton.ImageTransparentColor = Color.Magenta;
-            сохранитьToolStripButton.Name = "сохранитьToolStripButton";
-            сохранитьToolStripButton.Size = new Size(23, 22);
-            сохранитьToolStripButton.Text = "&Сохранить";
+            tsbSave.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbSave.Enabled = false;
+            tsbSave.Image = (Image)resources.GetObject("tsbSave.Image");
+            tsbSave.ImageTransparentColor = Color.Magenta;
+            tsbSave.Name = "tsbSave";
+            tsbSave.Size = new Size(23, 22);
+            tsbSave.Text = "&Сохранить";
+            tsbSave.Click += tsbSave_Click;
             // 
             // печатьToolStripButton
             // 
             печатьToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            печатьToolStripButton.Enabled = false;
             печатьToolStripButton.Image = (Image)resources.GetObject("печатьToolStripButton.Image");
             печатьToolStripButton.ImageTransparentColor = Color.Magenta;
             печатьToolStripButton.Name = "печатьToolStripButton";
@@ -147,6 +136,7 @@
             // вырезатьToolStripButton
             // 
             вырезатьToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            вырезатьToolStripButton.Enabled = false;
             вырезатьToolStripButton.Image = (Image)resources.GetObject("вырезатьToolStripButton.Image");
             вырезатьToolStripButton.ImageTransparentColor = Color.Magenta;
             вырезатьToolStripButton.Name = "вырезатьToolStripButton";
@@ -156,6 +146,7 @@
             // копироватьToolStripButton
             // 
             копироватьToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            копироватьToolStripButton.Enabled = false;
             копироватьToolStripButton.Image = (Image)resources.GetObject("копироватьToolStripButton.Image");
             копироватьToolStripButton.ImageTransparentColor = Color.Magenta;
             копироватьToolStripButton.Name = "копироватьToolStripButton";
@@ -165,6 +156,7 @@
             // вставитьToolStripButton
             // 
             вставитьToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            вставитьToolStripButton.Enabled = false;
             вставитьToolStripButton.Image = (Image)resources.GetObject("вставитьToolStripButton.Image");
             вставитьToolStripButton.ImageTransparentColor = Color.Magenta;
             вставитьToolStripButton.Name = "вставитьToolStripButton";
@@ -179,6 +171,7 @@
             // справкаToolStripButton
             // 
             справкаToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            справкаToolStripButton.Enabled = false;
             справкаToolStripButton.Image = (Image)resources.GetObject("справкаToolStripButton.Image");
             справкаToolStripButton.ImageTransparentColor = Color.Magenta;
             справкаToolStripButton.Name = "справкаToolStripButton";
@@ -194,10 +187,9 @@
             Controls.Add(toolStripModule);
             Name = "ModuleForm";
             StartPosition = FormStartPosition.WindowsDefaultBounds;
-            Text = "Дочерняя форма";
+            Text = "Форма модуля";
             FormClosing += ChildForm_FormClosing;
             Load += ChildForm_Load;
-            contextMenuStrip1.ResumeLayout(false);
             toolStripModule.ResumeLayout(false);
             toolStripModule.PerformLayout();
             ResumeLayout(false);
@@ -208,12 +200,10 @@
 
         private View.ZoomControl zoomPad;
         private ContextMenuStrip contextMenuStrip1;
-        private ToolStripMenuItem сохранитьToolStripMenuItem;
-        private ToolStripMenuItem загрузитьToolStripMenuItem;
         private ToolStrip toolStripModule;
         private ToolStripButton создатьToolStripButton;
         private ToolStripButton открытьToolStripButton;
-        private ToolStripButton сохранитьToolStripButton;
+        private ToolStripButton tsbSave;
         private ToolStripButton печатьToolStripButton;
         private ToolStripSeparator toolStripSeparator;
         private ToolStripButton вырезатьToolStripButton;

@@ -58,7 +58,22 @@ namespace Simulator
             Host.Close();
         }
 
-        private void создатьToolStripMenuItem_Click(object sender, EventArgs e)
+        private void tsmiCreate_Click(object sender, EventArgs e)
+        {
+            var notSaved = Project.Modules.Any(x => x.Changed);
+            if (notSaved)
+            {
+                var result = MessageBox.Show("Текущие изменения не сохранены! Записать?", "Создание нового проекта", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
+                    Project.Save();
+                if (result == DialogResult.Cancel)
+                    return;
+            }
+            Project.Clear();
+            AddModuleToProject();
+        }
+
+        private void AddModuleToProject()
         {
             var module = new Module();
             Project.Modules.Add(module);
@@ -74,6 +89,11 @@ namespace Simulator
             }
 
             CreateNewModuleForm(module);
+        }
+
+        private void tsmiAddModule_Click(object sender, EventArgs e)
+        {
+            AddModuleToProject();
         }
 
         private void CreateNewModuleForm(Module module)
@@ -135,6 +155,7 @@ namespace Simulator
         {
             SimulationTick?.Invoke(this, EventArgs.Empty);
             //if (!pgProps.Focused) pgProps.Refresh();
+            tsmiSave.Enabled = Project.Modules.Any(x => x.Changed);
         }
 
         private void tvLibrary_MouseDown(object sender, MouseEventArgs e)
@@ -205,15 +226,28 @@ namespace Simulator
 
         private void tsmiSave_Click(object sender, EventArgs e)
         {
-            Host.SaveModel();
+            Project.Save();
         }
 
-        private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
+        private void tsmiOpen_Click(object sender, EventArgs e)
         {
-            MdiChildren.ToList().ForEach(x => x.Close());
-            Host.LoadModel();
-            tvModules.Nodes.Clear();
-            tvModules.Nodes.AddRange(Project.GetModulesTree());
+            var notSaved = Project.Modules.Any(x => x.Changed);
+            if (notSaved)
+            {
+                var result = MessageBox.Show("Текущие изменения не сохранены! Записать?", "Загрузка проекта", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
+                    Project.Save();
+                if (result == DialogResult.Cancel)
+                    return;
+            }
+            var dlg = new OpenFileDialog() { DefaultExt = "xml", Filter = "*.xml|*.xml" };
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                MdiChildren.ToList().ForEach(x => x.Close());
+                Project.Load(dlg.FileName);
+                tvModules.Nodes.Clear();
+                tvModules.Nodes.AddRange(Project.GetModulesTree());
+            }
         }
 
         private void tvModules_DoubleClick(object sender, EventArgs e)
@@ -241,11 +275,25 @@ namespace Simulator
             {
                 tslPanelCaption.Text = $"{form.Text}";
                 var node = tvModules.Nodes[0].Nodes.Cast<TreeNode>().FirstOrDefault(x => x.Tag == form.Module);
-                if (node != null) 
-                { 
+                if (node != null)
+                {
                     tvModules.SelectedNode = node;
                     node.EnsureVisible();
                 }
+            }
+        }
+
+        private void tsmiSaveAs_Click(object sender, EventArgs e)
+        {
+            var dlg = new SaveFileDialog()
+            {
+                FileName = Project.FileName,
+                DefaultExt = "xml",
+                Filter = "*.xml|*.xml"
+            };
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                Project.Save(dlg.FileName);
             }
         }
     }

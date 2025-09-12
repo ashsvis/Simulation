@@ -8,9 +8,18 @@ namespace Simulator.Model
         public static string Description { get; set; } = string.Empty;
         public static List<Module> Modules { get; set; } = [];
 
+        private static string file = string.Empty;
+        public static string FileName => file;
+
+        public static void Save()
+        {
+            if (file == string.Empty) return;
+            Save(file);
+        }
 
         public static void Save(string filename)
         {
+            file = filename;
             var root = new XElement("Project");
             XDocument doc = new(new XComment(Description), root);
             XElement xmodules = new("Modules");
@@ -21,11 +30,17 @@ namespace Simulator.Model
                 xmodules.Add(xmodule);
                 module.Save(xmodule);
             }
-            doc.Save(filename);
+            try
+            {
+                doc.Save(filename);
+                Modules.ForEach(module => module.Changed = false);
+            }
+            catch { }
         }
 
         public static void Load(string filename) 
         {
+            file = filename;
             Modules.Clear();
             var xdoc = XDocument.Load(filename);
             try
@@ -109,6 +124,12 @@ namespace Simulator.Model
             orNode.Collapse();
             xorNode.Collapse();
             return [.. collection];
+        }
+
+        public static void Clear()
+        {
+            file = string.Empty;
+            Modules.Clear();
         }
     }
 }

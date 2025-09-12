@@ -57,6 +57,7 @@ namespace Simulator
 
                 }
             });
+            tsbSave.Enabled = Module.Changed;
         }
 
         private void zoomPad_DragEnter(object sender, DragEventArgs e)
@@ -101,6 +102,7 @@ namespace Simulator
                     items.ForEach(item => item.Selected = false);
                     item.Selected = true;
                     items.Add(item);
+                    Module.Changed = true;
                     zoomPad.Invalidate();
                     ElementSelected?.Invoke(item.Instance, EventArgs.Empty);
                 }
@@ -353,7 +355,10 @@ namespace Simulator
                     if (element != null)
                     {
                         if (pin == null)
+                        {
                             element.Location = PointF.Add(element.Location, delta);
+                            Module.Changed = true;
+                        }
                         else
                         {
 
@@ -385,10 +390,12 @@ namespace Simulator
                         if (pinSecond != null && pinFirst != null && outputFirst == true && outputSecond == false)
                         {
                             target.SetValueLinkToInp((int)pinSecond, source.GetResultLink((int)pinFirst), elementFirst.Id, (int)pinFirst);
+                            Module.Changed = true;
                         }
                         else if (pinSecond != null && pinFirst != null && outputFirst == false && outputSecond == true)
                         {
                             source.SetValueLinkToInp((int)pinFirst, target.GetResultLink((int)pinSecond), elementSecond.Id, (int)pinSecond);
+                            Module.Changed = true;
                         }
                     }
                     else if (elementFirst == elementSecond && outputFirst == outputSecond && outputSecond == false && pinSecond is int ipin)
@@ -396,7 +403,10 @@ namespace Simulator
                         // отпускание после нажатия на этом же входе
                         var value = target.InputValues[ipin];
                         if (value is bool bvalue)
+                        {
                             target.SetValueToInp(ipin, !bvalue);
+                            Module.Changed = true;
+                        }
                     }
                 }
                 else
@@ -413,84 +423,89 @@ namespace Simulator
             zoomPad.Invalidate();
         }
 
-        private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var root = new XElement("Module");
-            XDocument doc = new(new XComment("Конфигурация модуля"), root);
-            XElement xtems = new("Items");
-            root.Add(xtems);
-            foreach (var item in items)
-            {
-                XElement xtem = new("Item");
-                xtems.Add(xtem);
-                item.Save(xtem);
-            }
-            doc.Save("module.xml");
-        }
+        //private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
+        //    var root = new XElement("Module");
+        //    XDocument doc = new(new XComment("Конфигурация модуля"), root);
+        //    XElement xtems = new("Items");
+        //    root.Add(xtems);
+        //    foreach (var item in items)
+        //    {
+        //        XElement xtem = new("Item");
+        //        xtems.Add(xtem);
+        //        item.Save(xtem);
+        //    }
+        //    doc.Save("module.xml");
+        //}
 
-        private void загрузитьToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var file = "module.xml";
-            var xdoc = XDocument.Load(file);
-            try
-            {
-                items.ForEach(item =>
-                {
-                    if (item.Instance is IFunction instance)
-                        instance.ResultChanged -= Item_ResultChanged;
-                });
+        //private void загрузитьToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
+        //    var file = "module.xml";
+        //    var xdoc = XDocument.Load(file);
+        //    try
+        //    {
+        //        items.ForEach(item =>
+        //        {
+        //            if (item.Instance is IFunction instance)
+        //                instance.ResultChanged -= Item_ResultChanged;
+        //        });
 
-                items.Clear();
-                // загрузка функций и информации о связях
-                var xmodule = xdoc.Element("Module");
-                if (xmodule != null)
-                {
-                    var xtems = xmodule.Element("Items");
-                    if (xtems != null)
-                    {
-                        foreach (XElement item in xtems.Elements("Item"))
-                        {
-                            if (!Guid.TryParse(item.Element("Id")?.Value, out Guid id)) continue;
-                            var xtype = item.Element("Type");
-                            if (xtype == null) continue;
-                            Type? type = Type.GetType(xtype.Value);
-                            if (type == null) continue;
-                            var element = new Element { Id = id, };
-                            element.Load(item, type);
-                            items.Add(element);
-                        }
-                        // установление связей
-                        foreach (var item in items)
-                        {
-                            if (item.Instance is IFunction function)
-                            {
-                                var n = 0;
-                                foreach (var (id, output) in function.InputLinkSources)
-                                {
-                                    if (id != Guid.Empty)
-                                    {
-                                        var sourceItem = items.FirstOrDefault(x => x.Id == id);
-                                        if (sourceItem != null && sourceItem.Instance is IFunction source)
-                                            function.SetValueLinkToInp(n, source.GetResultLink(output), id, output);
-                                    }
-                                    n++;
-                                }
-                            }
-                        }
-                        // подключение обрабочика событий по изменению
-                        items.ForEach(item =>
-                        {
-                            if (item.Instance is IFunction instance)
-                                instance.ResultChanged += Item_ResultChanged;
-                        });
-                        UpdateView();
-                    }
-                }
-            }
-            catch (Exception ex)
-            { 
-                MessageBox.Show(ex.Message, "Чтение файла конфигурации", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+        //        items.Clear();
+        //        // загрузка функций и информации о связях
+        //        var xmodule = xdoc.Element("Module");
+        //        if (xmodule != null)
+        //        {
+        //            var xtems = xmodule.Element("Items");
+        //            if (xtems != null)
+        //            {
+        //                foreach (XElement item in xtems.Elements("Item"))
+        //                {
+        //                    if (!Guid.TryParse(item.Element("Id")?.Value, out Guid id)) continue;
+        //                    var xtype = item.Element("Type");
+        //                    if (xtype == null) continue;
+        //                    Type? type = Type.GetType(xtype.Value);
+        //                    if (type == null) continue;
+        //                    var element = new Element { Id = id, };
+        //                    element.Load(item, type);
+        //                    items.Add(element);
+        //                }
+        //                // установление связей
+        //                foreach (var item in items)
+        //                {
+        //                    if (item.Instance is IFunction function)
+        //                    {
+        //                        var n = 0;
+        //                        foreach (var (id, output) in function.InputLinkSources)
+        //                        {
+        //                            if (id != Guid.Empty)
+        //                            {
+        //                                var sourceItem = items.FirstOrDefault(x => x.Id == id);
+        //                                if (sourceItem != null && sourceItem.Instance is IFunction source)
+        //                                    function.SetValueLinkToInp(n, source.GetResultLink(output), id, output);
+        //                            }
+        //                            n++;
+        //                        }
+        //                    }
+        //                }
+        //                // подключение обрабочика событий по изменению
+        //                items.ForEach(item =>
+        //                {
+        //                    if (item.Instance is IFunction instance)
+        //                        instance.ResultChanged += Item_ResultChanged;
+        //                });
+        //                UpdateView();
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ex.Message, "Чтение файла конфигурации", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    }
+        //}
+
+        private void tsbSave_Click(object sender, EventArgs e)
+        {
+            Project.Save();
         }
     }
 }
