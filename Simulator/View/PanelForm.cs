@@ -32,47 +32,10 @@ namespace Simulator
         private void MainForm_Load(object sender, EventArgs e)
         {
             tvLibrary.Nodes.Clear();
-            var rootNode = new TreeNode("Библиотека");
-            tvLibrary.Nodes.Add(rootNode);
-            var logicaNode = new TreeNode("Логика");
-            logicaNode.Nodes.Add(new TreeNode("NOT") { Tag = typeof(Model.Logic.NOT) });
-            var andNode = new TreeNode("AND") { Tag = typeof(Model.Logic.AND) };
-            logicaNode.Nodes.Add(andNode);
-            andNode.Nodes.Add(new TreeNode("AND3") { Tag = typeof(Model.Logic.AND3) });
-            andNode.Nodes.Add(new TreeNode("AND4") { Tag = typeof(Model.Logic.AND4) });
-            andNode.Nodes.Add(new TreeNode("AND5") { Tag = typeof(Model.Logic.AND5) });
-            andNode.Nodes.Add(new TreeNode("AND6") { Tag = typeof(Model.Logic.AND6) });
-            andNode.Nodes.Add(new TreeNode("AND7") { Tag = typeof(Model.Logic.AND7) });
-            andNode.Nodes.Add(new TreeNode("AND8") { Tag = typeof(Model.Logic.AND8) });
-            var orNode = new TreeNode("OR") { Tag = typeof(Model.Logic.OR) };
-            logicaNode.Nodes.Add(orNode);
-            orNode.Nodes.Add(new TreeNode("OR3") { Tag = typeof(Model.Logic.OR3) });
-            orNode.Nodes.Add(new TreeNode("OR4") { Tag = typeof(Model.Logic.OR4) });
-            orNode.Nodes.Add(new TreeNode("OR5") { Tag = typeof(Model.Logic.OR5) });
-            orNode.Nodes.Add(new TreeNode("OR6") { Tag = typeof(Model.Logic.OR6) });
-            orNode.Nodes.Add(new TreeNode("OR7") { Tag = typeof(Model.Logic.OR7) });
-            orNode.Nodes.Add(new TreeNode("OR8") { Tag = typeof(Model.Logic.OR8) });
-            var xorNode = new TreeNode("XOR") { Tag = typeof(Model.Logic.XOR) };
-            logicaNode.Nodes.Add(xorNode);
-            xorNode.Nodes.Add(new TreeNode("XOR3") { Tag = typeof(Model.Logic.XOR3) });
-            xorNode.Nodes.Add(new TreeNode("XOR4") { Tag = typeof(Model.Logic.XOR4) });
-            xorNode.Nodes.Add(new TreeNode("XOR5") { Tag = typeof(Model.Logic.XOR5) });
-            xorNode.Nodes.Add(new TreeNode("XOR6") { Tag = typeof(Model.Logic.XOR6) });
-            xorNode.Nodes.Add(new TreeNode("XOR7") { Tag = typeof(Model.Logic.XOR7) });
-            xorNode.Nodes.Add(new TreeNode("XOR8") { Tag = typeof(Model.Logic.XOR8) });
-            rootNode.Nodes.Add(logicaNode);
-            var triggerNode = new TreeNode("Триггеры");
-            rootNode.Nodes.Add(triggerNode);
-            triggerNode.Nodes.Add(new TreeNode("RS-триггер") { Tag = typeof(Model.Trigger.RS) });
-            var generatorNode = new TreeNode("Генераторы");
-            rootNode.Nodes.Add(generatorNode);
-            generatorNode.Nodes.Add(new TreeNode("Одновибратор") { Tag = typeof(Model.Generator.PULSE) });
-            generatorNode.Nodes.Add(new TreeNode("Задержка фронта") { Tag = typeof(Model.Generator.ONDLY) });
-            generatorNode.Nodes.Add(new TreeNode("Задержка спада") { Tag = typeof(Model.Generator.OFFDLY) });
-            rootNode.ExpandAll();
-            andNode.Collapse();
-            orNode.Collapse();
-            xorNode.Collapse();
+            tvLibrary.Nodes.AddRange(Project.GetLibraryTree());
+
+            tvModules.Nodes.Clear();
+            tvModules.Nodes.AddRange(Project.GetModulesTree());
 
             timerInterface.Enabled = true;
             timerSimulation.Enabled = true;
@@ -97,12 +60,25 @@ namespace Simulator
 
         private void создатьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CreateNewChildForm();
+            var module = new Module();
+            Project.Modules.Add(module);
+
+            tvModules.Nodes.Clear();
+            tvModules.Nodes.AddRange(Project.GetModulesTree());
+
+            var node = tvModules.Nodes[0].Nodes.Cast<TreeNode>().FirstOrDefault(x => x.Tag == module);
+            if (node != null)
+            {
+                tvModules.SelectedNode = node;
+                node.EnsureVisible();
+            }
+
+            CreateNewModuleForm(module);
         }
 
-        private void CreateNewChildForm()
+        private void CreateNewModuleForm(Module module)
         {
-            var childForm = new ModuleForm(this) { MdiParent = this, WindowState = FormWindowState.Maximized };
+            var childForm = new ModuleForm(this, module) { MdiParent = this, WindowState = FormWindowState.Maximized, Text = module.ToString() };
             childForm.ElementSelected += ChildForm_ElementSelected;
             childForm.FormClosed += ChildForm_FormClosed;
             childForm.Show();
@@ -234,7 +210,43 @@ namespace Simulator
 
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            MdiChildren.ToList().ForEach(x => x.Close());
             Host.LoadModel();
+            tvModules.Nodes.Clear();
+            tvModules.Nodes.AddRange(Project.GetModulesTree());
+        }
+
+        private void tvModules_DoubleClick(object sender, EventArgs e)
+        {
+            if (tvModules.SelectedNode is TreeNode node)
+            {
+                if (node.Tag is Module module)
+                {
+                    var form = MdiChildren.OfType<ModuleForm>().FirstOrDefault(x => x.Module == module);
+                    if (form != null)
+                    {
+                        form.WindowState = FormWindowState.Maximized;
+                        form.BringToFront();
+                        form.Show();
+                    }
+                    else
+                        CreateNewModuleForm(module);
+                }
+            }
+        }
+
+        private void PanelForm_MdiChildActivate(object sender, EventArgs e)
+        {
+            if (ActiveMdiChild is ModuleForm form)
+            {
+                tslPanelCaption.Text = $"{form.Text}";
+                var node = tvModules.Nodes[0].Nodes.Cast<TreeNode>().FirstOrDefault(x => x.Tag == form.Module);
+                if (node != null) 
+                { 
+                    tvModules.SelectedNode = node;
+                    node.EnsureVisible();
+                }
+            }
         }
     }
 }

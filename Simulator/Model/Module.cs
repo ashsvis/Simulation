@@ -1,13 +1,18 @@
-﻿using System.Reflection;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 
 namespace Simulator.Model
 {
     public class Module
     {
+        public int Index { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public List<Element> Items { get; set; } = [];
+
+        public override string ToString()
+        {
+            return string.IsNullOrWhiteSpace(Name) ? $"Модуль {Index}" : Name;
+        }
 
         public void Save(XElement xmodule)
         {
@@ -38,6 +43,24 @@ namespace Simulator.Model
                         var element = new Element { Id = id, };
                         element.Load(xitem, type);
                         Items.Add(element);
+                    }
+                    // установление связей
+                    foreach (var item in Items)
+                    {
+                        if (item.Instance is IFunction function)
+                        {
+                            var n = 0;
+                            foreach (var (id, output) in function.InputLinkSources)
+                            {
+                                if (id != Guid.Empty)
+                                {
+                                    var sourceItem = Items.FirstOrDefault(x => x.Id == id);
+                                    if (sourceItem != null && sourceItem.Instance is IFunction source)
+                                        function.SetValueLinkToInp(n, source.GetResultLink(output), id, output);
+                                }
+                                n++;
+                            }
+                        }
                     }
                 }
             }

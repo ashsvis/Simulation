@@ -14,10 +14,12 @@ namespace Simulator
         private Point firstMouseDown;
         private Point mousePosition;
 
-        public ModuleForm(PanelForm mainForm)
+        public ModuleForm(PanelForm mainForm, Module module)
         {
             InitializeComponent();
             this.mainForm = mainForm;
+            Module = module;
+            items = module.Items;
             mainForm.SimulationTick += MainForm_SimulationTick;
         }
 
@@ -301,6 +303,8 @@ namespace Simulator
         private int? pin;
         private bool? output;
         private PointF? linkFirstPoint;
+
+        public Module Module { get; }
 
         public event EventHandler? ElementSelected;
 

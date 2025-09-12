@@ -1,71 +1,67 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!---->
 <Project>
-  <Units>
-    <Unit>
-      <Modules>
-        <Module>
-          <Items>
-            <Item X="156" Y="96">
-              <Id>33ca468d-c3e5-49e3-942a-6a0ba0bb9a06</Id>
-              <Type>Simulator.Model.Logic.NOT</Type>
-              <Instance>
-                <Outputs>
-                  <Output Index="0" Invert="true" />
-                </Outputs>
-              </Instance>
-            </Item>
-            <Item X="264" Y="132">
-              <Id>bf0b50f0-d6b4-4fb6-9f3e-e6000997522b</Id>
-              <Type>Simulator.Model.Trigger.RS</Type>
-              <Instance>
-                <Inputs>
-                  <Input Index="0" Name="S">
-                    <SourceId>33ca468d-c3e5-49e3-942a-6a0ba0bb9a06</SourceId>
-                  </Input>
-                  <Input Index="1" Name="R">
-                    <SourceId>851d7137-1c60-4373-ac2b-368e593ae5ad</SourceId>
-                  </Input>
-                </Inputs>
-                <Outputs>
-                  <Output Index="0" Name="Q" />
-                </Outputs>
-              </Instance>
-            </Item>
-            <Item X="156" Y="156">
-              <Id>851d7137-1c60-4373-ac2b-368e593ae5ad</Id>
-              <Type>Simulator.Model.Generator.PULSE</Type>
-              <Instance>
-                <WaitTime>3.6</WaitTime>
-              </Instance>
-            </Item>
-            <Item X="324" Y="204">
-              <Id>fb4a3348-32c9-4354-b480-a739781d6a3a</Id>
-              <Type>Simulator.Model.Generator.ONDLY</Type>
-              <Instance>
-                <Inputs>
-                  <Input Index="0">
-                    <SourceId>bf0b50f0-d6b4-4fb6-9f3e-e6000997522b</SourceId>
-                  </Input>
-                </Inputs>
-                <WaitTime>7.4</WaitTime>
-              </Instance>
-            </Item>
-            <Item X="408" Y="120">
-              <Id>3d483d24-6fd5-4a4e-873c-4cfd9db5be5a</Id>
-              <Type>Simulator.Model.Generator.OFFDLY</Type>
-              <Instance>
-                <Inputs>
-                  <Input Index="0">
-                    <SourceId>fb4a3348-32c9-4354-b480-a739781d6a3a</SourceId>
-                  </Input>
-                </Inputs>
-                <WaitTime>3.3</WaitTime>
-              </Instance>
-            </Item>
-          </Items>
-        </Module>
-      </Modules>
-    </Unit>
-  </Units>
+  <Modules>
+    <Module>
+      <Items>
+        <Item X="156" Y="96">
+          <Id>33ca468d-c3e5-49e3-942a-6a0ba0bb9a06</Id>
+          <Type>Simulator.Model.Logic.NOT</Type>
+          <Instance>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Item>
+        <Item X="264" Y="132">
+          <Id>bf0b50f0-d6b4-4fb6-9f3e-e6000997522b</Id>
+          <Type>Simulator.Model.Trigger.RS</Type>
+          <Instance>
+            <Inputs>
+              <Input Index="0" Name="S">
+                <SourceId>33ca468d-c3e5-49e3-942a-6a0ba0bb9a06</SourceId>
+              </Input>
+              <Input Index="1" Name="R">
+                <SourceId>851d7137-1c60-4373-ac2b-368e593ae5ad</SourceId>
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Name="Q" />
+            </Outputs>
+          </Instance>
+        </Item>
+        <Item X="156" Y="156">
+          <Id>851d7137-1c60-4373-ac2b-368e593ae5ad</Id>
+          <Type>Simulator.Model.Generator.PULSE</Type>
+          <Instance>
+            <WaitTime>3.6</WaitTime>
+          </Instance>
+        </Item>
+        <Item X="324" Y="204">
+          <Id>fb4a3348-32c9-4354-b480-a739781d6a3a</Id>
+          <Type>Simulator.Model.Generator.ONDLY</Type>
+          <Instance>
+            <Inputs>
+              <Input Index="0">
+                <SourceId>bf0b50f0-d6b4-4fb6-9f3e-e6000997522b</SourceId>
+              </Input>
+            </Inputs>
+            <WaitTime>7.4</WaitTime>
+          </Instance>
+        </Item>
+        <Item X="408" Y="120">
+          <Id>3d483d24-6fd5-4a4e-873c-4cfd9db5be5a</Id>
+          <Type>Simulator.Model.Generator.OFFDLY</Type>
+          <Instance>
+            <Inputs>
+              <Input Index="0">
+                <SourceId>fb4a3348-32c9-4354-b480-a739781d6a3a</SourceId>
+              </Input>
+            </Inputs>
+            <WaitTime>3.3</WaitTime>
+          </Instance>
+        </Item>
+      </Items>
+    </Module>
+  </Modules>
 </Project>

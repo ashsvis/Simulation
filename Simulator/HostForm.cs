@@ -4,7 +4,6 @@ namespace Simulator
 {
     public partial class HostForm : Form
     {
-        public readonly Project Project = new();
         private readonly PanelForm[] panels;
 
         public HostForm()

@@ -74,10 +74,10 @@
             tlpTools = new TableLayoutPanel();
             splitContainer1 = new SplitContainer();
             tcTools = new TabControl();
-            tpLibrary = new TabPage();
-            tvLibrary = new TreeView();
             tpModiles = new TabPage();
             tvModules = new TreeView();
+            tpLibrary = new TabPage();
+            tvLibrary = new TreeView();
             pgProps = new PropertyGrid();
             pnLeftSize = new Panel();
             toolStripCaption = new ToolStrip();
@@ -91,8 +91,8 @@
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
             tcTools.SuspendLayout();
-            tpLibrary.SuspendLayout();
             tpModiles.SuspendLayout();
+            tpLibrary.SuspendLayout();
             toolStripCaption.SuspendLayout();
             SuspendLayout();
             // 
@@ -408,14 +408,39 @@
             // 
             // tcTools
             // 
-            tcTools.Controls.Add(tpLibrary);
             tcTools.Controls.Add(tpModiles);
+            tcTools.Controls.Add(tpLibrary);
             tcTools.Dock = DockStyle.Fill;
             tcTools.Location = new Point(0, 0);
             tcTools.Name = "tcTools";
             tcTools.SelectedIndex = 0;
             tcTools.Size = new Size(199, 221);
             tcTools.TabIndex = 2;
+            // 
+            // tpModiles
+            // 
+            tpModiles.Controls.Add(tvModules);
+            tpModiles.Location = new Point(4, 24);
+            tpModiles.Name = "tpModiles";
+            tpModiles.Padding = new Padding(3);
+            tpModiles.Size = new Size(191, 193);
+            tpModiles.TabIndex = 1;
+            tpModiles.Text = "Модули";
+            tpModiles.UseVisualStyleBackColor = true;
+            // 
+            // tvModules
+            // 
+            tvModules.BackColor = Color.FromArgb(64, 64, 64);
+            tvModules.Dock = DockStyle.Fill;
+            tvModules.ForeColor = SystemColors.Window;
+            tvModules.FullRowSelect = true;
+            tvModules.HideSelection = false;
+            tvModules.LineColor = Color.WhiteSmoke;
+            tvModules.Location = new Point(3, 3);
+            tvModules.Name = "tvModules";
+            tvModules.Size = new Size(185, 187);
+            tvModules.TabIndex = 2;
+            tvModules.DoubleClick += tvModules_DoubleClick;
             // 
             // tpLibrary
             // 
@@ -444,30 +469,6 @@
             tvLibrary.Size = new Size(185, 187);
             tvLibrary.TabIndex = 1;
             tvLibrary.MouseDown += tvLibrary_MouseDown;
-            // 
-            // tpModiles
-            // 
-            tpModiles.Controls.Add(tvModules);
-            tpModiles.Location = new Point(4, 24);
-            tpModiles.Name = "tpModiles";
-            tpModiles.Padding = new Padding(3);
-            tpModiles.Size = new Size(191, 193);
-            tpModiles.TabIndex = 1;
-            tpModiles.Text = "Модули";
-            tpModiles.UseVisualStyleBackColor = true;
-            // 
-            // tvModules
-            // 
-            tvModules.BackColor = Color.FromArgb(64, 64, 64);
-            tvModules.Dock = DockStyle.Fill;
-            tvModules.ForeColor = SystemColors.Window;
-            tvModules.FullRowSelect = true;
-            tvModules.HideSelection = false;
-            tvModules.LineColor = Color.WhiteSmoke;
-            tvModules.Location = new Point(3, 3);
-            tvModules.Name = "tvModules";
-            tvModules.Size = new Size(185, 187);
-            tvModules.TabIndex = 2;
             // 
             // pgProps
             // 
@@ -539,6 +540,7 @@
             Text = "Моделирование работы устройств";
             FormClosing += MainForm_FormClosing;
             Load += MainForm_Load;
+            MdiChildActivate += PanelForm_MdiChildActivate;
             Enter += PanelForm_Enter;
             Leave += PanelForm_Leave;
             menuMainStrip.ResumeLayout(false);
@@ -550,8 +552,8 @@
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
             tcTools.ResumeLayout(false);
-            tpLibrary.ResumeLayout(false);
             tpModiles.ResumeLayout(false);
+            tpLibrary.ResumeLayout(false);
             toolStripCaption.ResumeLayout(false);
             toolStripCaption.PerformLayout();
             ResumeLayout(false);
