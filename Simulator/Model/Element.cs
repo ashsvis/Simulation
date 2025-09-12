@@ -250,12 +250,15 @@ namespace Simulator.Model
                     y += step * 2;
                 }
                 // индекс элемента в списке
-                if (Index != 0 && !named)
+                if (Index != 0)
                 {
                     var text = $"L{Index}";
                     var ms = graphics.MeasureString(text, font);
-                    graphics.DrawString(text, font, fontbrush, new PointF(location.X + width / 2, location.Y - ms.Height), format);
+                    graphics.DrawString(text, font, fontbrush, new PointF(location.X + width / 2, location.Y + height), format);
                 }
+
+                #region для отладки
+
                 // области выбора
                 //using Pen tarpen = new(Color.FromArgb(80, Color.Magenta), 0);
                 //foreach (var key in itargets.Keys)
@@ -284,6 +287,8 @@ namespace Simulator.Model
                 //    graphics.DrawLine(pinpen, new PointF(r.X, r.Y), new PointF(r.X + r.Width, r.Y + r.Height));
                 //    graphics.DrawLine(pinpen, new PointF(r.X + r.Width, r.Y), new PointF(r.X, r.Y + r.Height));
                 //}
+
+                #endregion
             }
         }
 

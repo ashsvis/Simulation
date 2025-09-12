@@ -226,5 +226,10 @@ namespace Simulator
             g.DrawLine(SystemPens.ControlLight, new PointF(r.Left + 2, r.Top), new PointF(r.Left + 2, r.Bottom));
             g.DrawLine(SystemPens.ControlLightLight, new PointF(r.Left + 3, r.Top), new PointF(r.Left + 3, r.Bottom));
         }
+
+        private void tsmiSave_Click(object sender, EventArgs e)
+        {
+            Host.Save();
+        }
     }
 }

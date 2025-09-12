@@ -30,13 +30,13 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PanelForm));
-            TreeNode treeNode1 = new TreeNode("Библиотека");
+            TreeNode treeNode2 = new TreeNode("Библиотека");
             menuMainStrip = new MenuStrip();
             файлToolStripMenuItem = new ToolStripMenuItem();
             создатьToolStripMenuItem = new ToolStripMenuItem();
             открытьToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator = new ToolStripSeparator();
-            сохранитьToolStripMenuItem = new ToolStripMenuItem();
+            tsmiSave = new ToolStripMenuItem();
             сохранитькакToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             печатьToolStripMenuItem = new ToolStripMenuItem();
@@ -108,7 +108,7 @@
             // 
             // файлToolStripMenuItem
             // 
-            файлToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { создатьToolStripMenuItem, открытьToolStripMenuItem, toolStripSeparator, сохранитьToolStripMenuItem, сохранитькакToolStripMenuItem, toolStripSeparator1, печатьToolStripMenuItem, предварительныйпросмотрToolStripMenuItem, toolStripSeparator2, выходToolStripMenuItem });
+            файлToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { создатьToolStripMenuItem, открытьToolStripMenuItem, toolStripSeparator, tsmiSave, сохранитькакToolStripMenuItem, toolStripSeparator1, печатьToolStripMenuItem, предварительныйпросмотрToolStripMenuItem, toolStripSeparator2, выходToolStripMenuItem });
             файлToolStripMenuItem.Name = "файлToolStripMenuItem";
             файлToolStripMenuItem.Size = new Size(48, 20);
             файлToolStripMenuItem.Text = "&Файл";
@@ -137,14 +137,15 @@
             toolStripSeparator.Name = "toolStripSeparator";
             toolStripSeparator.Size = new Size(230, 6);
             // 
-            // сохранитьToolStripMenuItem
+            // tsmiSave
             // 
-            сохранитьToolStripMenuItem.Image = (Image)resources.GetObject("сохранитьToolStripMenuItem.Image");
-            сохранитьToolStripMenuItem.ImageTransparentColor = Color.Magenta;
-            сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
-            сохранитьToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
-            сохранитьToolStripMenuItem.Size = new Size(233, 22);
-            сохранитьToolStripMenuItem.Text = "&Сохранить";
+            tsmiSave.Image = (Image)resources.GetObject("tsmiSave.Image");
+            tsmiSave.ImageTransparentColor = Color.Magenta;
+            tsmiSave.Name = "tsmiSave";
+            tsmiSave.ShortcutKeys = Keys.Control | Keys.S;
+            tsmiSave.Size = new Size(233, 22);
+            tsmiSave.Text = "&Сохранить";
+            tsmiSave.Click += tsmiSave_Click;
             // 
             // сохранитькакToolStripMenuItem
             // 
@@ -436,9 +437,9 @@
             tvLibrary.LineColor = Color.WhiteSmoke;
             tvLibrary.Location = new Point(3, 3);
             tvLibrary.Name = "tvLibrary";
-            treeNode1.Name = "Узел0";
-            treeNode1.Text = "Библиотека";
-            tvLibrary.Nodes.AddRange(new TreeNode[] { treeNode1 });
+            treeNode2.Name = "Узел0";
+            treeNode2.Text = "Библиотека";
+            tvLibrary.Nodes.AddRange(new TreeNode[] { treeNode2 });
             tvLibrary.Size = new Size(185, 187);
             tvLibrary.TabIndex = 1;
             tvLibrary.MouseDown += tvLibrary_MouseDown;
@@ -449,7 +450,7 @@
             tpModiles.Location = new Point(4, 24);
             tpModiles.Name = "tpModiles";
             tpModiles.Padding = new Padding(3);
-            tpModiles.Size = new Size(192, 193);
+            tpModiles.Size = new Size(191, 193);
             tpModiles.TabIndex = 1;
             tpModiles.Text = "Модули";
             tpModiles.UseVisualStyleBackColor = true;
@@ -464,7 +465,7 @@
             tvModules.LineColor = Color.WhiteSmoke;
             tvModules.Location = new Point(3, 3);
             tvModules.Name = "tvModules";
-            tvModules.Size = new Size(186, 187);
+            tvModules.Size = new Size(185, 187);
             tvModules.TabIndex = 2;
             // 
             // pgProps
@@ -565,7 +566,7 @@
         private ToolStripMenuItem создатьToolStripMenuItem;
         private ToolStripMenuItem открытьToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator;
-        private ToolStripMenuItem сохранитьToolStripMenuItem;
+        private ToolStripMenuItem tsmiSave;
         private ToolStripMenuItem сохранитькакToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem печатьToolStripMenuItem;
