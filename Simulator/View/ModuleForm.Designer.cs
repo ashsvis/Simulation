@@ -33,8 +33,8 @@
             zoomPad = new Simulator.View.ZoomControl();
             contextMenuStrip1 = new ContextMenuStrip(components);
             toolStripModule = new ToolStrip();
-            создатьToolStripButton = new ToolStripButton();
-            открытьToolStripButton = new ToolStripButton();
+            tsmiAddModule = new ToolStripButton();
+            tsbDeleteModule = new ToolStripButton();
             tsbSave = new ToolStripButton();
             печатьToolStripButton = new ToolStripButton();
             toolStripSeparator = new ToolStripSeparator();
@@ -77,7 +77,7 @@
             // toolStripModule
             // 
             toolStripModule.GripStyle = ToolStripGripStyle.Hidden;
-            toolStripModule.Items.AddRange(new ToolStripItem[] { создатьToolStripButton, открытьToolStripButton, tsbSave, печатьToolStripButton, toolStripSeparator, вырезатьToolStripButton, копироватьToolStripButton, вставитьToolStripButton, toolStripSeparator1, справкаToolStripButton });
+            toolStripModule.Items.AddRange(new ToolStripItem[] { tsmiAddModule, tsbDeleteModule, tsbSave, печатьToolStripButton, toolStripSeparator, вырезатьToolStripButton, копироватьToolStripButton, вставитьToolStripButton, toolStripSeparator1, справкаToolStripButton });
             toolStripModule.Location = new Point(0, 0);
             toolStripModule.Name = "toolStripModule";
             toolStripModule.RenderMode = ToolStripRenderMode.System;
@@ -85,27 +85,27 @@
             toolStripModule.TabIndex = 1;
             toolStripModule.Text = "toolStrip1";
             // 
-            // создатьToolStripButton
+            // tsmiAddModule
             // 
-            создатьToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            создатьToolStripButton.Enabled = false;
-            создатьToolStripButton.Image = (Image)resources.GetObject("создатьToolStripButton.Image");
-            создатьToolStripButton.ImageTransparentColor = Color.Magenta;
-            создатьToolStripButton.Name = "создатьToolStripButton";
-            создатьToolStripButton.Size = new Size(23, 22);
-            создатьToolStripButton.Text = "&Создать";
-            создатьToolStripButton.Visible = false;
+            tsmiAddModule.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsmiAddModule.Image = (Image)resources.GetObject("tsmiAddModule.Image");
+            tsmiAddModule.ImageTransparentColor = Color.Magenta;
+            tsmiAddModule.Name = "tsmiAddModule";
+            tsmiAddModule.Size = new Size(23, 22);
+            tsmiAddModule.Text = "&Добавить модуль";
+            tsmiAddModule.ToolTipText = "Добавить модуль в проект";
+            tsmiAddModule.Click += tsmiAddModule_Click;
             // 
-            // открытьToolStripButton
+            // tsbDeleteModule
             // 
-            открытьToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            открытьToolStripButton.Enabled = false;
-            открытьToolStripButton.Image = (Image)resources.GetObject("открытьToolStripButton.Image");
-            открытьToolStripButton.ImageTransparentColor = Color.Magenta;
-            открытьToolStripButton.Name = "открытьToolStripButton";
-            открытьToolStripButton.Size = new Size(23, 22);
-            открытьToolStripButton.Text = "&Открыть";
-            открытьToolStripButton.Visible = false;
+            tsbDeleteModule.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbDeleteModule.Image = (Image)resources.GetObject("tsbDeleteModule.Image");
+            tsbDeleteModule.ImageTransparentColor = Color.Magenta;
+            tsbDeleteModule.Name = "tsbDeleteModule";
+            tsbDeleteModule.Size = new Size(23, 22);
+            tsbDeleteModule.Text = "&Удалить этот модуль";
+            tsbDeleteModule.ToolTipText = "Удалить этот модуль из проекта";
+            tsbDeleteModule.Click += tsbDeleteModule_Click;
             // 
             // tsbSave
             // 
@@ -201,8 +201,8 @@
         private View.ZoomControl zoomPad;
         private ContextMenuStrip contextMenuStrip1;
         private ToolStrip toolStripModule;
-        private ToolStripButton создатьToolStripButton;
-        private ToolStripButton открытьToolStripButton;
+        private ToolStripButton tsmiAddModule;
+        private ToolStripButton tsbDeleteModule;
         private ToolStripButton tsbSave;
         private ToolStripButton печатьToolStripButton;
         private ToolStripSeparator toolStripSeparator;

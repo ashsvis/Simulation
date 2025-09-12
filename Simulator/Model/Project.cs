@@ -10,6 +10,7 @@ namespace Simulator.Model
 
         private static string file = string.Empty;
         public static string FileName => file;
+        public static bool Changed { get; set; }
 
         public static void Save()
         {
@@ -34,6 +35,7 @@ namespace Simulator.Model
             {
                 doc.Save(filename);
                 Modules.ForEach(module => module.Changed = false);
+                Changed = false;
             }
             catch { }
         }

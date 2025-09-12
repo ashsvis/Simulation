@@ -1,5 +1,6 @@
 using Simulator.Model;
 using Simulator.View;
+using System.Windows.Forms;
 
 namespace Simulator
 {
@@ -73,7 +74,7 @@ namespace Simulator
             AddModuleToProject();
         }
 
-        private void AddModuleToProject()
+        public void AddModuleToProject()
         {
             var module = new Module();
             Project.Modules.Add(module);
@@ -155,7 +156,7 @@ namespace Simulator
         {
             SimulationTick?.Invoke(this, EventArgs.Empty);
             //if (!pgProps.Focused) pgProps.Refresh();
-            tsmiSave.Enabled = Project.Modules.Any(x => x.Changed);
+            tsmiSave.Enabled = Project.Changed || Project.Modules.Any(x => x.Changed);
         }
 
         private void tvLibrary_MouseDown(object sender, MouseEventArgs e)
@@ -295,6 +296,17 @@ namespace Simulator
             {
                 Project.Save(dlg.FileName);
             }
+        }
+
+        public void RemoveModuleFromProject(Module module)
+        {
+            var node = tvModules.Nodes[0].Nodes.Cast<TreeNode>().FirstOrDefault(x => x.Tag == module);
+            if (node != null)
+                tvModules.Nodes[0].Nodes.Remove(node);
+            var form = MdiChildren.OfType<ModuleForm>().FirstOrDefault(x => x.Module == module);
+            form?.Close();
+            Project.Modules.Remove(module);
+            Project.Changed = true;
         }
     }
 }
