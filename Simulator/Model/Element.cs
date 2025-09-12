@@ -10,6 +10,7 @@ namespace Simulator.Model
         { 
         }
 
+        public int Index { get; set; }
         public bool Selected { get; set; }
 
         public Guid Id { get; set; } = Guid.NewGuid();
@@ -150,12 +151,14 @@ namespace Simulator.Model
 
         public virtual void Draw(Graphics graphics, Color foreColor, Color backColor, CustomDraw? customDraw = null)
         {
+            bool named = false;
             using var brush = new SolidBrush(Color.FromArgb(255, backColor));
             using var pen = new Pen(foreColor, 1f);
             using var font = new Font("Consolas", 8f);
             using var fontbrush = new SolidBrush(foreColor);
             if (Instance is IFunction instance)
             {
+                named = !string.IsNullOrEmpty(instance.Name);
                 var max = Math.Max(instance.InverseInputs.Length, instance.InverseOutputs.Length);
                 var step = 6f;
                 var height = step + max * step * 4 + step;
@@ -175,7 +178,8 @@ namespace Simulator.Model
                 using var format = new StringFormat();
                 format.Alignment = StringAlignment.Center;
                 var msn = graphics.MeasureString(instance.Name, font);
-                graphics.DrawString(instance.Name, font, fontbrush, new PointF(location.X + width / 2, location.Y - msn.Height), format);
+                if (named)
+                    graphics.DrawString(instance.Name, font, fontbrush, new PointF(location.X + width / 2, location.Y - msn.Height), format);
                 graphics.DrawString(instance.FuncSymbol, font, fontbrush, new PointF(location.X + width / 2, location.Y), format);
                 customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush);
                 // входы
@@ -244,6 +248,13 @@ namespace Simulator.Model
                         graphics.DrawString(text, font, fontbrush, new PointF(x, y - ms.Height));
                     }
                     y += step * 2;
+                }
+                // индекс элемента в списке
+                if (Index != 0 && !named)
+                {
+                    var text = $"L{Index}";
+                    var ms = graphics.MeasureString(text, font);
+                    graphics.DrawString(text, font, fontbrush, new PointF(location.X + width / 2, location.Y - ms.Height), format);
                 }
                 // области выбора
                 //using Pen tarpen = new(Color.FromArgb(80, Color.Magenta), 0);

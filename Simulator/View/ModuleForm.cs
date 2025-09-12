@@ -227,8 +227,10 @@ namespace Simulator
                 }
             }
             // прорисовка элементов
+            var np = 1;
             foreach (var item in items)
             {
+                item.Index = np++;
                 if (item.Instance is ICustomDraw inst)
                     item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor, inst.CustomDraw);
                 else
