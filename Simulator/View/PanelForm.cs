@@ -229,7 +229,12 @@ namespace Simulator
 
         private void tsmiSave_Click(object sender, EventArgs e)
         {
-            Host.Save();
+            Host.SaveModel();
+        }
+
+        private void îòêğûòüToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Host.LoadModel();
         }
     }
 }

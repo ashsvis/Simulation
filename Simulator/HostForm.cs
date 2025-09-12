@@ -1,12 +1,10 @@
-﻿using System.Diagnostics;
-using System.Reflection;
-using System.Security.Permissions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using Simulator.Model;
 
 namespace Simulator
 {
     public partial class HostForm : Form
     {
+        public readonly Project Project = new();
         private readonly PanelForm[] panels;
 
         public HostForm()
@@ -32,8 +30,7 @@ namespace Simulator
                 panels[i].Show(this);
                 panels[i].Refresh();
                 // debug
-                if (monitors[i].Primary)
-                    break;
+                break;
             }
         }
 
@@ -53,6 +50,16 @@ namespace Simulator
             //var process = RunningInstance();
             //if (process != null) { Application.Exit(); return; }
             #endregion
+        }
+
+        public void SaveModel()
+        {
+            Project.Save("project.xml");
+        }
+
+        public void LoadModel()
+        {
+            Project.Load("project.xml");
         }
 
         //[EnvironmentPermission(SecurityAction.LinkDemand, Unrestricted = true)]

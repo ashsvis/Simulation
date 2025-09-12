@@ -30,6 +30,11 @@ namespace Simulator.Model
             }
         }
 
+        public override string? ToString()
+        {
+            return Instance != null ? Instance.GetType().Name.ToString() : base.ToString();
+        }
+
         public void Save(XElement xtem)
         {
             xtem.Add(new XElement("Id", Id));
