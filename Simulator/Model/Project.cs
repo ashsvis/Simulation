@@ -82,7 +82,7 @@ namespace Simulator.Model
                 }
                 Modules.ForEach(module => module.Changed = false);
                 Changed = false;
-                OnChanged?.Invoke(null, EventArgs.Empty);
+                OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.Load));
             }
             catch { }
         }
@@ -157,14 +157,14 @@ namespace Simulator.Model
             file = string.Empty;
             Modules.Clear();
             Changed = false;
-            OnChanged?.Invoke(null, EventArgs.Empty);
+            OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.Clear));
         }
 
         public static Module AddModuleToProject()
         {
             var module = new Module();
             Modules.Add(module);
-            OnChanged?.Invoke(null, EventArgs.Empty);
+            OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.AddModule));
             return module;
         }
 
@@ -172,9 +172,29 @@ namespace Simulator.Model
         {
             Modules.Remove(module);
             Changed = true;
-            OnChanged?.Invoke(null, EventArgs.Empty);
+            OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.RemoveModule));
         }
 
-        public static event EventHandler? OnChanged;
+        public static event ProjectEventHandler? OnChanged;
+    }
+
+    public enum ProjectChangeKind
+    {
+        Clear,
+        Load,
+        AddModule,
+        RemoveModule,
+    }
+
+    public delegate void ProjectEventHandler(object? sender, ProjectEventArgs args);
+
+    public class ProjectEventArgs : EventArgs
+    {
+        public ProjectChangeKind ChangeKind;
+
+        public ProjectEventArgs(ProjectChangeKind changeKind)
+        {
+            ChangeKind = changeKind;
+        }
     }
 }

@@ -27,6 +27,18 @@ namespace Simulator
             Host = host;
             IsPrimary = isPrimary;
             Bounds = bounds;
+            Project.OnChanged += Project_OnChanged;
+        }
+
+        private void Project_OnChanged(object? sender, ProjectEventArgs e)
+        {
+            tvModules.Nodes.Clear();
+            tvModules.Nodes.AddRange(Project.GetModulesTree());
+            if (e.ChangeKind == ProjectChangeKind.Clear || e.ChangeKind == ProjectChangeKind.Load)
+            {
+                pgProps.SelectedObject = null;
+                MdiChildren.ToList().ForEach(x => x.Close());
+            }
         }
 
         private void MainForm_Load(object sender, EventArgs e)
