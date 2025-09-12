@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Конфигурация модуля-->
+<Module>
+  <Items>
+    <Item X="72" Y="264">
+      <Id>eb25809b-07c8-4af9-bc39-d5e7e579c29d</Id>
+      <Type>Simulator.Model.Generator.PULSE</Type>
+      <Instance>
+        <WaitTime>0.2</WaitTime>
+      </Instance>
+    </Item>
+    <Item X="252" Y="132">
+      <Id>aa9389ff-5b6a-487c-911a-7d4bda8d705e</Id>
+      <Type>Simulator.Model.Logic.AND3</Type>
+      <Instance>
+        <Inputs>
+          <Input Index="0" Invert="true">
+            <SourceId>ea382204-81ad-4840-a836-2ccff7af2951</SourceId>
+          </Input>
+          <Input Index="1">
+            <SourceId>eb25809b-07c8-4af9-bc39-d5e7e579c29d</SourceId>
+          </Input>
+          <Input Index="2" Invert="true">
+            <SourceId>e5cfa910-84ba-41ef-878b-5a0d93adb8da</SourceId>
+          </Input>
+        </Inputs>
+      </Instance>
+    </Item>
+    <Item X="264" Y="348">
+      <Id>1cec6374-e038-413d-aca0-6c3096200fbf</Id>
+      <Type>Simulator.Model.Logic.AND3</Type>
+      <Instance>
+        <Inputs>
+          <Input Index="0">
+            <SourceId>ea382204-81ad-4840-a836-2ccff7af2951</SourceId>
+          </Input>
+          <Input Index="1">
+            <SourceId>eb25809b-07c8-4af9-bc39-d5e7e579c29d</SourceId>
+          </Input>
+          <Input Index="2" Invert="true">
+            <SourceId>e5cfa910-84ba-41ef-878b-5a0d93adb8da</SourceId>
+          </Input>
+        </Inputs>
+      </Instance>
+    </Item>
+    <Item X="360" Y="48">
+      <Id>ea382204-81ad-4840-a836-2ccff7af2951</Id>
+      <Type>Simulator.Model.Trigger.RS</Type>
+      <Instance>
+        <Inputs>
+          <Input Index="0" Name="S">
+            <SourceId>aa9389ff-5b6a-487c-911a-7d4bda8d705e</SourceId>
+          </Input>
+          <Input Index="1" Name="R">
+            <SourceId>1cec6374-e038-413d-aca0-6c3096200fbf</SourceId>
+          </Input>
+        </Inputs>
+        <Outputs>
+          <Output Index="0" Name="Q" />
+        </Outputs>
+      </Instance>
+    </Item>
+    <Item X="288" Y="480">
+      <Id>9d833711-365d-437d-9975-861fb72bde26</Id>
+      <Type>Simulator.Model.Logic.AND</Type>
+      <Instance>
+        <Inputs>
+          <Input Index="0">
+            <SourceId>e5cfa910-84ba-41ef-878b-5a0d93adb8da</SourceId>
+          </Input>
+          <Input Index="1">
+            <SourceId>eb25809b-07c8-4af9-bc39-d5e7e579c29d</SourceId>
+          </Input>
+        </Inputs>
+      </Instance>
+    </Item>
+    <Item X="432" Y="672">
+      <Id>e5cfa910-84ba-41ef-878b-5a0d93adb8da</Id>
+      <Type>Simulator.Model.Trigger.RS</Type>
+      <Instance>
+        <Inputs>
+          <Input Index="0" Name="S">
+            <SourceId>1cec6374-e038-413d-aca0-6c3096200fbf</SourceId>
+          </Input>
+          <Input Index="1" Name="R">
+            <SourceId>9d833711-365d-437d-9975-861fb72bde26</SourceId>
+          </Input>
+        </Inputs>
+        <Outputs>
+          <Output Index="0" Name="Q" />
+        </Outputs>
+      </Instance>
+    </Item>
+    <Item X="612" Y="60">
+      <Id>5295ee98-3169-46d9-ac77-f0abfdc1fa2c</Id>
+      <Type>Simulator.Model.Logic.AND</Type>
+      <Instance>
+        <Inputs>
+          <Input Index="0" Invert="true">
+            <SourceId>ea382204-81ad-4840-a836-2ccff7af2951</SourceId>
+          </Input>
+          <Input Index="1" Invert="true">
+            <SourceId>e5cfa910-84ba-41ef-878b-5a0d93adb8da</SourceId>
+          </Input>
+        </Inputs>
+      </Instance>
+    </Item>
+    <Item X="612" Y="156">
+      <Id>fd44744b-791d-4913-908e-989166258bca</Id>
+      <Type>Simulator.Model.Logic.AND</Type>
+      <Instance>
+        <Inputs>
+          <Input Index="0">
+            <SourceId>ea382204-81ad-4840-a836-2ccff7af2951</SourceId>
+          </Input>
+          <Input Index="1" Invert="true">
+            <SourceId>e5cfa910-84ba-41ef-878b-5a0d93adb8da</SourceId>
+          </Input>
+        </Inputs>
+      </Instance>
+    </Item>
+    <Item X="612" Y="252">
+      <Id>ed187207-c8db-4ae9-9a61-571ce790c2bf</Id>
+      <Type>Simulator.Model.Logic.AND</Type>
+      <Instance>
+        <Inputs>
+          <Input Index="0" Invert="true">
+            <SourceId>ea382204-81ad-4840-a836-2ccff7af2951</SourceId>
+          </Input>
+          <Input Index="1">
+            <SourceId>e5cfa910-84ba-41ef-878b-5a0d93adb8da</SourceId>
+          </Input>
+        </Inputs>
+      </Instance>
+    </Item>
+  </Items>
+</Module>
