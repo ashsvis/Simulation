@@ -1,18 +1,28 @@
-﻿using System.Xml.Linq;
+﻿using System.ComponentModel;
+using System.Xml.Linq;
 
 namespace Simulator.Model
 {
     public class Module
     {
+        [Browsable(false)]
         public int Index { get; set; }
+
+        [Category("Задача"), DisplayName("Имя")]
         public string Name { get; set; } = string.Empty;
+
+        [Category("Задача"), DisplayName("Описание")]
         public string Description { get; set; } = string.Empty;
+
+        [Browsable(false)]
         public List<Element> Items { get; set; } = [];
+
+        [Browsable(false)]
         public bool Changed { get; set; }
 
         public override string ToString()
         {
-            return string.IsNullOrWhiteSpace(Name) ? $"Модуль {Index}" : Name;
+            return string.IsNullOrWhiteSpace(Name) ? $"Задача {Index}" : Name;
         }
 
         public void Save(XElement xmodule)

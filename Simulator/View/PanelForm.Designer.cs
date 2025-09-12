@@ -77,8 +77,10 @@
             tcTools = new TabControl();
             tpModiles = new TabPage();
             tvModules = new TreeView();
-            tpLibrary = new TabPage();
+            tabControl1 = new TabControl();
+            tabLib = new TabPage();
             tvLibrary = new TreeView();
+            tpProps = new TabPage();
             pgProps = new PropertyGrid();
             pnLeftSize = new Panel();
             toolStripCaption = new ToolStrip();
@@ -93,7 +95,9 @@
             splitContainer1.SuspendLayout();
             tcTools.SuspendLayout();
             tpModiles.SuspendLayout();
-            tpLibrary.SuspendLayout();
+            tabControl1.SuspendLayout();
+            tabLib.SuspendLayout();
+            tpProps.SuspendLayout();
             toolStripCaption.SuspendLayout();
             SuspendLayout();
             // 
@@ -411,7 +415,7 @@
             // 
             // splitContainer1.Panel2
             // 
-            splitContainer1.Panel2.Controls.Add(pgProps);
+            splitContainer1.Panel2.Controls.Add(tabControl1);
             splitContainer1.Size = new Size(199, 450);
             splitContainer1.SplitterDistance = 221;
             splitContainer1.TabIndex = 2;
@@ -419,7 +423,6 @@
             // tcTools
             // 
             tcTools.Controls.Add(tpModiles);
-            tcTools.Controls.Add(tpLibrary);
             tcTools.Dock = DockStyle.Fill;
             tcTools.Location = new Point(0, 0);
             tcTools.Name = "tcTools";
@@ -435,7 +438,7 @@
             tpModiles.Padding = new Padding(3);
             tpModiles.Size = new Size(191, 193);
             tpModiles.TabIndex = 1;
-            tpModiles.Text = "Модули";
+            tpModiles.Text = "Проект";
             tpModiles.UseVisualStyleBackColor = true;
             // 
             // tvModules
@@ -451,17 +454,29 @@
             tvModules.Size = new Size(185, 187);
             tvModules.TabIndex = 2;
             tvModules.DoubleClick += tvModules_DoubleClick;
+            tvModules.MouseDown += tvModules_MouseDown;
             // 
-            // tpLibrary
+            // tabControl1
             // 
-            tpLibrary.Controls.Add(tvLibrary);
-            tpLibrary.Location = new Point(4, 24);
-            tpLibrary.Name = "tpLibrary";
-            tpLibrary.Padding = new Padding(3);
-            tpLibrary.Size = new Size(191, 193);
-            tpLibrary.TabIndex = 0;
-            tpLibrary.Text = "Библиотека";
-            tpLibrary.UseVisualStyleBackColor = true;
+            tabControl1.Controls.Add(tabLib);
+            tabControl1.Controls.Add(tpProps);
+            tabControl1.Dock = DockStyle.Fill;
+            tabControl1.Location = new Point(0, 0);
+            tabControl1.Name = "tabControl1";
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new Size(199, 225);
+            tabControl1.TabIndex = 1;
+            // 
+            // tabLib
+            // 
+            tabLib.Controls.Add(tvLibrary);
+            tabLib.Location = new Point(4, 24);
+            tabLib.Name = "tabLib";
+            tabLib.Padding = new Padding(3);
+            tabLib.Size = new Size(191, 197);
+            tabLib.TabIndex = 0;
+            tabLib.Text = "Библиотека";
+            tabLib.UseVisualStyleBackColor = true;
             // 
             // tvLibrary
             // 
@@ -476,16 +491,27 @@
             treeNode1.Name = "Узел0";
             treeNode1.Text = "Библиотека";
             tvLibrary.Nodes.AddRange(new TreeNode[] { treeNode1 });
-            tvLibrary.Size = new Size(185, 187);
+            tvLibrary.Size = new Size(185, 191);
             tvLibrary.TabIndex = 1;
             tvLibrary.MouseDown += tvLibrary_MouseDown;
+            // 
+            // tpProps
+            // 
+            tpProps.Controls.Add(pgProps);
+            tpProps.Location = new Point(4, 24);
+            tpProps.Name = "tpProps";
+            tpProps.Padding = new Padding(3);
+            tpProps.Size = new Size(191, 197);
+            tpProps.TabIndex = 1;
+            tpProps.Text = "Свойства";
+            tpProps.UseVisualStyleBackColor = true;
             // 
             // pgProps
             // 
             pgProps.Dock = DockStyle.Fill;
-            pgProps.Location = new Point(0, 0);
+            pgProps.Location = new Point(3, 3);
             pgProps.Name = "pgProps";
-            pgProps.Size = new Size(199, 225);
+            pgProps.Size = new Size(185, 191);
             pgProps.TabIndex = 0;
             pgProps.PropertyValueChanged += pgProps_PropertyValueChanged;
             // 
@@ -563,7 +589,9 @@
             splitContainer1.ResumeLayout(false);
             tcTools.ResumeLayout(false);
             tpModiles.ResumeLayout(false);
-            tpLibrary.ResumeLayout(false);
+            tabControl1.ResumeLayout(false);
+            tabLib.ResumeLayout(false);
+            tpProps.ResumeLayout(false);
             toolStripCaption.ResumeLayout(false);
             toolStripCaption.PerformLayout();
             ResumeLayout(false);
@@ -620,10 +648,12 @@
         private Panel pnLeftSize;
         private ToolStripButton tsbHostClose;
         private ToolStripLabel tslPanelCaption;
+        private ToolStripMenuItem tsmiAddModule;
+        private TabControl tabControl1;
+        private TabPage tabLib;
+        private TabPage tpProps;
         private TabControl tcTools;
-        private TabPage tpLibrary;
         private TabPage tpModiles;
         private TreeView tvModules;
-        private ToolStripMenuItem tsmiAddModule;
     }
 }

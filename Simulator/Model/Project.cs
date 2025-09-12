@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.ComponentModel;
+using System.Xml.Linq;
 
 namespace Simulator.Model
 {
@@ -6,10 +7,16 @@ namespace Simulator.Model
     {
         public static string Name { get; set; } = string.Empty;
         public static string Description { get; set; } = string.Empty;
+
+        [Browsable(false)]
         public static List<Module> Modules { get; set; } = [];
 
         private static string file = string.Empty;
+
+        [Browsable(false)]
         public static string FileName => file;
+
+        [Browsable(false)]
         public static bool Changed { get; set; }
 
         public static void Save()
@@ -68,7 +75,7 @@ namespace Simulator.Model
         public static TreeNode[] GetModulesTree()
         {
             List<TreeNode> collection = [];
-            var rootNode = new TreeNode("Проект");
+            var rootNode = new TreeNode("Проект") { Tag = new ProjectProxy() };
             collection.Add(rootNode);
             int nmodule = 1;
             foreach(var module in Modules)
@@ -130,6 +137,8 @@ namespace Simulator.Model
 
         public static void Clear()
         {
+            Name = string.Empty;
+            Description = string.Empty;
             file = string.Empty;
             Modules.Clear();
         }

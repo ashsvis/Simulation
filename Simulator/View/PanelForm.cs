@@ -308,5 +308,23 @@ namespace Simulator
             Project.Modules.Remove(module);
             Project.Changed = true;
         }
+
+        private void tvModules_MouseDown(object sender, MouseEventArgs e)
+        {
+            var node = tvModules.GetNodeAt(e.X, e.Y);
+            if (node != null && e.Button == MouseButtons.Left)
+            {
+                tvModules.SelectedNode = null;
+                tvModules.SelectedNode = node;
+                if (node.Tag is ProjectProxy project)
+                {
+                    pgProps.SelectedObject = project;
+                }
+                else if (node.Tag is Module module)
+                {
+                    pgProps.SelectedObject = module;
+                }
+            }
+        }
     }
 }
