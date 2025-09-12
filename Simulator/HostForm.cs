@@ -27,7 +27,7 @@
                 panels[i].Show(this);
                 panels[i].Refresh();
                 // debug
-                break;
+                //break;
             }
         }
 

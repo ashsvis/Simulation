@@ -1,6 +1,5 @@
 using Simulator.Model;
 using Simulator.View;
-using System.Windows.Forms;
 
 namespace Simulator
 {
@@ -64,20 +63,21 @@ namespace Simulator
             var notSaved = Project.Modules.Any(x => x.Changed);
             if (notSaved)
             {
-                var result = MessageBox.Show("Текущие изменения не сохранены! Записать?", "Создание нового проекта", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                var result = MessageBox.Show("Текущие изменения не сохранены! Записать?", 
+                    "Создание нового проекта", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
                     Project.Save();
                 if (result == DialogResult.Cancel)
                     return;
             }
             Project.Clear();
+            pgProps.SelectedObject = null;
             AddModuleToProject();
         }
 
         public void AddModuleToProject()
         {
-            var module = new Module();
-            Project.Modules.Add(module);
+            var module = Project.AddModuleToProject();
 
             tvModules.Nodes.Clear();
             tvModules.Nodes.AddRange(Project.GetModulesTree());
@@ -87,6 +87,7 @@ namespace Simulator
             {
                 tvModules.SelectedNode = node;
                 node.EnsureVisible();
+                pgProps.SelectedObject = module;
             }
 
             CreateNewModuleForm(module);
@@ -244,10 +245,21 @@ namespace Simulator
             var dlg = new OpenFileDialog() { DefaultExt = "xml", Filter = "*.xml|*.xml" };
             if (dlg.ShowDialog() == DialogResult.OK)
             {
+                pgProps.SelectedObject = null;
                 MdiChildren.ToList().ForEach(x => x.Close());
                 Project.Load(dlg.FileName);
                 tvModules.Nodes.Clear();
                 tvModules.Nodes.AddRange(Project.GetModulesTree());
+                if (tvModules.Nodes[0].Nodes.Count > 0) 
+                {
+                    var node = tvModules.Nodes[0].Nodes[0];
+                    if (node.Tag is Module module)
+                    {
+                        tvModules.SelectedNode = node;
+                        pgProps.SelectedObject = module;
+                        CreateNewModuleForm(module);
+                    }
+                }
             }
         }
 
@@ -305,8 +317,7 @@ namespace Simulator
                 tvModules.Nodes[0].Nodes.Remove(node);
             var form = MdiChildren.OfType<ModuleForm>().FirstOrDefault(x => x.Module == module);
             form?.Close();
-            Project.Modules.Remove(module);
-            Project.Changed = true;
+            Project.RemoveModuleFromProject(module);
         }
 
         private void tvModules_MouseDown(object sender, MouseEventArgs e)

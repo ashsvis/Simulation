@@ -30,6 +30,10 @@ namespace Simulator.Model
             file = filename;
             var root = new XElement("Project");
             XDocument doc = new(new XComment(Description), root);
+            if (!string.IsNullOrWhiteSpace(Name))
+                root.Add(new XAttribute("Name", Name));
+            if (!string.IsNullOrWhiteSpace(Description))
+                root.Add(new XAttribute("Description", Description));
             XElement xmodules = new("Modules");
             root.Add(xmodules);
             foreach (var module in Modules)
@@ -49,15 +53,23 @@ namespace Simulator.Model
 
         public static void Load(string filename) 
         {
-            file = filename;
+            Name = string.Empty;
+            Description = string.Empty;
             Modules.Clear();
+            file = filename;
             var xdoc = XDocument.Load(filename);
             try
             {
                 var xproject = xdoc.Element("Project");
                 if (xproject != null)
                 {
-                    var xmodules = xproject.Element("Modules");
+                    var name = xproject?.Attribute("Name")?.Value;
+                    if (name != null)
+                        Name = name;
+                    var description = xproject?.Attribute("Description")?.Value;
+                    if (description != null)
+                        Description = description;
+                    var xmodules = xproject?.Element("Modules");
                     if (xmodules != null)
                     {
                         foreach (XElement xmodule in xmodules.Elements("Module"))
@@ -68,6 +80,9 @@ namespace Simulator.Model
                         }
                     }
                 }
+                Modules.ForEach(module => module.Changed = false);
+                Changed = false;
+                OnChanged?.Invoke(null, EventArgs.Empty);
             }
             catch { }
         }
@@ -141,6 +156,25 @@ namespace Simulator.Model
             Description = string.Empty;
             file = string.Empty;
             Modules.Clear();
+            Changed = false;
+            OnChanged?.Invoke(null, EventArgs.Empty);
         }
+
+        public static Module AddModuleToProject()
+        {
+            var module = new Module();
+            Modules.Add(module);
+            OnChanged?.Invoke(null, EventArgs.Empty);
+            return module;
+        }
+
+        public static void RemoveModuleFromProject(Module module)
+        {
+            Modules.Remove(module);
+            Changed = true;
+            OnChanged?.Invoke(null, EventArgs.Empty);
+        }
+
+        public static event EventHandler? OnChanged;
     }
 }

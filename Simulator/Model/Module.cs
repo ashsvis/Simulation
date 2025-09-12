@@ -5,14 +5,35 @@ namespace Simulator.Model
 {
     public class Module
     {
+        private string name = string.Empty;
+        private string description = string.Empty;
+
         [Browsable(false)]
         public int Index { get; set; }
 
         [Category("Задача"), DisplayName("Имя")]
-        public string Name { get; set; } = string.Empty;
+        public string Name 
+        { 
+            get => name;
+            set 
+            {
+                if (name == value) return;
+                name = value;
+                Changed = true;
+            }
+        }
 
         [Category("Задача"), DisplayName("Описание")]
-        public string Description { get; set; } = string.Empty;
+        public string Description 
+        { 
+            get => description;
+            set
+            {
+                if (description == value) return;
+                description = value;
+                Changed = true;
+            }
+        }
 
         [Browsable(false)]
         public List<Element> Items { get; set; } = [];
@@ -27,6 +48,10 @@ namespace Simulator.Model
 
         public void Save(XElement xmodule)
         {
+            if (!string.IsNullOrWhiteSpace(Name))
+                xmodule.Add(new XAttribute("Name", Name));
+            if (!string.IsNullOrWhiteSpace(Description))
+                xmodule.Add(new XAttribute("Description", Description));
             XElement xitems = new("Items");
             xmodule.Add(xitems);
             foreach (var item in Items)
@@ -41,7 +66,13 @@ namespace Simulator.Model
         {
             if (xmodule != null)
             {
-                var xmodules = xmodule.Element("Items");
+                var name = xmodule?.Attribute("Name")?.Value;
+                if (name != null)
+                    Name = name;
+                var description = xmodule?.Attribute("Description")?.Value;
+                if (description != null)
+                    Description = description;
+                var xmodules = xmodule?.Element("Items");
                 if (xmodules != null)
                 {
                     foreach (XElement xitem in xmodules.Elements("Item"))
