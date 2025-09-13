@@ -58,5 +58,29 @@ namespace Simulator.Properties {
                 this["MainFormMaximized"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool MultiScreensMode {
+            get {
+                return ((bool)(this["MultiScreensMode"]));
+            }
+            set {
+                this["MultiScreensMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int OneScreenIndex {
+            get {
+                return ((int)(this["OneScreenIndex"]));
+            }
+            set {
+                this["OneScreenIndex"] = value;
+            }
+        }
     }
 }

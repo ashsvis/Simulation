@@ -3,31 +3,60 @@
     public partial class HostForm : Form
     {
         private readonly PanelForm[] panels;
+        private bool multiScreensMode;
+        private int oneScreenIndex;
+
+        public bool MultiScreensMode 
+        { 
+            get => multiScreensMode;
+            set
+            {
+                if (multiScreensMode == value) return;
+                multiScreensMode = value;
+                Properties.Settings.Default.MultiScreensMode = multiScreensMode;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        public int OneScreenIndex 
+        { 
+            get => oneScreenIndex;
+            set
+            {
+                if (oneScreenIndex == value) return;
+                oneScreenIndex = value;
+                Properties.Settings.Default.OneScreenIndex = oneScreenIndex;
+                Properties.Settings.Default.Save();
+            }
+        }
 
         public HostForm()
         {
             InitializeComponent();
             Width = 0;
             Height = 1;
+            MultiScreensMode = Properties.Settings.Default.MultiScreensMode;
+            OneScreenIndex = Properties.Settings.Default.OneScreenIndex;
             var monitors = Screen.AllScreens;
             panels = new PanelForm[monitors.Length];
             for (var i = 0; i < monitors.Length; i++)
             {
-                panels[i] = new PanelForm(this, monitors[i].Primary, monitors[i].WorkingArea)
+                if (MultiScreensMode || !MultiScreensMode && i == OneScreenIndex)
                 {
-                    Visible = false,
-                    WindowState = FormWindowState.Normal,
-                    StartPosition = FormStartPosition.Manual,
-                    FormBorderStyle = FormBorderStyle.None,
-                    Location = monitors[i].WorkingArea.Location,
-                    Size = monitors[i].WorkingArea.Size,
-                    MinimizeBox = false,
-                    MaximizeBox = false,
-                };
-                panels[i].Show(this);
-                panels[i].Refresh();
-                // debug
-                //break;
+                    panels[i] = new PanelForm(this, monitors[i].Primary, monitors[i].WorkingArea)
+                    {
+                        Visible = false,
+                        WindowState = FormWindowState.Normal,
+                        StartPosition = FormStartPosition.Manual,
+                        FormBorderStyle = FormBorderStyle.None,
+                        Location = monitors[i].WorkingArea.Location,
+                        Size = monitors[i].WorkingArea.Size,
+                        MinimizeBox = false,
+                        MaximizeBox = false,
+                    };
+                    panels[i].Show(this);
+                    panels[i].Refresh();
+                }
             }
         }
 

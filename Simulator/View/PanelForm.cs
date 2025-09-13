@@ -12,6 +12,13 @@ namespace Simulator
         public PanelForm(HostForm host, bool isPrimary, Rectangle bounds)
         {
             InitializeComponent();
+            tsmiOneScreenMode.Visible = host.MultiScreensMode;
+            tsmiMultiScreensMode.Visible = !host.MultiScreensMode;
+            tslScreenNumber.Visible = !host.MultiScreensMode;
+            tslScreenNumber.Text = $"{host.OneScreenIndex + 1}";
+            tsbScreenToLeft.Visible = !host.MultiScreensMode && host.OneScreenIndex > 0; ;
+            tsbScreenToRight.Visible = !host.MultiScreensMode && host.OneScreenIndex < Screen.AllScreens.Length - 1;
+
             // восстановление состояния окна в начале сеанса работы
             //var location = Properties.Settings.Default.MainFormLocation;
             //var size = Properties.Settings.Default.MainFormSize;
@@ -75,7 +82,7 @@ namespace Simulator
             var notSaved = Project.Modules.Any(x => x.Changed);
             if (notSaved)
             {
-                var result = MessageBox.Show("Текущие изменения не сохранены! Записать?", 
+                var result = MessageBox.Show("Текущие изменения не сохранены! Записать?",
                     "Создание нового проекта", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
                     Project.Save();
@@ -262,7 +269,7 @@ namespace Simulator
                 Project.Load(dlg.FileName);
                 tvModules.Nodes.Clear();
                 tvModules.Nodes.AddRange(Project.GetModulesTree());
-                if (tvModules.Nodes[0].Nodes.Count > 0) 
+                if (tvModules.Nodes[0].Nodes.Count > 0)
                 {
                     var node = tvModules.Nodes[0].Nodes[0];
                     if (node.Tag is Module module)
@@ -348,6 +355,43 @@ namespace Simulator
                     pgProps.SelectedObject = module;
                 }
             }
+        }
+
+        private void tsbMinimize_Click(object sender, EventArgs e)
+        {
+            WindowState = FormWindowState.Minimized;
+        }
+
+        private void tsmiMultiScreensMode_Click(object sender, EventArgs e)
+        {
+            Host.MultiScreensMode = true;
+            Application.Restart();
+        }
+
+        private void tsmiOneScreenMode_Click(object sender, EventArgs e)
+        {
+            Host.MultiScreensMode = false;
+            Application.Restart();
+        }
+
+        private void tsmiScreenMoveRight_Click(object sender, EventArgs e)
+        {
+            if (Host.OneScreenIndex == Screen.AllScreens.Length - 1) return;
+            Host.OneScreenIndex++;
+            Location = Screen.AllScreens[Host.OneScreenIndex].Bounds.Location;
+            tsbScreenToLeft.Visible = !Host.MultiScreensMode && Host.OneScreenIndex > 0; ;
+            tsbScreenToRight.Visible = !Host.MultiScreensMode && Host.OneScreenIndex < Screen.AllScreens.Length - 1;
+            tslScreenNumber.Text = $"{Host.OneScreenIndex + 1}";
+        }
+
+        private void tsmiScreenMoveLeft_Click(object sender, EventArgs e)
+        {
+            if (Host.OneScreenIndex == 0) return;
+            Host.OneScreenIndex--;
+            Location = Screen.AllScreens[Host.OneScreenIndex].Bounds.Location;
+            tsbScreenToLeft.Visible = !Host.MultiScreensMode && Host.OneScreenIndex > 0; ;
+            tsbScreenToRight.Visible = !Host.MultiScreensMode && Host.OneScreenIndex < Screen.AllScreens.Length - 1;
+            tslScreenNumber.Text = $"{Host.OneScreenIndex + 1}";
         }
     }
 }
