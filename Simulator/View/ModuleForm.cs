@@ -271,7 +271,7 @@ namespace Simulator
 
         private PointF[,] BuildGrid()
         {
-            var minX = float.MaxValue; 
+            var minX = float.MaxValue;
             var minY = float.MaxValue;
             var maxX = float.MinValue;
             var maxY = float.MinValue;
@@ -571,10 +571,28 @@ namespace Simulator
 
         private void tsbDeleteModule_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Этот модуль будет удалён безвозвратно! Удалить?", 
+            if (MessageBox.Show("Этот модуль будет удалён безвозвратно! Удалить?",
                 "Удаление текущего модуля", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 panelForm.RemoveModuleFromProject(Module);
+            }
+        }
+
+        private void ModuleForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode) 
+            { 
+                case Keys.Delete:
+                    if (items.Any(x => x.Selected) &&
+                        MessageBox.Show("Удалить выделенные элементы?", 
+                        "Удаление элементов", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                    {
+                        items.RemoveAll(x => x.Selected);
+                        Module.Changed = true;
+                        grid = BuildGrid();
+                        zoomPad.Invalidate();
+                    }
+                    break;
             }
         }
     }

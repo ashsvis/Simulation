@@ -185,11 +185,13 @@
             ClientSize = new Size(800, 450);
             Controls.Add(zoomPad);
             Controls.Add(toolStripModule);
+            KeyPreview = true;
             Name = "ModuleForm";
             StartPosition = FormStartPosition.WindowsDefaultBounds;
             Text = "Форма модуля";
             FormClosing += ChildForm_FormClosing;
             Load += ChildForm_Load;
+            KeyDown += ModuleForm_KeyDown;
             toolStripModule.ResumeLayout(false);
             toolStripModule.PerformLayout();
             ResumeLayout(false);
