@@ -2,7 +2,9 @@
 using Simulator.View;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Xml.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Simulator
 {
@@ -11,7 +13,7 @@ namespace Simulator
         private readonly PanelForm panelForm;
 
         private readonly List<Element> items;
-        private PointF[,] grid;
+        private Cell[,] grid;
 
         private Point firstMouseDown;
         private Point mousePosition;
@@ -256,7 +258,10 @@ namespace Simulator
             {
                 for (var x = 0; x < grid.GetLength(1); x++)
                 {
-                    graphics.FillEllipse(brush, new RectangleF(PointF.Subtract(grid[y, x], new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
+                    graphics.FillEllipse(grid[y, x].Kind < 0 ? Brushes.Red : brush, 
+                        new RectangleF(
+                            PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)),
+                            new SizeF(1f, 1f)));
                 }
             }
             // прорисовка "резиновой" линии
@@ -269,7 +274,7 @@ namespace Simulator
             }
         }
 
-        private PointF[,] BuildGrid()
+        private Cell[,] BuildGrid()
         {
             var minX = float.MaxValue;
             var minY = float.MaxValue;
@@ -297,10 +302,51 @@ namespace Simulator
             int lengthX = (int)((maxX - minX) / Element.Step) + 1;
             if (lengthY < 0) lengthY = 0;
             if (lengthX < 0) lengthX = 0;
-            PointF[,] grid = new PointF[lengthY, lengthX];
+            // создание пустой сетки
+            Cell[,] grid = new Cell[lengthY, lengthX];
             for (int y = 0; y < lengthY; y++)
                 for (int x = 0; x < lengthX; x++)
-                    grid[y, x] = new PointF(minX + x * Element.Step, minY + y * Element.Step);
+                    grid[y, x] = new Cell { Point = new PointF(minX + x * Element.Step, minY + y * Element.Step) };
+            // эти точки не должны заполняться тенью
+            List<PointF> mustBeFree = [];
+            foreach (var item in items)
+            {
+                if (item.Instance is IFunction func)
+                {
+                    var n = 0;
+                    foreach (var isLinked in func.LinkedInputs)
+                    {
+                        if (!isLinked)
+                        {
+                            if (item.InputPins.TryGetValue(n, out PointF targetPinPoint))
+                                mustBeFree.Add(targetPinPoint);
+                        }
+                        n++;
+                    }
+                    n = 0;
+                    foreach (var output in func.OutputValues)
+                    {
+                        if (item.OutputPins.TryGetValue(n, out PointF sourcePinPoint))
+                            mustBeFree.Add(sourcePinPoint);
+                        n++;
+                    }
+                }
+            }
+            // заполнение тенями элементов
+            for (int y = 0; y < lengthY; y++)
+            {
+                for (int x = 0; x < lengthX; x++)
+                {
+                    if (items.Select(item => new RectangleF(
+                        item.Bounds.X - Element.Step, item.Bounds.Y,
+                        item.Bounds.Width + Element.Step * 3, item.Bounds.Height + Element.Step))
+                        .Any(rect => rect.Contains(grid[y, x].Point)))
+                    {
+                        if (!mustBeFree.Contains(grid[y, x].Point))
+                            grid[y, x].Kind = -1;
+                    }
+                }
+            }
             return grid;
         }
 
