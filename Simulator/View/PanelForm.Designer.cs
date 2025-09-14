@@ -552,6 +552,7 @@
             FormClosing += MainForm_FormClosing;
             Load += MainForm_Load;
             MdiChildActivate += PanelForm_MdiChildActivate;
+            VisibleChanged += PanelForm_VisibleChanged;
             Enter += PanelForm_Enter;
             Leave += PanelForm_Leave;
             menuMainStrip.ResumeLayout(false);

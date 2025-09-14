@@ -6,35 +6,29 @@ namespace Simulator
     public partial class PanelForm : Form
     {
         public HostForm Host { get; }
+        public int PanelIndex { get; set; }
         public bool IsPrimary { get; }
         public new Rectangle Bounds { get; }
 
-        public PanelForm(HostForm host, bool isPrimary, Rectangle bounds)
+        public PanelForm(HostForm host, int panelIndex, bool isPrimary, Rectangle bounds)
         {
             InitializeComponent();
-            tsmiOneScreenMode.Visible = host.MultiScreensMode;
-            tsmiMultiScreensMode.Visible = !host.MultiScreensMode;
-            tslScreenNumber.Visible = !host.MultiScreensMode;
-            tslScreenNumber.Text = $"{host.OneScreenIndex + 1}";
-            tsbScreenToLeft.Visible = !host.MultiScreensMode && host.OneScreenIndex > 0; ;
-            tsbScreenToRight.Visible = !host.MultiScreensMode && host.OneScreenIndex < Screen.AllScreens.Length - 1;
-
-            // восстановление состояния окна в начале сеанса работы
-            //var location = Properties.Settings.Default.MainFormLocation;
-            //var size = Properties.Settings.Default.MainFormSize;
-            //if (location.IsEmpty || size.IsEmpty)
-            //    CenterToScreen();
-            //else
-            //{
-            //    Location = location;
-            //    Size = size;
-            //    WindowState = Properties.Settings.Default.MainFormMaximized ? FormWindowState.Maximized : FormWindowState.Normal;
-            //}
-
+            UpdateScreenControls(host);
             Host = host;
+            PanelIndex = panelIndex;
             IsPrimary = isPrimary;
             Bounds = bounds;
             Project.OnChanged += Project_OnChanged;
+        }
+
+        private void UpdateScreenControls(HostForm host)
+        {
+            tsmiOneScreenMode.Visible = host.MultiScreensMode;
+            tsmiMultiScreensMode.Visible = !host.MultiScreensMode;
+            tslScreenNumber.Visible = !host.MultiScreensMode;
+            tslScreenNumber.Text = $"{PanelIndex + 1}";
+            tsbScreenToLeft.Visible = !host.MultiScreensMode && PanelIndex > 0; ;
+            tsbScreenToRight.Visible = !host.MultiScreensMode && PanelIndex < Screen.AllScreens.Length - 1;
         }
 
         private void Project_OnChanged(object? sender, ProjectEventArgs e)
@@ -64,12 +58,6 @@ namespace Simulator
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Application.Exit();
-            // сохранение состояния окна в конце сеанса работы
-            //Properties.Settings.Default.MainFormMaximized = WindowState == FormWindowState.Maximized;
-            //WindowState = FormWindowState.Normal;
-            //Properties.Settings.Default.MainFormLocation = Location;
-            //Properties.Settings.Default.MainFormSize = Size;
-            //Properties.Settings.Default.Save();
         }
 
         private void выходToolStripMenuItem_Click(object sender, EventArgs e)
@@ -365,33 +353,37 @@ namespace Simulator
         private void tsmiMultiScreensMode_Click(object sender, EventArgs e)
         {
             Host.MultiScreensMode = true;
-            Application.Restart();
+            Host.ShowAllBut(this);
+            UpdateScreenControls(Host);
         }
 
         private void tsmiOneScreenMode_Click(object sender, EventArgs e)
         {
             Host.MultiScreensMode = false;
-            Application.Restart();
+            Host.HideAllBut(this);
+            UpdateScreenControls(Host);
         }
 
         private void tsmiScreenMoveRight_Click(object sender, EventArgs e)
         {
-            if (Host.OneScreenIndex == Screen.AllScreens.Length - 1) return;
-            Host.OneScreenIndex++;
-            Location = Screen.AllScreens[Host.OneScreenIndex].Bounds.Location;
-            tsbScreenToLeft.Visible = !Host.MultiScreensMode && Host.OneScreenIndex > 0; ;
-            tsbScreenToRight.Visible = !Host.MultiScreensMode && Host.OneScreenIndex < Screen.AllScreens.Length - 1;
-            tslScreenNumber.Text = $"{Host.OneScreenIndex + 1}";
+            if (PanelIndex == Screen.AllScreens.Length - 1) return;
+            var prev = PanelIndex;
+            Host.SwapPanels(prev, PanelIndex + 1);
+            UpdateScreenControls(Host);
         }
 
         private void tsmiScreenMoveLeft_Click(object sender, EventArgs e)
         {
-            if (Host.OneScreenIndex == 0) return;
-            Host.OneScreenIndex--;
-            Location = Screen.AllScreens[Host.OneScreenIndex].Bounds.Location;
-            tsbScreenToLeft.Visible = !Host.MultiScreensMode && Host.OneScreenIndex > 0; ;
-            tsbScreenToRight.Visible = !Host.MultiScreensMode && Host.OneScreenIndex < Screen.AllScreens.Length - 1;
-            tslScreenNumber.Text = $"{Host.OneScreenIndex + 1}";
+            if (PanelIndex == 0) return;
+            var prev = PanelIndex;
+            Host.SwapPanels(prev, PanelIndex - 1);
+            UpdateScreenControls(Host);
+        }
+
+        private void PanelForm_VisibleChanged(object sender, EventArgs e)
+        {
+            if (Visible)
+                UpdateScreenControls(Host);
         }
     }
 }
