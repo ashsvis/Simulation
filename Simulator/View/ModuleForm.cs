@@ -25,7 +25,7 @@ namespace Simulator
             Module = module;
             items = module.Items;
 
-            grid = BuildGrid();
+            BuildLinks();
 
             panelForm.SimulationTick += Module_SimulationTick;
         }
@@ -111,7 +111,7 @@ namespace Simulator
                     item.Selected = true;
                     items.Add(item);
                     Module.Changed = true;
-                    grid = BuildGrid();
+                    BuildLinks();
                     zoomPad.Invalidate();
                     ElementSelected?.Invoke(item.Instance, EventArgs.Empty);
                 }
@@ -211,8 +211,8 @@ namespace Simulator
         {
             var graphics = e.Graphics;
             if (graphics == null) return;
-            //graphics.SmoothingMode = SmoothingMode.HighQuality;
-            //graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            graphics.SmoothingMode = SmoothingMode.HighQuality;
+            graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
             // прорисовка связей
             using var linkpen = new Pen(Color.FromArgb(100, zoomPad.ForeColor));
@@ -254,14 +254,20 @@ namespace Simulator
             }
             // прорисовка узлов сетки
             using var brush = new SolidBrush(Color.Gray);
+            using var font = new Font("Consolas", 3f);
             for (var y = 0; y < grid.GetLength(0); y++)
             {
                 for (var x = 0; x < grid.GetLength(1); x++)
                 {
-                    graphics.FillEllipse(grid[y, x].Kind < 0 ? Brushes.Red : brush, 
-                        new RectangleF(
-                            PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)),
-                            new SizeF(1f, 1f)));
+                    if (grid[y, x].Kind < -1)
+                    {
+                        graphics.FillEllipse(Brushes.Yellow, new RectangleF(
+                            PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
+                    }
+                    if (grid[y, x].Kind > 0)
+                    {
+                        graphics.DrawString(grid[y, x].Kind.ToString(), font, brush, grid[y, x].Point);
+                    }
                 }
             }
             // прорисовка "резиновой" линии
@@ -271,6 +277,139 @@ namespace Simulator
                 using var pen = new Pen(Color.Silver, 0);
                 pen.DashStyle = DashStyle.Dash;
                 graphics.DrawLine(pen, (PointF)linkFirstPoint, mp);
+            }
+        }
+
+        private void BuildLinks()
+        {
+            // подготовка сетки с тенями от существующих элентов и связей
+            grid = BuildGrid();
+            // составление списка связей для построения
+            List<Link> links = [];
+            foreach (var item in items)
+            {
+                if (item.Instance is IFunction function && function.LinkedInputs.Any(x => x == true))
+                {
+                    var n = 0;
+                    foreach (var isLinked in function.LinkedInputs)
+                    {
+                        if (isLinked)
+                        {
+                            if (item.InputPins.TryGetValue(n, out PointF targetPinPoint))
+                            {
+                                (Guid sourceId, int outputIndex) = function.InputLinkSources[n];
+                                var source = items.FirstOrDefault(x => x.Id == sourceId);
+                                if (source != null)
+                                {
+                                    var sourcePinPoint = source.OutputPins[outputIndex];
+                                    links.Add(new Link { SourcePoint = sourcePinPoint, TargetPoint = targetPinPoint });
+                                }
+                            }
+                        }
+                        n++;
+                    }
+                }
+            }
+            foreach (var link in links)
+            {
+                // помещение затравки волны в сетку
+                var tpt = link.SourcePoint;
+                var spt = link.TargetPoint;
+                var tx = -1;
+                var ty = -1;
+                for (var y = 0; y < grid.GetLength(0); y++)
+                {
+                    for (var x = 0; x < grid.GetLength(1); x++)
+                    {
+                        if (spt == grid[y, x].Point)
+                            grid[y, x].Kind = 1;
+                        if (tpt == grid[y, x].Point)
+                        {
+                            tx = x;
+                            ty = y;
+                        }
+                    }
+                }
+                // генерация волны
+                var changed = true;
+                var wave = 1;
+                while (changed) 
+                {
+                    changed = false;
+                    for (var y = 0; y < grid.GetLength(0); y++)
+                    {
+                        for (var x = 0; x < grid.GetLength(1); x++)
+                        {
+                            if (grid[y, x].Kind == wave)
+                            {
+                                if (y > 0 && grid[y - 1, x].Kind == 0)
+                                {
+                                    grid[y - 1, x].Kind = wave + 1;
+                                    changed = true;
+                                }
+                                if (y < grid.GetLength(0) - 1 && grid[y + 1, x].Kind == 0)
+                                {
+                                    grid[y + 1, x].Kind = wave + 1;
+                                    changed = true;
+                                }
+                                if (x > 0 && grid[y, x - 1].Kind == 0)
+                                {
+                                    grid[y, x - 1].Kind = wave + 1;
+                                    changed = true;
+                                }
+                                if (x < grid.GetLength(1) - 1 && grid[y, x + 1].Kind == 0)
+                                {
+                                    grid[y, x + 1].Kind = wave + 1;
+                                    changed = true;
+                                }
+                                if (changed && grid[ty, tx].Kind > 0)
+                                    goto exit;
+                            }
+                        }
+                    }
+                    wave++;
+                }
+            exit: if (changed) // путь найден
+                {
+                    // следуем путём
+                    var x = tx;
+                    var y = ty;
+                    wave = grid[y, x].Kind;
+                    grid[y, x].Kind = -2;
+                    while (wave > 1)
+                    {
+                        if (y > 0 && grid[y - 1, x].Kind == wave - 1)
+                        {
+                            y--;
+                            grid[y, x].Kind = -2;
+                        }
+                        else if (y < grid.GetLength(0) - 1 && grid[y + 1, x].Kind == wave - 1)
+                        {
+                            y++;
+                            grid[y, x].Kind = -2;
+                        }
+                        else if (x > 0 && grid[y, x - 1].Kind == wave - 1)
+                        {
+                            x--;
+                            grid[y, x].Kind = -2;
+                        }
+                        else if (x < grid.GetLength(1) - 1 && grid[y, x + 1].Kind == wave - 1)
+                        {
+                            x++;
+                            grid[y, x].Kind = -2;
+                        }
+                        wave--;
+                    }
+                }
+                // очистка от предыдущей волны
+                for (var iy = 0; iy < grid.GetLength(0); iy++)
+                {
+                    for (var ix = 0; ix < grid.GetLength(1); ix++)
+                    {
+                        if (grid[iy, ix].Kind > 0)
+                            grid[iy, ix].Kind = 0;
+                    }
+                }
             }
         }
 
@@ -316,11 +455,11 @@ namespace Simulator
                     var n = 0;
                     foreach (var isLinked in func.LinkedInputs)
                     {
-                        if (!isLinked)
-                        {
+                        //if (!isLinked)
+                        //{
                             if (item.InputPins.TryGetValue(n, out PointF targetPinPoint))
                                 mustBeFree.Add(targetPinPoint);
-                        }
+                        //}
                         n++;
                     }
                     n = 0;
@@ -515,7 +654,7 @@ namespace Simulator
                 pin = null;
                 output = null;
                 linkFirstPoint = null;
-                grid = BuildGrid();
+                BuildLinks();
                 zoomPad.Invalidate();
             }
         }
@@ -524,86 +663,6 @@ namespace Simulator
         {
             zoomPad.Invalidate();
         }
-
-        //private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
-        //{
-        //    var root = new XElement("Module");
-        //    XDocument doc = new(new XComment("Конфигурация модуля"), root);
-        //    XElement xtems = new("Items");
-        //    root.Add(xtems);
-        //    foreach (var item in items)
-        //    {
-        //        XElement xtem = new("Item");
-        //        xtems.Add(xtem);
-        //        item.Save(xtem);
-        //    }
-        //    doc.Save("module.xml");
-        //}
-
-        //private void загрузитьToolStripMenuItem_Click(object sender, EventArgs e)
-        //{
-        //    var file = "module.xml";
-        //    var xdoc = XDocument.Load(file);
-        //    try
-        //    {
-        //        items.ForEach(item =>
-        //        {
-        //            if (item.Instance is IFunction instance)
-        //                instance.ResultChanged -= Item_ResultChanged;
-        //        });
-
-        //        items.Clear();
-        //        // загрузка функций и информации о связях
-        //        var xmodule = xdoc.Element("Module");
-        //        if (xmodule != null)
-        //        {
-        //            var xtems = xmodule.Element("Items");
-        //            if (xtems != null)
-        //            {
-        //                foreach (XElement item in xtems.Elements("Item"))
-        //                {
-        //                    if (!Guid.TryParse(item.Element("Id")?.Value, out Guid id)) continue;
-        //                    var xtype = item.Element("Type");
-        //                    if (xtype == null) continue;
-        //                    Type? type = Type.GetType(xtype.Value);
-        //                    if (type == null) continue;
-        //                    var element = new Element { Id = id, };
-        //                    element.Load(item, type);
-        //                    items.Add(element);
-        //                }
-        //                // установление связей
-        //                foreach (var item in items)
-        //                {
-        //                    if (item.Instance is IFunction function)
-        //                    {
-        //                        var n = 0;
-        //                        foreach (var (id, output) in function.InputLinkSources)
-        //                        {
-        //                            if (id != Guid.Empty)
-        //                            {
-        //                                var sourceItem = items.FirstOrDefault(x => x.Id == id);
-        //                                if (sourceItem != null && sourceItem.Instance is IFunction source)
-        //                                    function.SetValueLinkToInp(n, source.GetResultLink(output), id, output);
-        //                            }
-        //                            n++;
-        //                        }
-        //                    }
-        //                }
-        //                // подключение обрабочика событий по изменению
-        //                items.ForEach(item =>
-        //                {
-        //                    if (item.Instance is IFunction instance)
-        //                        instance.ResultChanged += Item_ResultChanged;
-        //                });
-        //                UpdateView();
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show(ex.Message, "Чтение файла конфигурации", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
-        //}
 
         private void tsbSave_Click(object sender, EventArgs e)
         {
@@ -635,7 +694,7 @@ namespace Simulator
                     {
                         items.RemoveAll(x => x.Selected);
                         Module.Changed = true;
-                        grid = BuildGrid();
+                        BuildLinks();
                         zoomPad.Invalidate();
                     }
                     break;
