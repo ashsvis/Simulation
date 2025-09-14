@@ -1,5 +1,6 @@
 ﻿using Simulator.Model;
 using Simulator.View;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Xml.Linq;
 
@@ -10,6 +11,7 @@ namespace Simulator
         private readonly PanelForm panelForm;
 
         private readonly List<Element> items;
+        private PointF[,] grid;
 
         private Point firstMouseDown;
         private Point mousePosition;
@@ -20,6 +22,9 @@ namespace Simulator
             this.panelForm = panelForm;
             Module = module;
             items = module.Items;
+
+            grid = BuildGrid();
+
             panelForm.SimulationTick += Module_SimulationTick;
         }
 
@@ -104,6 +109,7 @@ namespace Simulator
                     item.Selected = true;
                     items.Add(item);
                     Module.Changed = true;
+                    grid = BuildGrid();
                     zoomPad.Invalidate();
                     ElementSelected?.Invoke(item.Instance, EventArgs.Empty);
                 }
@@ -207,6 +213,7 @@ namespace Simulator
             //graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
             // прорисовка связей
+            using var linkpen = new Pen(Color.FromArgb(100, zoomPad.ForeColor));
             foreach (var item in items)
             {
                 if (item.Instance is IFunction function && function.LinkedInputs.Any(x => x == true))
@@ -223,7 +230,9 @@ namespace Simulator
                                 if (source != null)
                                 {
                                     var sourcePinPoint = source.OutputPins[outputIndex];
-                                    DrawLink(graphics, zoomPad.ForeColor, sourcePinPoint, targetPinPoint, source.Bounds, item.Bounds);
+                                    //DrawLink(graphics, zoomPad.ForeColor, sourcePinPoint, targetPinPoint, source.Bounds, item.Bounds);
+
+                                    graphics.DrawLine(linkpen, sourcePinPoint, targetPinPoint);
                                 }
                             }
                         }
@@ -241,6 +250,16 @@ namespace Simulator
                 else
                     item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor);
             }
+            // прорисовка узлов сетки
+            using var brush = new SolidBrush(Color.Gray);
+            for (var y = 0; y < grid.GetLength(0); y++)
+            {
+                for (var x = 0; x < grid.GetLength(1); x++)
+                {
+                    graphics.FillEllipse(brush, new RectangleF(PointF.Subtract(grid[y, x], new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
+                }
+            }
+            // прорисовка "резиновой" линии
             if (linkFirstPoint != null)
             {
                 var mp = PrepareMousePosition(mousePosition);
@@ -248,6 +267,41 @@ namespace Simulator
                 pen.DashStyle = DashStyle.Dash;
                 graphics.DrawLine(pen, (PointF)linkFirstPoint, mp);
             }
+        }
+
+        private PointF[,] BuildGrid()
+        {
+            var minX = float.MaxValue; 
+            var minY = float.MaxValue;
+            var maxX = float.MinValue;
+            var maxY = float.MinValue;
+            foreach (var item in items)
+            {
+                if (item.Bounds.X < minX) minX = item.Bounds.X;
+                if (item.Bounds.Y < minY) minY = item.Bounds.Y;
+                if (item.Bounds.X > maxX) maxX = item.Bounds.X;
+                if (item.Bounds.Y > maxY) maxY = item.Bounds.Y;
+
+                var bottomRightPoint = new PointF(item.Bounds.X + item.Bounds.Width, item.Bounds.Y + item.Bounds.Height);
+                if (bottomRightPoint.X < minX) minX = bottomRightPoint.X;
+                if (bottomRightPoint.Y < minY) minY = bottomRightPoint.Y;
+                if (bottomRightPoint.X > maxX) maxX = bottomRightPoint.X;
+                if (bottomRightPoint.Y > maxY) maxY = bottomRightPoint.Y;
+            }
+            minX -= Element.Step * 10;
+            minY -= Element.Step * 10;
+            maxX += Element.Step * 10;
+            maxY += Element.Step * 10;
+
+            int lengthY = (int)((maxY - minY) / Element.Step) + 1;
+            int lengthX = (int)((maxX - minX) / Element.Step) + 1;
+            if (lengthY < 0) lengthY = 0;
+            if (lengthX < 0) lengthX = 0;
+            PointF[,] grid = new PointF[lengthY, lengthX];
+            for (int y = 0; y < lengthY; y++)
+                for (int x = 0; x < lengthX; x++)
+                    grid[y, x] = new PointF(minX + x * Element.Step, minY + y * Element.Step);
+            return grid;
         }
 
         // рисовка связи
@@ -415,6 +469,7 @@ namespace Simulator
                 pin = null;
                 output = null;
                 linkFirstPoint = null;
+                grid = BuildGrid();
                 zoomPad.Invalidate();
             }
         }
