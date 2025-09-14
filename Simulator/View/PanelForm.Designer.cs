@@ -60,7 +60,6 @@
             toolStripMenuItem1 = new ToolStripSeparator();
             statusMainStrip = new StatusStrip();
             timerInterface = new System.Windows.Forms.Timer(components);
-            timerSimulation = new System.Windows.Forms.Timer(components);
             panel1 = new Panel();
             tlpTools = new TableLayoutPanel();
             splitContainer1 = new SplitContainer();
@@ -305,10 +304,6 @@
             // 
             timerInterface.Tick += timerInterface_Tick;
             // 
-            // timerSimulation
-            // 
-            timerSimulation.Tick += timerSimulation_Tick;
-            // 
             // panel1
             // 
             panel1.Controls.Add(tlpTools);
@@ -549,8 +544,8 @@
             Name = "PanelForm";
             StartPosition = FormStartPosition.Manual;
             Text = "Моделирование работы устройств";
-            FormClosing += MainForm_FormClosing;
-            Load += MainForm_Load;
+            FormClosing += PanelForm_FormClosing;
+            Load += PanelForm_Load;
             MdiChildActivate += PanelForm_MdiChildActivate;
             VisibleChanged += PanelForm_VisibleChanged;
             Enter += PanelForm_Enter;
@@ -602,7 +597,6 @@
         private ToolStripMenuItem упорядочитьСвернутыеToolStripMenuItem;
         private ToolStripSeparator toolStripMenuItem1;
         private ToolStripMenuItem каскадомToolStripMenuItem;
-        private System.Windows.Forms.Timer timerSimulation;
         private Panel panel1;
         private TreeView tvLibrary;
         private SplitContainer splitContainer1;

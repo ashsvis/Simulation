@@ -8,8 +8,8 @@ namespace Simulator
         private bool multiScreensMode;
         private int oneScreenIndex;
 
-        public bool MultiScreensMode 
-        { 
+        public bool MultiScreensMode
+        {
             get => multiScreensMode;
             set
             {
@@ -20,8 +20,8 @@ namespace Simulator
             }
         }
 
-        public int OneScreenIndex 
-        { 
+        public int OneScreenIndex
+        {
             get => oneScreenIndex;
             set
             {
@@ -63,9 +63,9 @@ namespace Simulator
 
         public void HideAllBut(PanelForm panel)
         {
-            panels.ForEach(x => 
-            { 
-                if (x != panel) x.Hide(); 
+            panels.ForEach(x =>
+            {
+                if (x != panel) x.Hide();
             });
         }
 
@@ -97,6 +97,7 @@ namespace Simulator
             //var process = RunningInstance();
             //if (process != null) { Application.Exit(); return; }
             #endregion
+            timerSimulation.Enabled = true;
         }
 
         public void SwapPanels(int prev, int current)
@@ -119,7 +120,7 @@ namespace Simulator
                 else
                     panels.Add(panel);
             }
-            else if (prev > current) 
+            else if (prev > current)
             {
                 OneScreenIndex = current;
                 var prevIndex = panels[prev].PanelIndex;
@@ -134,6 +135,18 @@ namespace Simulator
                 panels.RemoveAt(prev);
                 panels.Insert(current, panel);
             }
+        }
+
+        public event EventHandler? SimulationTick;
+
+        /// <summary>
+        /// Таймер моделирования (100 мс)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void timerSimulation_Tick(object sender, EventArgs e)
+        {
+            SimulationTick?.Invoke(this, EventArgs.Empty);
         }
 
         //public void LoadModel()

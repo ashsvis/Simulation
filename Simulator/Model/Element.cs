@@ -4,7 +4,7 @@ namespace Simulator.Model
 {
     public class Element
     {
-        public static float Step = 6f;
+        public const float Step = 8f;//6f;
 
         public Element() 
         { 
@@ -159,13 +159,13 @@ namespace Simulator.Model
             bool named = false;
             using var brush = new SolidBrush(Color.FromArgb(255, backColor));
             using var pen = new Pen(foreColor, 1f);
-            using var font = new Font("Consolas", 8f);
+            using var font = new Font("Consolas", Step + 2f);
             using var fontbrush = new SolidBrush(foreColor);
             if (Instance is IFunction instance)
             {
                 named = !string.IsNullOrEmpty(instance.Name);
                 var max = Math.Max(instance.InverseInputs.Length, instance.InverseOutputs.Length);
-                var step = 6f;
+                var step = Step;
                 var height = step + max * step * 4 + step;
                 var width = step + 1 * step * 4 + step;
                 var rect = new RectangleF(location, Size);

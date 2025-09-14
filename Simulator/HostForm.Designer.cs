@@ -28,18 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
+            timerSimulation = new System.Windows.Forms.Timer(components);
             SuspendLayout();
             // 
-            // RootForm
+            // timerSimulation
+            // 
+            timerSimulation.Tick += timerSimulation_Tick;
+            // 
+            // HostForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(197, 41);
+            ClientSize = new Size(193, 37);
             ControlBox = false;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
-            Name = "RootForm";
+            Name = "HostForm";
             ShowIcon = false;
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.Manual;
@@ -52,5 +58,7 @@
         }
 
         #endregion
+
+        private System.Windows.Forms.Timer timerSimulation;
     }
 }

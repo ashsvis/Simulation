@@ -10,15 +10,22 @@ namespace Simulator
         public bool IsPrimary { get; }
         public new Rectangle Bounds { get; }
 
-        public PanelForm(HostForm host, int panelIndex, bool isPrimary, Rectangle bounds)
+        public PanelForm(HostForm hostForm, int panelIndex, bool isPrimary, Rectangle bounds)
         {
             InitializeComponent();
-            UpdateScreenControls(host);
-            Host = host;
+            UpdateScreenControls(hostForm);
+            Host = hostForm;
             PanelIndex = panelIndex;
             IsPrimary = isPrimary;
             Bounds = bounds;
             Project.OnChanged += Project_OnChanged;
+            hostForm.SimulationTick += Panel_SimulationTick;
+        }
+
+        private void Panel_SimulationTick(object? sender, EventArgs e)
+        {
+            SimulationTick?.Invoke(this, EventArgs.Empty);
+            tsmiSave.Enabled = Project.Changed || Project.Modules.Any(x => x.Changed);
         }
 
         private void UpdateScreenControls(HostForm host)
@@ -42,7 +49,7 @@ namespace Simulator
             }
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private void PanelForm_Load(object sender, EventArgs e)
         {
             tvLibrary.Nodes.Clear();
             tvLibrary.Nodes.AddRange(Project.GetLibraryTree());
@@ -51,11 +58,9 @@ namespace Simulator
             tvModules.Nodes.AddRange(Project.GetModulesTree());
 
             timerInterface.Enabled = true;
-            timerSimulation.Enabled = true;
-
         }
 
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void PanelForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Application.Exit();
         }
@@ -107,10 +112,10 @@ namespace Simulator
 
         private void CreateNewModuleForm(Module module)
         {
-            var childForm = new ModuleForm(this, module) { MdiParent = this, WindowState = FormWindowState.Maximized, Text = module.ToString() };
-            childForm.ElementSelected += ChildForm_ElementSelected;
-            childForm.FormClosed += ChildForm_FormClosed;
-            childForm.Show();
+            var moduleForm = new ModuleForm(this, module) { MdiParent = this, WindowState = FormWindowState.Maximized, Text = module.ToString() };
+            moduleForm.ElementSelected += ChildForm_ElementSelected;
+            moduleForm.FormClosed += ChildForm_FormClosed;
+            moduleForm.Show();
         }
 
         private void ChildForm_FormClosed(object? sender, FormClosedEventArgs e)
@@ -154,18 +159,6 @@ namespace Simulator
         }
 
         public event EventHandler? SimulationTick;
-
-        /// <summary>
-        /// Таймер моделирования (100 мс)
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void timerSimulation_Tick(object sender, EventArgs e)
-        {
-            SimulationTick?.Invoke(this, EventArgs.Empty);
-            //if (!pgProps.Focused) pgProps.Refresh();
-            tsmiSave.Enabled = Project.Changed || Project.Modules.Any(x => x.Changed);
-        }
 
         private void tvLibrary_MouseDown(object sender, MouseEventArgs e)
         {

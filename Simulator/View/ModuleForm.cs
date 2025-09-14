@@ -7,20 +7,20 @@ namespace Simulator
 {
     public partial class ModuleForm : Form, IUpdateView
     {
-        private readonly PanelForm mainForm;
+        private readonly PanelForm panelForm;
 
-        private readonly List<Element> items = [];
+        private readonly List<Element> items;
 
         private Point firstMouseDown;
         private Point mousePosition;
 
-        public ModuleForm(PanelForm mainForm, Module module)
+        public ModuleForm(PanelForm panelForm, Module module)
         {
             InitializeComponent();
-            this.mainForm = mainForm;
+            this.panelForm = panelForm;
             Module = module;
             items = module.Items;
-            mainForm.SimulationTick += MainForm_SimulationTick;
+            panelForm.SimulationTick += Module_SimulationTick;
         }
 
         private void Item_ResultChanged(object sender, Model.ResultCalculateEventArgs args)
@@ -40,10 +40,10 @@ namespace Simulator
                 if (item.Instance is IFunction instance)
                     instance.ResultChanged -= Item_ResultChanged;
             });
-            mainForm.SimulationTick -= MainForm_SimulationTick;
+            panelForm.SimulationTick -= Module_SimulationTick;
         }
 
-        private void MainForm_SimulationTick(object? sender, EventArgs e)
+        private void Module_SimulationTick(object? sender, EventArgs e)
         {
             items.ForEach(item =>
             {
@@ -57,6 +57,7 @@ namespace Simulator
 
                 }
             });
+            zoomPad.Invalidate();
             tsbSave.Enabled = Module.Changed;
         }
 
@@ -510,7 +511,7 @@ namespace Simulator
 
         private void tsmiAddModule_Click(object sender, EventArgs e)
         {
-            mainForm.AddModuleToProject();
+            panelForm.AddModuleToProject();
         }
 
         private void tsbDeleteModule_Click(object sender, EventArgs e)
@@ -518,7 +519,7 @@ namespace Simulator
             if (MessageBox.Show("Этот модуль будет удалён безвозвратно! Удалить?", 
                 "Удаление текущего модуля", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
-                mainForm.RemoveModuleFromProject(Module);
+                panelForm.RemoveModuleFromProject(Module);
             }
         }
     }
