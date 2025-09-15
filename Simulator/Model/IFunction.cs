@@ -3,10 +3,6 @@ using System.Xml.Linq;
 
 namespace Simulator.Model
 {
-    public interface ICalculate
-    {
-        void Calculate();
-    }
     public interface IFunction
     {
         string? Name { get; set; }
@@ -19,12 +15,6 @@ namespace Simulator.Model
         object[] InputValues { get; }
         object[] OutputValues { get; }
         bool VisibleValues { get; set; }
-        bool[] LinkedInputs { get; }
-        (Guid, int)[] InputLinkSources { get; }
-        GetLinkValueMethod? GetResultLink(int outputIndex);
-        void SetValueToInp(int inputIndex, object? value);
-        void SetValueLinkToInp(int inputIndex, GetLinkValueMethod? getMethod, Guid sourceId, int outputPinIndex);
-        void ResetValueLinkToInp(int inputIndex);
         void Save(XElement xtem);
         void Load(XElement? xtem);
 

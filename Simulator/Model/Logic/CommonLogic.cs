@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace Simulator.Model.Logic
 {
-    public class CommonLogic : FilterablePropertyBase, IFunction, ICalculate
+    public class CommonLogic : FilterablePropertyBase, IFunction, ICalculate, ILink
     {
         private bool @out = false;
         private readonly bool[] getInputs;

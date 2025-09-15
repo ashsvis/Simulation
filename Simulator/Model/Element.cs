@@ -209,7 +209,7 @@ namespace Simulator.Model
                         graphics.DrawString(instance.InputNames[i], font, fontbrush, new PointF(x + step, y - ms.Height / 2));
                     }
                     // значение входа - отображаются только не связанные (свободные) входы
-                    if (instance.VisibleValues && !instance.LinkedInputs[i])
+                    if (instance.VisibleValues && Instance is ILink link && !link.LinkedInputs[i])
                     {
                         var value = instance.InputValues[i];
                         var text = value != null && value.GetType() == typeof(bool) ? (bool)value ? "T" : "F" : $"{value}";

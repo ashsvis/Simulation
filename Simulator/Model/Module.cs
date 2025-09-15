@@ -89,7 +89,7 @@ namespace Simulator.Model
                     // установление связей
                     foreach (var item in Items)
                     {
-                        if (item.Instance is IFunction function)
+                        if (item.Instance is ILink function)
                         {
                             var n = 0;
                             foreach (var (id, output) in function.InputLinkSources)
@@ -97,7 +97,7 @@ namespace Simulator.Model
                                 if (id != Guid.Empty)
                                 {
                                     var sourceItem = Items.FirstOrDefault(x => x.Id == id);
-                                    if (sourceItem != null && sourceItem.Instance is IFunction source)
+                                    if (sourceItem != null && sourceItem.Instance is ILink source)
                                         function.SetValueLinkToInp(n, source.GetResultLink(output), id, output);
                                 }
                                 n++;

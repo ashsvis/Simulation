@@ -188,7 +188,7 @@ namespace Simulator
             {
                 var item = items[i];
                 if (item.TryGetInput(pt, out pin, out point) &&
-                    item.Instance is IFunction function && pin is int ipin && !function.LinkedInputs[ipin])
+                    item.Instance is ILink function && pin is int ipin && !function.LinkedInputs[ipin])
                 {
                     output = false;
                     target = items[i];
@@ -299,7 +299,7 @@ namespace Simulator
             links = [];
             foreach (var item in items)
             {
-                if (item.Instance is IFunction function && function.LinkedInputs.Any(x => x == true))
+                if (item.Instance is ILink function && function.LinkedInputs.Any(x => x == true))
                 {
                     var n = 0;
                     foreach (var isLinked in function.LinkedInputs)
@@ -478,24 +478,24 @@ namespace Simulator
             List<PointF> mustBeFree = [];
             foreach (var item in items)
             {
-                if (item.Instance is IFunction func)
+                if (item.Instance is ILink link)
                 {
                     var n = 0;
-                    foreach (var isLinked in func.LinkedInputs)
+                    foreach (var isLinked in link.LinkedInputs)
                     {
-                        //if (!isLinked)
-                        //{
-                            if (item.InputPins.TryGetValue(n, out PointF targetPinPoint))
-                                mustBeFree.Add(targetPinPoint);
-                        //}
+                        if (item.InputPins.TryGetValue(n, out PointF targetPinPoint))
+                            mustBeFree.Add(targetPinPoint);
                         n++;
                     }
-                    n = 0;
-                    foreach (var output in func.OutputValues)
+                    if (item.Instance is IFunction func)
                     {
-                        if (item.OutputPins.TryGetValue(n, out PointF sourcePinPoint))
-                            mustBeFree.Add(sourcePinPoint);
-                        n++;
+                        n = 0;
+                        foreach (var output in func.OutputValues)
+                        {
+                            if (item.OutputPins.TryGetValue(n, out PointF sourcePinPoint))
+                                mustBeFree.Add(sourcePinPoint);
+                            n++;
+                        }
                     }
                 }
             }
@@ -606,7 +606,7 @@ namespace Simulator
                 linkFirstPoint = null;
                 cmsContextMenu.Items.Clear();
                 ToolStripMenuItem item; 
-                if (element?.Instance is IFunction func)
+                if (element?.Instance is ILink func)
                 {
                     if (output == false && pin != null && func.LinkedInputs[(int)pin])
                     {
@@ -614,7 +614,7 @@ namespace Simulator
                         item.Click += (s, e) =>
                         {
                             var menuItem = (ToolStripMenuItem?)s;
-                            if (menuItem?.Tag is Element element && element.Instance is IFunction fn)
+                            if (menuItem?.Tag is Element element && element.Instance is ILink fn)
                             {
                                 fn.ResetValueLinkToInp((int)pin);
                                 Module.Changed = true;
@@ -623,7 +623,7 @@ namespace Simulator
                         };
                         cmsContextMenu.Items.Add(item);
                     }
-                    else if (output == true && items.Select(x => x.Instance as IFunction)
+                    else if (output == true && items.Select(x => x.Instance as ILink)
                         .Any(x => x != null && x.InputLinkSources.Any(y => y.Item1 == element.Id)))
                     {
                         item = new ToolStripMenuItem() { Text = "Удалить связи по выходу", Tag = element };
@@ -632,7 +632,7 @@ namespace Simulator
                             var menuItem = (ToolStripMenuItem?)s;
                             if (menuItem?.Tag is Element element && element.Instance is IFunction fn)
                             {
-                                foreach (var instance in items.Select(x => x.Instance as IFunction)
+                                foreach (var instance in items.Select(x => x.Instance as ILink)
                                         .Where(instance => instance != null && instance.InputLinkSources.Any(y => y.Item1 == element.Id)))
                                 {
                                     if (instance == null) continue;
@@ -675,7 +675,7 @@ namespace Simulator
         {
             foreach (var item in items)
             {
-                if (item.Instance is IFunction func)
+                if (item.Instance is ILink func)
                 {
                     var n = 0;
                     foreach (var islinked in func.LinkedInputs)
@@ -742,7 +742,7 @@ namespace Simulator
                 var outputFirst = output;
                 var linkFirst = linkFirstPoint;
                 if (TryGetPin(e.Location, out Element? elementSecond, out int? pinSecond, out PointF? linkSecondPoint, out bool? outputSecond) &&
-                    elementSecond?.Instance is IFunction target && elementFirst?.Instance is IFunction source)
+                    elementSecond?.Instance is ILink target && elementFirst?.Instance is ILink source)
                 {
                     if (elementFirst != elementSecond && outputFirst != outputSecond)
                     {
@@ -758,16 +758,16 @@ namespace Simulator
                             Module.Changed = true;
                         }
                     }
-                    else if (elementFirst == elementSecond && outputFirst == outputSecond && outputSecond == false && pinSecond is int ipin)
-                    {
-                        // отпускание после нажатия на этом же входе
-                        var value = target.InputValues[ipin];
-                        if (value is bool bvalue)
-                        {
-                            target.SetValueToInp(ipin, !bvalue);
-                            Module.Changed = true;
-                        }
-                    }
+                    //else if (elementFirst == elementSecond && outputFirst == outputSecond && outputSecond == false && pinSecond is int ipin)
+                    //{
+                    //    // отпускание после нажатия на этом же входе
+                    //    var value = target.InputValues[ipin];
+                    //    if (value is bool bvalue)
+                    //    {
+                    //        target.SetValueToInp(ipin, !bvalue);
+                    //        Module.Changed = true;
+                    //    }
+                    //}
                 }
                 else
                     element = null;
@@ -823,7 +823,7 @@ namespace Simulator
         {
             foreach (var item in items)
             {
-                if (item.Instance is IFunction func)
+                if (item.Instance is ILink func)
                 {
                     var n = 0;
                     foreach (var islinked in func.LinkedInputs)

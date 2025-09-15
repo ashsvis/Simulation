@@ -33,7 +33,7 @@
           <Type>Simulator.Model.Logic.OR4</Type>
           <Instance>
             <Inputs>
-              <Input Index="0">
+              <Input Index="0" Invert="true">
                 <SourceId>33ca468d-c3e5-49e3-942a-6a0ba0bb9a06</SourceId>
               </Input>
               <Input Index="1">
@@ -61,7 +61,7 @@
             </Outputs>
           </Instance>
         </Item>
-        <Item X="432" Y="336">
+        <Item X="416" Y="336">
           <Id>7d2f81d2-4d10-4dc8-b0df-8585224f7fc9</Id>
           <Type>Simulator.Model.Logic.AND</Type>
           <Instance>
