@@ -188,7 +188,7 @@ namespace Simulator
             {
                 var item = items[i];
                 if (item.TryGetInput(pt, out pin, out point) &&
-                    item.Instance is ILink function && pin is int ipin && !function.LinkedInputs[ipin])
+                    item.Instance is ILink link && pin is int ipin && !link.LinkedInputs[ipin])
                 {
                     output = false;
                     target = items[i];

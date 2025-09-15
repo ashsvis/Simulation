@@ -154,14 +154,13 @@ namespace Simulator.Model
 
         public virtual void Draw(Graphics graphics, Color foreColor, Color backColor, CustomDraw? customDraw = null)
         {
-            bool named = false;
             using var brush = new SolidBrush(Color.FromArgb(255, backColor));
             using var pen = new Pen(foreColor, 1f);
             using var font = new Font("Consolas", Step + 2f);
             using var fontbrush = new SolidBrush(foreColor);
             if (Instance is IFunction instance)
             {
-                named = !string.IsNullOrEmpty(instance.Name);
+                var named = !string.IsNullOrEmpty(instance.Name);
                 var max = Math.Max(instance.InverseInputs.Length, instance.InverseOutputs.Length);
                 var step = Step;
                 var height = step + max * step * 4 + step;
