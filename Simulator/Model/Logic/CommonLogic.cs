@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Xml.Linq;
-using System.Xml.Serialization;
 
 namespace Simulator.Model.Logic
 {
-    public class CommonLogic : FilterablePropertyBase, IFunction
+    public class CommonLogic : FilterablePropertyBase, IFunction, ICalculate
     {
         private bool @out = false;
         private readonly bool[] getInputs;

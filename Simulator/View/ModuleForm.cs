@@ -53,7 +53,7 @@ namespace Simulator
             {
                 try
                 {
-                    if (item.Instance is IFunction instance)
+                    if (item.Instance is ICalculate instance)
                         instance.Calculate();
                 }
                 catch

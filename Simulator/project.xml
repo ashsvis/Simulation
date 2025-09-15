@@ -53,7 +53,7 @@
           <Type>Simulator.Model.Trigger.RS</Type>
           <Instance>
             <Inputs>
-              <Input Index="0" Name="S" Value="true" />
+              <Input Index="0" Name="S" />
               <Input Index="1" Name="R" />
             </Inputs>
             <Outputs>
