@@ -1,10 +1,6 @@
 ﻿using Simulator.Model;
 using Simulator.View;
-using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Xml.Linq;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Simulator
 {
@@ -13,7 +9,7 @@ namespace Simulator
         private readonly PanelForm panelForm;
 
         private readonly List<Element> items;
-        private Cell[,] grid;
+        private Cell[,] grid = new Cell[0, 0];
 
         private Point firstMouseDown;
         private Point mousePosition;
@@ -264,7 +260,17 @@ namespace Simulator
                         graphics.FillEllipse(Brushes.Yellow, new RectangleF(
                             PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
                     }
-                    if (grid[y, x].Kind > 0)
+                    else if (grid[y, x].Kind == -1)
+                    {
+                        graphics.FillEllipse(Brushes.Red, new RectangleF(
+                            PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
+                    }
+                    else if (grid[y, x].Kind == 0)
+                    {
+                        graphics.FillEllipse(Brushes.Gray, new RectangleF(
+                            PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
+                    }
+                    else if (grid[y, x].Kind > 0)
                     {
                         graphics.DrawString(grid[y, x].Kind.ToString(), font, brush, grid[y, x].Point);
                     }
@@ -302,7 +308,7 @@ namespace Simulator
                                 if (source != null)
                                 {
                                     var sourcePinPoint = source.OutputPins[outputIndex];
-                                    links.Add(new Link { SourcePoint = sourcePinPoint, TargetPoint = targetPinPoint });
+                                    links.Add(new Link(sourcePinPoint, targetPinPoint));
                                 }
                             }
                         }
@@ -330,6 +336,7 @@ namespace Simulator
                         }
                     }
                 }
+                if (tx < 0 || ty < 0) continue;
                 // генерация волны
                 var changed = true;
                 var wave = 1;
