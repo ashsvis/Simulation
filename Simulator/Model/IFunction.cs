@@ -1,5 +1,4 @@
 ﻿using Simulator.Model.Logic;
-using System.Xml.Linq;
 
 namespace Simulator.Model
 {
@@ -15,13 +14,9 @@ namespace Simulator.Model
         object[] InputValues { get; }
         object[] OutputValues { get; }
         bool VisibleValues { get; set; }
-        void Save(XElement xtem);
-        void Load(XElement? xtem);
 
         event ResultCalculateEventHandler? ResultChanged;
     }
-
-    public delegate object GetLinkValueMethod();
 
     public delegate void ResultCalculateEventHandler(object sender, ResultCalculateEventArgs args);
 

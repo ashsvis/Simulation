@@ -16,7 +16,7 @@
             </Outputs>
           </Instance>
         </Item>
-        <Item X="336" Y="416">
+        <Item X="256" Y="336">
           <Id>851d7137-1c60-4373-ac2b-368e593ae5ad</Id>
           <Type>Simulator.Model.Generator.PULSE</Type>
           <Instance>
@@ -61,7 +61,7 @@
             </Outputs>
           </Instance>
         </Item>
-        <Item X="416" Y="336">
+        <Item X="368" Y="240">
           <Id>7d2f81d2-4d10-4dc8-b0df-8585224f7fc9</Id>
           <Type>Simulator.Model.Logic.AND</Type>
           <Instance>

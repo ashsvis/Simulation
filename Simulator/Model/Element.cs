@@ -41,7 +41,7 @@ namespace Simulator.Model
             xtem.Add(new XElement("Type", Instance?.GetType()));
             xtem.Add(new XAttribute("X", Location.X));
             xtem.Add(new XAttribute("Y", Location.Y));
-            if (Instance is IFunction instance)
+            if (Instance is ILoadSave instance)
                 instance.Save(xtem);
         }
 
@@ -51,10 +51,8 @@ namespace Simulator.Model
             if (!int.TryParse(item.Attribute("Y")?.Value, out int y)) return;
             Instance = Activator.CreateInstance(type);
             Location = new Point(x, y);
-            if (Instance is IFunction inst) 
-            {
+            if (Instance is ILoadSave inst) 
                 inst.Load(item.Element("Instance"));
-            }
         }
 
         public SizeF Size { get; set; }

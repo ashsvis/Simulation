@@ -9,4 +9,6 @@
         void SetValueLinkToInp(int inputIndex, GetLinkValueMethod? getMethod, Guid sourceId, int outputPinIndex);
         void ResetValueLinkToInp(int inputIndex);
     }
+
+    public delegate object GetLinkValueMethod();
 }
