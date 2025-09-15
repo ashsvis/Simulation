@@ -8,15 +8,12 @@
           <Id>33ca468d-c3e5-49e3-942a-6a0ba0bb9a06</Id>
           <Type>Simulator.Model.Logic.NOT</Type>
           <Instance>
-            <Inputs>
-              <Input Index="0" Value="true" />
-            </Inputs>
             <Outputs>
               <Output Index="0" Invert="true" />
             </Outputs>
           </Instance>
         </Item>
-        <Item X="256" Y="144">
+        <Item X="288" Y="112">
           <Id>bf0b50f0-d6b4-4fb6-9f3e-e6000997522b</Id>
           <Type>Simulator.Model.Trigger.RS</Type>
           <Instance>
@@ -33,17 +30,14 @@
             </Outputs>
           </Instance>
         </Item>
-        <Item X="160" Y="176">
+        <Item X="160" Y="240">
           <Id>851d7137-1c60-4373-ac2b-368e593ae5ad</Id>
           <Type>Simulator.Model.Generator.PULSE</Type>
           <Instance>
-            <Inputs>
-              <Input Index="0" Value="true" />
-            </Inputs>
-            <WaitTime>3.6</WaitTime>
+            <WaitTime>2</WaitTime>
           </Instance>
         </Item>
-        <Item X="352" Y="208">
+        <Item X="384" Y="192">
           <Id>fb4a3348-32c9-4354-b480-a739781d6a3a</Id>
           <Type>Simulator.Model.Generator.ONDLY</Type>
           <Instance>
@@ -55,7 +49,7 @@
             <WaitTime>7.4</WaitTime>
           </Instance>
         </Item>
-        <Item X="432" Y="128">
+        <Item X="496" Y="128">
           <Id>3d483d24-6fd5-4a4e-873c-4cfd9db5be5a</Id>
           <Type>Simulator.Model.Generator.OFFDLY</Type>
           <Instance>
@@ -65,6 +59,20 @@
               </Input>
             </Inputs>
             <WaitTime>3.3</WaitTime>
+          </Instance>
+        </Item>
+        <Item X="288" Y="240">
+          <Id>756047c2-3007-402d-86de-1515c54a0adb</Id>
+          <Type>Simulator.Model.Logic.NOT</Type>
+          <Instance>
+            <Inputs>
+              <Input Index="0">
+                <SourceId>851d7137-1c60-4373-ac2b-368e593ae5ad</SourceId>
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
           </Instance>
         </Item>
       </Items>

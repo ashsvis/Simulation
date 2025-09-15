@@ -259,7 +259,8 @@ namespace Simulator.Model
                 {
                     var text = $"L{Index}";
                     var ms = graphics.MeasureString(text, font);
-                    graphics.DrawString(text, font, fontbrush, new PointF(location.X + width / 2, location.Y + height), format);
+                    var offset = height > width ? ms.Height : 0;
+                    graphics.DrawString(text, font, fontbrush, new PointF(location.X + width / 2, location.Y + height - offset), format);
                 }
 
                 #region для отладки

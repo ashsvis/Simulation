@@ -10,6 +10,7 @@ namespace Simulator
 
         private readonly List<Element> items;
         private Cell[,] grid = new Cell[0, 0];
+        private List<Link> links = [];
 
         private Point firstMouseDown;
         private Point mousePosition;
@@ -212,32 +213,36 @@ namespace Simulator
 
             // прорисовка связей
             using var linkpen = new Pen(Color.FromArgb(100, zoomPad.ForeColor));
-            foreach (var item in items)
+            foreach (var link in links)
             {
-                if (item.Instance is IFunction function && function.LinkedInputs.Any(x => x == true))
-                {
-                    var n = 0;
-                    foreach (var isLinked in function.LinkedInputs)
-                    {
-                        if (isLinked)
-                        {
-                            if (item.InputPins.TryGetValue(n, out PointF targetPinPoint))
-                            {
-                                (Guid sourceId, int outputIndex) = function.InputLinkSources[n];
-                                var source = items.FirstOrDefault(x => x.Id == sourceId);
-                                if (source != null)
-                                {
-                                    var sourcePinPoint = source.OutputPins[outputIndex];
-                                    //DrawLink(graphics, zoomPad.ForeColor, sourcePinPoint, targetPinPoint, source.Bounds, item.Bounds);
-
-                                    graphics.DrawLine(linkpen, sourcePinPoint, targetPinPoint);
-                                }
-                            }
-                        }
-                        n++;
-                    }
-                }
+                link.Draw(graphics, zoomPad.ForeColor);
             }
+            //foreach (var item in items)
+            //{
+            //    if (item.Instance is IFunction function && function.LinkedInputs.Any(x => x == true))
+            //    {
+            //        var n = 0;
+            //        foreach (var isLinked in function.LinkedInputs)
+            //        {
+            //            if (isLinked)
+            //            {
+            //                if (item.InputPins.TryGetValue(n, out PointF targetPinPoint))
+            //                {
+            //                    (Guid sourceId, int outputIndex) = function.InputLinkSources[n];
+            //                    var source = items.FirstOrDefault(x => x.Id == sourceId);
+            //                    if (source != null)
+            //                    {
+            //                        var sourcePinPoint = source.OutputPins[outputIndex];
+            //                        //DrawLink(graphics, zoomPad.ForeColor, sourcePinPoint, targetPinPoint, source.Bounds, item.Bounds);
+
+            //                        graphics.DrawLine(linkpen, sourcePinPoint, targetPinPoint);
+            //                    }
+            //                }
+            //            }
+            //            n++;
+            //        }
+            //    }
+            //}
             // прорисовка элементов
             var np = 1;
             foreach (var item in items)
@@ -249,33 +254,33 @@ namespace Simulator
                     item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor);
             }
             // прорисовка узлов сетки
-            using var brush = new SolidBrush(Color.Gray);
-            using var font = new Font("Consolas", 3f);
-            for (var y = 0; y < grid.GetLength(0); y++)
-            {
-                for (var x = 0; x < grid.GetLength(1); x++)
-                {
-                    if (grid[y, x].Kind < -1)
-                    {
-                        graphics.FillEllipse(Brushes.Yellow, new RectangleF(
-                            PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
-                    }
-                    else if (grid[y, x].Kind == -1)
-                    {
-                        graphics.FillEllipse(Brushes.Red, new RectangleF(
-                            PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
-                    }
-                    else if (grid[y, x].Kind == 0)
-                    {
-                        graphics.FillEllipse(Brushes.Gray, new RectangleF(
-                            PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
-                    }
-                    else if (grid[y, x].Kind > 0)
-                    {
-                        graphics.DrawString(grid[y, x].Kind.ToString(), font, brush, grid[y, x].Point);
-                    }
-                }
-            }
+            //using var brush = new SolidBrush(Color.Gray);
+            //using var font = new Font("Consolas", 3f);
+            //for (var y = 0; y < grid.GetLength(0); y++)
+            //{
+            //    for (var x = 0; x < grid.GetLength(1); x++)
+            //    {
+            //        if (grid[y, x].Kind < -1)
+            //        {
+            //            graphics.FillEllipse(Brushes.Yellow, new RectangleF(
+            //                PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
+            //        }
+            //        else if (grid[y, x].Kind == -1)
+            //        {
+            //            graphics.FillEllipse(Brushes.Red, new RectangleF(
+            //                PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
+            //        }
+            //        else if (grid[y, x].Kind == 0)
+            //        {
+            //            graphics.FillEllipse(Brushes.Gray, new RectangleF(
+            //                PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
+            //        }
+            //        else if (grid[y, x].Kind > 0)
+            //        {
+            //            graphics.DrawString(grid[y, x].Kind.ToString(), font, brush, grid[y, x].Point);
+            //        }
+            //    }
+            //}
             // прорисовка "резиновой" линии
             if (linkFirstPoint != null)
             {
@@ -291,7 +296,7 @@ namespace Simulator
             // подготовка сетки с тенями от существующих элентов и связей
             grid = BuildGrid();
             // составление списка связей для построения
-            List<Link> links = [];
+            links = [];
             foreach (var item in items)
             {
                 if (item.Instance is IFunction function && function.LinkedInputs.Any(x => x == true))
@@ -316,7 +321,7 @@ namespace Simulator
                     }
                 }
             }
-            foreach (var link in links)
+            foreach (var link in links.OrderBy(link => link.Length))
             {
                 // помещение затравки волны в сетку
                 var tpt = link.SourcePoint;
@@ -378,42 +383,58 @@ namespace Simulator
                 }
             exit: if (changed) // путь найден
                 {
+                    var vector = LinkVector.Horizontal;
                     // следуем путём
                     var x = tx;
                     var y = ty;
                     wave = grid[y, x].Kind;
                     grid[y, x].Kind = -2;
+                    link.Clear();
+                    link.AddPoint(grid[y, x].Point);
                     while (wave > 1)
                     {
                         if (y > 0 && grid[y - 1, x].Kind == wave - 1)
                         {
+                            if (vector != LinkVector.Vertical)
+                                link.AddPoint(grid[y, x].Point);
                             y--;
                             grid[y, x].Kind = -2;
+                            vector = LinkVector.Vertical;
                         }
                         else if (y < grid.GetLength(0) - 1 && grid[y + 1, x].Kind == wave - 1)
                         {
+                            if (vector != LinkVector.Vertical)
+                                link.AddPoint(grid[y, x].Point);
                             y++;
                             grid[y, x].Kind = -2;
+                            vector = LinkVector.Vertical;
                         }
                         else if (x > 0 && grid[y, x - 1].Kind == wave - 1)
                         {
+                            if (vector != LinkVector.Horizontal)
+                                link.AddPoint(grid[y, x].Point);
                             x--;
                             grid[y, x].Kind = -2;
+                            vector = LinkVector.Horizontal;
                         }
                         else if (x < grid.GetLength(1) - 1 && grid[y, x + 1].Kind == wave - 1)
                         {
+                            if (vector != LinkVector.Horizontal)
+                                link.AddPoint(grid[y, x].Point);
                             x++;
                             grid[y, x].Kind = -2;
+                            vector = LinkVector.Horizontal;
                         }
                         wave--;
                     }
+                    link.AddPoint(grid[y, x].Point);
                 }
                 // очистка от предыдущей волны
                 for (var iy = 0; iy < grid.GetLength(0); iy++)
                 {
                     for (var ix = 0; ix < grid.GetLength(1); ix++)
                     {
-                        if (grid[iy, ix].Kind > 0)
+                        if (grid[iy, ix].Kind > 0 || grid[iy, ix].Kind == -2)
                             grid[iy, ix].Kind = 0;
                     }
                 }
@@ -707,5 +728,12 @@ namespace Simulator
                     break;
             }
         }
+    }
+
+    public enum LinkVector
+    {
+        None,
+        Horizontal, 
+        Vertical,
     }
 }
