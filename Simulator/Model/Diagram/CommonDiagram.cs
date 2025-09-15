@@ -1,10 +1,11 @@
 ﻿using Simulator.Model.Logic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Xml.Linq;
 
 namespace Simulator.Model.Diagram
 {
-    public class CommonDiagram : FilterablePropertyBase, ILink, ILoadSave
+    public class CommonDiagram : FilterablePropertyBase, ILink, ILoadSave, IDraw
     {
         private readonly object[] getInputs;
         private readonly object[] getOutputs;
@@ -157,6 +158,55 @@ namespace Simulator.Model.Diagram
 
             if (customInputs || customOutputs)
                 xtem.Add(xtance);
+        }
+
+        public void Draw(Graphics graphics, Color foreColor, Color backColor, PointF location, SizeF size, CustomDraw? customDraw = null)
+        {
+            using var brush = new SolidBrush(Color.FromArgb(255, backColor));
+            using var pen = new Pen(foreColor, 1f);
+            using var font = new Font("Consolas", Element.Step + 2f);
+            using var fontbrush = new SolidBrush(foreColor);
+            var rect = new RectangleF(location, size);
+            graphics.FillRectangle(brush, rect); 
+            graphics.DrawRectangles(pen, [rect]);
+            customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush);
+        }
+
+        public virtual void CalculateTargets(PointF location, ref SizeF size,
+             Dictionary<int, RectangleF> itargets, Dictionary<int, PointF> ipins,
+             Dictionary<int, RectangleF> otargets, Dictionary<int, PointF> opins)
+        {
+            var step = Element.Step;
+            var max = 1;
+            var height = step + max * step * 4 + step;
+            var width = step + 1 * step * 4 + step;
+            size = new SizeF(width, height);
+            // вход
+            var y = location.Y;
+            var x = location.X + width / 2f;
+            var n = 0;
+            itargets.Clear();
+            ipins.Clear();
+            if (getInputs.Length > 0)
+            {
+                // значение входа
+                var ms = new SizeF(step * 2, step * 2);
+                itargets.Add(n, new RectangleF(new PointF(x - ms.Width / 2, y - ms.Height), ms));
+                ipins.Add(n, new PointF(x, y));
+            }
+            // выход
+            y = location.Y + height;
+            n = 0;
+            otargets.Clear();
+            opins.Clear();
+            if (getOutputs.Length > 0)
+            {
+                // значение выхода
+                var ms = new SizeF(step * 2, step * 2);
+                otargets.Add(n, new RectangleF(new PointF(x - ms.Width / 2, y/* + ms.Height*/), ms));
+                var pt = new PointF(x, y);
+                opins.Add(n, pt);
+            }
         }
     }
 }

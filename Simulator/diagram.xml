@@ -4,10 +4,22 @@
   <Modules>
     <Module>
       <Items>
-        <Item X="192" Y="352">
-          <Id>aad38f5d-7de6-4a0c-aefc-eab85e63a8d4</Id>
+        <Item X="96" Y="96">
+          <Id>c402a196-dcc1-4d65-ade2-359f03c3151e</Id>
           <Type>Simulator.Model.Diagram.START</Type>
           <Instance>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+          </Instance>
+        </Item>
+        <Item X="96" Y="176">
+          <Id>20806e2e-3dee-4922-a9a0-a7844c8ccf9f</Id>
+          <Type>Simulator.Model.Diagram.FINISH</Type>
+          <Instance>
+            <Inputs>
+              <Input Index="0" />
+            </Inputs>
             <Outputs>
               <Output Index="0" />
             </Outputs>
