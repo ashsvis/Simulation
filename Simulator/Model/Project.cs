@@ -143,6 +143,11 @@ namespace Simulator.Model
             generatorNode.Nodes.Add(new TreeNode("Одновибратор") { Tag = typeof(Model.Generator.PULSE) });
             generatorNode.Nodes.Add(new TreeNode("Задержка фронта") { Tag = typeof(Model.Generator.ONDLY) });
             generatorNode.Nodes.Add(new TreeNode("Задержка спада") { Tag = typeof(Model.Generator.OFFDLY) });
+            var diagramNode = new TreeNode("Диаграмма");
+            rootNode.Nodes.Add(diagramNode);
+            diagramNode.Nodes.Add(new TreeNode("Начало") { Tag = typeof(Model.Diagram.START) });
+            diagramNode.Nodes.Add(new TreeNode("Конец") { Tag = typeof(Model.Diagram.FINISH) });
+
             rootNode.ExpandAll();
             andNode.Collapse();
             orNode.Collapse();

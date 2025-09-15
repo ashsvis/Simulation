@@ -100,7 +100,7 @@ namespace Simulator
             {
                 if (e.Data.GetData(typeof(Element)) is Element item && item.Type != null)
                 {
-                    item.Instance = (IFunction?)Activator.CreateInstance(item.Type);
+                    item.Instance = Activator.CreateInstance(item.Type);
                     item.Location = SnapToGrid(PrepareMousePosition(zoomPad.PointToClient(new Point(e.X, e.Y))));
                     if (item.Instance is IFunction instance)
                         instance.ResultChanged += Item_ResultChanged;

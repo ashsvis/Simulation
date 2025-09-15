@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!---->
+<Project>
+  <Modules>
+    <Module>
+      <Items>
+        <Item X="192" Y="352">
+          <Id>aad38f5d-7de6-4a0c-aefc-eab85e63a8d4</Id>
+          <Type>Simulator.Model.Diagram.START</Type>
+          <Instance>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+          </Instance>
+        </Item>
+      </Items>
+    </Module>
+  </Modules>
+</Project>
