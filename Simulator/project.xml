@@ -4,7 +4,7 @@
   <Modules>
     <Module>
       <Items>
-        <Item X="160" Y="96">
+        <Item X="272" Y="64">
           <Id>33ca468d-c3e5-49e3-942a-6a0ba0bb9a06</Id>
           <Type>Simulator.Model.Logic.NOT</Type>
           <Instance>
@@ -16,14 +16,19 @@
             </Outputs>
           </Instance>
         </Item>
-        <Item X="160" Y="288">
+        <Item X="336" Y="416">
           <Id>851d7137-1c60-4373-ac2b-368e593ae5ad</Id>
           <Type>Simulator.Model.Generator.PULSE</Type>
           <Instance>
+            <Inputs>
+              <Input Index="0">
+                <SourceId>cb1e4fa3-8894-41c9-afad-c4c90bafe1de</SourceId>
+              </Input>
+            </Inputs>
             <WaitTime>2</WaitTime>
           </Instance>
         </Item>
-        <Item X="512" Y="160">
+        <Item X="496" Y="112">
           <Id>64df984e-4ff8-4671-80a2-79eb6c9e72c9</Id>
           <Type>Simulator.Model.Logic.OR4</Type>
           <Instance>
@@ -32,17 +37,23 @@
                 <SourceId>33ca468d-c3e5-49e3-942a-6a0ba0bb9a06</SourceId>
               </Input>
               <Input Index="1">
+                <SourceId>33ca468d-c3e5-49e3-942a-6a0ba0bb9a06</SourceId>
+              </Input>
+              <Input Index="2">
+                <SourceId>cb1e4fa3-8894-41c9-afad-c4c90bafe1de</SourceId>
+              </Input>
+              <Input Index="3">
                 <SourceId>7d2f81d2-4d10-4dc8-b0df-8585224f7fc9</SourceId>
               </Input>
             </Inputs>
           </Instance>
         </Item>
-        <Item X="160" Y="176">
+        <Item X="128" Y="256">
           <Id>cb1e4fa3-8894-41c9-afad-c4c90bafe1de</Id>
           <Type>Simulator.Model.Trigger.RS</Type>
           <Instance>
             <Inputs>
-              <Input Index="0" Name="S" />
+              <Input Index="0" Name="S" Value="true" />
               <Input Index="1" Name="R" />
             </Inputs>
             <Outputs>
@@ -50,7 +61,7 @@
             </Outputs>
           </Instance>
         </Item>
-        <Item X="368" Y="224">
+        <Item X="432" Y="336">
           <Id>7d2f81d2-4d10-4dc8-b0df-8585224f7fc9</Id>
           <Type>Simulator.Model.Logic.AND</Type>
           <Instance>

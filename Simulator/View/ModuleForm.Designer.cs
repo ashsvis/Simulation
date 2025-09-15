@@ -31,7 +31,7 @@
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModuleForm));
             zoomPad = new Simulator.View.ZoomControl();
-            contextMenuStrip1 = new ContextMenuStrip(components);
+            cmsContextMenu = new ContextMenuStrip(components);
             toolStripModule = new ToolStrip();
             tsmiAddModule = new ToolStripButton();
             tsbDeleteModule = new ToolStripButton();
@@ -50,7 +50,7 @@
             // 
             zoomPad.AllowDrop = true;
             zoomPad.BackColor = Color.FromArgb(64, 64, 64);
-            zoomPad.ContextMenuStrip = contextMenuStrip1;
+            zoomPad.ContextMenuStrip = cmsContextMenu;
             zoomPad.Dock = DockStyle.Fill;
             zoomPad.ForeColor = SystemColors.Window;
             zoomPad.Location = new Point(0, 25);
@@ -69,10 +69,10 @@
             zoomPad.MouseMove += zoomPad_MouseMove;
             zoomPad.MouseUp += zoomPad_MouseUp;
             // 
-            // contextMenuStrip1
+            // cmsContextMenu
             // 
-            contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(61, 4);
+            cmsContextMenu.Name = "contextMenuStrip1";
+            cmsContextMenu.Size = new Size(181, 26);
             // 
             // toolStripModule
             // 
@@ -201,7 +201,7 @@
         #endregion
 
         private View.ZoomControl zoomPad;
-        private ContextMenuStrip contextMenuStrip1;
+        private ContextMenuStrip cmsContextMenu;
         private ToolStrip toolStripModule;
         private ToolStripButton tsmiAddModule;
         private ToolStripButton tsbDeleteModule;

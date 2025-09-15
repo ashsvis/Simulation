@@ -581,27 +581,119 @@ namespace Simulator
         private void zoomPad_MouseDown(object sender, MouseEventArgs e)
         {
             mousePosition = firstMouseDown = e.Location;
-            if (e.Button == MouseButtons.Left)
+            linkFirstPoint = null;
+            element = null;
+            pin = null;
+            output = null;
+            if (TryGetModule(e.Location, out element) &&
+                element != null && element.Instance != null ||
+                TryGetFreeInputPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
+                element != null && element.Instance != null && output == false ||
+                TryGetPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
+                element != null && element.Instance != null && output == true)
+            {
+                element.Selected = true;
+                items.Where(item => item != element).ToList().ForEach(item => item.Selected = false);
+                ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
+            }
+            else
+            {
+                items.ForEach(item => item.Selected = false);
+                ElementSelected?.Invoke(null, EventArgs.Empty);
+            }
+            if (e.Button == MouseButtons.Right)
             {
                 linkFirstPoint = null;
-                if (TryGetModule(e.Location, out element) &&
-                    element != null && element.Instance != null ||
-                    TryGetFreeInputPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
-                    element != null && element.Instance != null && output == false ||
-                    TryGetPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
-                    element != null && element.Instance != null && output == true)
+                cmsContextMenu.Items.Clear();
+                ToolStripMenuItem item; 
+                if (element?.Instance is IFunction func)
                 {
-                    element.Selected = true;
-                    items.Where(item => item != element).ToList().ForEach(item => item.Selected = false);
-                    ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
+                    if (output == false && pin != null && func.LinkedInputs[(int)pin])
+                    {
+                        item = new ToolStripMenuItem() { Text = "Удалить связь по входу", Tag = element };
+                        item.Click += (s, e) =>
+                        {
+                            var menuItem = (ToolStripMenuItem?)s;
+                            if (menuItem?.Tag is Element element && element.Instance is IFunction fn)
+                            {
+                                fn.ResetValueLinkToInp((int)pin);
+                                Module.Changed = true;
+                                BuildLinks();
+                            }
+                        };
+                        cmsContextMenu.Items.Add(item);
+                    }
+                    else if (output == true && items.Select(x => x.Instance as IFunction)
+                        .Any(x => x != null && x.InputLinkSources.Any(y => y.Item1 == element.Id)))
+                    {
+                        item = new ToolStripMenuItem() { Text = "Удалить связи по выходу", Tag = element };
+                        item.Click += (s, e) =>
+                        {
+                            var menuItem = (ToolStripMenuItem?)s;
+                            if (menuItem?.Tag is Element element && element.Instance is IFunction fn)
+                            {
+                                foreach (var instance in items.Select(x => x.Instance as IFunction)
+                                        .Where(instance => instance != null && instance.InputLinkSources.Any(y => y.Item1 == element.Id)))
+                                {
+                                    if (instance == null) continue;
+                                    var n = 0;
+                                    foreach (var source in instance.InputLinkSources)
+                                    {
+                                        if (source.Item1 == element.Id)
+                                        {
+                                            instance.ResetValueLinkToInp(n);
+                                        }
+                                        n++;
+                                    }
+                                }
+                                Module.Changed = true;
+                                BuildLinks();
+                            }
+                        };
+                        cmsContextMenu.Items.Add(item);
+                    }
+                    else if (output == null)
+                    {
+                        item = new ToolStripMenuItem() { Text = "Удалить элемент", Tag = element };
+                        item.Click += (s, e) =>
+                        {
+                            var menuItem = (ToolStripMenuItem?)s;
+                            if (menuItem?.Tag is Element element)
+                            {
+                                DeleteOneElement(element);
+                                zoomPad.Invalidate();
+                            }
+                        };
+                        cmsContextMenu.Items.Add(item);
+                    }
                 }
-                else
-                {
-                    items.ForEach(item => item.Selected = false);
-                    ElementSelected?.Invoke(null, EventArgs.Empty);
-                }
-                zoomPad.Invalidate();
             }
+            zoomPad.Invalidate();
+        }
+
+        private void DeleteOneElement(Element element)
+        {
+            foreach (var item in items)
+            {
+                if (item.Instance is IFunction func)
+                {
+                    var n = 0;
+                    foreach (var islinked in func.LinkedInputs)
+                    {
+                        if (islinked)
+                        {
+                            var linkSources = func.InputLinkSources;
+                            (Guid id, int index) = linkSources[n];
+                            if (items.FirstOrDefault(x => x.Id == id) == element)
+                                func.ResetValueLinkToInp(n);
+                        }
+                        n++;
+                    }
+                }
+            }
+            items.Remove(element);
+            Module.Changed = true;
+            BuildLinks();
         }
 
         private void zoomPad_MouseMove(object sender, MouseEventArgs e)
@@ -720,32 +812,37 @@ namespace Simulator
                         MessageBox.Show("Удалить выделенные элементы?", "Удаление элементов", 
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     {
-                        foreach (var item in items) 
-                        { 
-                            if (item.Instance is IFunction func)
-                            {
-                                var n = 0;
-                                foreach (var islinked in func.LinkedInputs)
-                                {
-                                    if (islinked)
-                                    {
-                                        var linkSources = func.InputLinkSources;
-                                        (Guid id, int index) = linkSources[n];
-                                        var source = items.FirstOrDefault(x => x.Id == id);
-                                        if (source != null && source.Selected) 
-                                            func.ResetValueLinkToInp(n);
-                                    }
-                                    n++;
-                                }
-                            }
-                        }
-                        items.RemoveAll(x => x.Selected);
-                        Module.Changed = true;
-                        BuildLinks();
+                        DeleteAllSelectedElements();
                         zoomPad.Invalidate();
                     }
                     break;
             }
+        }
+
+        private void DeleteAllSelectedElements()
+        {
+            foreach (var item in items)
+            {
+                if (item.Instance is IFunction func)
+                {
+                    var n = 0;
+                    foreach (var islinked in func.LinkedInputs)
+                    {
+                        if (islinked)
+                        {
+                            var linkSources = func.InputLinkSources;
+                            (Guid id, int index) = linkSources[n];
+                            var source = items.FirstOrDefault(x => x.Id == id);
+                            if (source != null && source.Selected)
+                                func.ResetValueLinkToInp(n);
+                        }
+                        n++;
+                    }
+                }
+            }
+            items.RemoveAll(x => x.Selected);
+            Module.Changed = true;
+            BuildLinks();
         }
     }
 
