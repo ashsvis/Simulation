@@ -717,9 +717,28 @@ namespace Simulator
             { 
                 case Keys.Delete:
                     if (items.Any(x => x.Selected) &&
-                        MessageBox.Show("Удалить выделенные элементы?", 
-                        "Удаление элементов", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                        MessageBox.Show("Удалить выделенные элементы?", "Удаление элементов", 
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     {
+                        foreach (var item in items) 
+                        { 
+                            if (item.Instance is IFunction func)
+                            {
+                                var n = 0;
+                                foreach (var islinked in func.LinkedInputs)
+                                {
+                                    if (islinked)
+                                    {
+                                        var linkSources = func.InputLinkSources;
+                                        (Guid id, int index) = linkSources[n];
+                                        var source = items.FirstOrDefault(x => x.Id == id);
+                                        if (source != null && source.Selected) 
+                                            func.ResetValueLinkToInp(n);
+                                    }
+                                    n++;
+                                }
+                            }
+                        }
                         items.RemoveAll(x => x.Selected);
                         Module.Changed = true;
                         BuildLinks();

@@ -211,6 +211,15 @@ namespace Simulator.Model.Logic
             }
         }
 
+        public void ResetValueLinkToInp(int inputIndex)
+        {
+            if (inputIndex >= 0 && inputIndex < getLinkInputs.Length)
+            {
+                getLinkInputs[inputIndex] = null;
+                getLinkSources[inputIndex] = (Guid.Empty, 0);
+            }
+        }
+
         public void SetValueToInp(int inputIndex, object? value)
         {
             if (inputIndex >= 0 && inputIndex < getLinkInputs.Length &&

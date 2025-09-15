@@ -4,7 +4,7 @@
   <Modules>
     <Module>
       <Items>
-        <Item X="64" Y="48">
+        <Item X="64" Y="240">
           <Id>eb25809b-07c8-4af9-bc39-d5e7e579c29d</Id>
           <Type>Simulator.Model.Generator.PULSE</Type>
           <Instance>
@@ -45,7 +45,7 @@
             </Inputs>
           </Instance>
         </Item>
-        <Item X="240" Y="48">
+        <Item X="240" Y="80">
           <Id>ea382204-81ad-4840-a836-2ccff7af2951</Id>
           <Type>Simulator.Model.Trigger.RS</Type>
           <Instance>
@@ -93,7 +93,7 @@
             </Outputs>
           </Instance>
         </Item>
-        <Item X="512" Y="48">
+        <Item X="512" Y="80">
           <Id>5295ee98-3169-46d9-ac77-f0abfdc1fa2c</Id>
           <Type>Simulator.Model.Logic.AND</Type>
           <Instance>
@@ -107,7 +107,7 @@
             </Inputs>
           </Instance>
         </Item>
-        <Item X="512" Y="144">
+        <Item X="512" Y="160">
           <Id>fd44744b-791d-4913-908e-989166258bca</Id>
           <Type>Simulator.Model.Logic.AND</Type>
           <Instance>
