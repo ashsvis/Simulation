@@ -13,7 +13,7 @@
             </Outputs>
           </Instance>
         </Item>
-        <Item X="96" Y="256">
+        <Item X="128" Y="80">
           <Id>20806e2e-3dee-4922-a9a0-a7844c8ccf9f</Id>
           <Type>Simulator.Model.Diagram.FINISH</Type>
           <Instance>
@@ -41,7 +41,7 @@
             </Outputs>
           </Instance>
         </Item>
-        <Item X="64" Y="96">
+        <Item X="48" Y="176">
           <Id>0e6412b4-f59a-46cc-b7b8-e7d9225cf804</Id>
           <Type>Simulator.Model.Diagram.START</Type>
           <Instance>

@@ -561,7 +561,7 @@ namespace Simulator
                 items.Where(item => item != element).ToList().ForEach(item => item.Selected = false);
                 ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
             }
-            else if (TryGetLinkSegment(e.Location, out Link? link, out segmentIndex, out segmentVertical) &&
+            else if (TryGetLinkSegment(e.Location, out link, out segmentIndex, out segmentVertical) &&
                 link != null && segmentIndex != null && segmentVertical != null)
             {
                 ElementSelected?.Invoke(link, EventArgs.Empty);
@@ -672,9 +672,9 @@ namespace Simulator
                 Cursor = Cursors.SizeAll;
             else if (TryGetFreeInputPin(e.Location, out _, out _, out _, out _))
                 Cursor = Cursors.Hand;
-            else if (TryGetLinkSegment(e.Location, out _, out _, out segmentVertical))
+            else if (TryGetLinkSegment(e.Location, out _, out _, out bool? vertical))
             {
-                Cursor = segmentVertical == true ? Cursors.VSplit : Cursors.HSplit;
+                Cursor = vertical == true ? Cursors.VSplit : Cursors.HSplit;
             }
             else
                 Cursor = Cursors.Default;
@@ -693,10 +693,11 @@ namespace Simulator
                             element.Location = PointF.Add(element.Location, delta);
                             Module.Changed = true;
                         }
-                        else
-                        {
-
-                        }
+                    }
+                    else if (link != null && segmentIndex != null && segmentVertical != null)
+                    {
+                        link?.OffsetSegment((int)segmentIndex, (bool)segmentVertical, delta);
+                        Module.Changed = true;
                     }
                     zoomPad.Invalidate();
                 }

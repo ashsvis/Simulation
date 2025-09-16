@@ -53,6 +53,12 @@ namespace Simulator.View
                 var lastpt = this.points[^1];
                 this.points.Add(new PointF(lastpt.X, lastpt.Y));
             }
+            CalculateSegmentTargets();
+            busy[0] = false;
+        }
+
+        private void CalculateSegmentTargets()
+        {
             htargets.Clear();
             vtargets.Clear();
             for (int i = 1; i < points.Count; i++)
@@ -70,7 +76,6 @@ namespace Simulator.View
                     htargets.Add(i, new RectangleF(Math.Min(pt1.X, pt2.X), pt2.Y - Element.Step / 2, Math.Abs(pt1.X - pt2.X), Element.Step));
                 }
             }
-            busy[0] = false;
         }
 
         [Browsable(false)]
@@ -116,6 +121,38 @@ namespace Simulator.View
                 graphics.DrawRectangles(tarpen, [htarget]);
             }
 #endif
+        }
+
+        public void OffsetSegment(int segmentIndex, bool segmentVertical, SizeF delta)
+        {
+            for (int i = 1; i < points.Count; i++)
+            {
+                if (segmentIndex == i)
+                {
+                    var pt1 = points[i - 1];
+                    var pt2 = points[i];
+                    if (pt1.X == pt2.X)
+                    {
+                        // вертикальный сегмент
+                        if (segmentVertical)
+                        {
+                            points[i - 1] = PointF.Add(points[i - 1], new SizeF(delta.Width, 0));
+                            points[i] = PointF.Add(points[i], new SizeF(delta.Width, 0));
+                        }
+                    }
+                    else if (pt1.Y == pt2.Y)
+                    {
+                        // горизонтальный сегмент
+                        if (!segmentVertical)
+                        {
+                            points[i - 1] = PointF.Add(points[i - 1], new SizeF(0, delta.Height));
+                            points[i] = PointF.Add(points[i], new SizeF(0, delta.Height));
+                        }
+                    }
+                    CalculateSegmentTargets();
+                    break;
+                }
+            }
         }
     }
 }
