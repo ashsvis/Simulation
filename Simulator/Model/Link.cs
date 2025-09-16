@@ -1,8 +1,6 @@
 ﻿using System.ComponentModel;
-using System.Globalization;
-using System.Reflection;
 using System.Xml.Linq;
-using static System.Windows.Forms.LinkLabel;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Simulator.Model
 {
@@ -12,12 +10,11 @@ namespace Simulator.Model
         private readonly Dictionary<int, RectangleF> vtargets = [];
 
         [Browsable(false)]
-        public PointF SourcePoint => terminate.Count > 0 ? terminate[0] : PointF.Empty;
+        public PointF SourcePoint => points.Count > 0 ? points[0] : PointF.Empty;
 
         [Browsable(false)]
-        public readonly PointF TargetPoint => terminate.Count > 1 ? terminate[^1] : PointF.Empty;
+        public readonly PointF TargetPoint => points.Count > 1 ? points[^1] : PointF.Empty;
 
-        private readonly List<PointF> terminate = [new PointF(), new PointF()];
         private readonly List<PointF> points = [];
 
         private readonly bool[] busy = new bool[1];
@@ -28,8 +25,6 @@ namespace Simulator.Model
         {
             if (points == null || points.Length < 2)
                 throw new ArgumentNullException(nameof(points), "Массив точек пуст или содержит меньше двух элементов");
-            terminate[0] = points[0];
-            terminate[1] = points[^1];
             BeginUpdate();
             try
             {
@@ -212,6 +207,10 @@ namespace Simulator.Model
                         {
                             points[i - 1] = PointF.Add(points[i - 1], new SizeF(delta.Width, 0));
                             points[i] = PointF.Add(points[i], new SizeF(delta.Width, 0));
+                            if (segmentIndex == 1)
+                                points.Insert(0, pt1);
+                            if (segmentIndex == points.Count - 1)
+                                points.Add(pt2);
                         }
                     }
                     else if (pt1.Y == pt2.Y)
@@ -221,6 +220,10 @@ namespace Simulator.Model
                         {
                             points[i - 1] = PointF.Add(points[i - 1], new SizeF(0, delta.Height));
                             points[i] = PointF.Add(points[i], new SizeF(0, delta.Height));
+                            if (segmentIndex == 1)
+                                points.Insert(0, pt1);
+                            if (segmentIndex == points.Count - 1)
+                                points.Add(pt2);
                         }
                     }
                     CalculateSegmentTargets();

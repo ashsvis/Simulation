@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!---->
+<Project>
+  <Modules>
+    <Module>
+      <Items>
+        <Item X="112" Y="160">
+          <Id>8998d99c-5ee1-442a-8f10-278c05d8469d</Id>
+          <Type>Simulator.Model.Logic.NOT</Type>
+          <Instance>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Item>
+        <Item X="448" Y="160">
+          <Id>00455317-70e8-4617-8518-4ac88761b217</Id>
+          <Type>Simulator.Model.Logic.XOR</Type>
+          <Instance>
+            <Inputs>
+              <Input Index="0">
+                <SourceId>8998d99c-5ee1-442a-8f10-278c05d8469d</SourceId>
+              </Input>
+            </Inputs>
+          </Instance>
+        </Item>
+      </Items>
+      <Links>
+        <Link>
+          <Id>35ef9488-0e67-4a3f-8187-91f8bad53d78</Id>
+          <Points>
+            <Point X="168" Y="184" />
+            <Point X="230.17162" Y="184" />
+            <Point X="230.17162" Y="306.87167" />
+            <Point X="266.27524" Y="306.87167" />
+            <Point X="266.27524" Y="197.34514" />
+            <Point X="245.8497" Y="197.34514" />
+            <Point X="245.8497" Y="144.29921" />
+            <Point X="299.37265" Y="144.29921" />
+            <Point X="299.37265" Y="283.95953" />
+            <Point X="319.70343" Y="283.95953" />
+            <Point X="319.70343" Y="322.58688" />
+            <Point X="346.9265" Y="322.58688" />
+            <Point X="346.9265" Y="139.01508" />
+            <Point X="364.58472" Y="139.01508" />
+            <Point X="364.58472" Y="154.8339" />
+            <Point X="369.73502" Y="154.8339" />
+            <Point X="369.73502" Y="282.516" />
+            <Point X="387.7088" Y="282.516" />
+            <Point X="387.7088" Y="252.43341" />
+            <Point X="408.30228" Y="252.43341" />
+            <Point X="408.30228" Y="185" />
+            <Point X="440" Y="185" />
+          </Points>
+          <Segments>
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
+            <Segment Kind="Horizontal" />
+          </Segments>
+        </Link>
+      </Links>
+    </Module>
+  </Modules>
+</Project>
