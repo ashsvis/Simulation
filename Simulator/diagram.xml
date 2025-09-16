@@ -27,7 +27,7 @@
             </Outputs>
           </Instance>
         </Item>
-        <Item X="240" Y="176">
+        <Item X="272" Y="192">
           <Id>f4929c98-d908-4ba1-a94a-28b018789f79</Id>
           <Type>Simulator.Model.Diagram.FINISH</Type>
           <Instance>
@@ -51,6 +51,48 @@
           </Instance>
         </Item>
       </Items>
+      <Links>
+        <Link>
+          <Id>8fbc16b0-5dd1-44a3-a8d2-44c4f73e2fd1</Id>
+          <Points>
+            <Point X="72" Y="232" />
+            <Point X="72" Y="232" />
+            <Point X="72" Y="279.17953" />
+            <Point X="111.46275" Y="279.17953" />
+            <Point X="111.46275" Y="40.54698" />
+            <Point X="152" Y="40.54698" />
+            <Point X="152" Y="72" />
+            <Point X="152" Y="72" />
+          </Points>
+          <Segments>
+            <Segment Kind="None" />
+            <Segment Kind="Vertical" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
+            <Segment Kind="None" />
+          </Segments>
+        </Link>
+        <Link>
+          <Id>33a37634-df70-4daf-9e11-ee975bed87e3</Id>
+          <Points>
+            <Point X="232" Y="136" />
+            <Point X="232" Y="136" />
+            <Point X="195.79965" Y="136" />
+            <Point X="195.79965" Y="184" />
+            <Point X="296" Y="184" />
+            <Point X="296" Y="184" />
+          </Points>
+          <Segments>
+            <Segment Kind="None" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="None" />
+          </Segments>
+        </Link>
+      </Links>
     </Module>
   </Modules>
 </Project>

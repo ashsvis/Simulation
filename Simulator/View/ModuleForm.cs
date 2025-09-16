@@ -9,8 +9,8 @@ namespace Simulator
         private readonly PanelForm panelForm;
 
         private readonly List<Element> items;
+        private readonly List<Link> links;
         private Cell[,] grid = new Cell[0, 0];
-        private List<Link> links;
 
         private Point firstMouseDown;
         private Point mousePosition;
@@ -294,10 +294,14 @@ namespace Simulator
 
         private void BuildLinks()
         {
+
+            /*
+            
             // подготовка сетки с тенями от существующих элементов и связей
             grid = BuildGrid();
             // составление списка связей для построения
-            List<Link> links = [];
+            //List<Link> links = [];
+            links.Clear();
             foreach (var item in items)
             {
                 if (item.Instance is ILinkSupport function && function.LinkedInputs.Any(x => x == true))
@@ -447,6 +451,8 @@ namespace Simulator
                     }
                 }
             }
+
+            */
         }
 
         private Cell[,] BuildGrid()
