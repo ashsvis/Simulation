@@ -254,33 +254,33 @@ namespace Simulator
                     item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor);
             }
             // прорисовка узлов сетки
-            //using var brush = new SolidBrush(Color.Gray);
-            //using var font = new Font("Consolas", 3f);
-            //for (var y = 0; y < grid.GetLength(0); y++)
-            //{
-            //    for (var x = 0; x < grid.GetLength(1); x++)
-            //    {
-            //        if (grid[y, x].Kind < -1)
-            //        {
-            //            graphics.FillEllipse(Brushes.Yellow, new RectangleF(
-            //                PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
-            //        }
-            //        else if (grid[y, x].Kind == -1)
-            //        {
-            //            graphics.FillEllipse(Brushes.Red, new RectangleF(
-            //                PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
-            //        }
-            //        else if (grid[y, x].Kind == 0)
-            //        {
-            //            graphics.FillEllipse(Brushes.Gray, new RectangleF(
-            //                PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
-            //        }
-            //        else if (grid[y, x].Kind > 0)
-            //        {
-            //            graphics.DrawString(grid[y, x].Kind.ToString(), font, brush, grid[y, x].Point);
-            //        }
-            //    }
-            //}
+            using var brush = new SolidBrush(Color.Gray);
+            using var font = new Font("Consolas", 3f);
+            for (var y = 0; y < grid.GetLength(0); y++)
+            {
+                for (var x = 0; x < grid.GetLength(1); x++)
+                {
+                    if (grid[y, x].Kind < -1)
+                    {
+                        graphics.FillEllipse(Brushes.Yellow, new RectangleF(
+                            PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
+                    }
+                    else if (grid[y, x].Kind == -1)
+                    {
+                        graphics.FillEllipse(Brushes.Red, new RectangleF(
+                            PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
+                    }
+                    else if (grid[y, x].Kind == 0)
+                    {
+                        graphics.FillEllipse(Brushes.Gray, new RectangleF(
+                            PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
+                    }
+                    else if (grid[y, x].Kind > 0)
+                    {
+                        graphics.DrawString(grid[y, x].Kind.ToString(), font, brush, grid[y, x].Point);
+                    }
+                }
+            }
             // прорисовка "резиновой" линии
             if (linkFirstPoint != null)
             {
@@ -323,6 +323,15 @@ namespace Simulator
             }
             foreach (var link in links.OrderBy(link => link.Length))
             {
+                // очистка от предыдущей волны
+                //for (var iy = 0; iy < grid.GetLength(0); iy++)
+                //{
+                //    for (var ix = 0; ix < grid.GetLength(1); ix++)
+                //    {
+                //        if (grid[iy, ix].Kind > 0 || grid[iy, ix].Kind == -2)
+                //            grid[iy, ix].Kind = 0;
+                //    }
+                //}
                 // помещение затравки волны в сетку
                 var tpt = link.SourcePoint;
                 var spt = link.TargetPoint;
@@ -354,16 +363,6 @@ namespace Simulator
                         {
                             if (grid[y, x].Kind == wave)
                             {
-                                if (y > 0 && grid[y - 1, x].Kind == 0)
-                                {
-                                    grid[y - 1, x].Kind = wave + 1;
-                                    changed = true;
-                                }
-                                if (y < grid.GetLength(0) - 1 && grid[y + 1, x].Kind == 0)
-                                {
-                                    grid[y + 1, x].Kind = wave + 1;
-                                    changed = true;
-                                }
                                 if (x > 0 && grid[y, x - 1].Kind == 0)
                                 {
                                     grid[y, x - 1].Kind = wave + 1;
@@ -372,6 +371,16 @@ namespace Simulator
                                 if (x < grid.GetLength(1) - 1 && grid[y, x + 1].Kind == 0)
                                 {
                                     grid[y, x + 1].Kind = wave + 1;
+                                    changed = true;
+                                }
+                                if (y > 0 && grid[y - 1, x].Kind == 0)
+                                {
+                                    grid[y - 1, x].Kind = wave + 1;
+                                    changed = true;
+                                }
+                                if (y < grid.GetLength(0) - 1 && grid[y + 1, x].Kind == 0)
+                                {
+                                    grid[y + 1, x].Kind = wave + 1;
                                     changed = true;
                                 }
                                 if (changed && grid[ty, tx].Kind > 0)
@@ -393,23 +402,7 @@ namespace Simulator
                     link.AddPoint(grid[y, x].Point);
                     while (wave > 1)
                     {
-                        if (y > 0 && grid[y - 1, x].Kind == wave - 1)
-                        {
-                            if (vector != LinkVector.Vertical)
-                                link.AddPoint(grid[y, x].Point);
-                            y--;
-                            grid[y, x].Kind = -2;
-                            vector = LinkVector.Vertical;
-                        }
-                        else if (y < grid.GetLength(0) - 1 && grid[y + 1, x].Kind == wave - 1)
-                        {
-                            if (vector != LinkVector.Vertical)
-                                link.AddPoint(grid[y, x].Point);
-                            y++;
-                            grid[y, x].Kind = -2;
-                            vector = LinkVector.Vertical;
-                        }
-                        else if (x > 0 && grid[y, x - 1].Kind == wave - 1)
+                        if (x > 0 && grid[y, x - 1].Kind == wave - 1)
                         {
                             if (vector != LinkVector.Horizontal)
                                 link.AddPoint(grid[y, x].Point);
@@ -424,6 +417,22 @@ namespace Simulator
                             x++;
                             grid[y, x].Kind = -2;
                             vector = LinkVector.Horizontal;
+                        }
+                        else if (y > 0 && grid[y - 1, x].Kind == wave - 1)
+                        {
+                            if (vector != LinkVector.Vertical)
+                                link.AddPoint(grid[y, x].Point);
+                            y--;
+                            grid[y, x].Kind = -2;
+                            vector = LinkVector.Vertical;
+                        }
+                        else if (y < grid.GetLength(0) - 1 && grid[y + 1, x].Kind == wave - 1)
+                        {
+                            if (vector != LinkVector.Vertical)
+                                link.AddPoint(grid[y, x].Point);
+                            y++;
+                            grid[y, x].Kind = -2;
+                            vector = LinkVector.Vertical;
                         }
                         wave--;
                     }
@@ -487,15 +496,12 @@ namespace Simulator
                             mustBeFree.Add(targetPinPoint);
                         n++;
                     }
-                    if (item.Instance is IFunction func)
+                    n = 0;
+                    foreach (var output in link.LinkedOutputs)
                     {
-                        n = 0;
-                        foreach (var output in func.OutputValues)
-                        {
-                            if (item.OutputPins.TryGetValue(n, out PointF sourcePinPoint))
-                                mustBeFree.Add(sourcePinPoint);
-                            n++;
-                        }
+                        if (item.OutputPins.TryGetValue(n, out PointF sourcePinPoint))
+                            mustBeFree.Add(sourcePinPoint);
+                        n++;
                     }
                 }
             }
@@ -505,8 +511,8 @@ namespace Simulator
                 for (int x = 0; x < lengthX; x++)
                 {
                     if (items.Select(item => new RectangleF(
-                        item.Bounds.X - Element.Step, item.Bounds.Y,
-                        item.Bounds.Width + Element.Step * 3, item.Bounds.Height + Element.Step))
+                        item.Bounds.X - Element.Step, item.Bounds.Y - Element.Step,
+                        item.Bounds.Width + Element.Step * 3, item.Bounds.Height + Element.Step * 3))
                         .Any(rect => rect.Contains(grid[y, x].Point)))
                     {
                         if (!mustBeFree.Contains(grid[y, x].Point))
@@ -518,56 +524,56 @@ namespace Simulator
         }
 
         // рисовка связи
-        private static void DrawLink(Graphics graphics, Color color, PointF sourcePinPoint, PointF targetPinPoint,
-            RectangleF sourceBounds, RectangleF targetBounds)
-        {
-            //graphics.DrawLine(Pens.Yellow, sourcePinPoint, targetPinPoint);
-            var rect = new RectangleF(
-                Math.Min(sourcePinPoint.X, targetPinPoint.X),
-                Math.Min(sourcePinPoint.Y, targetPinPoint.Y),
-                Math.Abs(sourcePinPoint.X - targetPinPoint.X),
-                Math.Abs(sourcePinPoint.Y - targetPinPoint.Y));
+        //private static void DrawLink(Graphics graphics, Color color, PointF sourcePinPoint, PointF targetPinPoint,
+        //    RectangleF sourceBounds, RectangleF targetBounds)
+        //{
+        //    //graphics.DrawLine(Pens.Yellow, sourcePinPoint, targetPinPoint);
+        //    var rect = new RectangleF(
+        //        Math.Min(sourcePinPoint.X, targetPinPoint.X),
+        //        Math.Min(sourcePinPoint.Y, targetPinPoint.Y),
+        //        Math.Abs(sourcePinPoint.X - targetPinPoint.X),
+        //        Math.Abs(sourcePinPoint.Y - targetPinPoint.Y));
 
-            //using var rectpen = new Pen(Color.Silver, 0);
-            //rectpen.DashStyle = DashStyle.Dot;
-            //graphics.DrawRectangles(rectpen, [rect]);
+        //    //using var rectpen = new Pen(Color.Silver, 0);
+        //    //rectpen.DashStyle = DashStyle.Dot;
+        //    //graphics.DrawRectangles(rectpen, [rect]);
 
-            using var linepen = new Pen(color, 1);
-            if (sourcePinPoint.X < targetPinPoint.X)
-            {
-                var top = sourcePinPoint.Y < targetPinPoint.Y
-                ? sourcePinPoint.X < targetPinPoint.X ? rect.Top : rect.Bottom
-                : sourcePinPoint.X < targetPinPoint.X ? rect.Bottom : rect.Top;
-                var bottom = sourcePinPoint.Y < targetPinPoint.Y
-                    ? sourcePinPoint.X < targetPinPoint.X ? rect.Bottom : rect.Top
-                    : sourcePinPoint.X < targetPinPoint.X ? rect.Top : rect.Bottom;
-                var leftshift = SnapToGrid(new PointF(sourcePinPoint.X + (targetBounds.Left - (sourceBounds.Right + Element.Step * 2)) / 2, 0)).X;
-                graphics.DrawLines(linepen, [
-                    new PointF(rect.Left, top),
-                    new PointF(leftshift, top),
-                    new PointF(leftshift, bottom),
-                    new PointF(rect.Right, bottom),
-                ]);
-            }
-            else
-            {
-                var top = sourcePinPoint.Y > targetPinPoint.Y ? rect.Top : rect.Bottom;
-                var bottom = sourcePinPoint.Y > targetPinPoint.Y ? rect.Bottom : rect.Top;
-                var leftshift = rect.Right + Element.Step * 2;
-                var middle = SnapToGrid(new PointF(0, sourceBounds.Top - targetBounds.Bottom > 0
-                    ? targetBounds.Bottom + (sourceBounds.Top - targetBounds.Bottom) / 2
-                    : sourceBounds.Bottom + (targetBounds.Top - sourceBounds.Bottom) / 2)).Y;
-                var rightshift = rect.Left - Element.Step * 2;
-                graphics.DrawLines(linepen, [
-                    new PointF(rect.Right, bottom),
-                    new PointF(leftshift, bottom),
-                    new PointF(leftshift, middle),
-                    new PointF(rightshift, middle),
-                    new PointF(rightshift, top),
-                    new PointF(rect.Left, top),
-                ]);
-            }
-        }
+        //    using var linepen = new Pen(color, 1);
+        //    if (sourcePinPoint.X < targetPinPoint.X)
+        //    {
+        //        var top = sourcePinPoint.Y < targetPinPoint.Y
+        //        ? sourcePinPoint.X < targetPinPoint.X ? rect.Top : rect.Bottom
+        //        : sourcePinPoint.X < targetPinPoint.X ? rect.Bottom : rect.Top;
+        //        var bottom = sourcePinPoint.Y < targetPinPoint.Y
+        //            ? sourcePinPoint.X < targetPinPoint.X ? rect.Bottom : rect.Top
+        //            : sourcePinPoint.X < targetPinPoint.X ? rect.Top : rect.Bottom;
+        //        var leftshift = SnapToGrid(new PointF(sourcePinPoint.X + (targetBounds.Left - (sourceBounds.Right + Element.Step * 2)) / 2, 0)).X;
+        //        graphics.DrawLines(linepen, [
+        //            new PointF(rect.Left, top),
+        //            new PointF(leftshift, top),
+        //            new PointF(leftshift, bottom),
+        //            new PointF(rect.Right, bottom),
+        //        ]);
+        //    }
+        //    else
+        //    {
+        //        var top = sourcePinPoint.Y > targetPinPoint.Y ? rect.Top : rect.Bottom;
+        //        var bottom = sourcePinPoint.Y > targetPinPoint.Y ? rect.Bottom : rect.Top;
+        //        var leftshift = rect.Right + Element.Step * 2;
+        //        var middle = SnapToGrid(new PointF(0, sourceBounds.Top - targetBounds.Bottom > 0
+        //            ? targetBounds.Bottom + (sourceBounds.Top - targetBounds.Bottom) / 2
+        //            : sourceBounds.Bottom + (targetBounds.Top - sourceBounds.Bottom) / 2)).Y;
+        //        var rightshift = rect.Left - Element.Step * 2;
+        //        graphics.DrawLines(linepen, [
+        //            new PointF(rect.Right, bottom),
+        //            new PointF(leftshift, bottom),
+        //            new PointF(leftshift, middle),
+        //            new PointF(rightshift, middle),
+        //            new PointF(rightshift, top),
+        //            new PointF(rect.Left, top),
+        //        ]);
+        //    }
+        //}
 
         private Element? element;
         private int? pin;
@@ -844,12 +850,5 @@ namespace Simulator
             Module.Changed = true;
             BuildLinks();
         }
-    }
-
-    public enum LinkVector
-    {
-        None,
-        Horizontal, 
-        Vertical,
     }
 }

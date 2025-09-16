@@ -3,6 +3,7 @@
     public interface ILink
     {
         bool[] LinkedInputs { get; }
+        object[] LinkedOutputs { get; }
         (Guid, int)[] InputLinkSources { get; }
         GetLinkValueMethod? GetResultLink(int outputIndex);
         void SetValueToInp(int inputIndex, object? value);

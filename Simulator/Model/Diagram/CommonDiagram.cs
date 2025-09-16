@@ -53,6 +53,9 @@ namespace Simulator.Model.Diagram
         }
 
         [Browsable(false)]
+        public object[] LinkedOutputs => getOutputs;
+
+        [Browsable(false)]
         public (Guid, int)[] InputLinkSources => getLinkSources;
 
         [Browsable(false)]
@@ -160,15 +163,39 @@ namespace Simulator.Model.Diagram
                 xtem.Add(xtance);
         }
 
-        public void Draw(Graphics graphics, Color foreColor, Color backColor, PointF location, SizeF size, CustomDraw? customDraw = null)
+        public void Draw(Graphics graphics, Color foreColor, Color backColor, PointF location, SizeF size, int index, bool selected, CustomDraw? customDraw = null)
         {
+            var step = Element.Step;
             using var brush = new SolidBrush(Color.FromArgb(255, backColor));
             using var pen = new Pen(foreColor, 1f);
             using var font = new Font("Consolas", Element.Step + 2f);
             using var fontbrush = new SolidBrush(foreColor);
             var rect = new RectangleF(location, size);
+            if (selected)
+            {
+                for (var i = 5; i >= 3; i -= 2)
+                {
+                    using var selpen = new Pen(Color.FromArgb(110, Color.Yellow), i);
+                    graphics.DrawRectangles(selpen, [rect]);
+                }
+            }
             graphics.FillRectangle(brush, rect); 
             graphics.DrawRectangles(pen, [rect]);
+            var y = -step + location.Y;
+            var x = location.X + size.Width / 2f;
+            if (getInputs.Length > 0)
+            {
+                // вход
+                // вертикальная риска сверху, напротив входа
+                graphics.DrawLine(pen, new PointF(x, y), new PointF(x, y + step));
+            }
+            y = location.Y + size.Height;
+            if (getOutputs.Length > 0)
+            {
+                // выход
+                // вертикальная риска снизу, напротив выхода
+                graphics.DrawLine(pen, new PointF(x, y), new PointF(x, y + step));
+            }
             customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush);
         }
 
@@ -192,7 +219,7 @@ namespace Simulator.Model.Diagram
                 // значение входа
                 var ms = new SizeF(step * 2, step * 2);
                 itargets.Add(n, new RectangleF(new PointF(x - ms.Width / 2, y - ms.Height), ms));
-                ipins.Add(n, new PointF(x, y));
+                ipins.Add(n, new PointF(x, y - step));
             }
             // выход
             y = location.Y + height;
@@ -203,8 +230,8 @@ namespace Simulator.Model.Diagram
             {
                 // значение выхода
                 var ms = new SizeF(step * 2, step * 2);
-                otargets.Add(n, new RectangleF(new PointF(x - ms.Width / 2, y/* + ms.Height*/), ms));
-                var pt = new PointF(x, y);
+                otargets.Add(n, new RectangleF(new PointF(x - ms.Width / 2, y), ms));
+                var pt = new PointF(x, y + step);
                 opins.Add(n, pt);
             }
         }

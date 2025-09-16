@@ -4,7 +4,7 @@
   <Modules>
     <Module>
       <Items>
-        <Item X="96" Y="96">
+        <Item X="96" Y="32">
           <Id>c402a196-dcc1-4d65-ade2-359f03c3151e</Id>
           <Type>Simulator.Model.Diagram.START</Type>
           <Instance>
@@ -13,12 +13,14 @@
             </Outputs>
           </Instance>
         </Item>
-        <Item X="96" Y="176">
+        <Item X="208" Y="48">
           <Id>20806e2e-3dee-4922-a9a0-a7844c8ccf9f</Id>
           <Type>Simulator.Model.Diagram.FINISH</Type>
           <Instance>
             <Inputs>
-              <Input Index="0" />
+              <Input Index="0">
+                <SourceId>c402a196-dcc1-4d65-ade2-359f03c3151e</SourceId>
+              </Input>
             </Inputs>
             <Outputs>
               <Output Index="0" />

@@ -160,7 +160,7 @@ namespace Simulator.Model
         {
             if (Instance is IDraw instance)
             {
-                instance.Draw(graphics, foreColor, backColor, location, Size, customDraw);
+                instance.Draw(graphics, foreColor, backColor, location, Size, Index, Selected, customDraw);
             }
 
             #region для отладки

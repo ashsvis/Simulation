@@ -154,6 +154,10 @@ namespace Simulator.Model.Logic
             } 
         }
 
+        [Browsable(false)]
+        public object[] LinkedOutputs => [Out];
+
+
         public event ResultCalculateEventHandler? ResultChanged;
 
         public virtual void Calculate()
@@ -328,7 +332,7 @@ namespace Simulator.Model.Logic
             }
         }
 
-        public void Draw(Graphics graphics, Color foreColor, Color backColor, PointF location, SizeF size, CustomDraw? customDraw = null)
+        public void Draw(Graphics graphics, Color foreColor, Color backColor, PointF location, SizeF size, int index, bool selected, CustomDraw? customDraw = null)
         {
             using var brush = new SolidBrush(Color.FromArgb(255, backColor));
             using var pen = new Pen(foreColor, 1f);
@@ -342,14 +346,14 @@ namespace Simulator.Model.Logic
                 var height = step + max * step * 4 + step;
                 var width = step + 1 * step * 4 + step;
                 var rect = new RectangleF(location, size);
-                //if (Selected)
-                //{
-                //    for (var i = 5; i >= 3; i -= 2)
-                //    {
-                //        using var selpen = new Pen(Color.FromArgb(110, Color.Yellow), i);
-                //        graphics.DrawRectangles(selpen, [rect]);
-                //    }
-                //}
+                if (selected)
+                {
+                    for (var i = 5; i >= 3; i -= 2)
+                    {
+                        using var selpen = new Pen(Color.FromArgb(110, Color.Yellow), i);
+                        graphics.DrawRectangles(selpen, [rect]);
+                    }
+                }
                 graphics.FillRectangle(brush, rect);
                 graphics.DrawRectangles(pen, [rect]);
                 // обозначение функции, текст по-центру, в верхней части рамки элемента
@@ -428,14 +432,13 @@ namespace Simulator.Model.Logic
                     y += step * 2;
                 }
                 // индекс элемента в списке
-                //if (Index != 0)
-                //{
-                //    var text = $"L{Index}";
-                //    var ms = graphics.MeasureString(text, font);
-                //    var offset = height > width ? ms.Height : 0;
-                //    graphics.DrawString(text, font, fontbrush, new PointF(location.X + width / 2, location.Y + height - offset), format);
-                //}
-
+                if (index != 0)
+                {
+                    var text = $"L{index}";
+                    var ms = graphics.MeasureString(text, font);
+                    var offset = height > width ? ms.Height : 0;
+                    graphics.DrawString(text, font, fontbrush, new PointF(location.X + width / 2, location.Y + height - offset), format);
+                }
             }
         }
 
@@ -448,9 +451,9 @@ namespace Simulator.Model.Logic
             var height = step + max * step * 4 + step;
             var width = step + 1 * step * 4 + step;
             size = new SizeF(width, height);
-            if (this is IFunction instance)
+            if (this is ILink instance)
             {
-                max = Math.Max(instance.InverseInputs.Length, instance.InverseOutputs.Length);
+                max = Math.Max(instance.LinkedInputs.Length, instance.LinkedOutputs.Length);
                 height = step + max * step * 4 + step;
                 size = new SizeF(width, height);
                 // входы
@@ -459,7 +462,7 @@ namespace Simulator.Model.Logic
                 var n = 0;
                 itargets.Clear();
                 ipins.Clear();
-                for (var i = 0; i < instance.InverseInputs.Length; i++)
+                for (var i = 0; i < instance.LinkedInputs.Length; i++)
                 {
                     y += step * 2;
                     // значение входа
@@ -475,9 +478,9 @@ namespace Simulator.Model.Logic
                 n = 0;
                 otargets.Clear();
                 opins.Clear();
-                for (var i = 0; i < instance.InverseOutputs.Length; i++)
+                for (var i = 0; i < instance.LinkedOutputs.Length; i++)
                 {
-                    if (instance.InverseOutputs.Length == 1)
+                    if (instance.LinkedOutputs.Length == 1)
                         y = height / 2 + location.Y;
                     else
                         y += step * 2;
