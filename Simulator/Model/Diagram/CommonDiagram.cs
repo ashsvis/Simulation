@@ -5,7 +5,7 @@ using System.Xml.Linq;
 
 namespace Simulator.Model.Diagram
 {
-    public class CommonDiagram : FilterablePropertyBase, ILink, ILoadSave, IDraw
+    public class CommonDiagram : FilterablePropertyBase, ILinkSupport, ILoadSave, IDraw
     {
         private readonly object[] getInputs;
         private readonly object[] getOutputs;

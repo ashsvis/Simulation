@@ -1,6 +1,6 @@
 ﻿namespace Simulator.Model
 {
-    public interface ILink
+    public interface ILinkSupport
     {
         bool[] LinkedInputs { get; }
         object[] LinkedOutputs { get; }

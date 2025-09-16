@@ -7,54 +7,59 @@ namespace Simulator.View
         public readonly PointF TargetPoint => points.Count > 1 ? points[^1] : PointF.Empty;
 
         private readonly List<PointF> points = [];
+
+        private readonly bool[] busy = new bool[1];
         
         public readonly float Length => points.Count > 1 ? Math.Abs(SourcePoint.X - TargetPoint.X) + Math.Abs(SourcePoint.Y - TargetPoint.Y) : 0f;
 
         public Link(params PointF[] points)
         {
             if (points == null || points.Length < 2)
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(points), "Массив точек пуст или содержит меньше двух элементов");
             foreach (var point in points) 
             { 
                 this.points.Add(point);
             }
         }
 
-        public void Clear()
+        public void BeginUpdate()
         {
+            busy[0] = true;
             this.points.Clear();
         }
 
         public void AddPoint(PointF point)
         {
-            this.points.Add(point);
+            if (!busy[0])
+            {
+                throw new ArgumentNullException(nameof(point), "Для добавления точек вначале вызовите метод BeginUpdate(), а в конце EndUpdate()");
+            }
+            if (!points.Contains(point))
+                this.points.Add(point);
         }
 
-        public void Optimize()
+        public void EndUpdate()
         {
-            //List<PointF> pts = [];
-            //var groupsByX = points.GroupBy(point => point.X);
-            //foreach (var groupByX in groupsByX)
-            //{
-            //    var groupsByY = groupByX.GroupBy(point => point.Y);
-            //    foreach (var groupByY in groupsByY)
-            //        pts.Add(new PointF(groupByX.Key, groupByY.Key));
-            //}
+            busy[0] = false;
         }
 
         public void Draw(Graphics graphics, Color foreColor)
         {
-            using var pen = new Pen(foreColor);
-            using var brush = new SolidBrush(Color.Gray);
-            graphics.DrawLines(pen, [.. points]);
-            if (points.Count > 2)
+            if (busy[0]) return;
+
+            if (points.Count > 1)
             {
-                foreach (var point in points.Skip(1).Take(points.Count - 2))
-                {
-                    graphics.FillEllipse(brush, new RectangleF(
-                        PointF.Subtract(point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
-                }
+                using var pen = new Pen(foreColor);
+                graphics.DrawLines(pen, [.. points]);
             }
+#if DEBUG
+            using var brush = new SolidBrush(Color.Aqua);
+            foreach (var point in points)
+            {
+                graphics.FillEllipse(brush, new RectangleF(
+                    PointF.Subtract(point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
+            }
+#endif
         }
     }
 }

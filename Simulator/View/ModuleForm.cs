@@ -188,7 +188,7 @@ namespace Simulator
             {
                 var item = items[i];
                 if (item.TryGetInput(pt, out pin, out point) &&
-                    item.Instance is ILink link && pin is int ipin && !link.LinkedInputs[ipin])
+                    item.Instance is ILinkSupport link && pin is int ipin && !link.LinkedInputs[ipin])
                 {
                     output = false;
                     target = items[i];
@@ -241,13 +241,6 @@ namespace Simulator
                 }
             }
 #endif
-
-            // прорисовка связей
-            using var linkpen = new Pen(Color.FromArgb(100, zoomPad.ForeColor));
-            foreach (var link in links)
-            {
-                link.Draw(graphics, zoomPad.ForeColor);
-            }
             // прорисовка элементов
             var np = 1;
             foreach (var item in items)
@@ -258,6 +251,14 @@ namespace Simulator
                 else
                     item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor);
             }
+
+            // прорисовка связей
+            using var linkpen = new Pen(Color.FromArgb(100, zoomPad.ForeColor));
+            foreach (var link in links)
+            {
+                link.Draw(graphics, zoomPad.ForeColor);
+            }
+
             // прорисовка "резиновой" линии
             if (linkFirstPoint != null)
             {
@@ -276,7 +277,7 @@ namespace Simulator
             links = [];
             foreach (var item in items)
             {
-                if (item.Instance is ILink function && function.LinkedInputs.Any(x => x == true))
+                if (item.Instance is ILinkSupport function && function.LinkedInputs.Any(x => x == true))
                 {
                     var n = 0;
                     foreach (var isLinked in function.LinkedInputs)
@@ -375,45 +376,52 @@ namespace Simulator
                     var y = ty;
                     wave = grid[y, x].Kind;
                     grid[y, x].Kind = -2;
-                    link.Clear();
-                    link.AddPoint(grid[y, x].Point);
-                    while (wave > 1)
+                    link.BeginUpdate();
+                    try
                     {
-                        if (x > 0 && grid[y, x - 1].Kind == wave - 1)
+                        link.AddPoint(grid[y, x].Point);
+                        while (wave > 1)
                         {
-                            if (vector != LinkVector.Horizontal)
-                                link.AddPoint(grid[y, x].Point);
-                            x--;
-                            grid[y, x].Kind = -2;
-                            vector = LinkVector.Horizontal;
+                            if (x > 0 && grid[y, x - 1].Kind == wave - 1)
+                            {
+                                if (vector != LinkVector.Horizontal)
+                                    link.AddPoint(grid[y, x].Point);
+                                x--;
+                                grid[y, x].Kind = -2;
+                                vector = LinkVector.Horizontal;
+                            }
+                            else if (x < grid.GetLength(1) - 1 && grid[y, x + 1].Kind == wave - 1)
+                            {
+                                if (vector != LinkVector.Horizontal)
+                                    link.AddPoint(grid[y, x].Point);
+                                x++;
+                                grid[y, x].Kind = -2;
+                                vector = LinkVector.Horizontal;
+                            }
+                            else if (y > 0 && grid[y - 1, x].Kind == wave - 1)
+                            {
+                                if (vector != LinkVector.Vertical)
+                                    link.AddPoint(grid[y, x].Point);
+                                y--;
+                                grid[y, x].Kind = -2;
+                                vector = LinkVector.Vertical;
+                            }
+                            else if (y < grid.GetLength(0) - 1 && grid[y + 1, x].Kind == wave - 1)
+                            {
+                                if (vector != LinkVector.Vertical)
+                                    link.AddPoint(grid[y, x].Point);
+                                y++;
+                                grid[y, x].Kind = -2;
+                                vector = LinkVector.Vertical;
+                            }
+                            wave--;
                         }
-                        else if (x < grid.GetLength(1) - 1 && grid[y, x + 1].Kind == wave - 1)
-                        {
-                            if (vector != LinkVector.Horizontal)
-                                link.AddPoint(grid[y, x].Point);
-                            x++;
-                            grid[y, x].Kind = -2;
-                            vector = LinkVector.Horizontal;
-                        }
-                        else if (y > 0 && grid[y - 1, x].Kind == wave - 1)
-                        {
-                            if (vector != LinkVector.Vertical)
-                                link.AddPoint(grid[y, x].Point);
-                            y--;
-                            grid[y, x].Kind = -2;
-                            vector = LinkVector.Vertical;
-                        }
-                        else if (y < grid.GetLength(0) - 1 && grid[y + 1, x].Kind == wave - 1)
-                        {
-                            if (vector != LinkVector.Vertical)
-                                link.AddPoint(grid[y, x].Point);
-                            y++;
-                            grid[y, x].Kind = -2;
-                            vector = LinkVector.Vertical;
-                        }
-                        wave--;
+                        link.AddPoint(grid[y, x].Point);
                     }
-                    link.AddPoint(grid[y, x].Point);
+                    finally
+                    {
+                        link.EndUpdate();
+                    }
                 }
                 // очистка от предыдущей волны
                 for (var iy = 0; iy < grid.GetLength(0); iy++)
@@ -464,7 +472,7 @@ namespace Simulator
             List<PointF> mustBeFree = [];
             foreach (var item in items)
             {
-                if (item.Instance is ILink link)
+                if (item.Instance is ILinkSupport link)
                 {
                     var n = 0;
                     foreach (var isLinked in link.LinkedInputs)
@@ -589,7 +597,7 @@ namespace Simulator
                 linkFirstPoint = null;
                 cmsContextMenu.Items.Clear();
                 ToolStripMenuItem item; 
-                if (element?.Instance is ILink func)
+                if (element?.Instance is ILinkSupport func)
                 {
                     if (output == false && pin != null && func.LinkedInputs[(int)pin])
                     {
@@ -597,7 +605,7 @@ namespace Simulator
                         item.Click += (s, e) =>
                         {
                             var menuItem = (ToolStripMenuItem?)s;
-                            if (menuItem?.Tag is Element element && element.Instance is ILink fn)
+                            if (menuItem?.Tag is Element element && element.Instance is ILinkSupport fn)
                             {
                                 fn.ResetValueLinkToInp((int)pin);
                                 Module.Changed = true;
@@ -606,7 +614,7 @@ namespace Simulator
                         };
                         cmsContextMenu.Items.Add(item);
                     }
-                    else if (output == true && items.Select(x => x.Instance as ILink)
+                    else if (output == true && items.Select(x => x.Instance as ILinkSupport)
                         .Any(x => x != null && x.InputLinkSources.Any(y => y.Item1 == element.Id)))
                     {
                         item = new ToolStripMenuItem() { Text = "Удалить связи по выходу", Tag = element };
@@ -615,7 +623,7 @@ namespace Simulator
                             var menuItem = (ToolStripMenuItem?)s;
                             if (menuItem?.Tag is Element element && element.Instance is IFunction fn)
                             {
-                                foreach (var instance in items.Select(x => x.Instance as ILink)
+                                foreach (var instance in items.Select(x => x.Instance as ILinkSupport)
                                         .Where(instance => instance != null && instance.InputLinkSources.Any(y => y.Item1 == element.Id)))
                                 {
                                     if (instance == null) continue;
@@ -658,7 +666,7 @@ namespace Simulator
         {
             foreach (var item in items)
             {
-                if (item.Instance is ILink func)
+                if (item.Instance is ILinkSupport func)
                 {
                     var n = 0;
                     foreach (var islinked in func.LinkedInputs)
@@ -725,7 +733,7 @@ namespace Simulator
                 var outputFirst = output;
                 var linkFirst = linkFirstPoint;
                 if (TryGetPin(e.Location, out Element? elementSecond, out int? pinSecond, out PointF? linkSecondPoint, out bool? outputSecond) &&
-                    elementSecond?.Instance is ILink target && elementFirst?.Instance is ILink source)
+                    elementSecond?.Instance is ILinkSupport target && elementFirst?.Instance is ILinkSupport source)
                 {
                     if (elementFirst != elementSecond && outputFirst != outputSecond)
                     {
@@ -806,7 +814,7 @@ namespace Simulator
         {
             foreach (var item in items)
             {
-                if (item.Instance is ILink func)
+                if (item.Instance is ILinkSupport func)
                 {
                     var n = 0;
                     foreach (var islinked in func.LinkedInputs)

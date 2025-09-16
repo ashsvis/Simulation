@@ -26,7 +26,7 @@ namespace Simulator.Model
             {
                 if (location == value) return;
                 location = value;
-                if (Instance is ILink link)
+                if (Instance is ILinkSupport link)
                     link.CalculateTargets(location, ref size, itargets, ipins, otargets, opins);
             }
         }

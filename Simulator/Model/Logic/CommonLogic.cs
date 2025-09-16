@@ -4,7 +4,7 @@ using static System.ComponentModel.Design.ObjectSelectorEditor;
 
 namespace Simulator.Model.Logic
 {
-    public class CommonLogic : FilterablePropertyBase, IFunction, ICalculate, ILink, ILoadSave, IDraw
+    public class CommonLogic : FilterablePropertyBase, IFunction, ICalculate, ILinkSupport, ILoadSave, IDraw
     {
         private bool @out = false;
         private readonly bool[] getInputs;
@@ -386,7 +386,7 @@ namespace Simulator.Model.Logic
                         graphics.DrawString(instance.InputNames[i], font, fontbrush, new PointF(x + step, y - ms.Height / 2));
                     }
                     // значение входа - отображаются только не связанные (свободные) входы
-                    if (instance.VisibleValues && this is ILink link && !link.LinkedInputs[i])
+                    if (instance.VisibleValues && this is ILinkSupport link && !link.LinkedInputs[i])
                     {
                         var value = instance.InputValues[i];
                         var text = value != null && value.GetType() == typeof(bool) ? (bool)value ? "T" : "F" : $"{value}";
@@ -451,7 +451,7 @@ namespace Simulator.Model.Logic
             var height = step + max * step * 4 + step;
             var width = step + 1 * step * 4 + step;
             size = new SizeF(width, height);
-            if (this is ILink instance)
+            if (this is ILinkSupport instance)
             {
                 max = Math.Max(instance.LinkedInputs.Length, instance.LinkedOutputs.Length);
                 height = step + max * step * 4 + step;
