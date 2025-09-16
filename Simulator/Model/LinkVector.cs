@@ -1,4 +1,4 @@
-﻿namespace Simulator
+﻿namespace Simulator.Model
 {
     public enum LinkVector
     {

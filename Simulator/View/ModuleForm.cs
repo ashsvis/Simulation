@@ -10,7 +10,7 @@ namespace Simulator
 
         private readonly List<Element> items;
         private Cell[,] grid = new Cell[0, 0];
-        private List<Link> links = [];
+        private List<Link> links;
 
         private Point firstMouseDown;
         private Point mousePosition;
@@ -21,8 +21,8 @@ namespace Simulator
             this.panelForm = panelForm;
             Module = module;
             items = module.Items;
-
-            BuildLinks();
+            links = module.Links;
+            BuildLinks(); //ModuleForm(PanelForm panelForm, Module module)
 
             panelForm.SimulationTick += Module_SimulationTick;
         }
@@ -108,7 +108,7 @@ namespace Simulator
                     item.Selected = true;
                     items.Add(item);
                     Module.Changed = true;
-                    BuildLinks();
+                    BuildLinks(); //zoomPad_DragDrop(object sender, DragEventArgs e)
                     zoomPad.Invalidate();
                     ElementSelected?.Invoke(item.Instance, EventArgs.Empty);
                 }
@@ -294,10 +294,10 @@ namespace Simulator
 
         private void BuildLinks()
         {
-            // подготовка сетки с тенями от существующих элентов и связей
+            // подготовка сетки с тенями от существующих элементов и связей
             grid = BuildGrid();
             // составление списка связей для построения
-            links = [];
+            List<Link> links = [];
             foreach (var item in items)
             {
                 if (item.Instance is ILinkSupport function && function.LinkedInputs.Any(x => x == true))
@@ -314,7 +314,7 @@ namespace Simulator
                                 if (source != null)
                                 {
                                     var sourcePinPoint = source.OutputPins[outputIndex];
-                                    links.Add(new Link(sourcePinPoint, targetPinPoint));
+                                    links.Add(new Link(Guid.NewGuid(), sourcePinPoint, targetPinPoint));
                                 }
                             }
                         }
@@ -324,15 +324,6 @@ namespace Simulator
             }
             foreach (var link in links.OrderBy(link => link.Length))
             {
-                // очистка от предыдущей волны
-                //for (var iy = 0; iy < grid.GetLength(0); iy++)
-                //{
-                //    for (var ix = 0; ix < grid.GetLength(1); ix++)
-                //    {
-                //        if (grid[iy, ix].Kind > 0 || grid[iy, ix].Kind == -2)
-                //            grid[iy, ix].Kind = 0;
-                //    }
-                //}
                 // помещение затравки волны в сетку
                 var tpt = link.SourcePoint;
                 var spt = link.TargetPoint;
@@ -588,7 +579,7 @@ namespace Simulator
                             {
                                 fn.ResetValueLinkToInp((int)pin);
                                 Module.Changed = true;
-                                BuildLinks();
+                                BuildLinks(); // zoomPad_MouseDown(object sender, MouseEventArgs e)
                             }
                         };
                         cmsContextMenu.Items.Add(item);
@@ -617,7 +608,7 @@ namespace Simulator
                                     }
                                 }
                                 Module.Changed = true;
-                                BuildLinks();
+                                BuildLinks(); // zoomPad_MouseDown(object sender, MouseEventArgs e)
                             }
                         };
                         cmsContextMenu.Items.Add(item);
@@ -663,7 +654,7 @@ namespace Simulator
             }
             items.Remove(element);
             Module.Changed = true;
-            BuildLinks();
+            BuildLinks(); //DeleteOneElement(Element element)
         }
 
         private void zoomPad_MouseMove(object sender, MouseEventArgs e)
@@ -757,7 +748,7 @@ namespace Simulator
                 pin = null;
                 output = null;
                 linkFirstPoint = null;
-                BuildLinks();
+                BuildLinks(); // zoomPad_MouseUp(object sender, MouseEventArgs e)
                 zoomPad.Invalidate();
             }
         }
@@ -825,7 +816,7 @@ namespace Simulator
             }
             items.RemoveAll(x => x.Selected);
             Module.Changed = true;
-            BuildLinks();
+            BuildLinks(); // DeleteAllSelectedElements()
         }
     }
 }

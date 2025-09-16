@@ -1,15 +1,16 @@
-﻿
-using Simulator.Model;
-using System.ComponentModel;
-using System.Drawing;
+﻿using System.ComponentModel;
 
-namespace Simulator.View
+namespace Simulator.Model
 {
     public readonly struct Link
     {
         private readonly Dictionary<int, RectangleF> htargets = [];
         private readonly Dictionary<int, RectangleF> vtargets = [];
+
+        [Browsable(false)]
         public readonly PointF SourcePoint => points.Count > 0 ? points[0] : PointF.Empty;
+
+        [Browsable(false)]
         public readonly PointF TargetPoint => points.Count > 1 ? points[^1] : PointF.Empty;
 
         private readonly List<PointF> points = [];
@@ -18,7 +19,7 @@ namespace Simulator.View
         
         public readonly float Length => points.Count > 1 ? Math.Abs(SourcePoint.X - TargetPoint.X) + Math.Abs(SourcePoint.Y - TargetPoint.Y) : 0f;
 
-        public Link(params PointF[] points)
+        public Link(Guid id, params PointF[] points)
         {
             if (points == null || points.Length < 2)
                 throw new ArgumentNullException(nameof(points), "Массив точек пуст или содержит меньше двух элементов");
@@ -26,12 +27,14 @@ namespace Simulator.View
             { 
                 this.points.Add(point);
             }
+
+            Id = id;
         }
 
         public void BeginUpdate()
         {
             busy[0] = true;
-            this.points.Clear();
+            points.Clear();
         }
 
         public void AddPoint(PointF point)
@@ -41,17 +44,17 @@ namespace Simulator.View
                 throw new ArgumentNullException(nameof(point), "Для добавления точек вначале вызовите метод BeginUpdate(), а в конце EndUpdate()");
             }
             if (!points.Contains(point))
-                this.points.Add(point);
+                points.Add(point);
             if (points.Count == 1)
-                this.points.Add(point);
+                points.Add(point);
         }
 
         public void EndUpdate()
         {
-            if (this.points.Count > 0)
+            if (points.Count > 0)
             {
-                var lastpt = this.points[^1];
-                this.points.Add(new PointF(lastpt.X, lastpt.Y));
+                var lastpt = points[^1];
+                points.Add(new PointF(lastpt.X, lastpt.Y));
             }
             CalculateSegmentTargets();
             busy[0] = false;
@@ -91,6 +94,8 @@ namespace Simulator.View
                 return [.. list.OrderBy(x => x.Item2)];
             }
         }
+
+        public Guid Id { get; }
 
         public void Draw(Graphics graphics, Color foreColor)
         {

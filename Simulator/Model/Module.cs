@@ -39,6 +39,9 @@ namespace Simulator.Model
         public List<Element> Items { get; set; } = [];
 
         [Browsable(false)]
+        public List<Link> Links { get; set; } = [];
+
+        [Browsable(false)]
         public bool Changed { get; set; }
 
         public override string ToString()
