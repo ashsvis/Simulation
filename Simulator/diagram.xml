@@ -27,24 +27,22 @@
             </Outputs>
           </Instance>
         </Item>
-        <Item X="272" Y="192">
-          <Id>f4929c98-d908-4ba1-a94a-28b018789f79</Id>
-          <Type>Simulator.Model.Diagram.FINISH</Type>
+        <Item X="48" Y="176">
+          <Id>0e6412b4-f59a-46cc-b7b8-e7d9225cf804</Id>
+          <Type>Simulator.Model.Diagram.START</Type>
           <Instance>
-            <Inputs>
-              <Input Index="0">
-                <SourceId>c402a196-dcc1-4d65-ade2-359f03c3151e</SourceId>
-              </Input>
-            </Inputs>
             <Outputs>
               <Output Index="0" />
             </Outputs>
           </Instance>
         </Item>
-        <Item X="48" Y="176">
-          <Id>0e6412b4-f59a-46cc-b7b8-e7d9225cf804</Id>
-          <Type>Simulator.Model.Diagram.START</Type>
+        <Item X="240" Y="192">
+          <Id>6a5b201c-3b79-4c7c-8732-eb7e384bdc6a</Id>
+          <Type>Simulator.Model.Diagram.FINISH</Type>
           <Instance>
+            <Inputs>
+              <Input Index="0" />
+            </Inputs>
             <Outputs>
               <Output Index="0" />
             </Outputs>
@@ -71,24 +69,6 @@
             <Segment Kind="Vertical" />
             <Segment Kind="Horizontal" />
             <Segment Kind="Vertical" />
-            <Segment Kind="None" />
-          </Segments>
-        </Link>
-        <Link>
-          <Id>33a37634-df70-4daf-9e11-ee975bed87e3</Id>
-          <Points>
-            <Point X="232" Y="136" />
-            <Point X="232" Y="136" />
-            <Point X="195.79965" Y="136" />
-            <Point X="195.79965" Y="184" />
-            <Point X="296" Y="184" />
-            <Point X="296" Y="184" />
-          </Points>
-          <Segments>
-            <Segment Kind="None" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="Vertical" />
-            <Segment Kind="Horizontal" />
             <Segment Kind="None" />
           </Segments>
         </Link>

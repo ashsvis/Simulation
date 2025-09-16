@@ -455,6 +455,136 @@ namespace Simulator
             */
         }
 
+        private Link? BuildLink(PointF sourcePinPoint, PointF targetPinPoint)
+        {
+            // подготовка сетки с тенями от существующих элементов и связей
+            grid = BuildGrid();
+            var link = new Link(Guid.NewGuid(), sourcePinPoint, targetPinPoint);
+            // помещение затравки волны в сетку
+            var tpt = link.SourcePoint;
+            var spt = link.TargetPoint;
+            var tx = -1;
+            var ty = -1;
+            for (var y = 0; y < grid.GetLength(0); y++)
+            {
+                for (var x = 0; x < grid.GetLength(1); x++)
+                {
+                    if (spt == grid[y, x].Point)
+                        grid[y, x].Kind = 1;
+                    if (tpt == grid[y, x].Point)
+                    {
+                        tx = x;
+                        ty = y;
+                    }
+                }
+            }
+            if (tx < 0 || ty < 0) return null;
+            // генерация волны
+            var changed = true;
+            var wave = 1;
+            while (changed)
+            {
+                changed = false;
+                for (var y = 0; y < grid.GetLength(0); y++)
+                {
+                    for (var x = 0; x < grid.GetLength(1); x++)
+                    {
+                        if (grid[y, x].Kind == wave)
+                        {
+                            if (x > 0 && grid[y, x - 1].Kind == 0)
+                            {
+                                grid[y, x - 1].Kind = wave + 1;
+                                changed = true;
+                            }
+                            if (x < grid.GetLength(1) - 1 && grid[y, x + 1].Kind == 0)
+                            {
+                                grid[y, x + 1].Kind = wave + 1;
+                                changed = true;
+                            }
+                            if (y > 0 && grid[y - 1, x].Kind == 0)
+                            {
+                                grid[y - 1, x].Kind = wave + 1;
+                                changed = true;
+                            }
+                            if (y < grid.GetLength(0) - 1 && grid[y + 1, x].Kind == 0)
+                            {
+                                grid[y + 1, x].Kind = wave + 1;
+                                changed = true;
+                            }
+                            if (changed && grid[ty, tx].Kind > 0)
+                                goto exit;
+                        }
+                    }
+                }
+                wave++;
+            }
+        exit: if (changed) // путь найден
+            {
+                var vector = LinkVector.Horizontal;
+                // следуем путём
+                var x = tx;
+                var y = ty;
+                wave = grid[y, x].Kind;
+                grid[y, x].Kind = -2;
+                link.BeginUpdate();
+                try
+                {
+                    link.AddPoint(grid[y, x].Point);
+                    while (wave > 1)
+                    {
+                        if (x > 0 && grid[y, x - 1].Kind == wave - 1)
+                        {
+                            if (vector != LinkVector.Horizontal)
+                                link.AddPoint(grid[y, x].Point);
+                            x--;
+                            grid[y, x].Kind = -2;
+                            vector = LinkVector.Horizontal;
+                        }
+                        else if (x < grid.GetLength(1) - 1 && grid[y, x + 1].Kind == wave - 1)
+                        {
+                            if (vector != LinkVector.Horizontal)
+                                link.AddPoint(grid[y, x].Point);
+                            x++;
+                            grid[y, x].Kind = -2;
+                            vector = LinkVector.Horizontal;
+                        }
+                        else if (y > 0 && grid[y - 1, x].Kind == wave - 1)
+                        {
+                            if (vector != LinkVector.Vertical)
+                                link.AddPoint(grid[y, x].Point);
+                            y--;
+                            grid[y, x].Kind = -2;
+                            vector = LinkVector.Vertical;
+                        }
+                        else if (y < grid.GetLength(0) - 1 && grid[y + 1, x].Kind == wave - 1)
+                        {
+                            if (vector != LinkVector.Vertical)
+                                link.AddPoint(grid[y, x].Point);
+                            y++;
+                            grid[y, x].Kind = -2;
+                            vector = LinkVector.Vertical;
+                        }
+                        wave--;
+                    }
+                    link.AddPoint(grid[y, x].Point);
+                }
+                finally
+                {
+                    link.EndUpdate();
+                }
+            }
+            // очистка от предыдущей волны
+            for (var iy = 0; iy < grid.GetLength(0); iy++)
+            {
+                for (var ix = 0; ix < grid.GetLength(1); ix++)
+                {
+                    if (grid[iy, ix].Kind > 0 || grid[iy, ix].Kind == -2)
+                        grid[iy, ix].Kind = 0;
+                }
+            }
+            return link;
+        }
+
         private Cell[,] BuildGrid()
         {
             var minX = float.MaxValue;
@@ -716,7 +846,8 @@ namespace Simulator
                 if (TryGetPin(e.Location, out Element? elementSecond, out int? pinSecond, out PointF? linkSecondPoint, out bool? outputSecond) &&
                     elementSecond?.Instance is ILinkSupport target && elementFirst?.Instance is ILinkSupport source)
                 {
-                    if (elementFirst != elementSecond && outputFirst != outputSecond)
+                    if (elementFirst != elementSecond && outputFirst != outputSecond &&
+                        linkFirstPoint != null && linkSecondPoint != null)
                     {
                         // создание связей между элементами
                         if (pinSecond != null && pinFirst != null && outputFirst == true && outputSecond == false)
@@ -725,7 +856,12 @@ namespace Simulator
                             if (!target.LinkedInputs[(int)pinSecond])
                             {
                                 target.SetValueLinkToInp((int)pinSecond, source.GetResultLink((int)pinFirst), elementFirst.Id, (int)pinFirst);
-                                Module.Changed = true;
+                                var link = BuildLink((PointF)linkFirstPoint, (PointF)linkSecondPoint);
+                                if (link != null)
+                                {
+                                    links.Add((Link)link);
+                                    Module.Changed = true;
+                                }
                             }
                         }
                         else if (pinSecond != null && pinFirst != null && outputFirst == false && outputSecond == true)

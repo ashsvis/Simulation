@@ -12,11 +12,12 @@ namespace Simulator.Model
         private readonly Dictionary<int, RectangleF> vtargets = [];
 
         [Browsable(false)]
-        public readonly PointF SourcePoint => points.Count > 0 ? points[0] : PointF.Empty;
+        public PointF SourcePoint => terminate.Count > 0 ? terminate[0] : PointF.Empty;
 
         [Browsable(false)]
-        public readonly PointF TargetPoint => points.Count > 1 ? points[^1] : PointF.Empty;
+        public readonly PointF TargetPoint => terminate.Count > 1 ? terminate[^1] : PointF.Empty;
 
+        private readonly List<PointF> terminate = [new PointF(), new PointF()];
         private readonly List<PointF> points = [];
 
         private readonly bool[] busy = new bool[1];
@@ -27,12 +28,13 @@ namespace Simulator.Model
         {
             if (points == null || points.Length < 2)
                 throw new ArgumentNullException(nameof(points), "Массив точек пуст или содержит меньше двух элементов");
+            terminate[0] = points[0];
+            terminate[1] = points[^1];
             BeginUpdate();
             try
             {
                 foreach (var point in points)
                 {
-                    //this.points.Add(point);
                     AddPoint(point);
                 }
             }
@@ -117,17 +119,10 @@ namespace Simulator.Model
             }
             if (!points.Contains(point))
                 points.Add(point);
-            if (points.Count == 1)
-                points.Add(point);
         }
 
         public void EndUpdate()
         {
-            if (points.Count > 0)
-            {
-                var lastpt = points[^1];
-                points.Add(new PointF(lastpt.X, lastpt.Y));
-            }
             CalculateSegmentTargets();
             busy[0] = false;
         }
@@ -176,7 +171,9 @@ namespace Simulator.Model
             if (points.Count > 1)
             {
                 using var pen = new Pen(foreColor);
+                graphics.DrawLines(pen, [SourcePoint, points[0]]);
                 graphics.DrawLines(pen, [.. points]);
+                graphics.DrawLines(pen, [points[^1], TargetPoint]);
             }
 #if DEBUG
             using var brush = new SolidBrush(Color.Aqua);
