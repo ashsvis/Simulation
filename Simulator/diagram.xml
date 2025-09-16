@@ -13,7 +13,7 @@
             </Outputs>
           </Instance>
         </Item>
-        <Item X="208" Y="48">
+        <Item X="96" Y="128">
           <Id>20806e2e-3dee-4922-a9a0-a7844c8ccf9f</Id>
           <Type>Simulator.Model.Diagram.FINISH</Type>
           <Instance>
@@ -22,6 +22,29 @@
                 <SourceId>c402a196-dcc1-4d65-ade2-359f03c3151e</SourceId>
               </Input>
             </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+          </Instance>
+        </Item>
+        <Item X="96" Y="208">
+          <Id>f4929c98-d908-4ba1-a94a-28b018789f79</Id>
+          <Type>Simulator.Model.Diagram.FINISH</Type>
+          <Instance>
+            <Inputs>
+              <Input Index="0">
+                <SourceId>0e6412b4-f59a-46cc-b7b8-e7d9225cf804</SourceId>
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+          </Instance>
+        </Item>
+        <Item X="160" Y="32">
+          <Id>0e6412b4-f59a-46cc-b7b8-e7d9225cf804</Id>
+          <Type>Simulator.Model.Diagram.START</Type>
+          <Instance>
             <Outputs>
               <Output Index="0" />
             </Outputs>

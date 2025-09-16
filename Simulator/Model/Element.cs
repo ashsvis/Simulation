@@ -105,57 +105,6 @@ namespace Simulator.Model
             return false;
         }
 
-        //public void CalculateTargets()
-        //{
-        //    var step = Step;
-        //    var max = 1;
-        //    var height = step + max * step * 4 + step;
-        //    var width = step + 1 * step * 4 + step;
-        //    Size = new SizeF(width, height);
-        //    if (Instance is IFunction instance)
-        //    {
-        //        max = Math.Max(instance.InverseInputs.Length, instance.InverseOutputs.Length);
-        //        height = step + max * step * 4 + step;
-        //        // входы
-        //        var y = step + location.Y;
-        //        var x = -step + location.X;
-        //        var n = 0;
-        //        itargets.Clear();
-        //        ipins.Clear();
-        //        for (var i = 0; i < instance.InverseInputs.Length; i++)
-        //        {
-        //            y += step * 2;
-        //            // значение входа
-        //            var ms = new SizeF(step * 2, step * 2);
-        //            itargets.Add(n, new RectangleF(new PointF(x - ms.Width + step, y - ms.Height), ms));
-        //            ipins.Add(n, new PointF(x, y));
-        //            y += step * 2;
-        //            n++;
-        //        }
-        //        // выходы
-        //        y = step + location.Y;
-        //        x = width + location.X;
-        //        n = 0;
-        //        otargets.Clear();
-        //        opins.Clear();
-        //        for (var i = 0; i < instance.InverseOutputs.Length; i++)
-        //        {
-        //            if (instance.InverseOutputs.Length == 1)
-        //                y = height / 2 + location.Y;
-        //            else
-        //                y += step * 2;
-        //            // значение выхода
-        //            var ms = new SizeF(step * 2, step * 2);
-        //            otargets.Add(n, new RectangleF(new PointF(x, y - ms.Height), ms));
-        //            var pt = new PointF(x + step, y);
-        //            opins.Add(n, pt);
-        //            y += step * 2;
-        //            n++;
-        //        }
-        //    }
-
-        //}
-
         public void Draw(Graphics graphics, Color foreColor, Color backColor, CustomDraw? customDraw = null)
         {
             if (Instance is IDraw instance)
@@ -163,7 +112,7 @@ namespace Simulator.Model
                 instance.Draw(graphics, foreColor, backColor, location, Size, Index, Selected, customDraw);
             }
 
-            #region для отладки
+#if DEBUG
 
             // области выбора
             using Pen tarpen = new(Color.FromArgb(80, Color.Magenta), 0);
@@ -194,7 +143,7 @@ namespace Simulator.Model
                 graphics.DrawLine(pinpen, new PointF(r.X + r.Width, r.Y), new PointF(r.X, r.Y + r.Height));
             }
 
-            #endregion
+#endif
         }
 
     }

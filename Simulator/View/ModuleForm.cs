@@ -210,49 +210,8 @@ namespace Simulator
             if (graphics == null) return;
             graphics.SmoothingMode = SmoothingMode.HighQuality;
             graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+#if DEBUG
 
-            // прорисовка связей
-            using var linkpen = new Pen(Color.FromArgb(100, zoomPad.ForeColor));
-            foreach (var link in links)
-            {
-                link.Draw(graphics, zoomPad.ForeColor);
-            }
-            //foreach (var item in items)
-            //{
-            //    if (item.Instance is IFunction function && function.LinkedInputs.Any(x => x == true))
-            //    {
-            //        var n = 0;
-            //        foreach (var isLinked in function.LinkedInputs)
-            //        {
-            //            if (isLinked)
-            //            {
-            //                if (item.InputPins.TryGetValue(n, out PointF targetPinPoint))
-            //                {
-            //                    (Guid sourceId, int outputIndex) = function.InputLinkSources[n];
-            //                    var source = items.FirstOrDefault(x => x.Id == sourceId);
-            //                    if (source != null)
-            //                    {
-            //                        var sourcePinPoint = source.OutputPins[outputIndex];
-            //                        //DrawLink(graphics, zoomPad.ForeColor, sourcePinPoint, targetPinPoint, source.Bounds, item.Bounds);
-
-            //                        graphics.DrawLine(linkpen, sourcePinPoint, targetPinPoint);
-            //                    }
-            //                }
-            //            }
-            //            n++;
-            //        }
-            //    }
-            //}
-            // прорисовка элементов
-            var np = 1;
-            foreach (var item in items)
-            {
-                item.Index = np++;
-                if (item.Instance is ICustomDraw inst)
-                    item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor, inst.CustomDraw);
-                else
-                    item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor);
-            }
             // прорисовка узлов сетки
             using var brush = new SolidBrush(Color.Gray);
             using var font = new Font("Consolas", 3f);
@@ -262,7 +221,7 @@ namespace Simulator
                 {
                     if (grid[y, x].Kind < -1)
                     {
-                        graphics.FillEllipse(Brushes.Yellow, new RectangleF(
+                        graphics.FillEllipse(Brushes.Aqua, new RectangleF(
                             PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
                     }
                     else if (grid[y, x].Kind == -1)
@@ -280,6 +239,24 @@ namespace Simulator
                         graphics.DrawString(grid[y, x].Kind.ToString(), font, brush, grid[y, x].Point);
                     }
                 }
+            }
+#endif
+
+            // прорисовка связей
+            using var linkpen = new Pen(Color.FromArgb(100, zoomPad.ForeColor));
+            foreach (var link in links)
+            {
+                link.Draw(graphics, zoomPad.ForeColor);
+            }
+            // прорисовка элементов
+            var np = 1;
+            foreach (var item in items)
+            {
+                item.Index = np++;
+                if (item.Instance is ICustomDraw inst)
+                    item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor, inst.CustomDraw);
+                else
+                    item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor);
             }
             // прорисовка "резиновой" линии
             if (linkFirstPoint != null)
