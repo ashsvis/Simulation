@@ -26,8 +26,8 @@ namespace Simulator.Model
             {
                 if (location == value) return;
                 location = value;
-                if (Instance is ILinkSupport link)
-                    link.CalculateTargets(location, ref size, itargets, ipins, otargets, opins);
+                if (Instance is ILinkSupport element)
+                    element.CalculateTargets(location, ref size, itargets, ipins, otargets, opins);
             }
         }
 
@@ -60,11 +60,11 @@ namespace Simulator.Model
 
         public RectangleF Bounds => new(location, Size);
 
-        private Dictionary<int, RectangleF> itargets = [];
-        private Dictionary<int, RectangleF> otargets = [];
+        private readonly Dictionary<int, RectangleF> itargets = [];
+        private readonly Dictionary<int, RectangleF> otargets = [];
                 
-        private Dictionary<int, PointF> ipins = [];
-        private Dictionary<int, PointF> opins = [];
+        private readonly Dictionary<int, PointF> ipins = [];
+        private readonly Dictionary<int, PointF> opins = [];
         protected PointF location;
         private SizeF size;
 

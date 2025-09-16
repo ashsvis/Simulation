@@ -1,8 +1,14 @@
 ﻿
+using Simulator.Model;
+using System.ComponentModel;
+using System.Drawing;
+
 namespace Simulator.View
 {
     public readonly struct Link
     {
+        private readonly Dictionary<int, RectangleF> htargets = [];
+        private readonly Dictionary<int, RectangleF> vtargets = [];
         public readonly PointF SourcePoint => points.Count > 0 ? points[0] : PointF.Empty;
         public readonly PointF TargetPoint => points.Count > 1 ? points[^1] : PointF.Empty;
 
@@ -36,11 +42,49 @@ namespace Simulator.View
             }
             if (!points.Contains(point))
                 this.points.Add(point);
+            if (points.Count == 1)
+                this.points.Add(point);
         }
 
         public void EndUpdate()
         {
+            if (this.points.Count > 0)
+            {
+                var lastpt = this.points[^1];
+                this.points.Add(new PointF(lastpt.X, lastpt.Y));
+            }
+            htargets.Clear();
+            vtargets.Clear();
+            for (int i = 1; i < points.Count; i++)
+            {
+                var pt1 = points[i - 1];
+                var pt2 = points[i];
+                if (pt1.X == pt2.X)
+                {
+                    // вертикальный сегмент
+                    vtargets.Add(i, new RectangleF(pt1.X - Element.Step / 2, Math.Min(pt1.Y, pt2.Y), Element.Step, Math.Abs(pt1.Y - pt2.Y)));
+                }
+                else if (pt1.Y == pt2.Y)
+                {
+                    // горизонтальный сегмент
+                    htargets.Add(i, new RectangleF(Math.Min(pt1.X, pt2.X), pt2.Y - Element.Step / 2, Math.Abs(pt1.X - pt2.X), Element.Step));
+                }
+            }
             busy[0] = false;
+        }
+
+        [Browsable(false)]
+        public (RectangleF,int, bool)[] Segments
+        {
+            get
+            {
+                List<(RectangleF, int, bool)> list = [];
+                foreach (var key in vtargets.Keys)
+                    list.Add((vtargets[key], key, true));
+                foreach (var key in htargets.Keys)
+                    list.Add((htargets[key], key, false));
+                return [.. list.OrderBy(x => x.Item2)];
+            }
         }
 
         public void Draw(Graphics graphics, Color foreColor)
@@ -58,6 +102,18 @@ namespace Simulator.View
             {
                 graphics.FillEllipse(brush, new RectangleF(
                     PointF.Subtract(point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
+            }
+            // области выбора
+            using Pen tarpen = new(Color.FromArgb(80, Color.Aqua), 0);
+            foreach (var key in vtargets.Keys)
+            {
+                var vtarget = vtargets[key];
+                graphics.DrawRectangles(tarpen, [vtarget]);
+            }
+            foreach (var key in htargets.Keys)
+            {
+                var htarget = htargets[key];
+                graphics.DrawRectangles(tarpen, [htarget]);
             }
 #endif
         }

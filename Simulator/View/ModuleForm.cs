@@ -204,6 +204,29 @@ namespace Simulator
             return false;
         }
 
+        private bool TryGetLinkSegment(Point location, out Link? target, out int? index, out bool? vertical)
+        {
+            var point = PrepareMousePosition(location);
+            for (var i = links.Count - 1; i >= 0; i--)
+            {
+                var link = links[i];
+                foreach(var segment in link.Segments)
+                {
+                    if (segment.Item1.Contains(point))
+                    {
+                        target = links[i];
+                        index = segment.Item2;
+                        vertical = segment.Item3;
+                        return true;
+                    }
+                }
+            }
+            target = null;
+            index = null;
+            vertical = null;
+            return false;
+        }
+
         private void zoomPad_OnDraw(object sender, ZoomControl.DrawEventArgs e)
         {
             var graphics = e.Graphics;
@@ -496,8 +519,7 @@ namespace Simulator
                 for (int x = 0; x < lengthX; x++)
                 {
                     if (items.Select(item => new RectangleF(
-                        item.Bounds.X - Element.Step, item.Bounds.Y - Element.Step,
-                        item.Bounds.Width + Element.Step * 3, item.Bounds.Height + Element.Step * 3))
+                        item.Bounds.X, item.Bounds.Y, item.Bounds.Width + Element.Step, item.Bounds.Height + Element.Step))
                         .Any(rect => rect.Contains(grid[y, x].Point)))
                     {
                         if (!mustBeFree.Contains(grid[y, x].Point))
@@ -508,62 +530,14 @@ namespace Simulator
             return grid;
         }
 
-        // рисовка связи
-        //private static void DrawLink(Graphics graphics, Color color, PointF sourcePinPoint, PointF targetPinPoint,
-        //    RectangleF sourceBounds, RectangleF targetBounds)
-        //{
-        //    //graphics.DrawLine(Pens.Yellow, sourcePinPoint, targetPinPoint);
-        //    var rect = new RectangleF(
-        //        Math.Min(sourcePinPoint.X, targetPinPoint.X),
-        //        Math.Min(sourcePinPoint.Y, targetPinPoint.Y),
-        //        Math.Abs(sourcePinPoint.X - targetPinPoint.X),
-        //        Math.Abs(sourcePinPoint.Y - targetPinPoint.Y));
-
-        //    //using var rectpen = new Pen(Color.Silver, 0);
-        //    //rectpen.DashStyle = DashStyle.Dot;
-        //    //graphics.DrawRectangles(rectpen, [rect]);
-
-        //    using var linepen = new Pen(color, 1);
-        //    if (sourcePinPoint.X < targetPinPoint.X)
-        //    {
-        //        var top = sourcePinPoint.Y < targetPinPoint.Y
-        //        ? sourcePinPoint.X < targetPinPoint.X ? rect.Top : rect.Bottom
-        //        : sourcePinPoint.X < targetPinPoint.X ? rect.Bottom : rect.Top;
-        //        var bottom = sourcePinPoint.Y < targetPinPoint.Y
-        //            ? sourcePinPoint.X < targetPinPoint.X ? rect.Bottom : rect.Top
-        //            : sourcePinPoint.X < targetPinPoint.X ? rect.Top : rect.Bottom;
-        //        var leftshift = SnapToGrid(new PointF(sourcePinPoint.X + (targetBounds.Left - (sourceBounds.Right + Element.Step * 2)) / 2, 0)).X;
-        //        graphics.DrawLines(linepen, [
-        //            new PointF(rect.Left, top),
-        //            new PointF(leftshift, top),
-        //            new PointF(leftshift, bottom),
-        //            new PointF(rect.Right, bottom),
-        //        ]);
-        //    }
-        //    else
-        //    {
-        //        var top = sourcePinPoint.Y > targetPinPoint.Y ? rect.Top : rect.Bottom;
-        //        var bottom = sourcePinPoint.Y > targetPinPoint.Y ? rect.Bottom : rect.Top;
-        //        var leftshift = rect.Right + Element.Step * 2;
-        //        var middle = SnapToGrid(new PointF(0, sourceBounds.Top - targetBounds.Bottom > 0
-        //            ? targetBounds.Bottom + (sourceBounds.Top - targetBounds.Bottom) / 2
-        //            : sourceBounds.Bottom + (targetBounds.Top - sourceBounds.Bottom) / 2)).Y;
-        //        var rightshift = rect.Left - Element.Step * 2;
-        //        graphics.DrawLines(linepen, [
-        //            new PointF(rect.Right, bottom),
-        //            new PointF(leftshift, bottom),
-        //            new PointF(leftshift, middle),
-        //            new PointF(rightshift, middle),
-        //            new PointF(rightshift, top),
-        //            new PointF(rect.Left, top),
-        //        ]);
-        //    }
-        //}
-
         private Element? element;
         private int? pin;
         private bool? output;
         private PointF? linkFirstPoint;
+
+        private Link? link;
+        private int? segmentIndex;
+        private bool? segmentVertical;
 
         public Module Module { get; }
 
@@ -586,6 +560,11 @@ namespace Simulator
                 element.Selected = true;
                 items.Where(item => item != element).ToList().ForEach(item => item.Selected = false);
                 ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
+            }
+            else if (TryGetLinkSegment(e.Location, out Link? link, out segmentIndex, out segmentVertical) &&
+                link != null && segmentIndex != null && segmentVertical != null)
+            {
+                ElementSelected?.Invoke(link, EventArgs.Empty);
             }
             else
             {
@@ -693,6 +672,10 @@ namespace Simulator
                 Cursor = Cursors.SizeAll;
             else if (TryGetFreeInputPin(e.Location, out _, out _, out _, out _))
                 Cursor = Cursors.Hand;
+            else if (TryGetLinkSegment(e.Location, out _, out _, out segmentVertical))
+            {
+                Cursor = segmentVertical == true ? Cursors.VSplit : Cursors.HSplit;
+            }
             else
                 Cursor = Cursors.Default;
             if (e.Button == MouseButtons.Left)
@@ -740,13 +723,21 @@ namespace Simulator
                         // создание связей между элементами
                         if (pinSecond != null && pinFirst != null && outputFirst == true && outputSecond == false)
                         {
-                            target.SetValueLinkToInp((int)pinSecond, source.GetResultLink((int)pinFirst), elementFirst.Id, (int)pinFirst);
-                            Module.Changed = true;
+                            // от выхода ко входу
+                            if (!target.LinkedInputs[(int)pinSecond])
+                            {
+                                target.SetValueLinkToInp((int)pinSecond, source.GetResultLink((int)pinFirst), elementFirst.Id, (int)pinFirst);
+                                Module.Changed = true;
+                            }
                         }
                         else if (pinSecond != null && pinFirst != null && outputFirst == false && outputSecond == true)
                         {
-                            source.SetValueLinkToInp((int)pinFirst, target.GetResultLink((int)pinSecond), elementSecond.Id, (int)pinSecond);
-                            Module.Changed = true;
+                            // от входа к выходу
+                            if (!source.LinkedInputs[(int)pinFirst])
+                            {
+                                source.SetValueLinkToInp((int)pinFirst, target.GetResultLink((int)pinSecond), elementSecond.Id, (int)pinSecond);
+                                Module.Changed = true;
+                            }
                         }
                     }
                     //else if (elementFirst == elementSecond && outputFirst == outputSecond && outputSecond == false && pinSecond is int ipin)

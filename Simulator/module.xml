@@ -62,7 +62,7 @@
             </Outputs>
           </Instance>
         </Item>
-        <Item X="464" Y="448">
+        <Item X="432" Y="272">
           <Id>9d833711-365d-437d-9975-861fb72bde26</Id>
           <Type>Simulator.Model.Logic.AND</Type>
           <Instance>
@@ -76,7 +76,7 @@
             </Inputs>
           </Instance>
         </Item>
-        <Item X="384" Y="352">
+        <Item X="272" Y="384">
           <Id>e5cfa910-84ba-41ef-878b-5a0d93adb8da</Id>
           <Type>Simulator.Model.Trigger.RS</Type>
           <Instance>
