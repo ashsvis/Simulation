@@ -105,8 +105,14 @@ namespace Simulator.Model
                     foreach (XElement xlink in xlinks.Elements("Link"))
                     {
                         if (!Guid.TryParse(xlink.Element("Id")?.Value, out Guid id)) continue;
-                        if (!Guid.TryParse(xlink.Element("SourceId")?.Value, out Guid sourceId)) continue;
-                        if (!Guid.TryParse(xlink.Element("DestinationId")?.Value, out Guid destinationId)) continue;
+                        var xsource = xlink.Element("Source");
+                        if (xsource == null) continue;
+                        if (!Guid.TryParse(xsource.Attribute("Id")?.Value, out Guid sourceId)) continue;
+                        if (!int.TryParse(xsource.Attribute("PinIndex")?.Value, out int sourcePinIndex)) continue;
+                        var xdest = xlink.Element("Destination");
+                        if (xdest == null) continue;
+                        if (!Guid.TryParse(xdest.Attribute("Id")?.Value, out Guid destinationId)) continue;
+                        if (!int.TryParse(xdest.Attribute("PinIndex")?.Value, out int destPinIndex)) continue;
                         List<PointF> points = [];
                         var xpoints = xlink.Element("Points");
                         if (xpoints != null)
@@ -123,7 +129,7 @@ namespace Simulator.Model
                         }
                         if (points.Count > 1)
                         {
-                            var link = new Link(id, sourceId, destinationId, [..points]);
+                            var link = new Link(id, sourceId, sourcePinIndex, destinationId, destPinIndex, [..points]);
                             link.Load(xlink);
                             Links.Add(link);
                         }

@@ -4,8 +4,8 @@
   <Modules>
     <Module>
       <Items>
-        <Item X="208" Y="144">
-          <Id>234aa53f-17ef-4222-afdb-f59be25d2156</Id>
+        <Item X="128" Y="96">
+          <Id>43e2100e-6888-4b41-8d10-a2896fd27971</Id>
           <Type>Simulator.Model.Logic.NOT</Type>
           <Instance>
             <Outputs>
@@ -13,30 +13,34 @@
             </Outputs>
           </Instance>
         </Item>
-        <Item X="384" Y="208">
-          <Id>bd6614e5-016d-47bf-9c29-f1aaca71e57a</Id>
-          <Type>Simulator.Model.Logic.XOR</Type>
+        <Item X="368" Y="176">
+          <Id>fa184619-dc3b-4ec9-a621-6ec1bcef5b8b</Id>
+          <Type>Simulator.Model.Trigger.RS</Type>
           <Instance>
             <Inputs>
-              <Input Index="1">
-                <SourceId>234aa53f-17ef-4222-afdb-f59be25d2156</SourceId>
+              <Input Index="0" Name="S" />
+              <Input Index="1" Name="R">
+                <SourceId>43e2100e-6888-4b41-8d10-a2896fd27971</SourceId>
               </Input>
             </Inputs>
+            <Outputs>
+              <Output Index="0" Name="Q" />
+            </Outputs>
           </Instance>
         </Item>
       </Items>
       <Links>
         <Link>
-          <Id>fc14eafc-4490-47b4-8557-6df18ef9e8c2</Id>
-          <SourceId>234aa53f-17ef-4222-afdb-f59be25d2156</SourceId>
-          <DestinationId>bd6614e5-016d-47bf-9c29-f1aaca71e57a</DestinationId>
+          <Id>7d99d68e-4da2-434f-a5d4-13ab6ca3ada1</Id>
+          <Source Id="43e2100e-6888-4b41-8d10-a2896fd27971" PinIndex="0" />
+          <Destination Id="fa184619-dc3b-4ec9-a621-6ec1bcef5b8b" PinIndex="1" />
           <Points>
-            <Point X="264" Y="168" />
-            <Point X="264" Y="168" />
-            <Point X="304" Y="168" />
-            <Point X="304" Y="264" />
-            <Point X="376" Y="264" />
-            <Point X="376" Y="264" />
+            <Point X="184" Y="120" />
+            <Point X="184" Y="120" />
+            <Point X="216" Y="120" />
+            <Point X="216" Y="232" />
+            <Point X="360" Y="232" />
+            <Point X="360" Y="232" />
           </Points>
           <Segments>
             <Segment Kind="None" />

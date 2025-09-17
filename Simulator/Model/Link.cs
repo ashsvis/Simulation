@@ -19,9 +19,7 @@ namespace Simulator.Model
         private readonly bool[] busy = new bool[1];
         private readonly bool[] selected = new bool[1];
 
-        public readonly float Length => points.Count > 1 ? Math.Abs(SourcePoint.X - TargetPoint.X) + Math.Abs(SourcePoint.Y - TargetPoint.Y) : 0f;
-
-        public Link(Guid id, Guid sourceId, Guid destinationId, params PointF[] points)
+        public Link(Guid id, Guid sourceId, int sourcePin, Guid destinationId, int destinationPin, params PointF[] points)
         {
             if (points == null || points.Length < 2)
                 throw new ArgumentNullException(nameof(points), "Массив точек пуст или содержит меньше двух элементов");
@@ -39,14 +37,22 @@ namespace Simulator.Model
             }
             Id = id;
             SourceId = sourceId;
+            SourcePinIndex = sourcePin;
             DestinationId = destinationId;
+            DestinationPinIndex = destinationPin;
         }
 
         public void Save(XElement xtem)
         {
             xtem.Add(new XElement("Id", Id));
-            xtem.Add(new XElement("SourceId", SourceId));
-            xtem.Add(new XElement("DestinationId", DestinationId));
+            var xsource = new XElement("Source");
+            xsource.Add(new XAttribute("Id", SourceId));
+            xsource.Add(new XAttribute("PinIndex", SourcePinIndex));
+            xtem.Add(xsource);
+            var xdest = new XElement("Destination");
+            xdest.Add(new XAttribute("Id", DestinationId));
+            xdest.Add(new XAttribute("PinIndex", DestinationPinIndex));
+            xtem.Add(xdest);
             XElement xpoints = new("Points");
             foreach (var point in points)
             {
@@ -164,7 +170,9 @@ namespace Simulator.Model
 
         public Guid Id { get; }
         public Guid SourceId { get; }
+        public int SourcePinIndex { get; }
         public Guid DestinationId { get; }
+        public int DestinationPinIndex { get; }
 
         public bool Selected => selected[0];
 
@@ -265,6 +273,11 @@ namespace Simulator.Model
             points.Insert(0, pt1);
             points.Add(pt2);
             CalculateSegmentTargets();
+        }
+
+        public void UpdateSourcePoint(PointF? linkPoint)
+        {
+            throw new NotImplementedException();
         }
     }
 }

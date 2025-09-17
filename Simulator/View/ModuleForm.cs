@@ -453,11 +453,11 @@ namespace Simulator
 
         */
 
-        private Link? BuildLink(Guid sourceId, PointF sourcePinPoint, Guid dectinationId, PointF targetPinPoint)
+        private Link? BuildLink(Guid sourceId, int sourcePin, PointF sourcePinPoint, Guid destinationId, int destinationPin, PointF destinationPinPoint)
         {
             // подготовка сетки с тенями от существующих элементов и связей
             var grid = BuildGrid();
-            var link = new Link(Guid.NewGuid(), sourceId, dectinationId, sourcePinPoint, targetPinPoint);
+            var link = new Link(Guid.NewGuid(), sourceId, sourcePin, destinationId, destinationPin, sourcePinPoint, destinationPinPoint);
             // помещение затравки волны в сетку
             var tpt = link.SourcePoint;
             var spt = link.TargetPoint;
@@ -843,6 +843,14 @@ namespace Simulator
                 if (element != null)
                 {
                     element.Location = SnapToGrid(element.Location);
+                    foreach (var link in links.Where(x => x.SourceId == element.Id))
+                    {
+
+                    }
+                    foreach (var link in links.Where(x => x.DestinationId == element.Id))
+                    {
+
+                    }
                 }
                 else if (link != null)
                 {
@@ -865,7 +873,7 @@ namespace Simulator
                             if (!target.LinkedInputs[(int)pinSecond])
                             {
                                 target.SetValueLinkToInp((int)pinSecond, source.GetResultLink((int)pinFirst), elementFirst.Id, (int)pinFirst);
-                                var link = BuildLink(elementFirst.Id, (PointF)linkFirstPoint, elementSecond.Id, (PointF)linkSecondPoint);
+                                var link = BuildLink(elementFirst.Id, (int)pinFirst, (PointF)linkFirstPoint, elementSecond.Id, (int)pinSecond, (PointF)linkSecondPoint);
                                 if (link != null)
                                 {
                                     elementFirst.Selected = false;
@@ -881,7 +889,14 @@ namespace Simulator
                             if (!source.LinkedInputs[(int)pinFirst])
                             {
                                 source.SetValueLinkToInp((int)pinFirst, target.GetResultLink((int)pinSecond), elementSecond.Id, (int)pinSecond);
-                                Module.Changed = true;
+                                var link = BuildLink(elementSecond.Id, (int)pinSecond, (PointF)linkSecondPoint, elementFirst.Id, (int)pinFirst, (PointF)linkFirstPoint);
+                                if (link != null)
+                                {
+                                    elementFirst.Selected = false;
+                                    ((Link)link).Select(true);
+                                    links.Add((Link)link);
+                                    Module.Changed = true;
+                                }
                             }
                         }
                     }
