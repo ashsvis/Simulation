@@ -10,7 +10,7 @@ namespace Simulator
 
         private readonly List<Element> items;
         private readonly List<Link> links;
-        private Cell[,] grid = new Cell[0, 0];
+        //private Cell[,] grid = new Cell[0, 0];
 
         private Point firstMouseDown;
         private Point mousePosition;
@@ -234,33 +234,33 @@ namespace Simulator
 #if DEBUG
 
             // прорисовка узлов сетки
-            using var brush = new SolidBrush(Color.Gray);
-            using var font = new Font("Consolas", 3f);
-            for (var y = 0; y < grid.GetLength(0); y++)
-            {
-                for (var x = 0; x < grid.GetLength(1); x++)
-                {
-                    if (grid[y, x].Kind < -1)
-                    {
-                        graphics.FillEllipse(Brushes.Aqua, new RectangleF(
-                            PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
-                    }
-                    else if (grid[y, x].Kind == -1)
-                    {
-                        graphics.FillEllipse(Brushes.Red, new RectangleF(
-                            PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
-                    }
-                    else if (grid[y, x].Kind == 0)
-                    {
-                        graphics.FillEllipse(Brushes.Gray, new RectangleF(
-                            PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
-                    }
-                    else if (grid[y, x].Kind > 0)
-                    {
-                        graphics.DrawString(grid[y, x].Kind.ToString(), font, brush, grid[y, x].Point);
-                    }
-                }
-            }
+            //using var brush = new SolidBrush(Color.Gray);
+            //using var font = new Font("Consolas", 3f);
+            //for (var y = 0; y < grid.GetLength(0); y++)
+            //{
+            //    for (var x = 0; x < grid.GetLength(1); x++)
+            //    {
+            //        if (grid[y, x].Kind < -1)
+            //        {
+            //            graphics.FillEllipse(Brushes.Aqua, new RectangleF(
+            //                PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
+            //        }
+            //        else if (grid[y, x].Kind == -1)
+            //        {
+            //            graphics.FillEllipse(Brushes.Red, new RectangleF(
+            //                PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
+            //        }
+            //        else if (grid[y, x].Kind == 0)
+            //        {
+            //            graphics.FillEllipse(Brushes.Gray, new RectangleF(
+            //                PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
+            //        }
+            //        else if (grid[y, x].Kind > 0)
+            //        {
+            //            graphics.DrawString(grid[y, x].Kind.ToString(), font, brush, grid[y, x].Point);
+            //        }
+            //    }
+            //}
 #endif
             // прорисовка элементов
             var np = 1;
@@ -456,7 +456,7 @@ namespace Simulator
         private Link? BuildLink(Guid sourceId, PointF sourcePinPoint, Guid dectinationId, PointF targetPinPoint)
         {
             // подготовка сетки с тенями от существующих элементов и связей
-            grid = BuildGrid();
+            var grid = BuildGrid();
             var link = new Link(Guid.NewGuid(), sourceId, dectinationId, sourcePinPoint, targetPinPoint);
             // помещение затравки волны в сетку
             var tpt = link.SourcePoint;
@@ -717,6 +717,7 @@ namespace Simulator
                             if (menuItem?.Tag is Element element && element.Instance is ILinkSupport fn)
                             {
                                 fn.ResetValueLinkToInp((int)pin);
+                                links.RemoveAll(link => link.SourceId == element.Id || link.DestinationId == element.Id);
                                 Module.Changed = true;
                             }
                         };
@@ -741,6 +742,7 @@ namespace Simulator
                                         if (source.Item1 == element.Id)
                                         {
                                             instance.ResetValueLinkToInp(n);
+                                            links.RemoveAll(link => link.SourceId == element.Id || link.DestinationId == element.Id);
                                         }
                                         n++;
                                     }
@@ -785,13 +787,13 @@ namespace Simulator
                             if (items.FirstOrDefault(x => x.Id == id) == element)
                             {
                                 func.ResetValueLinkToInp(n);
-                                links.RemoveAll(link => link.SourceId == item.Id || link.DestinationId == id);
                             }
                         }
                         n++;
                     }
                 }
             }
+            links.RemoveAll(link => link.SourceId == element.Id || link.DestinationId == element.Id);
             items.Remove(element);
             Module.Changed = true;
         }
@@ -947,7 +949,7 @@ namespace Simulator
         {
             foreach (var item in items)
             {
-                if (item.Instance is ILinkSupport func)
+                if (item.Selected && item.Instance is ILinkSupport func)
                 {
                     var n = 0;
                     foreach (var islinked in func.LinkedInputs)
@@ -960,11 +962,11 @@ namespace Simulator
                             if (source != null && source.Selected)
                             {
                                 func.ResetValueLinkToInp(n);
-                                links.RemoveAll(link => link.SourceId == item.Id || link.DestinationId == id);
                             }
                         }
                         n++;
                     }
+                    links.RemoveAll(link => link.SourceId == item.Id || link.DestinationId == item.Id);
                 }
             }
             items.RemoveAll(x => x.Selected);
