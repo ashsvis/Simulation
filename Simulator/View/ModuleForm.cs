@@ -1,6 +1,7 @@
 ﻿using Simulator.Model;
 using Simulator.View;
 using System.Drawing.Drawing2D;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Simulator
 {
@@ -697,17 +698,18 @@ namespace Simulator
             output = null;
             if (TryGetModule(e.Location, out element) &&
                 element != null && element.Instance != null ||
-                TryGetFreeInputPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
-                element != null && element.Instance != null && output == false ||
+                //TryGetFreeInputPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
+                //element != null && element.Instance != null && output == false ||
                 TryGetPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
                 element != null && element.Instance != null && output == true)
             {
                 element.Selected = true;
                 items.Where(item => item != element).ToList().ForEach(item => item.Selected = false);
                 links.ForEach(item => item.Select(false));
+                // выделение выходных связей элемента
                 foreach (var item in items.Where(x => x.Selected))
                 {
-                    foreach (var link in links.Where(x => x.SourceId == item.Id/* || x.DestinationId == item.Id*/))
+                    foreach (var link in links.Where(x => x.SourceId == item.Id))
                         link.Select(true);
                 }
                 ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
@@ -828,7 +830,8 @@ namespace Simulator
         {
             if (TryGetModule(e.Location, out _))
                 Cursor = Cursors.SizeAll;
-            else if (TryGetFreeInputPin(e.Location, out _, out _, out _, out _))
+            else if (TryGetFreeInputPin(e.Location, out Element? element, out _, out _, out _) &&
+                element?.Instance is IManualChange _)
                 Cursor = Cursors.Hand;
             else if (TryGetLinkSegment(e.Location, out _, out _, out bool? vertical))
             {
@@ -886,7 +889,14 @@ namespace Simulator
                 var pinFirst = pin;
                 var outputFirst = output;
                 var linkFirst = linkFirstPoint;
-                if (TryGetPin(e.Location, out Element? elementSecond, out int? pinSecond, out PointF? linkSecondPoint, out bool? outputSecond) &&
+                if (TryGetFreeInputPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
+                    element != null && pin != null && element.Instance is IManualChange tar && output == false)
+                {
+                    var value = tar.GetValueFromInp((int)pin);
+                    if (value is bool bval)
+                        tar.SetValueToInp((int)pin, !bval);
+                }
+                else if (TryGetPin(e.Location, out Element? elementSecond, out int? pinSecond, out PointF? linkSecondPoint, out bool? outputSecond) &&
                     elementSecond?.Instance is ILinkSupport target && elementFirst?.Instance is ILinkSupport source)
                 {
                     if (elementFirst != elementSecond && outputFirst != outputSecond &&
@@ -926,16 +936,6 @@ namespace Simulator
                             }
                         }
                     }
-                    //else if (elementFirst == elementSecond && outputFirst == outputSecond && outputSecond == false && pinSecond is int ipin)
-                    //{
-                    //    // отпускание после нажатия на этом же входе
-                    //    var value = target.InputValues[ipin];
-                    //    if (value is bool bvalue)
-                    //    {
-                    //        target.SetValueToInp(ipin, !bvalue);
-                    //        Module.Changed = true;
-                    //    }
-                    //}
                 }
                 else
                     element = null;
@@ -980,6 +980,19 @@ namespace Simulator
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     {
                         DeleteAllSelectedElements();
+                        zoomPad.Invalidate();
+                    }
+                    else if (links.Any(x => x.Selected) &&
+                        MessageBox.Show("Удалить выделенные связи?", "Удаление связей",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                    {
+                        foreach (var link in links)
+                        {
+                            var item = items.FirstOrDefault(x => x.Id == link.DestinationId);
+                            if (item?.Instance is ILinkSupport func)
+                                func.ResetValueLinkToInp(link.DestinationPinIndex);
+                        }
+                        links.RemoveAll(link => link.Selected);
                         zoomPad.Invalidate();
                     }
                     break;

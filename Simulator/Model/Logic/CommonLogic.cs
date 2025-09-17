@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace Simulator.Model.Logic
 {
-    public class CommonLogic : FilterablePropertyBase, IFunction, ICalculate, ILinkSupport, ILoadSave, IDraw
+    public class CommonLogic : FilterablePropertyBase, IFunction, ICalculate, ILinkSupport, ILoadSave, IDraw, IManualChange
     {
         private bool @out = false;
         private readonly bool[] getInputs;
@@ -235,6 +235,21 @@ namespace Simulator.Model.Logic
             if (inputIndex >= 0 && inputIndex < getLinkInputs.Length &&
                 value != null && getLinkInputs[inputIndex] == null)
                 getInputs[inputIndex] = (bool)value;
+        }
+
+        public object? GetValueFromInp(int inputIndex)
+        {
+            if (inputIndex >= 0 && inputIndex < getLinkInputs.Length)
+            {
+                if (getLinkInputs[inputIndex] != null)
+                {
+                    var method = getLinkInputs[inputIndex];
+                    return method?.Invoke();
+                }
+                else
+                    return getInputs[inputIndex];
+            }
+            return null;
         }
 
         public virtual void Save(XElement xtem)

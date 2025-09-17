@@ -82,13 +82,6 @@ namespace Simulator.Model.Diagram
             }
         }
 
-        public void SetValueToInp(int inputIndex, object? value)
-        {
-            if (inputIndex >= 0 && inputIndex < getLinkInputs.Length &&
-                value != null && getLinkInputs[inputIndex] == null)
-                getInputs[inputIndex] = value;
-        }
-
         public void Load(XElement? xtance)
         {
             var xinputs = xtance?.Element("Inputs");
