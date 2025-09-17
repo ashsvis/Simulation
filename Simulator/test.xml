@@ -4,7 +4,7 @@
   <Modules>
     <Module>
       <Items>
-        <Item X="64" Y="112">
+        <Item X="64" Y="184">
           <Id>43e2100e-6888-4b41-8d10-a2896fd27971</Id>
           <Type>Simulator.Model.Logic.NOT</Type>
           <Instance>
@@ -13,7 +13,7 @@
             </Outputs>
           </Instance>
         </Item>
-        <Item X="224" Y="64">
+        <Item X="288" Y="152">
           <Id>fa184619-dc3b-4ec9-a621-6ec1bcef5b8b</Id>
           <Type>Simulator.Model.Trigger.RS</Type>
           <Instance>
@@ -41,17 +41,13 @@
           <Source Id="43e2100e-6888-4b41-8d10-a2896fd27971" PinIndex="0" />
           <Destination Id="fa184619-dc3b-4ec9-a621-6ec1bcef5b8b" PinIndex="1" />
           <Points>
-            <Point X="120" Y="136" />
-            <Point X="120" Y="136" />
-            <Point X="168" Y="136" />
-            <Point X="168" Y="120" />
-            <Point X="216" Y="120" />
-            <Point X="216" Y="120" />
+            <Point X="120" Y="208" />
+            <Point X="120" Y="208" />
+            <Point X="280" Y="208" />
+            <Point X="280" Y="208" />
           </Points>
           <Segments>
             <Segment Kind="None" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="Vertical" />
             <Segment Kind="Horizontal" />
             <Segment Kind="None" />
           </Segments>
@@ -63,10 +59,10 @@
           <Points>
             <Point X="120" Y="56" />
             <Point X="120" Y="56" />
-            <Point X="144" Y="56" />
-            <Point X="144" Y="88" />
-            <Point X="216" Y="88" />
-            <Point X="216" Y="88" />
+            <Point X="216" Y="56" />
+            <Point X="216" Y="176" />
+            <Point X="280" Y="176" />
+            <Point X="280" Y="176" />
           </Points>
           <Segments>
             <Segment Kind="None" />

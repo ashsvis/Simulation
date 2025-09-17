@@ -8,6 +8,7 @@
         Or,
         Xor,
         Rs,
+        Sr,
         Pulse,
         OnDelay,
         OffDelay

@@ -31,7 +31,7 @@ namespace Simulator.Model.Logic
             {
                 if (func == LogicFunction.Not)
                     inputCount = 1;
-                else if (func == LogicFunction.Rs)
+                else if (func == LogicFunction.Rs || func == LogicFunction.Sr)
                     inputCount = 2;
                 getInputs = new bool[inputCount];
                 getInverseInputs = new bool[inputCount];
@@ -43,7 +43,7 @@ namespace Simulator.Model.Logic
                 {
                     InverseOut = true;
                 }
-                else if (func == LogicFunction.Rs)
+                else if (func == LogicFunction.Rs || func == LogicFunction.Sr)
                 {
                     getInputNames[0] = "S";
                     getInputNames[1] = "R";
@@ -67,6 +67,7 @@ namespace Simulator.Model.Logic
                     LogicFunction.Not or LogicFunction.Or => "1",
                     LogicFunction.Xor => "=1",
                     LogicFunction.Rs => "RS",
+                    LogicFunction.Sr => "SR",
                     _ => "",
                 };
             } 
@@ -162,7 +163,7 @@ namespace Simulator.Model.Logic
         public virtual void Calculate()
         {
             bool result = (bool)InputValues[0] ^ getInverseInputs[0];
-            if (logicFunction == LogicFunction.Rs)
+            if (logicFunction == LogicFunction.Rs || logicFunction == LogicFunction.Sr)
             {
                 getInverseInputs[0] = false;
                 getInverseInputs[1] = false;
@@ -176,6 +177,7 @@ namespace Simulator.Model.Logic
                     LogicFunction.Or => result || input,
                     LogicFunction.Xor => CalcXor(InputValues),
                     LogicFunction.Rs => CalcRsTrigger(result, input, @out),
+                    LogicFunction.Sr => CalcSrTrigger(result, input, @out),
                     _ => logicFunction == LogicFunction.Not && !result,
                 };
             }
@@ -192,6 +194,11 @@ namespace Simulator.Model.Logic
         private static bool CalcRsTrigger(bool s, bool r, bool q)
         {
             return !r && (s || q);
+        }
+
+        private static bool CalcSrTrigger(bool s, bool r, bool q)
+        {
+            return s || (!r && q); 
         }
 
         public GetLinkValueMethod? GetResultLink(int outputIndex)
