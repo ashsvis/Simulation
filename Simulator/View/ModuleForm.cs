@@ -22,8 +22,6 @@ namespace Simulator
             Module = module;
             items = module.Items;
             links = module.Links;
-            BuildLinks(); //ModuleForm(PanelForm panelForm, Module module)
-
             panelForm.SimulationTick += Module_SimulationTick;
         }
 
@@ -85,9 +83,9 @@ namespace Simulator
             }
         }
 
-        public static PointF SnapToGrid(PointF pointF)
+        public static PointF SnapToGrid(PointF pointF, int koeff = 2)
         {
-            float gridStep = Element.Step * 2;
+            float gridStep = Element.Step * koeff;
             return new PointF(
                 (float)Math.Round(pointF.X / gridStep) * gridStep,
                 (float)Math.Round(pointF.Y / gridStep) * gridStep);
@@ -105,10 +103,10 @@ namespace Simulator
                     if (item.Instance is IFunction instance)
                         instance.ResultChanged += Item_ResultChanged;
                     items.ForEach(item => item.Selected = false);
+                    links.ForEach(item => item.Select(false));
                     item.Selected = true;
                     items.Add(item);
                     Module.Changed = true;
-                    BuildLinks(); //zoomPad_DragDrop(object sender, DragEventArgs e)
                     zoomPad.Invalidate();
                     ElementSelected?.Invoke(item.Instance, EventArgs.Empty);
                 }
@@ -292,11 +290,11 @@ namespace Simulator
             }
         }
 
+ 
+        /*
+            
         private void BuildLinks()
         {
-
-            /*
-            
             // подготовка сетки с тенями от существующих элементов и связей
             grid = BuildGrid();
             // составление списка связей для построения
@@ -451,15 +449,15 @@ namespace Simulator
                     }
                 }
             }
-
-            */
         }
 
-        private Link? BuildLink(PointF sourcePinPoint, PointF targetPinPoint)
+        */
+
+        private Link? BuildLink(Guid sourceId, PointF sourcePinPoint, Guid dectinationId, PointF targetPinPoint)
         {
             // подготовка сетки с тенями от существующих элементов и связей
             grid = BuildGrid();
-            var link = new Link(Guid.NewGuid(), sourcePinPoint, targetPinPoint);
+            var link = new Link(Guid.NewGuid(), sourceId, dectinationId, sourcePinPoint, targetPinPoint);
             // помещение затравки волны в сетку
             var tpt = link.SourcePoint;
             var spt = link.TargetPoint;
@@ -686,16 +684,21 @@ namespace Simulator
             {
                 element.Selected = true;
                 items.Where(item => item != element).ToList().ForEach(item => item.Selected = false);
+                links.ForEach(item => item.Select(false));
                 ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
             }
             else if (TryGetLinkSegment(e.Location, out link, out segmentIndex, out segmentVertical) &&
                 link != null && segmentIndex != null && segmentVertical != null)
             {
+                ((Link)link).Select(true);
+                links.Where(item => item.Id != ((Link)link).Id).ToList().ForEach(item => item.Select(false));
+                items.ForEach(item => item.Selected = false);
                 ElementSelected?.Invoke(link, EventArgs.Empty);
             }
             else
             {
                 items.ForEach(item => item.Selected = false);
+                links.ForEach(item => item.Select(false));
                 ElementSelected?.Invoke(null, EventArgs.Empty);
             }
             if (e.Button == MouseButtons.Right)
@@ -715,7 +718,6 @@ namespace Simulator
                             {
                                 fn.ResetValueLinkToInp((int)pin);
                                 Module.Changed = true;
-                                BuildLinks(); // zoomPad_MouseDown(object sender, MouseEventArgs e)
                             }
                         };
                         cmsContextMenu.Items.Add(item);
@@ -744,7 +746,6 @@ namespace Simulator
                                     }
                                 }
                                 Module.Changed = true;
-                                BuildLinks(); // zoomPad_MouseDown(object sender, MouseEventArgs e)
                             }
                         };
                         cmsContextMenu.Items.Add(item);
@@ -782,7 +783,10 @@ namespace Simulator
                             var linkSources = func.InputLinkSources;
                             (Guid id, int index) = linkSources[n];
                             if (items.FirstOrDefault(x => x.Id == id) == element)
+                            {
                                 func.ResetValueLinkToInp(n);
+                                links.RemoveAll(link => link.SourceId == item.Id || link.DestinationId == id);
+                            }
                         }
                         n++;
                     }
@@ -790,7 +794,6 @@ namespace Simulator
             }
             items.Remove(element);
             Module.Changed = true;
-            BuildLinks(); //DeleteOneElement(Element element)
         }
 
         private void zoomPad_MouseMove(object sender, MouseEventArgs e)
@@ -839,6 +842,10 @@ namespace Simulator
                 {
                     element.Location = SnapToGrid(element.Location);
                 }
+                else if (link != null)
+                {
+                    ((Link)link).SnapPointsToGrid(SnapToGrid);
+                }
                 var elementFirst = element;
                 var pinFirst = pin;
                 var outputFirst = output;
@@ -856,9 +863,11 @@ namespace Simulator
                             if (!target.LinkedInputs[(int)pinSecond])
                             {
                                 target.SetValueLinkToInp((int)pinSecond, source.GetResultLink((int)pinFirst), elementFirst.Id, (int)pinFirst);
-                                var link = BuildLink((PointF)linkFirstPoint, (PointF)linkSecondPoint);
+                                var link = BuildLink(elementFirst.Id, (PointF)linkFirstPoint, elementSecond.Id, (PointF)linkSecondPoint);
                                 if (link != null)
                                 {
+                                    elementFirst.Selected = false;
+                                    ((Link)link).Select(true);
                                     links.Add((Link)link);
                                     Module.Changed = true;
                                 }
@@ -890,7 +899,6 @@ namespace Simulator
                 pin = null;
                 output = null;
                 linkFirstPoint = null;
-                BuildLinks(); // zoomPad_MouseUp(object sender, MouseEventArgs e)
                 zoomPad.Invalidate();
             }
         }
@@ -950,7 +958,10 @@ namespace Simulator
                             (Guid id, int index) = linkSources[n];
                             var source = items.FirstOrDefault(x => x.Id == id);
                             if (source != null && source.Selected)
+                            {
                                 func.ResetValueLinkToInp(n);
+                                links.RemoveAll(link => link.SourceId == item.Id || link.DestinationId == id);
+                            }
                         }
                         n++;
                     }
@@ -958,7 +969,6 @@ namespace Simulator
             }
             items.RemoveAll(x => x.Selected);
             Module.Changed = true;
-            BuildLinks(); // DeleteAllSelectedElements()
         }
     }
 }

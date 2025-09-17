@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Simulator.Model
 {
@@ -18,10 +17,11 @@ namespace Simulator.Model
         private readonly List<PointF> points = [];
 
         private readonly bool[] busy = new bool[1];
-        
+        private readonly bool[] selected = new bool[1];
+
         public readonly float Length => points.Count > 1 ? Math.Abs(SourcePoint.X - TargetPoint.X) + Math.Abs(SourcePoint.Y - TargetPoint.Y) : 0f;
 
-        public Link(Guid id, params PointF[] points)
+        public Link(Guid id, Guid sourceId, Guid destinationId, params PointF[] points)
         {
             if (points == null || points.Length < 2)
                 throw new ArgumentNullException(nameof(points), "Массив точек пуст или содержит меньше двух элементов");
@@ -38,11 +38,15 @@ namespace Simulator.Model
                 EndUpdate();
             }
             Id = id;
+            SourceId = sourceId;
+            DestinationId = destinationId;
         }
 
         public void Save(XElement xtem)
         {
             xtem.Add(new XElement("Id", Id));
+            xtem.Add(new XElement("SourceId", SourceId));
+            xtem.Add(new XElement("DestinationId", DestinationId));
             XElement xpoints = new("Points");
             foreach (var point in points)
             {
@@ -75,10 +79,6 @@ namespace Simulator.Model
                     // скрытый сегмент
                     xsegment.Add(new XAttribute("Kind", LinkVector.None));
                 }
-                //xsegment.Add(new XAttribute("X1", pt1.X));
-                //xsegment.Add(new XAttribute("Y1", pt1.Y));
-                //xsegment.Add(new XAttribute("X2", pt2.X));
-                //xsegment.Add(new XAttribute("Y2", pt2.Y));
             }
             if (points.Count > 1)
                 xtem.Add(xsegments);
@@ -118,6 +118,11 @@ namespace Simulator.Model
 
         public void EndUpdate()
         {
+            var pt1 = points[0];
+            var pt2 = points[^1];
+            points.Insert(0, pt1);
+            points.Add(pt2);
+
             CalculateSegmentTargets();
             busy[0] = false;
         }
@@ -158,6 +163,15 @@ namespace Simulator.Model
         }
 
         public Guid Id { get; }
+        public Guid SourceId { get; }
+        public Guid DestinationId { get; }
+
+        public bool Selected => selected[0];
+
+        public void Select(bool value)
+        {
+            selected[0] = value;
+        }
 
         public void Draw(Graphics graphics, Color foreColor)
         {
@@ -165,7 +179,7 @@ namespace Simulator.Model
 
             if (points.Count > 1)
             {
-                using var pen = new Pen(foreColor);
+                using var pen = new Pen(selected[0] ? Color.Magenta : foreColor);
                 graphics.DrawLines(pen, [SourcePoint, points[0]]);
                 graphics.DrawLines(pen, [.. points]);
                 graphics.DrawLines(pen, [points[^1], TargetPoint]);
@@ -230,6 +244,27 @@ namespace Simulator.Model
                     break;
                 }
             }
+        }
+
+        public void SnapPointsToGrid(Func<PointF, int, PointF> snapToGridMethod)
+        {
+            for (var i = 0; i < points.Count; i++) 
+                points[i] = snapToGridMethod(points[i], 1);
+            var pt1 = points[0];
+            var pt2 = points[^1];
+            // объединение повторяющихся сегментов
+            var k = 2;
+            while (k < points.Count)
+            {
+                if (points[k - 2].Y == points[k - 1].Y && points[k - 1].Y == points[k].Y || 
+                    points[k - 2].X == points[k - 1].X && points[k - 1].X == points[k].X)
+                    points.RemoveAt(k - 1);
+                else
+                    k++;
+            }
+            points.Insert(0, pt1);
+            points.Add(pt2);
+            CalculateSegmentTargets();
         }
     }
 }

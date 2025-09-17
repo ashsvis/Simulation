@@ -4,8 +4,8 @@
   <Modules>
     <Module>
       <Items>
-        <Item X="112" Y="160">
-          <Id>8998d99c-5ee1-442a-8f10-278c05d8469d</Id>
+        <Item X="208" Y="144">
+          <Id>234aa53f-17ef-4222-afdb-f59be25d2156</Id>
           <Type>Simulator.Model.Logic.NOT</Type>
           <Instance>
             <Outputs>
@@ -13,13 +13,13 @@
             </Outputs>
           </Instance>
         </Item>
-        <Item X="448" Y="160">
-          <Id>00455317-70e8-4617-8518-4ac88761b217</Id>
+        <Item X="384" Y="208">
+          <Id>bd6614e5-016d-47bf-9c29-f1aaca71e57a</Id>
           <Type>Simulator.Model.Logic.XOR</Type>
           <Instance>
             <Inputs>
-              <Input Index="0">
-                <SourceId>8998d99c-5ee1-442a-8f10-278c05d8469d</SourceId>
+              <Input Index="1">
+                <SourceId>234aa53f-17ef-4222-afdb-f59be25d2156</SourceId>
               </Input>
             </Inputs>
           </Instance>
@@ -27,53 +27,23 @@
       </Items>
       <Links>
         <Link>
-          <Id>35ef9488-0e67-4a3f-8187-91f8bad53d78</Id>
+          <Id>fc14eafc-4490-47b4-8557-6df18ef9e8c2</Id>
+          <SourceId>234aa53f-17ef-4222-afdb-f59be25d2156</SourceId>
+          <DestinationId>bd6614e5-016d-47bf-9c29-f1aaca71e57a</DestinationId>
           <Points>
-            <Point X="168" Y="184" />
-            <Point X="230.17162" Y="184" />
-            <Point X="230.17162" Y="306.87167" />
-            <Point X="266.27524" Y="306.87167" />
-            <Point X="266.27524" Y="197.34514" />
-            <Point X="245.8497" Y="197.34514" />
-            <Point X="245.8497" Y="144.29921" />
-            <Point X="299.37265" Y="144.29921" />
-            <Point X="299.37265" Y="283.95953" />
-            <Point X="319.70343" Y="283.95953" />
-            <Point X="319.70343" Y="322.58688" />
-            <Point X="346.9265" Y="322.58688" />
-            <Point X="346.9265" Y="139.01508" />
-            <Point X="364.58472" Y="139.01508" />
-            <Point X="364.58472" Y="154.8339" />
-            <Point X="369.73502" Y="154.8339" />
-            <Point X="369.73502" Y="282.516" />
-            <Point X="387.7088" Y="282.516" />
-            <Point X="387.7088" Y="252.43341" />
-            <Point X="408.30228" Y="252.43341" />
-            <Point X="408.30228" Y="185" />
-            <Point X="440" Y="185" />
+            <Point X="264" Y="168" />
+            <Point X="264" Y="168" />
+            <Point X="304" Y="168" />
+            <Point X="304" Y="264" />
+            <Point X="376" Y="264" />
+            <Point X="376" Y="264" />
           </Points>
           <Segments>
+            <Segment Kind="None" />
             <Segment Kind="Horizontal" />
             <Segment Kind="Vertical" />
             <Segment Kind="Horizontal" />
-            <Segment Kind="Vertical" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="Vertical" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="Vertical" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="Vertical" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="Vertical" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="Vertical" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="Vertical" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="Vertical" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="Vertical" />
-            <Segment Kind="Horizontal" />
+            <Segment Kind="None" />
           </Segments>
         </Link>
       </Links>

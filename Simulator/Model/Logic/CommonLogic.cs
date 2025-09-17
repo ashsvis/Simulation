@@ -334,9 +334,9 @@ namespace Simulator.Model.Logic
         public void Draw(Graphics graphics, Color foreColor, Color backColor, PointF location, SizeF size, int index, bool selected, CustomDraw? customDraw = null)
         {
             using var brush = new SolidBrush(Color.FromArgb(255, backColor));
-            using var pen = new Pen(foreColor, 1f);
+            using var pen = new Pen(selected ? Color.Magenta : foreColor, 1f);
             using var font = new Font("Consolas", Element.Step + 2f);
-            using var fontbrush = new SolidBrush(foreColor);
+            using var fontbrush = new SolidBrush(selected ? Color.Magenta : foreColor);
             if (this is IFunction instance)
             {
                 var named = !string.IsNullOrEmpty(instance.Name);
@@ -345,14 +345,6 @@ namespace Simulator.Model.Logic
                 var height = step + max * step * 4 + step;
                 var width = step + 1 * step * 4 + step;
                 var rect = new RectangleF(location, size);
-                if (selected)
-                {
-                    for (var i = 5; i >= 3; i -= 2)
-                    {
-                        using var selpen = new Pen(Color.FromArgb(110, Color.Yellow), i);
-                        graphics.DrawRectangles(selpen, [rect]);
-                    }
-                }
                 graphics.FillRectangle(brush, rect);
                 graphics.DrawRectangles(pen, [rect]);
                 // обозначение функции, текст по-центру, в верхней части рамки элемента
@@ -438,6 +430,14 @@ namespace Simulator.Model.Logic
                     var offset = height > width ? ms.Height : 0;
                     graphics.DrawString(text, font, fontbrush, new PointF(location.X + width / 2, location.Y + height - offset), format);
                 }
+                //if (selected)
+                //{
+                    //for (var i = 5; i >= 3; i -= 2)
+                    //{
+                    //    using var selpen = new Pen(Color.FromArgb(110, Color.Yellow), i);
+                    //    graphics.DrawRectangles(selpen, [rect]);
+                    //}
+                //}
             }
         }
 
