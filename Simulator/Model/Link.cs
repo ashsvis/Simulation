@@ -193,24 +193,24 @@ namespace Simulator.Model
                 graphics.DrawLines(pen, [points[^1], TargetPoint]);
             }
 #if DEBUG
-            using var brush = new SolidBrush(Color.Aqua);
-            foreach (var point in points)
-            {
-                graphics.FillEllipse(brush, new RectangleF(
-                    PointF.Subtract(point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
-            }
-            // области выбора
-            using Pen tarpen = new(Color.FromArgb(80, Color.Aqua), 0);
-            foreach (var key in vtargets.Keys)
-            {
-                var vtarget = vtargets[key];
-                graphics.DrawRectangles(tarpen, [vtarget]);
-            }
-            foreach (var key in htargets.Keys)
-            {
-                var htarget = htargets[key];
-                graphics.DrawRectangles(tarpen, [htarget]);
-            }
+            //using var brush = new SolidBrush(Color.Aqua);
+            //foreach (var point in points)
+            //{
+            //    graphics.FillEllipse(brush, new RectangleF(
+            //        PointF.Subtract(point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
+            //}
+            //// области выбора
+            //using Pen tarpen = new(Color.FromArgb(80, Color.Aqua), 0);
+            //foreach (var key in vtargets.Keys)
+            //{
+            //    var vtarget = vtargets[key];
+            //    graphics.DrawRectangles(tarpen, [vtarget]);
+            //}
+            //foreach (var key in htargets.Keys)
+            //{
+            //    var htarget = htargets[key];
+            //    graphics.DrawRectangles(tarpen, [htarget]);
+            //}
 #endif
         }
 
@@ -256,15 +256,21 @@ namespace Simulator.Model
 
         public void SnapPointsToGrid(Func<PointF, int, PointF> snapToGridMethod)
         {
-            for (var i = 0; i < points.Count; i++) 
+            for (var i = 0; i < points.Count; i++)
                 points[i] = snapToGridMethod(points[i], 1);
+            SegmentOptimization();
+            CalculateSegmentTargets();
+        }
+
+        private void SegmentOptimization()
+        {
             var pt1 = points[0];
             var pt2 = points[^1];
             // объединение повторяющихся сегментов
             var k = 2;
             while (k < points.Count)
             {
-                if (points[k - 2].Y == points[k - 1].Y && points[k - 1].Y == points[k].Y || 
+                if (points[k - 2].Y == points[k - 1].Y && points[k - 1].Y == points[k].Y ||
                     points[k - 2].X == points[k - 1].X && points[k - 1].X == points[k].X)
                     points.RemoveAt(k - 1);
                 else
@@ -272,12 +278,22 @@ namespace Simulator.Model
             }
             points.Insert(0, pt1);
             points.Add(pt2);
+        }
+
+        public void UpdateSourcePoint(PointF point)
+        {
+            points.Insert(0, new PointF(points[0].X, point.Y));
+            points.Insert(0, point);
+            SegmentOptimization();
             CalculateSegmentTargets();
         }
 
-        public void UpdateSourcePoint(PointF? linkPoint)
+        public void UpdateDestinationPoint(PointF point)
         {
-            throw new NotImplementedException();
+            points.Add(new PointF(points[^1].X, point.Y));
+            points.Add(point);
+            SegmentOptimization();
+            CalculateSegmentTargets();
         }
     }
 }

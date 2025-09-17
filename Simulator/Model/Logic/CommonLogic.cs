@@ -430,14 +430,6 @@ namespace Simulator.Model.Logic
                     var offset = height > width ? ms.Height : 0;
                     graphics.DrawString(text, font, fontbrush, new PointF(location.X + width / 2, location.Y + height - offset), format);
                 }
-                //if (selected)
-                //{
-                    //for (var i = 5; i >= 3; i -= 2)
-                    //{
-                    //    using var selpen = new Pen(Color.FromArgb(110, Color.Yellow), i);
-                    //    graphics.DrawRectangles(selpen, [rect]);
-                    //}
-                //}
             }
         }
 

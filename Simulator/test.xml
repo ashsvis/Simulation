@@ -4,7 +4,7 @@
   <Modules>
     <Module>
       <Items>
-        <Item X="128" Y="96">
+        <Item X="64" Y="112">
           <Id>43e2100e-6888-4b41-8d10-a2896fd27971</Id>
           <Type>Simulator.Model.Logic.NOT</Type>
           <Instance>
@@ -13,12 +13,14 @@
             </Outputs>
           </Instance>
         </Item>
-        <Item X="368" Y="176">
+        <Item X="224" Y="64">
           <Id>fa184619-dc3b-4ec9-a621-6ec1bcef5b8b</Id>
           <Type>Simulator.Model.Trigger.RS</Type>
           <Instance>
             <Inputs>
-              <Input Index="0" Name="S" />
+              <Input Index="0" Name="S">
+                <SourceId>23f0c221-c845-4782-bd33-c4551c7ce5c5</SourceId>
+              </Input>
               <Input Index="1" Name="R">
                 <SourceId>43e2100e-6888-4b41-8d10-a2896fd27971</SourceId>
               </Input>
@@ -28,6 +30,10 @@
             </Outputs>
           </Instance>
         </Item>
+        <Item X="64" Y="16">
+          <Id>23f0c221-c845-4782-bd33-c4551c7ce5c5</Id>
+          <Type>Simulator.Model.Logic.AND</Type>
+        </Item>
       </Items>
       <Links>
         <Link>
@@ -35,12 +41,32 @@
           <Source Id="43e2100e-6888-4b41-8d10-a2896fd27971" PinIndex="0" />
           <Destination Id="fa184619-dc3b-4ec9-a621-6ec1bcef5b8b" PinIndex="1" />
           <Points>
-            <Point X="184" Y="120" />
-            <Point X="184" Y="120" />
+            <Point X="120" Y="136" />
+            <Point X="120" Y="136" />
+            <Point X="168" Y="136" />
+            <Point X="168" Y="120" />
             <Point X="216" Y="120" />
-            <Point X="216" Y="232" />
-            <Point X="360" Y="232" />
-            <Point X="360" Y="232" />
+            <Point X="216" Y="120" />
+          </Points>
+          <Segments>
+            <Segment Kind="None" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="None" />
+          </Segments>
+        </Link>
+        <Link>
+          <Id>892e0b05-260d-4e5c-b610-c336ef068e3c</Id>
+          <Source Id="23f0c221-c845-4782-bd33-c4551c7ce5c5" PinIndex="0" />
+          <Destination Id="fa184619-dc3b-4ec9-a621-6ec1bcef5b8b" PinIndex="0" />
+          <Points>
+            <Point X="120" Y="56" />
+            <Point X="120" Y="56" />
+            <Point X="144" Y="56" />
+            <Point X="144" Y="88" />
+            <Point X="216" Y="88" />
+            <Point X="216" Y="88" />
           </Points>
           <Segments>
             <Segment Kind="None" />

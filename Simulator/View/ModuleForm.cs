@@ -83,7 +83,7 @@ namespace Simulator
             }
         }
 
-        public static PointF SnapToGrid(PointF pointF, int koeff = 2)
+        public static PointF SnapToGrid(PointF pointF, int koeff = 1)
         {
             float gridStep = Element.Step * koeff;
             return new PointF(
@@ -262,6 +262,14 @@ namespace Simulator
             //    }
             //}
 #endif
+
+            // прорисовка связей
+            using var linkpen = new Pen(zoomPad.ForeColor);
+            foreach (var link in links.Where(x => !x.Selected))
+            {
+                link.Draw(graphics, zoomPad.ForeColor);
+            }
+
             // прорисовка элементов
             var np = 1;
             foreach (var item in items)
@@ -273,9 +281,8 @@ namespace Simulator
                     item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor);
             }
 
-            // прорисовка связей
-            using var linkpen = new Pen(Color.FromArgb(100, zoomPad.ForeColor));
-            foreach (var link in links)
+            // прорисовка выбранных связей 
+            foreach (var link in links.Where(x => x.Selected))
             {
                 link.Draw(graphics, zoomPad.ForeColor);
             }
@@ -845,11 +852,11 @@ namespace Simulator
                     element.Location = SnapToGrid(element.Location);
                     foreach (var link in links.Where(x => x.SourceId == element.Id))
                     {
-
+                        link.UpdateSourcePoint(element.OutputPins[link.SourcePinIndex]);
                     }
                     foreach (var link in links.Where(x => x.DestinationId == element.Id))
                     {
-
+                        link.UpdateDestinationPoint(element.InputPins[link.DestinationPinIndex]);
                     }
                 }
                 else if (link != null)
