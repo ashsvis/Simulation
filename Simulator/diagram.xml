@@ -4,7 +4,7 @@
   <Modules>
     <Module>
       <Items>
-        <Item X="504" Y="296">
+        <Item X="424" Y="224">
           <Id>f107a951-f6f3-4731-93db-09f29d000092</Id>
           <Type>Simulator.Model.Diagram.START</Type>
           <Instance>
@@ -13,7 +13,7 @@
             </Outputs>
           </Instance>
         </Item>
-        <Item X="368" Y="408">
+        <Item X="424" Y="392">
           <Id>ef7d7dc4-e366-46de-91f9-0cf376b2e946</Id>
           <Type>Simulator.Model.Diagram.FINISH</Type>
           <Instance>
@@ -34,17 +34,13 @@
           <Source Id="f107a951-f6f3-4731-93db-09f29d000092" PinIndex="0" />
           <Destination Id="ef7d7dc4-e366-46de-91f9-0cf376b2e946" PinIndex="0" />
           <Points>
-            <Point X="544" Y="336" />
-            <Point X="544" Y="336" />
-            <Point X="544" Y="368" />
-            <Point X="408" Y="368" />
-            <Point X="408" Y="400" />
-            <Point X="408" Y="400" />
+            <Point X="464" Y="264" />
+            <Point X="464" Y="264" />
+            <Point X="464" Y="384" />
+            <Point X="464" Y="384" />
           </Points>
           <Segments>
             <Segment Kind="None" />
-            <Segment Kind="Vertical" />
-            <Segment Kind="Horizontal" />
             <Segment Kind="Vertical" />
             <Segment Kind="None" />
           </Segments>

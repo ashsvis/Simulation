@@ -1,7 +1,6 @@
 ﻿using Simulator.Model;
 using Simulator.View;
 using System.Drawing.Drawing2D;
-using System.Linq;
 
 namespace Simulator
 {
@@ -243,8 +242,8 @@ namespace Simulator
         {
             var graphics = e.Graphics;
             if (graphics == null) return;
-            graphics.SmoothingMode = SmoothingMode.HighQuality;
-            graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            //graphics.SmoothingMode = SmoothingMode.HighQuality;
+            //graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 #if DEBUG
 
             // прорисовка узлов сетки
@@ -288,11 +287,12 @@ namespace Simulator
             {
                 if (group.Count() > 1)
                 {
-                    List<PointF> list = [];
-                    List<RectangleF> rects = [];
+                    List<(PointF, Guid)> list = [];
+                    List<(RectangleF, Guid)> rects = [];
                     foreach (var link in group)
                     {
-                        list.AddRange(link.Points.Distinct().Skip(1));
+                        foreach (var point in link.Points.Distinct().Skip(1))
+                            list.Add((point, link.Id));
                         for (var i = 1; i < link.Points.Count; i++)
                         {
                             var pt1 = link.Points[i - 1];
@@ -300,21 +300,29 @@ namespace Simulator
                             if (pt1.X != pt2.X || pt1.Y != pt2.Y)
                             {
                                 if (pt1.X != pt2.X || pt1.Y == pt2.Y)
-                                    rects.Add(new RectangleF(Math.Min(pt1.X, pt2.X), pt1.Y - 1f , Math.Abs(pt1.X - pt2.X), 3f));
+                                    rects.Add((new RectangleF(Math.Min(pt1.X, pt2.X), pt1.Y - 1f , Math.Abs(pt1.X - pt2.X), 3f), link.Id));
                                 if (pt1.X == pt2.X || pt1.Y != pt2.Y)
-                                    rects.Add(new RectangleF(pt1.X - 1f, Math.Min(pt1.Y, pt2.Y), 3f, Math.Abs(pt1.Y - pt2.Y)));
+                                    rects.Add((new RectangleF(pt1.X - 1f, Math.Min(pt1.Y, pt2.Y), 3f, Math.Abs(pt1.Y - pt2.Y)), link.Id));
                             }
                         }
                     }
 
-                    using var brush = new SolidBrush(Color.Aqua);
-                    foreach (var pointGroup in list.GroupBy(x => x))
+                    List<(PointF, Guid)> results = [];
+                    foreach ((var point, var id1) in list)
                     {
-                        if (pointGroup.Count() > 1 && rects.Any(r => r.Contains(pointGroup.First())))
-                        graphics.FillEllipse(brush, new RectangleF(
-                            PointF.Subtract(pointGroup.First(), new SizeF(2.5f, 2.5f)), new SizeF(5f, 5f)));
+                        foreach((var rect, var id2) in rects)
+                        {
+                            if (id1 != id2 && rect.Contains(point) && !results.Contains((point, id1)))
+                                results.Add((point, id1));
+                        }
                     }
-
+                    foreach ((var pt, var id) in results)
+                    {
+                        var link = links.First(x => x.Id == id);
+                        using var brush = new SolidBrush(link.Selected ? Color.Magenta : zoomPad.ForeColor);
+                        graphics.FillEllipse(brush, new RectangleF(
+                            PointF.Subtract(pt, new SizeF(2.5f, 2.5f)), new SizeF(5f, 5f)));
+                    }
                 }
             }
 
@@ -732,8 +740,6 @@ namespace Simulator
             output = null;
             if (TryGetModule(e.Location, out element) &&
                 element != null && element.Instance != null ||
-                //TryGetFreeInputPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
-                //element != null && element.Instance != null && output == false ||
                 TryGetPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
                 element != null && element.Instance != null && output == true)
             {
