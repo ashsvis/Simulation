@@ -1,6 +1,4 @@
-﻿using Simulator.Model.Logic;
-using System.ComponentModel;
-using System.Drawing;
+﻿using System.ComponentModel;
 using System.Xml.Linq;
 
 namespace Simulator.Model.Diagram
@@ -166,21 +164,17 @@ namespace Simulator.Model.Diagram
         public void Draw(Graphics graphics, Color foreColor, Color backColor, PointF location, SizeF size, int index, bool selected, CustomDraw? customDraw = null)
         {
             var step = Element.Step;
-            using var brush = new SolidBrush(Color.FromArgb(255, backColor));
-            using var pen = new Pen(foreColor, 1f);
+            using var brush = new SolidBrush(backColor);
+            using var pen = new Pen(selected ? Color.Magenta : foreColor, 1f);
             using var font = new Font("Consolas", Element.Step + 2f);
             using var fontbrush = new SolidBrush(foreColor);
             var rect = new RectangleF(location, size);
-            if (selected)
+            if (customDraw == null)
             {
-                for (var i = 5; i >= 3; i -= 2)
-                {
-                    using var selpen = new Pen(Color.FromArgb(110, Color.Yellow), i);
-                    graphics.DrawRectangles(selpen, [rect]);
-                }
+                graphics.FillRectangle(brush, rect);
+                graphics.DrawRectangles(pen, [rect]);
             }
-            graphics.FillRectangle(brush, rect); 
-            graphics.DrawRectangles(pen, [rect]);
+            customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush);
             var y = -step + location.Y;
             var x = location.X + size.Width / 2f;
             if (getInputs.Length > 0)
@@ -196,7 +190,6 @@ namespace Simulator.Model.Diagram
                 // вертикальная риска снизу, напротив выхода
                 graphics.DrawLine(pen, new PointF(x, y), new PointF(x, y + step));
             }
-            customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush);
         }
 
         public virtual void CalculateTargets(PointF location, ref SizeF size,

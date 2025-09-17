@@ -4,8 +4,8 @@
   <Modules>
     <Module>
       <Items>
-        <Item X="208" Y="80">
-          <Id>c402a196-dcc1-4d65-ade2-359f03c3151e</Id>
+        <Item X="504" Y="296">
+          <Id>f107a951-f6f3-4731-93db-09f29d000092</Id>
           <Type>Simulator.Model.Diagram.START</Type>
           <Instance>
             <Outputs>
@@ -13,35 +13,14 @@
             </Outputs>
           </Instance>
         </Item>
-        <Item X="128" Y="80">
-          <Id>20806e2e-3dee-4922-a9a0-a7844c8ccf9f</Id>
+        <Item X="368" Y="408">
+          <Id>ef7d7dc4-e366-46de-91f9-0cf376b2e946</Id>
           <Type>Simulator.Model.Diagram.FINISH</Type>
           <Instance>
             <Inputs>
               <Input Index="0">
-                <SourceId>0e6412b4-f59a-46cc-b7b8-e7d9225cf804</SourceId>
+                <SourceId>f107a951-f6f3-4731-93db-09f29d000092</SourceId>
               </Input>
-            </Inputs>
-            <Outputs>
-              <Output Index="0" />
-            </Outputs>
-          </Instance>
-        </Item>
-        <Item X="48" Y="176">
-          <Id>0e6412b4-f59a-46cc-b7b8-e7d9225cf804</Id>
-          <Type>Simulator.Model.Diagram.START</Type>
-          <Instance>
-            <Outputs>
-              <Output Index="0" />
-            </Outputs>
-          </Instance>
-        </Item>
-        <Item X="240" Y="192">
-          <Id>6a5b201c-3b79-4c7c-8732-eb7e384bdc6a</Id>
-          <Type>Simulator.Model.Diagram.FINISH</Type>
-          <Instance>
-            <Inputs>
-              <Input Index="0" />
             </Inputs>
             <Outputs>
               <Output Index="0" />
@@ -51,21 +30,19 @@
       </Items>
       <Links>
         <Link>
-          <Id>8fbc16b0-5dd1-44a3-a8d2-44c4f73e2fd1</Id>
+          <Id>ccaf2335-68b3-481a-a97a-39a60e0545bc</Id>
+          <Source Id="f107a951-f6f3-4731-93db-09f29d000092" PinIndex="0" />
+          <Destination Id="ef7d7dc4-e366-46de-91f9-0cf376b2e946" PinIndex="0" />
           <Points>
-            <Point X="72" Y="232" />
-            <Point X="72" Y="232" />
-            <Point X="72" Y="279.17953" />
-            <Point X="111.46275" Y="279.17953" />
-            <Point X="111.46275" Y="40.54698" />
-            <Point X="152" Y="40.54698" />
-            <Point X="152" Y="72" />
-            <Point X="152" Y="72" />
+            <Point X="544" Y="336" />
+            <Point X="544" Y="336" />
+            <Point X="544" Y="368" />
+            <Point X="408" Y="368" />
+            <Point X="408" Y="400" />
+            <Point X="408" Y="400" />
           </Points>
           <Segments>
             <Segment Kind="None" />
-            <Segment Kind="Vertical" />
-            <Segment Kind="Horizontal" />
             <Segment Kind="Vertical" />
             <Segment Kind="Horizontal" />
             <Segment Kind="Vertical" />

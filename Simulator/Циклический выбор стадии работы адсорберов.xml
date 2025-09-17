@@ -107,7 +107,7 @@
             </Inputs>
           </Instance>
         </Item>
-        <Item X="688" Y="192">
+        <Item X="688" Y="200">
           <Id>897b3c77-6388-4ba6-8a82-9312593d38cf</Id>
           <Type>Simulator.Model.Logic.AND</Type>
           <Instance>
@@ -264,8 +264,8 @@
           <Points>
             <Point X="488" Y="504" />
             <Point X="488" Y="504" />
-            <Point X="504" Y="504" />
-            <Point X="504" Y="440" />
+            <Point X="512" Y="504" />
+            <Point X="512" Y="440" />
             <Point X="536" Y="440" />
             <Point X="536" Y="440" />
           </Points>
@@ -301,9 +301,9 @@
             <Point X="488" Y="120" />
             <Point X="488" Y="120" />
             <Point X="528" Y="120" />
-            <Point X="528" Y="216" />
-            <Point X="680" Y="216" />
-            <Point X="680" Y="216" />
+            <Point X="528" Y="224" />
+            <Point X="680" Y="224" />
+            <Point X="680" Y="224" />
           </Points>
           <Segments>
             <Segment Kind="None" />
@@ -409,9 +409,9 @@
             <Point X="600" Y="424" />
             <Point X="600" Y="424" />
             <Point X="624" Y="424" />
-            <Point X="624" Y="248" />
-            <Point X="680" Y="248" />
-            <Point X="680" Y="248" />
+            <Point X="624" Y="256" />
+            <Point X="680" Y="256" />
+            <Point X="680" Y="256" />
           </Points>
           <Segments>
             <Segment Kind="None" />

@@ -537,23 +537,7 @@ namespace Simulator
                     link.AddPoint(grid[y, x].Point);
                     while (wave > 1)
                     {
-                        if (x > 0 && grid[y, x - 1].Kind == wave - 1)
-                        {
-                            if (vector != LinkVector.Horizontal)
-                                link.AddPoint(grid[y, x].Point);
-                            x--;
-                            grid[y, x].Kind = -2;
-                            vector = LinkVector.Horizontal;
-                        }
-                        else if (x < grid.GetLength(1) - 1 && grid[y, x + 1].Kind == wave - 1)
-                        {
-                            if (vector != LinkVector.Horizontal)
-                                link.AddPoint(grid[y, x].Point);
-                            x++;
-                            grid[y, x].Kind = -2;
-                            vector = LinkVector.Horizontal;
-                        }
-                        else if (y > 0 && grid[y - 1, x].Kind == wave - 1)
+                        if (y > 0 && grid[y - 1, x].Kind == wave - 1)
                         {
                             if (vector != LinkVector.Vertical)
                                 link.AddPoint(grid[y, x].Point);
@@ -568,6 +552,22 @@ namespace Simulator
                             y++;
                             grid[y, x].Kind = -2;
                             vector = LinkVector.Vertical;
+                        }
+                        else if (x > 0 && grid[y, x - 1].Kind == wave - 1)
+                        {
+                            if (vector != LinkVector.Horizontal)
+                                link.AddPoint(grid[y, x].Point);
+                            x--;
+                            grid[y, x].Kind = -2;
+                            vector = LinkVector.Horizontal;
+                        }
+                        else if (x < grid.GetLength(1) - 1 && grid[y, x + 1].Kind == wave - 1)
+                        {
+                            if (vector != LinkVector.Horizontal)
+                                link.AddPoint(grid[y, x].Point);
+                            x++;
+                            grid[y, x].Kind = -2;
+                            vector = LinkVector.Horizontal;
                         }
                         wave--;
                     }
@@ -651,7 +651,7 @@ namespace Simulator
                 for (int x = 0; x < lengthX; x++)
                 {
                     if (items.Select(item => new RectangleF(
-                        item.Bounds.X, item.Bounds.Y, item.Bounds.Width + Element.Step, item.Bounds.Height + Element.Step))
+                        item.Bounds.X - Element.Step, item.Bounds.Y - Element.Step, item.Bounds.Width + Element.Step * 3, item.Bounds.Height + Element.Step * 3))
                         .Any(rect => rect.Contains(grid[y, x].Point)))
                     {
                         if (!mustBeFree.Contains(grid[y, x].Point))
@@ -692,6 +692,11 @@ namespace Simulator
                 element.Selected = true;
                 items.Where(item => item != element).ToList().ForEach(item => item.Selected = false);
                 links.ForEach(item => item.Select(false));
+                foreach (var item in items.Where(x => x.Selected))
+                {
+                    foreach (var link in links.Where(x => x.SourceId == item.Id/* || x.DestinationId == item.Id*/))
+                        link.Select(true);
+                }
                 ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
             }
             else if (TryGetLinkSegment(e.Location, out link, out segmentIndex, out segmentVertical) &&
@@ -704,6 +709,7 @@ namespace Simulator
             }
             else
             {
+                linkFirstPoint = null;
                 items.ForEach(item => item.Selected = false);
                 links.ForEach(item => item.Select(false));
                 ElementSelected?.Invoke(null, EventArgs.Empty);
