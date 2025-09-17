@@ -3,45 +3,52 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Xml.Linq;
 
-namespace Simulator.Model.Generator
+namespace Simulator.Model.Timer
 {
-    public class ONDLY : CommonLogic, ICustomDraw
+    public class PULSE : CommonLogic, ICustomDraw
     {
-        public ONDLY() : base(LogicFunction.OnDelay, 1) { }
+        public PULSE() : base(LogicFunction.Pulse, 1) { }
 
         [Browsable(false)]
-        public override string FuncSymbol => "_^"; // Задержка срабатывания
+        public override string FuncSymbol => "^-^"; // Импульс
 
         private DateTime time;
+        private double waitTime = 1.0;
 
-        [Category("Настройки"), DisplayName("Задержка"), Description("Время задержки, сек")]
-        public double WaitTime { get; set; } = 1.0;
-
-        private bool state;
-
+        [Category("Настройки"), DisplayName("Время"), Description("Время импульса, сек")]
+        public double WaitTime 
+        { 
+            get => waitTime;
+            set
+            {
+                if (Math.Abs(waitTime - value) < 0.0001) return;
+                if (waitTime < 0.1) waitTime = 0.1;
+                waitTime = value;
+            }
+        }
         public override void Calculate()
         {
             bool input = (bool)InputValues[0];
-            if (!input && !state)
+            if (!input && !Out)
             {
                 time = DateTime.Now + TimeSpan.FromSeconds(WaitTime);
-                state = false;
+                Out = false;
             }
             else
-                state = time > DateTime.Now;
-            Out = !state && input;
+                Out = time > DateTime.Now;
         }
 
         public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush)
         {
             rect.Inflate(-1, -1);
-            
             graphics.FillRectangle(brush, rect);
             var sym = new RectangleF(rect.Location, new SizeF(rect.Width, rect.Height / 2));
-            sym.Inflate(-6, -6);
-            sym.Offset(0, sym.Height);
-            graphics.DrawLine(pen, new PointF(sym.Left, sym.Top + sym.Height / 2), new PointF(sym.Right, sym.Top + sym.Height / 2));
-            graphics.DrawLine(pen, new PointF(sym.Left, sym.Top), new PointF(sym.Left, sym.Top + sym.Height));
+            sym.Inflate(-6, -3);
+            var w = sym.Width / 4;
+            graphics.DrawLines(pen, [
+                new PointF(sym.Left, sym.Bottom), new PointF(sym.Left + w, sym.Bottom), 
+                new PointF(sym.Left + w, sym.Top), new PointF(sym.Right - w, sym.Top), 
+                new PointF(sym.Right - w, sym.Bottom), new PointF(sym.Right, sym.Bottom)]);
 
             // время импульса, текст по-центру, в нижней части рамки элемента
             using var format = new StringFormat();
@@ -50,10 +57,6 @@ namespace Simulator.Model.Generator
             var ms = graphics.MeasureString(text, font);
             var pt = new PointF(rect.X + rect.Width / 2, rect.Y + rect.Height - ms.Height);
             graphics.DrawString(text, font, fontbrush, pt, format);
-
-            using var symfont = new Font(font.FontFamily, font.Size - 3, FontStyle.Italic);
-            var symms = graphics.MeasureString("t1", symfont);
-            graphics.DrawString("t1", symfont, fontbrush, new PointF(sym.Left, sym.Top + sym.Height / 2 - symms.Height * 1.2f), format);
         }
 
         public override void Save(XElement xtem)
@@ -61,7 +64,7 @@ namespace Simulator.Model.Generator
             base.Save(xtem);
             XElement? xtance = xtem.Element("Instance");
             if (Math.Abs(WaitTime - 1.0) < 0.0001) return;
-            if (xtance == null)
+            if (xtance == null )
             {
                 xtance = new XElement("Instance");
                 xtem.Add(xtance);

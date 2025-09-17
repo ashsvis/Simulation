@@ -59,6 +59,19 @@ namespace Simulator
 
                 }
             });
+            items.ForEach(item =>
+            {
+                try
+                {
+                    if (item.Instance is Model.Logic.FE frontEdgeDetector)
+                        frontEdgeDetector.Reset();
+                }
+                catch
+                {
+
+                }
+            });
+
             zoomPad.Invalidate();
             tsbSave.Enabled = Module.Changed;
         }

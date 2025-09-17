@@ -9,6 +9,7 @@
         Xor,
         Rs,
         Sr,
+        Fe,
         Pulse,
         OnDelay,
         OffDelay

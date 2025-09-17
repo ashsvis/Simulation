@@ -142,11 +142,13 @@ namespace Simulator.Model
             rootNode.Nodes.Add(triggerNode);
             triggerNode.Nodes.Add(new TreeNode("RS-триггер") { Tag = typeof(Trigger.RS) });
             triggerNode.Nodes.Add(new TreeNode("SR-триггер") { Tag = typeof(Trigger.SR) });
+            var frontEdgeNode = new TreeNode("Детектор фронта") { Tag = typeof(Logic.FE) };
+            logicaNode.Nodes.Add(frontEdgeNode);
             var generatorNode = new TreeNode("Таймеры");
             rootNode.Nodes.Add(generatorNode);
-            generatorNode.Nodes.Add(new TreeNode("Задержка включения") { Tag = typeof(Generator.ONDLY) });
-            generatorNode.Nodes.Add(new TreeNode("Задержка выключения") { Tag = typeof(Generator.OFFDLY) });
-            generatorNode.Nodes.Add(new TreeNode("Формирователь импульса") { Tag = typeof(Generator.PULSE) });
+            generatorNode.Nodes.Add(new TreeNode("Задержка включения") { Tag = typeof(Timer.ONDLY) });
+            generatorNode.Nodes.Add(new TreeNode("Задержка выключения") { Tag = typeof(Timer.OFFDLY) });
+            generatorNode.Nodes.Add(new TreeNode("Формирователь импульса") { Tag = typeof(Timer.PULSE) });
             var diagramNode = new TreeNode("Диаграмма");
             rootNode.Nodes.Add(diagramNode);
             diagramNode.Nodes.Add(new TreeNode("Начало") { Tag = typeof(Diagram.START) });
