@@ -1,7 +1,7 @@
 ﻿using Simulator.Model;
 using Simulator.View;
 using System.Drawing.Drawing2D;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Linq;
 
 namespace Simulator
 {
@@ -282,6 +282,40 @@ namespace Simulator
             foreach (var link in links.Where(x => !x.Selected))
             {
                 link.Draw(graphics, zoomPad.ForeColor);
+            }
+            // прорисовка узлов на связях
+            foreach (var group in links.GroupBy(x => x.SourceId))
+            {
+                if (group.Count() > 1)
+                {
+                    List<PointF> list = [];
+                    List<RectangleF> rects = [];
+                    foreach (var link in group)
+                    {
+                        list.AddRange(link.Points.Distinct().Skip(1));
+                        for (var i = 1; i < link.Points.Count; i++)
+                        {
+                            var pt1 = link.Points[i - 1];
+                            var pt2 = link.Points[i];
+                            if (pt1.X != pt2.X || pt1.Y != pt2.Y)
+                            {
+                                if (pt1.X != pt2.X || pt1.Y == pt2.Y)
+                                    rects.Add(new RectangleF(Math.Min(pt1.X, pt2.X), pt1.Y - 1f , Math.Abs(pt1.X - pt2.X), 3f));
+                                if (pt1.X == pt2.X || pt1.Y != pt2.Y)
+                                    rects.Add(new RectangleF(pt1.X - 1f, Math.Min(pt1.Y, pt2.Y), 3f, Math.Abs(pt1.Y - pt2.Y)));
+                            }
+                        }
+                    }
+
+                    using var brush = new SolidBrush(Color.Aqua);
+                    foreach (var pointGroup in list.GroupBy(x => x))
+                    {
+                        if (pointGroup.Count() > 1 && rects.Any(r => r.Contains(pointGroup.First())))
+                        graphics.FillEllipse(brush, new RectangleF(
+                            PointF.Subtract(pointGroup.First(), new SizeF(2.5f, 2.5f)), new SizeF(5f, 5f)));
+                    }
+
+                }
             }
 
             // прорисовка элементов

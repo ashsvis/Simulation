@@ -16,6 +16,9 @@ namespace Simulator.Model
 
         private readonly List<PointF> points = [];
 
+        [Browsable(false)]
+        public readonly List<PointF> Points => points;
+
         private readonly bool[] busy = new bool[1];
         private readonly bool[] selected = new bool[1];
 
