@@ -14,6 +14,7 @@
         OnDelay,
         OffDelay,
         Lamp,
+        DigInp,
         DigOut
     }
 }

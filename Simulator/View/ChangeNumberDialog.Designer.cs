@@ -39,7 +39,7 @@
             tbValue.Font = new Font("Consolas", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
             tbValue.Location = new Point(12, 12);
             tbValue.Name = "tbValue";
-            tbValue.Size = new Size(154, 23);
+            tbValue.Size = new Size(241, 23);
             tbValue.TabIndex = 0;
             tbValue.Text = "0";
             tbValue.TextAlign = HorizontalAlignment.Right;
@@ -50,7 +50,7 @@
             button1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             button1.DialogResult = DialogResult.OK;
             button1.Enabled = false;
-            button1.Location = new Point(11, 41);
+            button1.Location = new Point(98, 41);
             button1.Name = "button1";
             button1.Size = new Size(75, 23);
             button1.TabIndex = 1;
@@ -61,7 +61,7 @@
             // 
             button2.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             button2.DialogResult = DialogResult.Cancel;
-            button2.Location = new Point(92, 41);
+            button2.Location = new Point(179, 41);
             button2.Name = "button2";
             button2.Size = new Size(75, 23);
             button2.TabIndex = 1;
@@ -74,7 +74,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = button2;
-            ClientSize = new Size(179, 71);
+            ClientSize = new Size(266, 71);
             Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(tbValue);

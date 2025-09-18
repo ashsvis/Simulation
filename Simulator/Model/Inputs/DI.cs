@@ -2,21 +2,21 @@
 using System.ComponentModel;
 using System.Xml.Linq;
 
-namespace Simulator.Model.Outputs
+namespace Simulator.Model.Inputs
 {
-    public class DO : CommonLogic, ICustomDraw
+    public class DI : CommonLogic, ICustomDraw
     {
-        public DO() : base(LogicFunction.DigOut, 1, 0)
+        public DI() : base(LogicFunction.DigInp, 0, 1)
         {
         }
 
-        [Category("Настройки"), DisplayName("Текст"), Description("Наименование выхода")]
-        public string Description { get; set; } = "Дискретный выход";
+        [Category("Настройки"), DisplayName("Текст"), Description("Наименование входа")]
+        public string Description { get; set; } = "Дискретный вход";
 
         public override void Calculate()
         {
-            bool input = (bool)InputValues[0];
-            Out = input;
+            bool output = (bool)OutputValues[0];
+            Out = output;
         }
 
         public override void CalculateTargets(PointF location, ref SizeF size,
@@ -26,27 +26,28 @@ namespace Simulator.Model.Outputs
             var width = step * 24;
             var height = step * 6;
             size = new SizeF(width, height);
-            // входы
-            var y = step + location.Y;
-            var x = -step + location.X;
             itargets.Clear();
             ipins.Clear();
-            y += step * 2;
-            // значение входа
-            var ms = new SizeF(step * 2, step * 2);
-            itargets.Add(0, new RectangleF(new PointF(x - ms.Width + step, y - ms.Height), ms));
-            ipins.Add(0, new PointF(x, y));
+            // выходы
+            var y = step + location.Y;
+            var x = width + location.X;
             otargets.Clear();
             opins.Clear();
+            y = height / 2 + location.Y;
+            // значение выхода
+            var ms = new SizeF(step * 2, step * 2);
+            otargets.Add(0, new RectangleF(new PointF(x, y - ms.Height), ms));
+            var pt = new PointF(x + step, y);
+            opins.Add(0, pt);
         }
 
         public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush, int index)
         {
             graphics.FillRectangle(brush, rect);
             graphics.DrawRectangles(pen, [rect]);
-            
-            var funcrect = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height / 3);
-            var text = "DO";
+
+            var funcrect = new RectangleF(rect.X + rect.Height * 3, rect.Y, rect.Height, rect.Height / 3);
+            var text = "DI";
             using var format = new StringFormat();
             format.Alignment = StringAlignment.Center;
             format.LineAlignment = StringAlignment.Center;
@@ -56,19 +57,19 @@ namespace Simulator.Model.Outputs
             // индекс элемента в списке
             if (index != 0)
             {
-                var labelrect = new RectangleF(rect.X, rect.Bottom - rect.Height / 3, rect.Height, rect.Height / 3);
+                var labelrect = new RectangleF(rect.X + rect.Height * 3, rect.Bottom - rect.Height / 3, rect.Height, rect.Height / 3);
                 text = $"L{index}";
                 var ms = graphics.MeasureString(text, font);
                 format.Alignment = StringAlignment.Center;
                 graphics.DrawString(text, font, fontbrush, labelrect, format);
             }
 
-            var staterect = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height / 3);
+            var staterect = new RectangleF(rect.X + rect.Height * 3, rect.Y, rect.Height, rect.Height / 3);
             staterect.Offset(0, rect.Height / 3);
             using var statebrush = new SolidBrush(Out ? Color.Lime : Color.Red);
             graphics.DrawString(Out ? "\"1\"" : "\"0\"", font, statebrush, staterect, format);
 
-            var descrect = new RectangleF(rect.X + rect.Height, rect.Y, rect.Height * 3, rect.Height);
+            var descrect = new RectangleF(rect.X, rect.Y, rect.Height * 3, rect.Height);
             graphics.DrawRectangles(pen, [descrect]);
             using var textFont = new Font("Arial Narrow", font.Size);
             graphics.DrawString(Description, textFont, fontbrush, descrect, format);

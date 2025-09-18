@@ -108,6 +108,9 @@ namespace Simulator.Model
             List<TreeNode> collection = [];
             var rootNode = new TreeNode("Библиотека");
             collection.Add(rootNode);
+            var inputNode = new TreeNode("Входные сигналы");
+            rootNode.Nodes.Add(inputNode);
+            inputNode.Nodes.Add(new TreeNode("Дискретный вход") { Tag = typeof(Inputs.DI) });
             var logicaNode = new TreeNode("Логика");
             logicaNode.Nodes.Add(new TreeNode("Инвертор") { Tag = typeof(Logic.NOT) });
             var orNode = new TreeNode("Дизъюнкция (\"ИЛИ\")");

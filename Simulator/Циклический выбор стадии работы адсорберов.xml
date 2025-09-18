@@ -630,6 +630,13 @@
         <Item X="248" Y="376">
           <Id>3d039624-869e-4347-a89f-ce36ca2696a6</Id>
           <Type>Simulator.Model.Logic.OR</Type>
+          <Instance>
+            <Inputs>
+              <Input Index="0">
+                <SourceId>7caff32e-6a7d-48c7-bdee-ee5eb5b6acca</SourceId>
+              </Input>
+            </Inputs>
+          </Instance>
         </Item>
         <Item X="248" Y="464">
           <Id>80cd8ebb-ca3d-4543-84c3-2c3503dab714</Id>
@@ -757,6 +764,13 @@
             </Inputs>
             <Description>Клапан закрыт</Description>
             <Color>Lime</Color>
+          </Instance>
+        </Item>
+        <Item X="16" Y="376">
+          <Id>7caff32e-6a7d-48c7-bdee-ee5eb5b6acca</Id>
+          <Type>Simulator.Model.Inputs.DI</Type>
+          <Instance>
+            <Description>Концевой ОТКРЫТ</Description>
           </Instance>
         </Item>
       </Items>
@@ -1054,6 +1068,22 @@
             <Point X="424" Y="184" />
             <Point X="800" Y="184" />
             <Point X="800" Y="184" />
+          </Points>
+          <Segments>
+            <Segment Kind="None" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="None" />
+          </Segments>
+        </Link>
+        <Link>
+          <Id>698d0a7d-bfb1-4ea4-a342-db6f36aae989</Id>
+          <Source Id="7caff32e-6a7d-48c7-bdee-ee5eb5b6acca" PinIndex="0" />
+          <Destination Id="3d039624-869e-4347-a89f-ce36ca2696a6" PinIndex="0" />
+          <Points>
+            <Point X="216" Y="400" />
+            <Point X="216" Y="400" />
+            <Point X="240" Y="400" />
+            <Point X="240" Y="400" />
           </Points>
           <Segments>
             <Segment Kind="None" />
