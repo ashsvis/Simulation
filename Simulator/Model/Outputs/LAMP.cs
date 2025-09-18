@@ -8,13 +8,13 @@ namespace Simulator.Model.Outputs
         {
         }
 
-        public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush)
+        public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush, int index)
         {
-            //if (false)
-            //{
-            //    using var fill = new SolidBrush(Color.Yellow);
-            //    graphics.FillEllipse(fill, rect);
-            //}
+            if (Out)
+            {
+                using var fill = new SolidBrush(Color.Yellow);
+                graphics.FillEllipse(fill, rect);
+            }
             var rleft = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height);
             graphics.DrawArc(pen, rleft, 90f, 180f);
             var rright = new RectangleF(rect.X + rect.Width - rect.Height, rect.Y, rect.Height, rect.Height);

@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using static System.Windows.Forms.DataFormats;
 
 namespace Simulator.Model.Logic
 {
@@ -30,7 +32,7 @@ namespace Simulator.Model.Logic
                 time = DateTime.Now;
         }
 
-        public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush)
+        public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush, int index)
         {
             graphics.FillRectangle(brush, rect);
             graphics.DrawRectangles(pen, [rect]);
@@ -43,6 +45,15 @@ namespace Simulator.Model.Logic
             graphics.DrawLines(pen, [
                 new PointF(sym.Left, sym.Bottom), new PointF(sym.Left + w, sym.Bottom),
                 new PointF(sym.Left + w, sym.Top), new PointF(sym.Left + w * 2, sym.Top)]);
+            // индекс элемента в списке
+            if (index != 0)
+            {
+                var text = $"L{index}";
+                var ms = graphics.MeasureString(text, font);
+                using var format = new StringFormat();
+                format.Alignment = StringAlignment.Center;
+                graphics.DrawString(text, font, fontbrush, new PointF(rect.X + rect.Width / 2, rect.Y +rect.Height - ms.Height), format);
+            }
         }
     }
 }

@@ -25,5 +25,5 @@ namespace Simulator.Model
 
     }
 
-    public delegate void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush);
+    public delegate void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush, int index);
 }

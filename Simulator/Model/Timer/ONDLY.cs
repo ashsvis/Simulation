@@ -32,7 +32,7 @@ namespace Simulator.Model.Timer
             Out = !state && input;
         }
 
-        public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush)
+        public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush, int index)
         {
             graphics.FillRectangle(brush, rect);
             graphics.DrawRectangles(pen, [rect]);
@@ -56,6 +56,13 @@ namespace Simulator.Model.Timer
             using var symfont = new Font(font.FontFamily, font.Size - 4, FontStyle.Italic);
             var symms = graphics.MeasureString("t1", symfont);
             graphics.DrawString("t1", symfont, fontbrush, new PointF(sym.Left, sym.Top + sym.Height / 3 - symms.Height), format);
+            // индекс элемента в списке
+            if (index != 0)
+            {
+                text = $"L{index}";
+                ms = graphics.MeasureString(text, font);
+                graphics.DrawString(text, font, fontbrush, new PointF(rect.X + rect.Width / 2, rect.Y + rect.Height - ms.Height), format);
+            }
         }
 
         public override void Save(XElement xtem)

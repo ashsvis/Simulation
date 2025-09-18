@@ -97,7 +97,8 @@ namespace Simulator.Model.Logic
         public bool[] InverseInputs => getInverseInputs;
 
         [Category("Выходы"), DisplayName("Выход")]
-        public bool Out
+        [DynamicPropertyFilter(nameof(FuncName), "Not,And,Or,Xor,Rs,Sr,Fe,Pulse,OnDelay,OffDelay")]
+        public virtual bool Out
         {
             get => @out;
             protected set
@@ -188,6 +189,7 @@ namespace Simulator.Model.Logic
                     LogicFunction.Xor => CalcXor(InputValues),
                     LogicFunction.Rs => CalcRsTrigger(result, input, @out),
                     LogicFunction.Sr => CalcSrTrigger(result, input, @out),
+                    LogicFunction.Lamp => input,
                     _ => logicFunction == LogicFunction.Not && !result,
                 };
             }
@@ -387,7 +389,7 @@ namespace Simulator.Model.Logic
             if (named)
                 graphics.DrawString(Name, font, fontbrush, new PointF(location.X + width / 2, location.Y - msn.Height), format);
             graphics.DrawString(FuncSymbol, font, fontbrush, new PointF(location.X + width / 2, location.Y), format);
-            customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush);
+            customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush, index);
             // входы
             var y = step + location.Y;
             var x = -step + location.X;
@@ -459,7 +461,7 @@ namespace Simulator.Model.Logic
                 y += step * 2;
             }
             // индекс элемента в списке
-            if (index != 0)
+            if (customDraw == null && index != 0)
             {
                 var text = $"L{index}";
                 var ms = graphics.MeasureString(text, font);

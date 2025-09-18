@@ -27,7 +27,7 @@ namespace Simulator.Model.Diagram
             opins.Add(0, pt);
         }
 
-        public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush)
+        public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush, int index)
         {
             var rleft = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height);
             graphics.DrawArc(pen, rleft, 90f, 180f);
