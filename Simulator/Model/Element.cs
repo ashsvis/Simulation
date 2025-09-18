@@ -2,7 +2,7 @@
 
 namespace Simulator.Model
 {
-    public class Element
+    public class Element: IChangeIndex
     {
         public const float Step = 8f;//6f;
 

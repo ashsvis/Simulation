@@ -831,14 +831,39 @@ namespace Simulator
                     }
                     else if (output == null)
                     {
+                        item = new ToolStripMenuItem() { Text = "Изменить номер...", Tag = element };
+                        item.Click += (s, e) =>
+                        {
+                            var menuItem = (ToolStripMenuItem?)s;
+                            if (menuItem?.Tag is Element element && element is IChangeIndex changer)
+                            {
+                                var dlg = new ChangeNumberDialog(changer.Index);
+                                if (dlg.ShowDialog() == DialogResult.OK)
+                                {
+                                    if (dlg.EnteredValue > 0)
+                                    {
+                                        var tmp = items[changer.Index - 1];
+                                        items.Remove(tmp);
+                                        items.Insert(dlg.EnteredValue - 1, tmp);
+                                        Module.Changed = true;
+                                        zoomPad.Invalidate();
+                                    }
+                                }
+                            }
+                        };
+                        cmsContextMenu.Items.Add(item);
                         item = new ToolStripMenuItem() { Text = "Удалить элемент", Tag = element };
                         item.Click += (s, e) =>
                         {
                             var menuItem = (ToolStripMenuItem?)s;
                             if (menuItem?.Tag is Element element)
                             {
-                                DeleteOneElement(element);
-                                zoomPad.Invalidate();
+                                if (MessageBox.Show("Чо, реально удалить?", "Удаление элемента",
+                                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                                {
+                                    DeleteOneElement(element);
+                                    zoomPad.Invalidate();
+                                }
                             }
                         };
                         cmsContextMenu.Items.Add(item);

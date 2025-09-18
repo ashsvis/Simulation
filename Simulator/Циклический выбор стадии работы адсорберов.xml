@@ -4,6 +4,15 @@
   <Modules>
     <Module Name="PhaseSelector" Description="Последовательное переключение фаз">
       <Items>
+        <Item X="72" Y="240">
+          <Id>ecb54d76-6d97-4c21-9b7c-eeb87980cc1a</Id>
+          <Type>Simulator.Model.Logic.FE</Type>
+          <Instance>
+            <Inputs>
+              <Input Index="0" Value="true" />
+            </Inputs>
+          </Instance>
+        </Item>
         <Item X="288" Y="208">
           <Id>77bf00ae-4938-4844-b964-ba32d64918a4</Id>
           <Type>Simulator.Model.Logic.AND3</Type>
@@ -151,15 +160,6 @@
               <Input Index="1">
                 <SourceId>b5c57ae9-a0eb-4ee1-8289-557febb877b2</SourceId>
               </Input>
-            </Inputs>
-          </Instance>
-        </Item>
-        <Item X="72" Y="240">
-          <Id>ecb54d76-6d97-4c21-9b7c-eeb87980cc1a</Id>
-          <Type>Simulator.Model.Logic.FE</Type>
-          <Instance>
-            <Inputs>
-              <Input Index="0" Value="true" />
             </Inputs>
           </Instance>
         </Item>
@@ -682,6 +682,18 @@
             </Inputs>
           </Instance>
         </Item>
+        <Item X="808" Y="160">
+          <Id>d7cb0b62-ef20-49cf-98be-511f5addd7de</Id>
+          <Type>Simulator.Model.Outputs.DO</Type>
+          <Instance>
+            <Inputs>
+              <Input Index="0">
+                <SourceId>0bf51bf1-4382-4fa4-b37c-092a9ec018e2</SourceId>
+              </Input>
+            </Inputs>
+            <Description>Управление клапаном</Description>
+          </Instance>
+        </Item>
         <Item X="808" Y="216">
           <Id>871ef549-ea30-4010-9b20-ba575ba427b3</Id>
           <Type>Simulator.Model.Outputs.LAMP</Type>
@@ -721,19 +733,6 @@
             <Color>Lime</Color>
           </Instance>
         </Item>
-        <Item X="808" Y="520">
-          <Id>cbf4cb51-df08-4568-a87c-c2656c409537</Id>
-          <Type>Simulator.Model.Outputs.LAMP</Type>
-          <Instance>
-            <Inputs>
-              <Input Index="0">
-                <SourceId>80cd8ebb-ca3d-4543-84c3-2c3503dab714</SourceId>
-              </Input>
-            </Inputs>
-            <Description>Клапан закрыт</Description>
-            <Color>Lime</Color>
-          </Instance>
-        </Item>
         <Item X="808" Y="464">
           <Id>1f935a96-08c1-48cf-b86d-9551ab096221</Id>
           <Type>Simulator.Model.Outputs.LAMP</Type>
@@ -747,16 +746,17 @@
             <Color>Red</Color>
           </Instance>
         </Item>
-        <Item X="808" Y="160">
-          <Id>d7cb0b62-ef20-49cf-98be-511f5addd7de</Id>
-          <Type>Simulator.Model.Outputs.DO</Type>
+        <Item X="808" Y="520">
+          <Id>cbf4cb51-df08-4568-a87c-c2656c409537</Id>
+          <Type>Simulator.Model.Outputs.LAMP</Type>
           <Instance>
             <Inputs>
               <Input Index="0">
-                <SourceId>0bf51bf1-4382-4fa4-b37c-092a9ec018e2</SourceId>
+                <SourceId>80cd8ebb-ca3d-4543-84c3-2c3503dab714</SourceId>
               </Input>
             </Inputs>
-            <Description>Управление клапаном</Description>
+            <Description>Клапан закрыт</Description>
+            <Color>Lime</Color>
           </Instance>
         </Item>
       </Items>
