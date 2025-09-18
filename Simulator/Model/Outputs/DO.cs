@@ -4,17 +4,14 @@ using System.Xml.Linq;
 
 namespace Simulator.Model.Outputs
 {
-    public class LAMP : CommonLogic, ICustomDraw
+    public class DO : CommonLogic, ICustomDraw
     {
-        public LAMP() : base(LogicFunction.Lamp, 1, 0) 
+        public DO() : base(LogicFunction.DigOut, 1, 0)
         {
         }
 
-        [Category("Настройки"), DisplayName("Цвет"), Description("Цвет свечения лампы")]
-        public Color Color { get; set; } = Color.Red;
-
-        [Category("Настройки"), DisplayName("Текст"), Description("Наименование лампы")]
-        public string Description { get; set; } = "Индикаторная лампа";
+        [Category("Настройки"), DisplayName("Текст"), Description("Наименование выхода")]
+        public string Description { get; set; } = "Дискретный выход";
 
         public override void Calculate()
         {
@@ -45,7 +42,7 @@ namespace Simulator.Model.Outputs
         {
             graphics.FillRectangle(brush, rect);
             graphics.DrawRectangles(pen, [rect]);
-            var text = "Лампа";
+            var text = " DO";
             using var format = new StringFormat();
             format.Alignment = StringAlignment.Center;
             using var lampFont = new Font(font.FontFamily, font.Size - 2f);
@@ -58,22 +55,14 @@ namespace Simulator.Model.Outputs
                 format.Alignment = StringAlignment.Center;
                 graphics.DrawString(text, font, fontbrush, new PointF(rect.X + rect.Height / 2, rect.Y + rect.Height - ms.Height), format);
             }
-            var lamprect = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height);
-            lamprect.Inflate(-rect.Height / 3, -rect.Height / 3);
-            lamprect.Offset(0, -2);
-            if (Out)
-            {
-                using var fill = new SolidBrush(Color);
-                graphics.FillEllipse(fill, lamprect);
-            }
-            else 
-            {
-                using var stroke = new Pen(Color);
-                graphics.DrawEllipse(stroke, lamprect);
-            }
+            format.LineAlignment = StringAlignment.Center;
+            var staterect = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height);
+            staterect.Inflate(0, -rect.Height / 3);
+            staterect.Offset(0, -2);
+            using var statebrush = new SolidBrush(Out ? Color.Lime : Color.Red);
+            graphics.DrawString(Out ? "\"1\"" : "\"0\"", font, statebrush, staterect, format);
             var descrect = new RectangleF(rect.X + rect.Height, rect.Y, rect.Height * 3, rect.Height);
             graphics.DrawRectangles(pen, [descrect]);
-            format.LineAlignment = StringAlignment.Center;
             using var textFont = new Font("Arial Narrow", font.Size);
             graphics.DrawString(Description, textFont, fontbrush, descrect, format);
         }
@@ -88,18 +77,12 @@ namespace Simulator.Model.Outputs
                 xtem.Add(xtance);
             }
             xtance.Add(new XElement("Description", Description));
-            xtance.Add(new XElement("Color", Color.Name));
         }
 
         public override void Load(XElement? xtance)
         {
             base.Load(xtance);
             Description = $"{xtance?.Element("Description")?.Value}";
-            try
-            {
-                Color = Color.FromName($"{xtance?.Element("Color")?.Value}");
-            }
-            catch { }
         }
     }
 }

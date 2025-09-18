@@ -189,7 +189,6 @@ namespace Simulator.Model.Logic
                     LogicFunction.Xor => CalcXor(InputValues),
                     LogicFunction.Rs => CalcRsTrigger(result, input, @out),
                     LogicFunction.Sr => CalcSrTrigger(result, input, @out),
-                    LogicFunction.Lamp => input,
                     _ => logicFunction == LogicFunction.Not && !result,
                 };
             }

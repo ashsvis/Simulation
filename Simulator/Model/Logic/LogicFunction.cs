@@ -13,6 +13,7 @@
         Pulse,
         OnDelay,
         OffDelay,
-        Lamp
+        Lamp,
+        DigOut
     }
 }

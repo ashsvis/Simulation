@@ -152,6 +152,7 @@ namespace Simulator.Model
             var outputNode = new TreeNode("Выходные сигналы");
             rootNode.Nodes.Add(outputNode);
             outputNode.Nodes.Add(new TreeNode("Лампа") { Tag = typeof(Outputs.LAMP) });
+            outputNode.Nodes.Add(new TreeNode("Дискретный выход") { Tag = typeof(Outputs.DO) });
             var diagramNode = new TreeNode("Диаграмма");
             rootNode.Nodes.Add(diagramNode);
             diagramNode.Nodes.Add(new TreeNode("Начало") { Tag = typeof(Diagram.START) });
