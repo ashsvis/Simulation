@@ -459,8 +459,7 @@ namespace Simulator.Model.Logic
                 {
                     var text = $"L{index}";
                     var ms = graphics.MeasureString(text, font);
-                    var offset = height > width ? ms.Height : 0;
-                    graphics.DrawString(text, font, fontbrush, new PointF(location.X + width / 2, location.Y + height - offset), format);
+                    graphics.DrawString(text, font, fontbrush, new PointF(location.X + width / 2, location.Y + height - ms.Height), format);
                 }
             }
         }

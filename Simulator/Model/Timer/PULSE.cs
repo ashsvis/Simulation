@@ -42,7 +42,7 @@ namespace Simulator.Model.Timer
         {
             rect.Inflate(-1, -1);
             graphics.FillRectangle(brush, rect);
-            var sym = new RectangleF(rect.Location, new SizeF(rect.Width, rect.Height / 2));
+            var sym = new RectangleF(rect.Location, new SizeF(rect.Width, rect.Height / 3));
             sym.Inflate(-6, -3);
             var w = sym.Width / 4;
             graphics.DrawLines(pen, [
@@ -55,7 +55,7 @@ namespace Simulator.Model.Timer
             format.Alignment = StringAlignment.Center;
             var text = $"{WaitTime:0.#}s";
             var ms = graphics.MeasureString(text, font);
-            var pt = new PointF(rect.X + rect.Width / 2, rect.Y + rect.Height - ms.Height);
+            var pt = new PointF(rect.X + rect.Width / 2, rect.Y + (rect.Height - ms.Height) / 2);
             graphics.DrawString(text, font, fontbrush, pt, format);
         }
 

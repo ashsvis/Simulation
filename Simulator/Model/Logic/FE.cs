@@ -34,7 +34,7 @@ namespace Simulator.Model.Logic
         {
             rect.Inflate(-1, -1);
             graphics.FillRectangle(brush, rect);
-            var sym = new RectangleF(rect.Location, new SizeF(rect.Width, rect.Height / 2));
+            var sym = new RectangleF(rect.Location, new SizeF(rect.Width, rect.Height / 3));
             sym.Inflate(-6, -3);
             var w = sym.Width / 4;
             sym.Offset(w, 0);

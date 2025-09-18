@@ -37,23 +37,23 @@ namespace Simulator.Model.Timer
             rect.Inflate(-1, -1);
 
             graphics.FillRectangle(brush, rect);
-            var sym = new RectangleF(rect.Location, new SizeF(rect.Width, rect.Height / 2));
+            var sym = new RectangleF(rect.Location, new SizeF(rect.Width, rect.Height / 3));
             sym.Inflate(-6, -6);
             sym.Offset(0, sym.Height);
-            graphics.DrawLine(pen, new PointF(sym.Left, sym.Top + sym.Height / 2), new PointF(sym.Right, sym.Top + sym.Height / 2));
-            graphics.DrawLine(pen, new PointF(sym.Right, sym.Top), new PointF(sym.Right, sym.Top + sym.Height));
+            graphics.DrawLine(pen, new PointF(sym.Left, sym.Top + sym.Height / 3), new PointF(sym.Right, sym.Top + sym.Height / 3));
+            graphics.DrawLine(pen, new PointF(sym.Right, sym.Top), new PointF(sym.Right, sym.Top + sym.Height - 1));
 
             // время импульса, текст по-центру, в нижней части рамки элемента
             using var format = new StringFormat();
             format.Alignment = StringAlignment.Center;
             var text = $"{WaitTime:0.#}s";
             var ms = graphics.MeasureString(text, font);
-            var pt = new PointF(rect.X + rect.Width / 2, rect.Y + rect.Height - ms.Height);
+            var pt = new PointF(rect.X + rect.Width / 2, rect.Y + (rect.Height - ms.Height) / 2);
             graphics.DrawString(text, font, fontbrush, pt, format);
 
-            using var symfont = new Font(font.FontFamily, font.Size - 3, FontStyle.Italic);
+            using var symfont = new Font(font.FontFamily, font.Size - 4, FontStyle.Italic);
             var symms = graphics.MeasureString("t2", symfont);
-            graphics.DrawString("t2", symfont, fontbrush, new PointF(sym.Right, sym.Top + sym.Height / 2 - symms.Height * 1.2f), format);
+            graphics.DrawString("t2", symfont, fontbrush, new PointF(sym.Right, sym.Top + sym.Height / 3 - symms.Height), format);
         }
 
         public override void Save(XElement xtem)
