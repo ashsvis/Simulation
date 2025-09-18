@@ -1,4 +1,6 @@
 ﻿using Simulator.Model.Logic;
+using System.ComponentModel;
+using System.Xml.Linq;
 
 namespace Simulator.Model.Outputs
 {
@@ -8,27 +10,95 @@ namespace Simulator.Model.Outputs
         {
         }
 
+        [Category("Настройки"), DisplayName("Цвет"), Description("Цвет свечения лампы")]
+        public Color Color { get; set; } = Color.Red;
+
+        [Category("Настройки"), DisplayName("Наименование"), Description("Наименование лампы")]
+        public string Description { get; set; } = string.Empty;
+
+        public override void Calculate()
+        {
+            bool input = (bool)InputValues[0];
+            Out = input;
+        }
+
+        public override void CalculateTargets(PointF location, ref SizeF size,
+            Dictionary<int, RectangleF> itargets, Dictionary<int, PointF> ipins, Dictionary<int, RectangleF> otargets, Dictionary<int, PointF> opins)
+        {
+            var step = Element.Step;
+            var width = step * 24;
+            var height = step * 6;
+            size = new SizeF(width, height);
+            // входы
+            var y = step + location.Y;
+            var x = -step + location.X;
+            itargets.Clear();
+            ipins.Clear();
+            y += step * 2;
+            // значение входа
+            var ms = new SizeF(step * 2, step * 2);
+            itargets.Add(0, new RectangleF(new PointF(x - ms.Width + step, y - ms.Height), ms));
+            ipins.Add(0, new PointF(x, y));
+        }
+
         public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush, int index)
         {
+            graphics.FillRectangle(brush, rect);
+            graphics.DrawRectangles(pen, [rect]);
+            var text = "Лампа";
+            using var format = new StringFormat();
+            format.Alignment = StringAlignment.Center;
+            using var textFont = new Font(font.FontFamily, font.Size - 2f);
+            graphics.DrawString(text, textFont, fontbrush, new PointF(rect.X + rect.Height / 2, rect.Y), format);
+            // индекс элемента в списке
+            if (index != 0)
+            {
+                text = $"L{index}";
+                var ms = graphics.MeasureString(text, font);
+                format.Alignment = StringAlignment.Center;
+                graphics.DrawString(text, font, fontbrush, new PointF(rect.X + rect.Height / 2, rect.Y + rect.Height - ms.Height), format);
+            }
+            var lamprect = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height);
+            lamprect.Inflate(-rect.Height / 3, -rect.Height / 3);
+            lamprect.Offset(0, -2);
             if (Out)
             {
-                using var fill = new SolidBrush(Color.Yellow);
-                graphics.FillEllipse(fill, rect);
+                using var fill = new SolidBrush(Color);
+                graphics.FillEllipse(fill, lamprect);
             }
-            var rleft = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height);
-            graphics.DrawArc(pen, rleft, 90f, 180f);
-            var rright = new RectangleF(rect.X + rect.Width - rect.Height, rect.Y, rect.Height, rect.Height);
-            graphics.DrawArc(pen, rright, -90f, 180f);
+            else 
+            {
+                using var stroke = new Pen(Color);
+                graphics.DrawEllipse(stroke, lamprect);
+            }
+            var descrect = new RectangleF(rect.X + rect.Height, rect.Y, rect.Height * 3, rect.Height);
+            graphics.DrawRectangles(pen, [descrect]);
+            format.LineAlignment = StringAlignment.Center;
+            graphics.DrawString(Description, font, fontbrush, descrect, format);
+        }
 
+        public override void Save(XElement xtem)
+        {
+            base.Save(xtem);
+            XElement? xtance = xtem.Element("Instance");
+            if (xtance == null)
+            {
+                xtance = new XElement("Instance");
+                xtem.Add(xtance);
+            }
+            xtance.Add(new XElement("Description", Description));
+            xtance.Add(new XElement("Color", Color.Name));
+        }
 
-            //var cen = new RectangleF(rect.X + rect.Height / 2f, rect.Y, rect.Width - rect.Height, rect.Height);
-            //graphics.DrawLines(pen, [cen.Location, new PointF(cen.Right, cen.Top)]);
-            //graphics.DrawLines(pen, [new PointF(cen.Left, cen.Bottom), new PointF(cen.Right, cen.Bottom)]);
-            //using var sf = new StringFormat();
-            //sf.Alignment = StringAlignment.Center;
-            //sf.LineAlignment = StringAlignment.Center;
-
-            //graphics.DrawString("Начало", font, fontbrush, rect, sf);
+        public override void Load(XElement? xtance)
+        {
+            base.Load(xtance);
+            Description = $"{xtance?.Element("Description")?.Value}";
+            try
+            {
+                Color = Color.FromName($"{xtance?.Element("Color")?.Value}");
+            }
+            catch { }
         }
     }
 }

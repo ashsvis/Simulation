@@ -298,26 +298,30 @@ namespace Simulator.Model.Logic
             }
             if (customInputs)
                 xtance.Add(xinputs);
-
-            XElement xoutputs = new("Outputs");
-            bool customOutputs = false;
-            for (var i = 0; i < InverseOutputs.Length; i++)
+            if (OutputNames.Length > 0)
             {
-                if (string.IsNullOrWhiteSpace(OutputNames[i]) &&
-                    !InverseOutputs[i]) continue;
-                customOutputs = true;
-                XElement xoutput = new("Output");
-                xoutputs.Add(xoutput);
-                xoutput.Add(new XAttribute("Index", i));
-                if (!string.IsNullOrWhiteSpace(OutputNames[i]))
-                    xoutput.Add(new XAttribute("Name", OutputNames[i]));
-                if (InverseOutputs[i])
-                    xoutput.Add(new XAttribute("Invert", InverseOutputs[i]));
+                XElement xoutputs = new("Outputs");
+                bool customOutputs = false;
+                for (var i = 0; i < InverseOutputs.Length; i++)
+                {
+                    if (string.IsNullOrWhiteSpace(OutputNames[i]) &&
+                        !InverseOutputs[i]) continue;
+                    customOutputs = true;
+                    XElement xoutput = new("Output");
+                    xoutputs.Add(xoutput);
+                    xoutput.Add(new XAttribute("Index", i));
+                    if (!string.IsNullOrWhiteSpace(OutputNames[i]))
+                        xoutput.Add(new XAttribute("Name", OutputNames[i]));
+                    if (InverseOutputs[i])
+                        xoutput.Add(new XAttribute("Invert", InverseOutputs[i]));
+                }
+                if (customOutputs)
+                {
+                    xtance.Add(xoutputs);
+                    xtem.Add(xtance);
+                }
             }
-            if (customOutputs)
-                xtance.Add(xoutputs);
-
-            if (customInputs || customOutputs)
+            if (customInputs)
                 xtem.Add(xtance);
         }
 
@@ -469,7 +473,7 @@ namespace Simulator.Model.Logic
             }
         }
 
-        public void CalculateTargets(PointF location, ref SizeF size,
+        public virtual void CalculateTargets(PointF location, ref SizeF size,
              Dictionary<int, RectangleF> itargets, Dictionary<int, PointF> ipins,
              Dictionary<int, RectangleF> otargets, Dictionary<int, PointF> opins)
         {
