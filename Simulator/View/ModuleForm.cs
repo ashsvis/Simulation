@@ -10,7 +10,7 @@ namespace Simulator
 
         private readonly List<Element> items;
         private readonly List<Link> links;
-        //private Cell[,] grid = new Cell[0, 0];
+        private Cell[,] grid = new Cell[0, 0];
 
         private Point firstMouseDown;
         private Point mousePosition;
@@ -25,7 +25,7 @@ namespace Simulator
             panelForm.SimulationTick += Module_SimulationTick;
         }
 
-        private void Item_ResultChanged(object sender, Model.ResultCalculateEventArgs args)
+        private void Item_ResultChanged(object sender, ResultCalculateEventArgs args)
         {
             zoomPad.Invalidate();
         }
@@ -115,6 +115,8 @@ namespace Simulator
                     item.Location = SnapToGrid(PrepareMousePosition(zoomPad.PointToClient(new Point(e.X, e.Y))));
                     if (item.Instance is IFunction instance)
                         instance.ResultChanged += Item_ResultChanged;
+                    if (item.Instance is ILinkSupport link)
+                        link.SetItemId(item.Id);
                     items.ForEach(item => item.Selected = false);
                     links.ForEach(item => item.Select(false));
                     item.Selected = true;
@@ -319,8 +321,8 @@ namespace Simulator
                     foreach ((var pt, var id) in results)
                     {
                         var link = links.First(x => x.Id == id);
-                        using var brush = new SolidBrush(link.Selected ? Color.Magenta : zoomPad.ForeColor);
-                        graphics.FillEllipse(brush, new RectangleF(
+                        using var br = new SolidBrush(link.Selected ? Color.Magenta : zoomPad.ForeColor);
+                        graphics.FillEllipse(br, new RectangleF(
                             PointF.Subtract(pt, new SizeF(2.5f, 2.5f)), new SizeF(5f, 5f)));
                     }
                 }
@@ -519,7 +521,7 @@ namespace Simulator
         private Link? BuildLink(Guid sourceId, int sourcePin, PointF sourcePinPoint, Guid destinationId, int destinationPin, PointF destinationPinPoint)
         {
             // подготовка сетки с тенями от существующих элементов и связей
-            var grid = BuildGrid();
+            grid = BuildGrid();
             var link = new Link(Guid.NewGuid(), sourceId, sourcePin, destinationId, destinationPin, sourcePinPoint, destinationPinPoint);
             // помещение затравки волны в сетку
             var tpt = link.SourcePoint;
@@ -540,6 +542,7 @@ namespace Simulator
                 }
             }
             if (tx < 0 || ty < 0) return null;
+
             // генерация волны
             var changed = true;
             var wave = 1;
@@ -635,6 +638,12 @@ namespace Simulator
                 }
             }
             // очистка от предыдущей волны
+            ClearGridFromWaves();
+            return link;
+        }
+
+        private void ClearGridFromWaves()
+        {
             for (var iy = 0; iy < grid.GetLength(0); iy++)
             {
                 for (var ix = 0; ix < grid.GetLength(1); ix++)
@@ -643,7 +652,6 @@ namespace Simulator
                         grid[iy, ix].Kind = 0;
                 }
             }
-            return link;
         }
 
         private Cell[,] BuildGrid()
@@ -707,7 +715,7 @@ namespace Simulator
                 for (int x = 0; x < lengthX; x++)
                 {
                     if (items.Select(item => new RectangleF(
-                        item.Bounds.X - Element.Step, item.Bounds.Y - Element.Step, item.Bounds.Width + Element.Step * 3, item.Bounds.Height + Element.Step * 3))
+                        item.Bounds.X, item.Bounds.Y, item.Bounds.Width + Element.Step, item.Bounds.Height + Element.Step))
                         .Any(rect => rect.Contains(grid[y, x].Point)))
                     {
                         if (!mustBeFree.Contains(grid[y, x].Point))
@@ -738,7 +746,15 @@ namespace Simulator
             element = null;
             pin = null;
             output = null;
-            if (TryGetModule(e.Location, out element) &&
+            if (TryGetLinkSegment(e.Location, out link, out segmentIndex, out segmentVertical) &&
+                link != null && segmentIndex != null && segmentVertical != null)
+            {
+                ((Link)link).Select(true);
+                links.Where(item => item.Id != ((Link)link).Id).ToList().ForEach(item => item.Select(false));
+                items.ForEach(item => item.Selected = false);
+                ElementSelected?.Invoke(link, EventArgs.Empty);
+            }
+            else if (TryGetModule(e.Location, out element) &&
                 element != null && element.Instance != null ||
                 TryGetPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
                 element != null && element.Instance != null && output == true)
@@ -754,17 +770,10 @@ namespace Simulator
                 }
                 ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
             }
-            else if (TryGetLinkSegment(e.Location, out link, out segmentIndex, out segmentVertical) &&
-                link != null && segmentIndex != null && segmentVertical != null)
-            {
-                ((Link)link).Select(true);
-                links.Where(item => item.Id != ((Link)link).Id).ToList().ForEach(item => item.Select(false));
-                items.ForEach(item => item.Selected = false);
-                ElementSelected?.Invoke(link, EventArgs.Empty);
-            }
             else
             {
-                linkFirstPoint = null;
+                if (!(TryGetFreeInputPin(e.Location, out Element? element, out _, out _, out _) && element?.Instance is IManualChange _))
+                    linkFirstPoint = null;
                 items.ForEach(item => item.Selected = false);
                 links.ForEach(item => item.Select(false));
                 ElementSelected?.Invoke(null, EventArgs.Empty);
@@ -785,7 +794,7 @@ namespace Simulator
                             if (menuItem?.Tag is Element element && element.Instance is ILinkSupport fn)
                             {
                                 fn.ResetValueLinkToInp((int)pin);
-                                links.RemoveAll(link => link.SourceId == element.Id || link.DestinationId == element.Id);
+                                links.RemoveAll(link => link.DestinationId == element.Id && link.DestinationPinIndex == (int)pin);
                                 Module.Changed = true;
                             }
                         };
@@ -810,7 +819,7 @@ namespace Simulator
                                         if (source.Item1 == element.Id)
                                         {
                                             instance.ResetValueLinkToInp(n);
-                                            links.RemoveAll(link => link.SourceId == element.Id || link.DestinationId == element.Id);
+                                            links.RemoveAll(link => link.SourceId == element.Id && link.SourcePinIndex == n);
                                         }
                                         n++;
                                     }
@@ -868,15 +877,12 @@ namespace Simulator
 
         private void zoomPad_MouseMove(object sender, MouseEventArgs e)
         {
-            if (TryGetModule(e.Location, out _))
-                Cursor = Cursors.SizeAll;
-            else if (TryGetFreeInputPin(e.Location, out Element? element, out _, out _, out _) &&
-                element?.Instance is IManualChange _)
-                Cursor = Cursors.Hand;
-            else if (TryGetLinkSegment(e.Location, out _, out _, out bool? vertical))
-            {
+            if (TryGetLinkSegment(e.Location, out _, out _, out bool? vertical))
                 Cursor = vertical == true ? Cursors.VSplit : Cursors.HSplit;
-            }
+            else if (TryGetModule(e.Location, out _))
+                Cursor = Cursors.SizeAll;
+            else if (TryGetFreeInputPin(e.Location, out Element? element, out _, out _, out _) && element?.Instance is IManualChange _)
+                Cursor = Cursors.Hand;
             else
                 Cursor = Cursors.Default;
             if (e.Button == MouseButtons.Left)
@@ -936,7 +942,7 @@ namespace Simulator
                     if (value is bool bval)
                         tar.SetValueToInp((int)pin, !bval);
                 }
-                else if (TryGetPin(e.Location, out Element? elementSecond, out int? pinSecond, out PointF? linkSecondPoint, out bool? outputSecond) &&
+                if (TryGetPin(e.Location, out Element? elementSecond, out int? pinSecond, out PointF? linkSecondPoint, out bool? outputSecond) &&
                     elementSecond?.Instance is ILinkSupport target && elementFirst?.Instance is ILinkSupport source)
                 {
                     if (elementFirst != elementSecond && outputFirst != outputSecond &&
@@ -955,6 +961,7 @@ namespace Simulator
                                     elementFirst.Selected = false;
                                     ((Link)link).Select(true);
                                     links.Add((Link)link);
+                                    ((Link)link).UpdateSourcePoint(elementFirst.OutputPins[((Link)link).SourcePinIndex]);
                                     Module.Changed = true;
                                 }
                             }
@@ -971,6 +978,7 @@ namespace Simulator
                                     elementFirst.Selected = false;
                                     ((Link)link).Select(true);
                                     links.Add((Link)link);
+                                    ((Link)link).UpdateDestinationPoint(elementFirst.InputPins[((Link)link).DestinationPinIndex]);
                                     Module.Changed = true;
                                 }
                             }
@@ -1026,7 +1034,7 @@ namespace Simulator
                         MessageBox.Show("Удалить выделенные связи?", "Удаление связей",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     {
-                        foreach (var link in links)
+                        foreach (var link in links.Where(x => x.Selected))
                         {
                             var item = items.FirstOrDefault(x => x.Id == link.DestinationId);
                             if (item?.Instance is ILinkSupport func)

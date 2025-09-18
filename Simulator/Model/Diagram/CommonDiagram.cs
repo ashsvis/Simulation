@@ -10,6 +10,16 @@ namespace Simulator.Model.Diagram
         private readonly GetLinkValueMethod?[] getLinkInputs;
         private readonly (Guid, int)[] getLinkSources;
 
+        private Guid itemId;
+
+        public void SetItemId(Guid id)
+        {
+            itemId = id;
+        }
+
+        [Category(" Общие"), DisplayName("Идентификатор")]
+        public Guid ItemId => itemId;
+
         public CommonDiagram() : this(DiagramFunction.None)
         {
         }

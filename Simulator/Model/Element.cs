@@ -54,6 +54,8 @@ namespace Simulator.Model
             Location = new Point(x, y);
             if (Instance is ILoadSave inst) 
                 inst.Load(item.Element("Instance"));
+            if (Instance is ILinkSupport link)
+                link.SetItemId(Id);
         }
 
         public SizeF Size { get => size; set => size = value; }
@@ -114,7 +116,7 @@ namespace Simulator.Model
 
 #if DEBUG
 
-            //// области выбора
+            // области выбора
             //using Pen tarpen = new(Color.FromArgb(80, Color.Magenta), 0);
             //foreach (var key in itargets.Keys)
             //{

@@ -14,6 +14,13 @@ namespace Simulator.Model.Logic
         private readonly string[] getOutputNames;
         private readonly LogicFunction logicFunction;
 
+        private Guid itemId;
+
+        public void SetItemId(Guid id)
+        {
+            itemId = id;
+        }
+
         public CommonLogic() : this(LogicFunction.None, 1)
         { 
         }
@@ -55,6 +62,9 @@ namespace Simulator.Model.Logic
 
         [Category(" Общие"), DisplayName("Функция")]
         public LogicFunction FuncName => logicFunction;
+
+        [Category(" Общие"), DisplayName("Идентификатор")]
+        public Guid ItemId => itemId;
 
         [Browsable(false)]
         public virtual string FuncSymbol 

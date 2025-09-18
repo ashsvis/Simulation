@@ -171,12 +171,23 @@ namespace Simulator.Model
             }
         }
 
+
+        [Category(" Общие"), DisplayName("Идентификатор")]
         public Guid Id { get; }
+
+        [Category("Источник"), DisplayName("Идентификатор")]
         public Guid SourceId { get; }
+
+        [Category("Источник"), DisplayName("Выхода индекс")]
         public int SourcePinIndex { get; }
+
+        [Category("Назначение"), DisplayName("Идентификатор")]
         public Guid DestinationId { get; }
+
+        [Category("Назначение"), DisplayName("Входы индекс")]
         public int DestinationPinIndex { get; }
 
+        [Browsable(false)]
         public bool Selected => selected[0];
 
         public void Select(bool value)

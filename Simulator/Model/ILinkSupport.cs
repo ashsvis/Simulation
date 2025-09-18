@@ -11,6 +11,9 @@
         void CalculateTargets(PointF location, ref SizeF size,
              Dictionary<int, RectangleF> itargets, Dictionary<int, PointF> ipins,
              Dictionary<int, RectangleF> otargets, Dictionary<int, PointF> opins);
+
+        Guid ItemId { get; }
+        void SetItemId(Guid itemId);
     }
 
     public delegate object GetLinkValueMethod();
