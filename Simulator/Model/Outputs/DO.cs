@@ -42,25 +42,30 @@ namespace Simulator.Model.Outputs
         {
             graphics.FillRectangle(brush, rect);
             graphics.DrawRectangles(pen, [rect]);
+            
+            var funcrect = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height / 3);
             var text = " DO";
             using var format = new StringFormat();
             format.Alignment = StringAlignment.Center;
-            using var lampFont = new Font(font.FontFamily, font.Size - 2f);
-            graphics.DrawString(text, lampFont, fontbrush, new PointF(rect.X + rect.Height / 2, rect.Y), format);
+            format.LineAlignment = StringAlignment.Center;
+            using var lampFont = new Font(font.FontFamily, font.Size);
+            graphics.DrawString(text, lampFont, fontbrush, funcrect, format);
+
             // индекс элемента в списке
             if (index != 0)
             {
+                var labelrect = new RectangleF(rect.X, rect.Bottom - rect.Height / 3, rect.Height, rect.Height / 3);
                 text = $"L{index}";
                 var ms = graphics.MeasureString(text, font);
                 format.Alignment = StringAlignment.Center;
-                graphics.DrawString(text, font, fontbrush, new PointF(rect.X + rect.Height / 2, rect.Y + rect.Height - ms.Height), format);
+                graphics.DrawString(text, font, fontbrush, labelrect, format);
             }
-            format.LineAlignment = StringAlignment.Center;
-            var staterect = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height);
-            staterect.Inflate(0, -rect.Height / 3);
-            staterect.Offset(0, -2);
+
+            var staterect = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height / 3);
+            staterect.Offset(0, rect.Height / 3);
             using var statebrush = new SolidBrush(Out ? Color.Lime : Color.Red);
             graphics.DrawString(Out ? "\"1\"" : "\"0\"", font, statebrush, staterect, format);
+
             var descrect = new RectangleF(rect.X + rect.Height, rect.Y, rect.Height * 3, rect.Height);
             graphics.DrawRectangles(pen, [descrect]);
             using var textFont = new Font("Arial Narrow", font.Size);

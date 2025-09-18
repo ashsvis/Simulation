@@ -548,11 +548,6 @@
         <Item X="248" Y="216">
           <Id>660fbb53-9532-41f7-ad72-eb9f49e6b822</Id>
           <Type>Simulator.Model.Logic.FE</Type>
-          <Instance>
-            <Inputs>
-              <Input Index="0" Value="true" />
-            </Inputs>
-          </Instance>
         </Item>
         <Item X="368" Y="144">
           <Id>0bf51bf1-4382-4fa4-b37c-092a9ec018e2</Id>
@@ -757,7 +752,7 @@
           <Type>Simulator.Model.Outputs.DO</Type>
           <Instance>
             <Inputs>
-              <Input Index="0" Value="true">
+              <Input Index="0">
                 <SourceId>0bf51bf1-4382-4fa4-b37c-092a9ec018e2</SourceId>
               </Input>
             </Inputs>
@@ -789,8 +784,8 @@
           <Points>
             <Point X="304" Y="416" />
             <Point X="304" Y="416" />
-            <Point X="664" Y="416" />
-            <Point X="664" Y="472" />
+            <Point X="656" Y="416" />
+            <Point X="656" Y="472" />
             <Point X="680" Y="472" />
             <Point X="680" Y="472" />
           </Points>
@@ -953,8 +948,8 @@
           <Points>
             <Point X="304" Y="416" />
             <Point X="304" Y="416" />
-            <Point X="664" Y="416" />
-            <Point X="664" Y="256" />
+            <Point X="656" Y="416" />
+            <Point X="656" Y="256" />
             <Point X="680" Y="256" />
             <Point X="680" Y="256" />
           </Points>
@@ -1021,8 +1016,8 @@
           <Points>
             <Point X="304" Y="504" />
             <Point X="304" Y="504" />
-            <Point X="360" Y="504" />
-            <Point X="360" Y="544" />
+            <Point X="632" Y="504" />
+            <Point X="632" Y="544" />
             <Point X="800" Y="544" />
             <Point X="800" Y="544" />
           </Points>
