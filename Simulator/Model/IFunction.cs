@@ -11,8 +11,6 @@ namespace Simulator.Model
         bool[] InverseOutputs { get; }
         string[] InputNames { get; }
         string[] OutputNames { get; }
-        object[] InputValues { get; }
-        object[] OutputValues { get; }
         bool VisibleValues { get; set; }
 
         event ResultCalculateEventHandler? ResultChanged;

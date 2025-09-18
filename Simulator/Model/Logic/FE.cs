@@ -32,6 +32,8 @@ namespace Simulator.Model.Logic
 
         public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush)
         {
+            graphics.FillRectangle(brush, rect);
+            graphics.DrawRectangles(pen, [rect]);
             rect.Inflate(-1, -1);
             graphics.FillRectangle(brush, rect);
             var sym = new RectangleF(rect.Location, new SizeF(rect.Width, rect.Height / 3));

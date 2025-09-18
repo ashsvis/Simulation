@@ -302,9 +302,9 @@ namespace Simulator
                             if (pt1.X != pt2.X || pt1.Y != pt2.Y)
                             {
                                 if (pt1.X != pt2.X || pt1.Y == pt2.Y)
-                                    rects.Add((new RectangleF(Math.Min(pt1.X, pt2.X), pt1.Y - 1f , Math.Abs(pt1.X - pt2.X), 3f), link.Id));
+                                    rects.Add((new RectangleF(Math.Min(pt1.X, pt2.X) + 3f, pt1.Y - 1f , Math.Abs(pt1.X - pt2.X) - 6f, 3f), link.Id));
                                 if (pt1.X == pt2.X || pt1.Y != pt2.Y)
-                                    rects.Add((new RectangleF(pt1.X - 1f, Math.Min(pt1.Y, pt2.Y), 3f, Math.Abs(pt1.Y - pt2.Y)), link.Id));
+                                    rects.Add((new RectangleF(pt1.X - 1f, Math.Min(pt1.Y, pt2.Y) + 3f, 3f, Math.Abs(pt1.Y - pt2.Y) - 6f), link.Id));
                             }
                         }
                     }

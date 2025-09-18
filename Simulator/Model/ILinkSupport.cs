@@ -5,6 +5,8 @@
         bool[] LinkedInputs { get; }
         object[] LinkedOutputs { get; }
         (Guid, int)[] InputLinkSources { get; }
+        object[] InputValues { get; }
+        object[] OutputValues { get; }
         GetLinkValueMethod? GetResultLink(int outputIndex);
         void SetValueLinkToInp(int inputIndex, GetLinkValueMethod? getMethod, Guid sourceId, int outputPinIndex);
         void ResetValueLinkToInp(int inputIndex);

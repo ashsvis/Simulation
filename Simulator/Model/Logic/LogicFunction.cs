@@ -12,6 +12,7 @@
         Fe,
         Pulse,
         OnDelay,
-        OffDelay
+        OffDelay,
+        Lamp
     }
 }

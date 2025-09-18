@@ -69,6 +69,10 @@ namespace Simulator.Model.Diagram
         [Browsable(false)]
         public object Out { get; set; }
 
+        public object[] InputValues => [];
+
+        public object[] OutputValues => [];
+
         public GetLinkValueMethod? GetResultLink(int outputIndex)
         {
             return () => Out;

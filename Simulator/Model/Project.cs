@@ -149,6 +149,9 @@ namespace Simulator.Model
             generatorNode.Nodes.Add(new TreeNode("Задержка включения") { Tag = typeof(Timer.ONDLY) });
             generatorNode.Nodes.Add(new TreeNode("Задержка выключения") { Tag = typeof(Timer.OFFDLY) });
             generatorNode.Nodes.Add(new TreeNode("Формирователь импульса") { Tag = typeof(Timer.PULSE) });
+            var outputNode = new TreeNode("Выходные сигналы");
+            rootNode.Nodes.Add(outputNode);
+            outputNode.Nodes.Add(new TreeNode("Лампа") { Tag = typeof(Outputs.LAMP) });
             var diagramNode = new TreeNode("Диаграмма");
             rootNode.Nodes.Add(diagramNode);
             diagramNode.Nodes.Add(new TreeNode("Начало") { Tag = typeof(Diagram.START) });
