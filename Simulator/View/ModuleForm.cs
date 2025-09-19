@@ -1194,6 +1194,22 @@ namespace Simulator
                         zoomPad.Invalidate();
                     }
                     break;
+                case Keys.C:
+                    if (e.Control)
+                    {
+                        foreach (var item in items.Where(x => x.Selected))
+                        {
+                            if (item.Instance is ICopyPaste copy)
+                            {
+                                copy.Copy();
+                            }
+                        }
+
+                        //items.ForEach(x => x.Selected = true);
+                        //links.ForEach(x => x.Select(true));
+                        zoomPad.Invalidate();
+                    }
+                    break;
             }
         }
 
