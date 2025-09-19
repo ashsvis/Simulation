@@ -179,13 +179,13 @@ namespace Simulator.Model
         [Category("Источник"), DisplayName("Идентификатор")]
         public Guid SourceId { get; }
 
-        [Category("Источник"), DisplayName("Выхода индекс")]
+        [Category("Источник"), DisplayName("Выход"), Description("Индекс выхода источника")]
         public int SourcePinIndex { get; }
 
-        [Category("Назначение"), DisplayName("Идентификатор")]
+        [Category("Приёмник"), DisplayName("Идентификатор")]
         public Guid DestinationId { get; }
 
-        [Category("Назначение"), DisplayName("Входы индекс")]
+        [Category("Приёмник"), DisplayName("Вход"), Description("Индекс входа приёмника")]
         public int DestinationPinIndex { get; }
 
         [Browsable(false)]

@@ -1,4 +1,5 @@
-﻿using Simulator.Model;
+﻿using Microsoft.VisualBasic.Devices;
+using Simulator.Model;
 using Simulator.View;
 using System.Drawing.Drawing2D;
 
@@ -771,15 +772,21 @@ namespace Simulator
                 TryGetPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
                 element != null && element.Instance != null && output == true)
             {
-                element.Selected = output == null;
-                items.Where(item => item != element).ToList().ForEach(item => item.Selected = false);
-                links.ForEach(item => item.Select(false));
-                // выделение выходных связей элемента
-                foreach (var item in items.Where(x => x.Selected))
+                if (!element.Selected && (ModifierKeys & Keys.Control) != Keys.Control)
                 {
-                    foreach (var link in links.Where(x => x.SourceId == item.Id))
-                        link.Select(true);
+                    items.Where(item => item != element).ToList().ForEach(item => item.Selected = false);
+                    links.ForEach(item => item.Select(false));
+                    // выделение выходных связей элемента
+                    foreach (var item in items.Where(x => x.Selected))
+                    {
+                        foreach (var link in links.Where(x => x.SourceId == item.Id))
+                            link.Select(true);
+                    }
                 }
+                if (element.Selected && (ModifierKeys & Keys.Control) == Keys.Control)
+                    element.Selected = false;
+                else
+                    element.Selected = output == null;
                 ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
             }
             else
@@ -1085,6 +1092,14 @@ namespace Simulator
                                 func.ResetValueLinkToInp(link.DestinationPinIndex);
                         }
                         links.RemoveAll(link => link.Selected);
+                        zoomPad.Invalidate();
+                    }
+                    break;
+                case Keys.A:
+                    if (e.Control)
+                    {
+                        items.ForEach(x => x.Selected = true);
+                        links.ForEach(x => x.Select(true));
                         zoomPad.Invalidate();
                     }
                     break;
