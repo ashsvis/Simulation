@@ -541,13 +541,43 @@
     </Module>
     <Module Name="ValveControl" Description="Управление клапаном">
       <Items>
+        <Item X="8" Y="144">
+          <Id>3629394c-3e68-426f-89c0-16a557352a1e</Id>
+          <Type>Simulator.Model.Inputs.DI</Type>
+          <Instance>
+            <Order>0</Order>
+            <Description>Команда ОТКРЫТЬ</Description>
+          </Instance>
+        </Item>
         <Item X="248" Y="144">
           <Id>1c83e13c-d923-4570-b5e5-5e56eef83260</Id>
           <Type>Simulator.Model.Logic.FE</Type>
+          <Instance>
+            <Inputs>
+              <Input Index="0">
+                <SourceId>3629394c-3e68-426f-89c0-16a557352a1e</SourceId>
+              </Input>
+            </Inputs>
+          </Instance>
+        </Item>
+        <Item X="8" Y="216">
+          <Id>72148cfa-e251-4ebc-8ec8-d87cbf5a6675</Id>
+          <Type>Simulator.Model.Inputs.DI</Type>
+          <Instance>
+            <Order>1</Order>
+            <Description>Команда ЗАКРЫТЬ</Description>
+          </Instance>
         </Item>
         <Item X="248" Y="216">
           <Id>660fbb53-9532-41f7-ad72-eb9f49e6b822</Id>
           <Type>Simulator.Model.Logic.FE</Type>
+          <Instance>
+            <Inputs>
+              <Input Index="0">
+                <SourceId>72148cfa-e251-4ebc-8ec8-d87cbf5a6675</SourceId>
+              </Input>
+            </Inputs>
+          </Instance>
         </Item>
         <Item X="368" Y="144">
           <Id>0bf51bf1-4382-4fa4-b37c-092a9ec018e2</Id>
@@ -627,24 +657,12 @@
             <WaitTime>5</WaitTime>
           </Instance>
         </Item>
-        <Item X="248" Y="376">
-          <Id>3d039624-869e-4347-a89f-ce36ca2696a6</Id>
-          <Type>Simulator.Model.Logic.OR</Type>
+        <Item X="8" Y="392">
+          <Id>7caff32e-6a7d-48c7-bdee-ee5eb5b6acca</Id>
+          <Type>Simulator.Model.Inputs.DI</Type>
           <Instance>
-            <Inputs>
-              <Input Index="0">
-                <SourceId>7caff32e-6a7d-48c7-bdee-ee5eb5b6acca</SourceId>
-              </Input>
-            </Inputs>
-          </Instance>
-        </Item>
-        <Item X="248" Y="464">
-          <Id>80cd8ebb-ca3d-4543-84c3-2c3503dab714</Id>
-          <Type>Simulator.Model.Logic.OR</Type>
-          <Instance>
-            <Inputs>
-              <Input Index="0" Value="true" />
-            </Inputs>
+            <Order>2</Order>
+            <Description>Концевой ОТКРЫТ</Description>
           </Instance>
         </Item>
         <Item X="688" Y="200">
@@ -656,9 +674,17 @@
                 <SourceId>8cea94e9-039d-4a1d-b7a7-998634ba4a1b</SourceId>
               </Input>
               <Input Index="1" Invert="true">
-                <SourceId>3d039624-869e-4347-a89f-ce36ca2696a6</SourceId>
+                <SourceId>7caff32e-6a7d-48c7-bdee-ee5eb5b6acca</SourceId>
               </Input>
             </Inputs>
+          </Instance>
+        </Item>
+        <Item X="8" Y="480">
+          <Id>14512f72-a397-4908-b9a8-fdfcd826d433</Id>
+          <Type>Simulator.Model.Inputs.DI</Type>
+          <Instance>
+            <Order>3</Order>
+            <Description>Концевой ЗАКРЫТ</Description>
           </Instance>
         </Item>
         <Item X="688" Y="296">
@@ -670,7 +696,7 @@
                 <SourceId>a6953e1f-4464-4970-8ed8-716203a289cf</SourceId>
               </Input>
               <Input Index="1" Invert="true">
-                <SourceId>80cd8ebb-ca3d-4543-84c3-2c3503dab714</SourceId>
+                <SourceId>14512f72-a397-4908-b9a8-fdfcd826d433</SourceId>
               </Input>
             </Inputs>
           </Instance>
@@ -681,10 +707,10 @@
           <Instance>
             <Inputs>
               <Input Index="0">
-                <SourceId>3d039624-869e-4347-a89f-ce36ca2696a6</SourceId>
+                <SourceId>7caff32e-6a7d-48c7-bdee-ee5eb5b6acca</SourceId>
               </Input>
               <Input Index="1">
-                <SourceId>80cd8ebb-ca3d-4543-84c3-2c3503dab714</SourceId>
+                <SourceId>14512f72-a397-4908-b9a8-fdfcd826d433</SourceId>
               </Input>
             </Inputs>
           </Instance>
@@ -698,6 +724,7 @@
                 <SourceId>0bf51bf1-4382-4fa4-b37c-092a9ec018e2</SourceId>
               </Input>
             </Inputs>
+            <Order>0</Order>
             <Description>Управление клапаном</Description>
           </Instance>
         </Item>
@@ -733,7 +760,7 @@
           <Instance>
             <Inputs>
               <Input Index="0">
-                <SourceId>3d039624-869e-4347-a89f-ce36ca2696a6</SourceId>
+                <SourceId>7caff32e-6a7d-48c7-bdee-ee5eb5b6acca</SourceId>
               </Input>
             </Inputs>
             <Description>Клапан открыт</Description>
@@ -759,58 +786,15 @@
           <Instance>
             <Inputs>
               <Input Index="0">
-                <SourceId>80cd8ebb-ca3d-4543-84c3-2c3503dab714</SourceId>
+                <SourceId>14512f72-a397-4908-b9a8-fdfcd826d433</SourceId>
               </Input>
             </Inputs>
             <Description>Клапан закрыт</Description>
             <Color>Lime</Color>
           </Instance>
         </Item>
-        <Item X="16" Y="376">
-          <Id>7caff32e-6a7d-48c7-bdee-ee5eb5b6acca</Id>
-          <Type>Simulator.Model.Inputs.DI</Type>
-          <Instance>
-            <Description>Концевой ОТКРЫТ</Description>
-          </Instance>
-        </Item>
       </Items>
       <Links>
-        <Link>
-          <Id>d434177b-1726-4449-8b55-2c38f422fd22</Id>
-          <Source Id="80cd8ebb-ca3d-4543-84c3-2c3503dab714" PinIndex="0" />
-          <Destination Id="7c8612da-da95-4f0b-aead-9a41b5799f65" PinIndex="1" />
-          <Points>
-            <Point X="304" Y="504" />
-            <Point X="304" Y="504" />
-            <Point X="680" Y="504" />
-            <Point X="680" Y="504" />
-          </Points>
-          <Segments>
-            <Segment Kind="None" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="None" />
-          </Segments>
-        </Link>
-        <Link>
-          <Id>110f03ee-c711-4fe2-b714-deba571d8671</Id>
-          <Source Id="3d039624-869e-4347-a89f-ce36ca2696a6" PinIndex="0" />
-          <Destination Id="7c8612da-da95-4f0b-aead-9a41b5799f65" PinIndex="0" />
-          <Points>
-            <Point X="304" Y="416" />
-            <Point X="304" Y="416" />
-            <Point X="656" Y="416" />
-            <Point X="656" Y="472" />
-            <Point X="680" Y="472" />
-            <Point X="680" Y="472" />
-          </Points>
-          <Segments>
-            <Segment Kind="None" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="Vertical" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="None" />
-          </Segments>
-        </Link>
         <Link>
           <Id>25bf54d5-e693-44dd-be39-4175b13c872d</Id>
           <Source Id="1c83e13c-d923-4570-b5e5-5e56eef83260" PinIndex="0" />
@@ -936,46 +920,6 @@
           </Segments>
         </Link>
         <Link>
-          <Id>57877b68-35f3-4219-974f-bb11a9148b28</Id>
-          <Source Id="80cd8ebb-ca3d-4543-84c3-2c3503dab714" PinIndex="0" />
-          <Destination Id="b35c01c8-005e-4c35-ae56-f798d0f9e262" PinIndex="1" />
-          <Points>
-            <Point X="304" Y="504" />
-            <Point X="304" Y="504" />
-            <Point X="632" Y="504" />
-            <Point X="632" Y="352" />
-            <Point X="680" Y="352" />
-            <Point X="680" Y="352" />
-          </Points>
-          <Segments>
-            <Segment Kind="None" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="Vertical" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="None" />
-          </Segments>
-        </Link>
-        <Link>
-          <Id>cefdde85-5570-496d-aa8c-28f9cb9ef554</Id>
-          <Source Id="3d039624-869e-4347-a89f-ce36ca2696a6" PinIndex="0" />
-          <Destination Id="93c97fb8-3342-4ae8-8bb6-5c69059cff40" PinIndex="1" />
-          <Points>
-            <Point X="304" Y="416" />
-            <Point X="304" Y="416" />
-            <Point X="656" Y="416" />
-            <Point X="656" Y="256" />
-            <Point X="680" Y="256" />
-            <Point X="680" Y="256" />
-          </Points>
-          <Segments>
-            <Segment Kind="None" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="Vertical" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="None" />
-          </Segments>
-        </Link>
-        <Link>
           <Id>81a89224-bdb2-4367-9210-d26e079dae5e</Id>
           <Source Id="93c97fb8-3342-4ae8-8bb6-5c69059cff40" PinIndex="0" />
           <Destination Id="871ef549-ea30-4010-9b20-ba575ba427b3" PinIndex="0" />
@@ -1003,42 +947,6 @@
           </Points>
           <Segments>
             <Segment Kind="None" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="None" />
-          </Segments>
-        </Link>
-        <Link>
-          <Id>f2f919e9-8741-4357-b2f7-bb969cf49d24</Id>
-          <Source Id="3d039624-869e-4347-a89f-ce36ca2696a6" PinIndex="0" />
-          <Destination Id="e5d63694-0e0b-4635-aaf0-1970962be63d" PinIndex="0" />
-          <Points>
-            <Point X="304" Y="416" />
-            <Point X="304" Y="416" />
-            <Point X="800" Y="416" />
-            <Point X="800" Y="416" />
-          </Points>
-          <Segments>
-            <Segment Kind="None" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="None" />
-          </Segments>
-        </Link>
-        <Link>
-          <Id>c5fdf1df-f860-46b7-b418-1f32b69325df</Id>
-          <Source Id="80cd8ebb-ca3d-4543-84c3-2c3503dab714" PinIndex="0" />
-          <Destination Id="cbf4cb51-df08-4568-a87c-c2656c409537" PinIndex="0" />
-          <Points>
-            <Point X="304" Y="504" />
-            <Point X="304" Y="504" />
-            <Point X="632" Y="504" />
-            <Point X="632" Y="544" />
-            <Point X="800" Y="544" />
-            <Point X="800" Y="544" />
-          </Points>
-          <Segments>
-            <Segment Kind="None" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="Vertical" />
             <Segment Kind="Horizontal" />
             <Segment Kind="None" />
           </Segments>
@@ -1076,14 +984,142 @@
           </Segments>
         </Link>
         <Link>
-          <Id>698d0a7d-bfb1-4ea4-a342-db6f36aae989</Id>
+          <Id>1ab5e3f1-4039-4d17-9a7a-b3c947768f08</Id>
           <Source Id="7caff32e-6a7d-48c7-bdee-ee5eb5b6acca" PinIndex="0" />
-          <Destination Id="3d039624-869e-4347-a89f-ce36ca2696a6" PinIndex="0" />
+          <Destination Id="e5d63694-0e0b-4635-aaf0-1970962be63d" PinIndex="0" />
           <Points>
-            <Point X="216" Y="400" />
-            <Point X="216" Y="400" />
-            <Point X="240" Y="400" />
-            <Point X="240" Y="400" />
+            <Point X="208" Y="416" />
+            <Point X="208" Y="416" />
+            <Point X="800" Y="416" />
+            <Point X="800" Y="416" />
+          </Points>
+          <Segments>
+            <Segment Kind="None" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="None" />
+          </Segments>
+        </Link>
+        <Link>
+          <Id>f684cbe3-4380-4183-9a07-a0888b646460</Id>
+          <Source Id="7caff32e-6a7d-48c7-bdee-ee5eb5b6acca" PinIndex="0" />
+          <Destination Id="93c97fb8-3342-4ae8-8bb6-5c69059cff40" PinIndex="1" />
+          <Points>
+            <Point X="208" Y="416" />
+            <Point X="208" Y="416" />
+            <Point X="656" Y="416" />
+            <Point X="656" Y="256" />
+            <Point X="680" Y="256" />
+            <Point X="680" Y="256" />
+          </Points>
+          <Segments>
+            <Segment Kind="None" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="None" />
+          </Segments>
+        </Link>
+        <Link>
+          <Id>f5d7b31a-dc04-46d9-b9b5-fac9c6029f46</Id>
+          <Source Id="7caff32e-6a7d-48c7-bdee-ee5eb5b6acca" PinIndex="0" />
+          <Destination Id="7c8612da-da95-4f0b-aead-9a41b5799f65" PinIndex="0" />
+          <Points>
+            <Point X="208" Y="416" />
+            <Point X="208" Y="416" />
+            <Point X="656" Y="416" />
+            <Point X="656" Y="472" />
+            <Point X="680" Y="472" />
+            <Point X="680" Y="472" />
+          </Points>
+          <Segments>
+            <Segment Kind="None" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="None" />
+          </Segments>
+        </Link>
+        <Link>
+          <Id>6471058f-0e4b-43ab-88b1-61a6b0f36795</Id>
+          <Source Id="14512f72-a397-4908-b9a8-fdfcd826d433" PinIndex="0" />
+          <Destination Id="cbf4cb51-df08-4568-a87c-c2656c409537" PinIndex="0" />
+          <Points>
+            <Point X="208" Y="504" />
+            <Point X="208" Y="504" />
+            <Point X="624" Y="504" />
+            <Point X="624" Y="544" />
+            <Point X="800" Y="544" />
+            <Point X="800" Y="544" />
+          </Points>
+          <Segments>
+            <Segment Kind="None" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="None" />
+          </Segments>
+        </Link>
+        <Link>
+          <Id>41a3b483-21b2-4ec8-a336-cb2e03ba11d1</Id>
+          <Source Id="14512f72-a397-4908-b9a8-fdfcd826d433" PinIndex="0" />
+          <Destination Id="b35c01c8-005e-4c35-ae56-f798d0f9e262" PinIndex="1" />
+          <Points>
+            <Point X="208" Y="504" />
+            <Point X="208" Y="504" />
+            <Point X="624" Y="504" />
+            <Point X="624" Y="352" />
+            <Point X="680" Y="352" />
+            <Point X="680" Y="352" />
+          </Points>
+          <Segments>
+            <Segment Kind="None" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="None" />
+          </Segments>
+        </Link>
+        <Link>
+          <Id>4d2224c2-ae82-41cc-8c99-5317b0b19a69</Id>
+          <Source Id="14512f72-a397-4908-b9a8-fdfcd826d433" PinIndex="0" />
+          <Destination Id="7c8612da-da95-4f0b-aead-9a41b5799f65" PinIndex="1" />
+          <Points>
+            <Point X="208" Y="504" />
+            <Point X="208" Y="504" />
+            <Point X="680" Y="504" />
+            <Point X="680" Y="504" />
+          </Points>
+          <Segments>
+            <Segment Kind="None" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="None" />
+          </Segments>
+        </Link>
+        <Link>
+          <Id>0ce53bae-233d-42bc-984e-c6a81735efa4</Id>
+          <Source Id="3629394c-3e68-426f-89c0-16a557352a1e" PinIndex="0" />
+          <Destination Id="1c83e13c-d923-4570-b5e5-5e56eef83260" PinIndex="0" />
+          <Points>
+            <Point X="208" Y="168" />
+            <Point X="208" Y="168" />
+            <Point X="240" Y="168" />
+            <Point X="240" Y="168" />
+          </Points>
+          <Segments>
+            <Segment Kind="None" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="None" />
+          </Segments>
+        </Link>
+        <Link>
+          <Id>a8e06106-9303-4c20-a538-c2d5467a9d9a</Id>
+          <Source Id="72148cfa-e251-4ebc-8ec8-d87cbf5a6675" PinIndex="0" />
+          <Destination Id="660fbb53-9532-41f7-ad72-eb9f49e6b822" PinIndex="0" />
+          <Points>
+            <Point X="208" Y="240" />
+            <Point X="208" Y="240" />
+            <Point X="240" Y="240" />
+            <Point X="240" Y="240" />
           </Points>
           <Segments>
             <Segment Kind="None" />

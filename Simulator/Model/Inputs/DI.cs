@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace Simulator.Model.Inputs
 {
-    public class DI : CommonLogic, ICustomDraw
+    public class DI : CommonLogic, ICustomDraw, IChangeOrder
     {
         public DI() : base(LogicFunction.DigInp, 0, 1)
         {
@@ -12,6 +12,9 @@ namespace Simulator.Model.Inputs
 
         [Category("Настройки"), DisplayName("Текст"), Description("Наименование входа")]
         public string Description { get; set; } = "Дискретный вход";
+
+        [Category("Настройки"), DisplayName("Номер"), Description("Индекс входа")]
+        public int Order { get; set; }
 
         public override void Calculate()
         {
@@ -46,8 +49,12 @@ namespace Simulator.Model.Inputs
             graphics.FillRectangle(brush, rect);
             graphics.DrawRectangles(pen, [rect]);
 
+            // горизонтальная риска справа, напротив выхода
+            graphics.DrawLine(pen, new PointF(rect.Right, rect.Y + rect.Height / 2),
+                new PointF(rect.Right + Element.Step, rect.Y + rect.Height / 2));
+
             var funcrect = new RectangleF(rect.X + rect.Height * 3, rect.Y, rect.Height, rect.Height / 3);
-            var text = "DI";
+            var text = $"DI{Order}";
             using var format = new StringFormat();
             format.Alignment = StringAlignment.Center;
             format.LineAlignment = StringAlignment.Center;
@@ -84,12 +91,15 @@ namespace Simulator.Model.Inputs
                 xtance = new XElement("Instance");
                 xtem.Add(xtance);
             }
+            xtance.Add(new XElement("Order", Order));
             xtance.Add(new XElement("Description", Description));
         }
 
         public override void Load(XElement? xtance)
         {
             base.Load(xtance);
+            if (int.TryParse(xtance?.Element("Order")?.Value, out int order))
+                Order = order;
             Description = $"{xtance?.Element("Description")?.Value}";
         }
     }

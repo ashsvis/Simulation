@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace Simulator.Model.Outputs
 {
-    public class DO : CommonLogic, ICustomDraw
+    public class DO : CommonLogic, ICustomDraw, IChangeOrder
     {
         public DO() : base(LogicFunction.DigOut, 1, 0)
         {
@@ -12,6 +12,9 @@ namespace Simulator.Model.Outputs
 
         [Category("Настройки"), DisplayName("Текст"), Description("Наименование выхода")]
         public string Description { get; set; } = "Дискретный выход";
+
+        [Category("Настройки"), DisplayName("Номер"), Description("Индекс выхода")]
+        public int Order { get; set; }
 
         public override void Calculate()
         {
@@ -44,9 +47,9 @@ namespace Simulator.Model.Outputs
         {
             graphics.FillRectangle(brush, rect);
             graphics.DrawRectangles(pen, [rect]);
-            
+
             var funcrect = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height / 3);
-            var text = "DO";
+            var text = $"DO{Order}";
             using var format = new StringFormat();
             format.Alignment = StringAlignment.Center;
             format.LineAlignment = StringAlignment.Center;
@@ -83,12 +86,15 @@ namespace Simulator.Model.Outputs
                 xtance = new XElement("Instance");
                 xtem.Add(xtance);
             }
+            xtance.Add(new XElement("Order", Order));
             xtance.Add(new XElement("Description", Description));
         }
 
         public override void Load(XElement? xtance)
         {
             base.Load(xtance);
+            if (int.TryParse(xtance?.Element("Order")?.Value, out int order))
+                Order = order;
             Description = $"{xtance?.Element("Description")?.Value}";
         }
     }
