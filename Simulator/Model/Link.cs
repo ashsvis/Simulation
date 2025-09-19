@@ -307,16 +307,30 @@ namespace Simulator.Model
 
         public void UpdateSourcePoint(PointF point)
         {
+            if (points.Count > 4)
+            {
+                points.RemoveAt(0);
+                points.RemoveAt(0);
+                points.RemoveAt(0);
+            }
             points.Insert(0, new PointF(points[0].X, point.Y));
             points.Insert(0, point);
+
             SegmentOptimization();
             CalculateSegmentTargets();
         }
 
         public void UpdateDestinationPoint(PointF point)
         {
+            if (points.Count > 4)
+            {
+                points.RemoveAt(points.Count - 1);
+                points.RemoveAt(points.Count - 1);
+                points.RemoveAt(points.Count - 1);
+            }
             points.Add(new PointF(points[^1].X, point.Y));
             points.Add(point);
+
             SegmentOptimization();
             CalculateSegmentTargets();
         }
