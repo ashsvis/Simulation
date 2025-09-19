@@ -320,5 +320,11 @@ namespace Simulator.Model
             SegmentOptimization();
             CalculateSegmentTargets();
         }
+
+        public void Offset(SizeF delta)
+        {
+            for (var i = 0; i < points.Count; i++)
+                points[i] = PointF.Add(points[i], delta);
+        }
     }
 }

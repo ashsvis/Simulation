@@ -783,10 +783,12 @@ namespace Simulator
                             link.Select(true);
                     }
                 }
-                if (element.Selected && (ModifierKeys & Keys.Control) == Keys.Control)
-                    element.Selected = false;
-                else
-                    element.Selected = output == null;
+
+                if (output == null)
+                {
+                    //if (!element.Selected)
+                        element.Selected = true; // (ModifierKeys & Keys.Control) == Keys.Control;
+                }
                 ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
             }
             else
@@ -941,8 +943,17 @@ namespace Simulator
                     {
                         if (pin == null)
                         {
-                            element.Location = PointF.Add(element.Location, delta);
-                            Module.Changed = true;
+                            if (items.Any(x => x.Selected))
+                            {
+                                //element.Location = PointF.Add(element.Location, delta);
+                                foreach (var item in items.Where(x => x.Selected))
+                                {
+                                    item.Location = PointF.Add(item.Location, delta);
+                                    foreach (var link in links.Where(x => x.Selected && x.DestinationId == item.Id))
+                                        link.Offset(delta);
+                                }
+                                Module.Changed = true;
+                            }
                         }
                     }
                     else if (link != null && segmentIndex != null && segmentVertical != null)
@@ -961,14 +972,16 @@ namespace Simulator
             {
                 if (element != null)
                 {
-                    element.Location = SnapToGrid(element.Location);
-                    foreach (var link in links.Where(x => x.SourceId == element.Id))
+                    //element.Location = SnapToGrid(element.Location);
+                    foreach (var item in items.Where(x => x.Selected))
                     {
-                        link.UpdateSourcePoint(element.OutputPins[link.SourcePinIndex]);
-                    }
-                    foreach (var link in links.Where(x => x.DestinationId == element.Id))
-                    {
-                        link.UpdateDestinationPoint(element.InputPins[link.DestinationPinIndex]);
+                        item.Location = SnapToGrid(item.Location);
+                        foreach (var link in links.Where(x => x.DestinationId == item.Id))
+                            link.UpdateDestinationPoint(item.InputPins[link.DestinationPinIndex]);
+                        foreach (var link in links.Where(x => x.SourceId == item.Id))
+                            link.UpdateSourcePoint(item.OutputPins[link.SourcePinIndex]);
+                        foreach (var link in links.Where(x => x.DestinationId == item.Id || x.SourceId == item.Id))
+                            link.SnapPointsToGrid(SnapToGrid);
                     }
                 }
                 else if (link != null)
