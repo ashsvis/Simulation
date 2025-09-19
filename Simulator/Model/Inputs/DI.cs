@@ -4,10 +4,11 @@ using System.Xml.Linq;
 
 namespace Simulator.Model.Inputs
 {
-    public class DI : CommonLogic, ICustomDraw, IChangeOrderDI
+    public class DI : CommonLogic, ICustomDraw, IChangeOrderDI, IManualCommand
     {
         public DI() : base(LogicFunction.DigInp, 0, 1)
         {
+            OutputValues[0] = false;
         }
 
         [Category("Настройки"), DisplayName("Текст"), Description("Наименование входа")]
@@ -18,7 +19,7 @@ namespace Simulator.Model.Inputs
 
         public override void Calculate()
         {
-            bool output = (bool)OutputValues[0];
+            bool output = (bool)(OutputValues[0] ?? false);
             Out = output;
         }
 
@@ -52,6 +53,14 @@ namespace Simulator.Model.Inputs
             // горизонтальная риска справа, напротив выхода
             graphics.DrawLine(pen, new PointF(rect.Right, rect.Y + rect.Height / 2),
                 new PointF(rect.Right + Element.Step, rect.Y + rect.Height / 2));
+            // значение выхода
+            if (VisibleValues && this is ILinkSupport link)
+            {
+                var value = link.OutputValues[0];
+                var textval = value != null && value.GetType() == typeof(bool) ? (bool)value ? "T" : "F" : $"{value}";
+                var ms = graphics.MeasureString(textval, font);
+                graphics.DrawString(textval, font, fontbrush, new PointF(rect.Right, rect.Y + rect.Height / 2 - ms.Height));
+            }
 
             var funcrect = new RectangleF(rect.X + rect.Height * 3, rect.Y, rect.Height, rect.Height / 3);
             var text = $"DI{Order}";
@@ -77,6 +86,7 @@ namespace Simulator.Model.Inputs
             graphics.DrawString(Out ? "\"1\"" : "\"0\"", font, statebrush, staterect, format);
 
             var descrect = new RectangleF(rect.X, rect.Y, rect.Height * 3, rect.Height);
+            graphics.FillRectangle(brush, descrect);
             graphics.DrawRectangles(pen, [descrect]);
             using var textFont = new Font("Arial Narrow", font.Size);
             graphics.DrawString(Description, textFont, fontbrush, descrect, format);
@@ -101,6 +111,21 @@ namespace Simulator.Model.Inputs
             if (int.TryParse(xtance?.Element("Order")?.Value, out int order))
                 Order = order;
             Description = $"{xtance?.Element("Description")?.Value}";
+        }
+
+        public void SetValueToOut(int outputIndex, object? value)
+        {
+            if (outputIndex >= 0 && outputIndex < OutputValues.Length)
+            {
+                OutputValues[outputIndex] = (bool)(value ?? false);
+            }
+        }
+
+        public object? GetValueFromOut(int outputIndex)
+        {
+            if (outputIndex >= 0 && outputIndex < OutputValues.Length)
+                return (bool)(OutputValues[outputIndex] ?? false);
+            return null;
         }
     }
 }

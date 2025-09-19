@@ -11,6 +11,7 @@ namespace Simulator.Model.Logic
         private readonly GetLinkValueMethod?[] getLinkInputs;
         private readonly (Guid, int)[] getLinkSources;
         private readonly string[] getInputNames;
+        private readonly object[] getOutputs;
         private readonly string[] getOutputNames;
         private readonly LogicFunction logicFunction;
 
@@ -33,6 +34,7 @@ namespace Simulator.Model.Logic
             getLinkInputs = [];
             getLinkSources = [];
             getInputNames = [];
+            getOutputs = [];
             getOutputNames = [];
             if (inputCount > 0)
             {
@@ -45,7 +47,6 @@ namespace Simulator.Model.Logic
                 getLinkInputs = new GetLinkValueMethod?[inputCount];
                 getLinkSources = new (Guid, int)[inputCount];
                 getInputNames = new string[inputCount];
-                getOutputNames = new string[outputCount];
                 if (func == LogicFunction.Not)
                 {
                     InverseOut = true;
@@ -54,10 +55,17 @@ namespace Simulator.Model.Logic
                 {
                     getInputNames[0] = "S";
                     getInputNames[1] = "R";
+                }
+            }
+            if (outputCount > 0)
+            {
+                getOutputs = new object[outputCount];
+                getOutputNames = new string[outputCount];
+                if (func == LogicFunction.Rs || func == LogicFunction.Sr)
+                {
                     getOutputNames[0] = "Q";
                 }
             }
-
         }
 
         [Category(" Общие"), DisplayName("Функция")]
@@ -146,7 +154,7 @@ namespace Simulator.Model.Logic
         public (Guid, int)[] InputLinkSources => getLinkSources;
 
         [Browsable(false)]
-        public object[] OutputValues => [Out];
+        public object[] OutputValues => getOutputs;
 
         [Browsable(false)]
         public bool[] LinkedInputs 
@@ -392,7 +400,6 @@ namespace Simulator.Model.Logic
             if (named)
                 graphics.DrawString(Name, font, fontbrush, new PointF(location.X + width / 2, location.Y - msn.Height), format);
             graphics.DrawString(FuncSymbol, font, fontbrush, new PointF(location.X + width / 2, location.Y), format);
-            customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush, index);
             // входы
             var y = step + location.Y;
             var x = -step + location.X;
@@ -440,7 +447,7 @@ namespace Simulator.Model.Logic
                     // горизонтальная риска справа, напротив выхода
                     graphics.DrawLine(pen, new PointF(x, y), new PointF(x + step, y));
                 }
-                if (InverseOutputs[i])
+                if (InverseOutputs[i] && customDraw == null)
                 {
                     var r = new RectangleF(x - step / 2, y - step / 2, step, step);
                     // рисуем кружок инверсии
@@ -463,6 +470,7 @@ namespace Simulator.Model.Logic
                 }
                 y += step * 2;
             }
+            customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush, index);
             // индекс элемента в списке
             if (customDraw == null && index != 0)
             {

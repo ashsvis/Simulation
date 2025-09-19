@@ -973,8 +973,15 @@ namespace Simulator
                     if (value is bool bval)
                         tar.SetValueToInp((int)pin, !bval);
                 }
+                if (TryGetPin(e.Location, out element, out pin, out _, out output) &&
+                    element != null && pin != null && element.Instance is IManualCommand comm && output == true)
+                {
+                    var value = comm.GetValueFromOut((int)pin);
+                    if (value is bool bval)
+                        comm.SetValueToOut((int)pin, !bval);
+                }
                 if (TryGetPin(e.Location, out Element? elementSecond, out int? pinSecond, out PointF? linkSecondPoint, out bool? outputSecond) &&
-                    elementSecond?.Instance is ILinkSupport target && elementFirst?.Instance is ILinkSupport source)
+                     elementSecond?.Instance is ILinkSupport target && elementFirst?.Instance is ILinkSupport source)
                 {
                     if (elementFirst != elementSecond && outputFirst != outputSecond &&
                         linkFirstPoint != null && linkSecondPoint != null)
