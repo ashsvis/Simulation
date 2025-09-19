@@ -82,5 +82,29 @@ namespace Simulator.Properties {
                 this["OneScreenIndex"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("210")]
+        public int LeftToolsPanelWidth {
+            get {
+                return ((int)(this["LeftToolsPanelWidth"]));
+            }
+            set {
+                this["LeftToolsPanelWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("210")]
+        public int RightToolsPanelWidth {
+            get {
+                return ((int)(this["RightToolsPanelWidth"]));
+            }
+            set {
+                this["RightToolsPanelWidth"] = value;
+            }
+        }
     }
 }

@@ -17,5 +17,11 @@
     <Setting Name="OneScreenIndex" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="LeftToolsPanelWidth" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">210</Value>
+    </Setting>
+    <Setting Name="RightToolsPanelWidth" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">210</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

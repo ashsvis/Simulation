@@ -10,6 +10,9 @@ namespace Simulator
         public bool IsPrimary { get; }
         public new Rectangle Bounds { get; }
 
+        private Point firstMouseDown;
+        private Point mousePosition;
+
         public PanelForm(HostForm hostForm, int panelIndex, bool isPrimary, Rectangle bounds)
         {
             InitializeComponent();
@@ -51,6 +54,9 @@ namespace Simulator
 
         private void PanelForm_Load(object sender, EventArgs e)
         {
+            panLeft.Width = Properties.Settings.Default.LeftToolsPanelWidth;
+            panRight.Width = Properties.Settings.Default.RightToolsPanelWidth;
+
             tvLibrary.Nodes.Clear();
             tvLibrary.Nodes.AddRange(Project.GetLibraryTree());
 
@@ -377,6 +383,56 @@ namespace Simulator
         {
             if (Visible)
                 UpdateScreenControls(Host);
+        }
+
+        private void panRightSize_MouseDown(object sender, MouseEventArgs e)
+        {
+            mousePosition = firstMouseDown = e.Location;
+        }
+
+        private void panRightSize_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                var mp = mousePosition;
+                var pt = e.Location;
+                var delta = new Size(pt.X - mp.X, pt.Y - mp.Y);
+                mousePosition = e.Location;
+                panRight.SuspendLayout();
+                panRight.Width -= delta.Width;
+                panRight.ResumeLayout();
+            }
+        }
+
+        private void panRightSize_MouseUp(object sender, MouseEventArgs e)
+        {
+            Properties.Settings.Default.RightToolsPanelWidth = panRight.Width;
+            Properties.Settings.Default.Save();
+        }
+
+        private void pnLeftSize_MouseDown(object sender, MouseEventArgs e)
+        {
+            mousePosition = firstMouseDown = e.Location;
+        }
+
+        private void pnLeftSize_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                var mp = mousePosition;
+                var pt = e.Location;
+                var delta = new Size(pt.X - mp.X, pt.Y - mp.Y);
+                mousePosition = e.Location;
+                panLeft.SuspendLayout();
+                panLeft.Width += delta.Width;
+                panLeft.ResumeLayout();
+            }
+        }
+
+        private void pnLeftSize_MouseUp(object sender, MouseEventArgs e)
+        {
+            Properties.Settings.Default.LeftToolsPanelWidth = panLeft.Width;
+            Properties.Settings.Default.Save();
         }
     }
 }

@@ -30,7 +30,7 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PanelForm));
-            TreeNode treeNode1 = new TreeNode("Библиотека");
+            TreeNode treeNode2 = new TreeNode("Библиотека");
             menuMainStrip = new MenuStrip();
             файлToolStripMenuItem = new ToolStripMenuItem();
             tsmiCreate = new ToolStripMenuItem();
@@ -434,6 +434,9 @@
             pnLeftSize.Size = new Size(4, 456);
             pnLeftSize.TabIndex = 5;
             pnLeftSize.Paint += pnLeftSize_Paint;
+            pnLeftSize.MouseDown += pnLeftSize_MouseDown;
+            pnLeftSize.MouseMove += pnLeftSize_MouseMove;
+            pnLeftSize.MouseUp += pnLeftSize_MouseUp;
             // 
             // tvLibrary
             // 
@@ -445,9 +448,9 @@
             tvLibrary.LineColor = Color.WhiteSmoke;
             tvLibrary.Location = new Point(3, 3);
             tvLibrary.Name = "tvLibrary";
-            treeNode1.Name = "Узел0";
-            treeNode1.Text = "Библиотека";
-            tvLibrary.Nodes.AddRange(new TreeNode[] { treeNode1 });
+            treeNode2.Name = "Узел0";
+            treeNode2.Text = "Библиотека";
+            tvLibrary.Nodes.AddRange(new TreeNode[] { treeNode2 });
             tvLibrary.Size = new Size(188, 416);
             tvLibrary.TabIndex = 1;
             tvLibrary.MouseDown += tvLibrary_MouseDown;
@@ -486,6 +489,9 @@
             panRightSize.Size = new Size(4, 456);
             panRightSize.TabIndex = 6;
             panRightSize.Paint += pnLeftSize_Paint;
+            panRightSize.MouseDown += panRightSize_MouseDown;
+            panRightSize.MouseMove += panRightSize_MouseMove;
+            panRightSize.MouseUp += panRightSize_MouseUp;
             // 
             // tabControl3
             // 
