@@ -2,6 +2,7 @@
 using Simulator.Model;
 using Simulator.View;
 using System.Drawing.Drawing2D;
+using static System.ComponentModel.Design.ObjectSelectorEditor;
 
 namespace Simulator
 {
@@ -19,6 +20,8 @@ namespace Simulator
 
         private Point firstMouseDown;
         private Point mousePosition;
+        private Rectangle? ribbon = null;
+        private bool partSelection = false;
 
         public ModuleForm(PanelForm panelForm, Module module)
         {
@@ -39,6 +42,8 @@ namespace Simulator
 
         private void ChildForm_Load(object sender, EventArgs e)
         {
+            items.ForEach(item => item.Selected = false);
+            links.ForEach(item => item.Select(false));
 
         }
 
@@ -366,9 +371,24 @@ namespace Simulator
                 pen.DashStyle = DashStyle.Dash;
                 graphics.DrawLine(pen, (PointF)linkFirstPoint, mp);
             }
+            // прорисовка "резиновой" рамки 
+            if (ribbon != null && linkFirstPoint == null && !dragging && !segmentmoving)
+            {
+                using var pen = new Pen(Color.FromArgb(200, partSelection ? Color.LimeGreen : Color.Aqua), 0);
+                pen.DashStyle = DashStyle.Dash;
+                graphics.DrawRectangle(pen, PrepareRect((Rectangle)ribbon));
+            }
         }
 
- 
+        private Rectangle PrepareRect(Rectangle rectangle)
+        {
+            var pt1 = PrepareMousePosition(rectangle.Location);
+            var size = rectangle.Size;
+            var pt2 = PrepareMousePosition(Point.Add(rectangle.Location, size));
+            return Rectangle.Ceiling(new RectangleF(pt1, new SizeF(pt2.X - pt1.X, pt2.Y - pt1.Y)));
+        }
+
+
         /*
             
         private void BuildLinks()
@@ -752,6 +772,9 @@ namespace Simulator
 
         public event EventHandler? ElementSelected;
 
+        private bool dragging = false;
+        private bool segmentmoving = false;
+
         private void zoomPad_MouseDown(object sender, MouseEventArgs e)
         {
             mousePosition = firstMouseDown = e.Location;
@@ -759,6 +782,8 @@ namespace Simulator
             element = null;
             pin = null;
             output = null;
+            dragging = false;
+            segmentmoving = false;
             if (TryGetLinkSegment(e.Location, out link, out segmentIndex, out segmentVertical) &&
                 link != null && segmentIndex != null && segmentVertical != null)
             {
@@ -769,6 +794,10 @@ namespace Simulator
                 links.Where(item => item.Id != ((Link)link).Id).ToList().ForEach(item => item.Select(false));
                 if ((ModifierKeys & Keys.Control) != Keys.Control)
                     items.ForEach(item => item.Selected = false);
+                if (e.Button == MouseButtons.Left)
+                {
+                    segmentmoving = ((Link)link).Selected;
+                }
                 ElementSelected?.Invoke(link, EventArgs.Empty);
             }
             else if (TryGetModule(e.Location, out element) &&
@@ -795,6 +824,11 @@ namespace Simulator
                     else if ((ModifierKeys & Keys.Control) == Keys.Control)
                         element.Selected = false;
                 }
+                if (e.Button == MouseButtons.Left) 
+                {
+                    dragging = output == null && element.Selected;
+                }
+
                 ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
             }
             else
@@ -929,7 +963,9 @@ namespace Simulator
 
         private void zoomPad_MouseMove(object sender, MouseEventArgs e)
         {
-            if (TryGetLinkSegment(e.Location, out _, out _, out bool? vertical))
+            if (ribbon != null)
+                Cursor = Cursors.Cross;
+            else if (TryGetLinkSegment(e.Location, out _, out _, out bool? vertical))
                 Cursor = vertical == true ? Cursors.VSplit : Cursors.HSplit;
             else if (TryGetModule(e.Location, out _))
                 Cursor = Cursors.SizeAll;
@@ -945,27 +981,27 @@ namespace Simulator
                 mousePosition = e.Location;
                 if (!delta.IsEmpty)
                 {
-                    if (element != null)
+                    if (dragging)
                     {
-                        if (pin == null)
+                        //element.Location = PointF.Add(element.Location, delta);
+                        foreach (var item in items.Where(x => x.Selected))
                         {
-                            if (items.Any(x => x.Selected))
-                            {
-                                //element.Location = PointF.Add(element.Location, delta);
-                                foreach (var item in items.Where(x => x.Selected))
-                                {
-                                    item.Location = PointF.Add(item.Location, delta);
-                                    foreach (var link in links.Where(x => x.Selected && x.DestinationId == item.Id))
-                                        link.Offset(delta);
-                                }
-                                Module.Changed = true;
-                            }
+                            item.Location = PointF.Add(item.Location, delta);
+                            foreach (var link in links.Where(x => x.Selected && x.DestinationId == item.Id))
+                                link.Offset(delta);
                         }
+                        Module.Changed = true;
                     }
-                    else if (link != null && segmentIndex != null && segmentVertical != null)
+                    if (segmentmoving && link != null && segmentIndex != null && segmentVertical != null)
                     {
                         link?.OffsetSegment((int)segmentIndex, (bool)segmentVertical, delta);
                         Module.Changed = true;
+                    }
+                    if (!dragging)
+                    {
+                        ribbon = new Rectangle(Math.Min(firstMouseDown.X, mousePosition.X), Math.Min(firstMouseDown.Y, mousePosition.Y),
+                            Math.Abs(firstMouseDown.X - mousePosition.X), Math.Abs(firstMouseDown.Y - mousePosition.Y));
+                        partSelection = firstMouseDown.Y > mousePosition.Y && firstMouseDown.X > mousePosition.X;
                     }
                     zoomPad.Invalidate();
                 }
@@ -976,9 +1012,43 @@ namespace Simulator
         {
             if (e.Button == MouseButtons.Left)
             {
-                if (element != null)
+                if (ribbon != null)
                 {
-                    //element.Location = SnapToGrid(element.Location);
+                    var rect = PrepareRect((Rectangle)ribbon);
+                    if ((ModifierKeys & Keys.Control) != Keys.Control)
+                    {
+                        items.ForEach(item => item.Selected = false);
+                        links.ForEach(item => item.Select(false));
+                    }
+                    if (partSelection)
+                    {
+                        items.ForEach(item =>
+                        {
+                            if (rect.IntersectsWith(Rectangle.Ceiling(item.Bounds)))
+                                item.Selected = true;
+                        });
+                    }
+                    else
+                    {
+                        items.ForEach(item =>
+                        {
+                            var r = Rectangle.Ceiling(item.Bounds);
+                            var u = Rectangle.Intersect(rect, r);
+                            if (u.Equals(r))
+                                item.Selected = true;
+                        });
+                    }
+                    foreach (var link in links)
+                    {
+                        if (items.Any(x => x.Selected && x.Id == link.SourceId) && items.Any(x => x.Selected && x.Id == link.DestinationId))
+                            link.Select(true);
+                    }
+
+                    ribbon = null;
+                }
+                if (dragging)
+                {
+                    dragging = false;
                     foreach (var item in items.Where(x => x.Selected))
                     {
                         item.Location = SnapToGrid(item.Location);
@@ -990,9 +1060,11 @@ namespace Simulator
                             link.SnapPointsToGrid(SnapToGrid);
                     }
                 }
-                else if (link != null)
+                if (segmentmoving)
                 {
-                    ((Link)link).SnapPointsToGrid(SnapToGrid);
+                    segmentmoving = false;
+                    if (link != null)
+                        ((Link)link).SnapPointsToGrid(SnapToGrid);
                 }
                 var elementFirst = element;
                 var pinFirst = pin;
