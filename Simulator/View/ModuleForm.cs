@@ -762,9 +762,13 @@ namespace Simulator
             if (TryGetLinkSegment(e.Location, out link, out segmentIndex, out segmentVertical) &&
                 link != null && segmentIndex != null && segmentVertical != null)
             {
-                ((Link)link).Select(true);
+                if (!((Link)link).Selected)
+                    ((Link)link).Select(true);
+                else if ((ModifierKeys & Keys.Control) == Keys.Control)
+                    ((Link)link).Select(false);
                 links.Where(item => item.Id != ((Link)link).Id).ToList().ForEach(item => item.Select(false));
-                items.ForEach(item => item.Selected = false);
+                if ((ModifierKeys & Keys.Control) != Keys.Control)
+                    items.ForEach(item => item.Selected = false);
                 ElementSelected?.Invoke(link, EventArgs.Empty);
             }
             else if (TryGetModule(e.Location, out element) &&
@@ -786,8 +790,10 @@ namespace Simulator
 
                 if (output == null)
                 {
-                    //if (!element.Selected)
-                        element.Selected = true; // (ModifierKeys & Keys.Control) == Keys.Control;
+                    if (!element.Selected)
+                        element.Selected = true;
+                    else if ((ModifierKeys & Keys.Control) == Keys.Control)
+                        element.Selected = false;
                 }
                 ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
             }
