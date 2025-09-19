@@ -2,7 +2,7 @@
 
 namespace Simulator.Model
 {
-    public class Element: IChangeIndex
+    public class Element: IChangeIndex, ICopyPaste
     {
         public const float Step = 8f;//6f;
 
@@ -148,5 +148,23 @@ namespace Simulator.Model
 #endif
         }
 
+        public string Copy()
+        {
+            var holder = new XElement("Element");
+            Save(holder);
+            return holder.ToString();
+            //var content = holder.ToString();
+            //Clipboard.SetText(content);
+        }
+
+        public object Paste(string source)
+        {
+            return Clipboard.GetText();
+        }
+
+        public bool CanPaste()
+        {
+            return Clipboard.ContainsText();
+        }
     }
 }

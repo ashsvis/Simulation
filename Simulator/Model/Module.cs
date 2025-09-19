@@ -37,7 +37,7 @@ namespace Simulator.Model
         }
 
         [Browsable(false)]
-        public List<Element> Items { get; set; } = [];
+        public List<Element> Elements { get; set; } = [];
 
         [Browsable(false)]
         public List<Link> Links { get; set; } = [];
@@ -56,11 +56,11 @@ namespace Simulator.Model
                 xmodule.Add(new XAttribute("Name", Name));
             if (!string.IsNullOrWhiteSpace(Description))
                 xmodule.Add(new XAttribute("Description", Description));
-            XElement xitems = new("Items");
+            XElement xitems = new("Elements");
             xmodule.Add(xitems);
-            foreach (var item in Items)
+            foreach (var item in Elements)
             {
-                XElement xitem = new("Item");
+                XElement xitem = new("Element");
                 xitems.Add(xitem);
                 item.Save(xitem);
             }
@@ -84,10 +84,10 @@ namespace Simulator.Model
                 var description = xmodule?.Attribute("Description")?.Value;
                 if (description != null)
                     Description = description;
-                var xitems = xmodule?.Element("Items");
+                var xitems = xmodule?.Element("Elements");
                 if (xitems != null)
                 {
-                    foreach (XElement xitem in xitems.Elements("Item"))
+                    foreach (XElement xitem in xitems.Elements("Element"))
                     {
                         if (!Guid.TryParse(xitem.Element("Id")?.Value, out Guid id)) continue;
                         var xtype = xitem.Element("Type");
@@ -96,7 +96,7 @@ namespace Simulator.Model
                         if (type == null) continue;
                         var element = new Element { Id = id, };
                         element.Load(xitem, type);
-                        Items.Add(element);
+                        Elements.Add(element);
                     }
                 }
                 var xlinks = xmodule?.Element("Links");
@@ -136,7 +136,7 @@ namespace Simulator.Model
                     }
                 }
                 // установление связей
-                foreach (var item in Items)
+                foreach (var item in Elements)
                 {
                     if (item.Instance is ILinkSupport function)
                     {
@@ -145,7 +145,7 @@ namespace Simulator.Model
                         {
                             if (id != Guid.Empty)
                             {
-                                var sourceItem = Items.FirstOrDefault(x => x.Id == id);
+                                var sourceItem = Elements.FirstOrDefault(x => x.Id == id);
                                 if (sourceItem != null && sourceItem.Instance is ILinkSupport source)
                                     function.SetValueLinkToInp(n, source.GetResultLink(output), id, output);
                             }

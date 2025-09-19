@@ -2,9 +2,9 @@
 {
     public interface ICopyPaste
     {
-        void Copy();
+        string Copy();
         bool CanPaste();
-        object Paste();
+        object Paste(string source);
 
     }
 }

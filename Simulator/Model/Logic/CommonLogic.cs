@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace Simulator.Model.Logic
 {
-    public class CommonLogic : FilterablePropertyBase, IFunction, ICalculate, ILinkSupport, ILoadSave, IDraw, IManualChange, ICopyPaste
+    public class CommonLogic : FilterablePropertyBase, IFunction, ICalculate, ILinkSupport, ILoadSave, IDraw, IManualChange
     {
         private readonly bool[] getInputs;
         private readonly bool[] getInverseInputs;
@@ -527,24 +527,6 @@ namespace Simulator.Model.Logic
                 y += step * 2;
                 n++;
             }
-        }
-
-        public void Copy()
-        {
-            var holder = new XElement("DataHolder");
-            Save(holder);
-            var content = holder.ToString();
-            Clipboard.SetText(content);
-        }
-
-        public object Paste()
-        {
-            return Clipboard.GetText();
-        }
-
-        public bool CanPaste()
-        {
-            return Clipboard.ContainsText();
         }
     }
 }

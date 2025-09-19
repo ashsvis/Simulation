@@ -1,8 +1,11 @@
-﻿using Microsoft.VisualBasic.Devices;
-using Simulator.Model;
+﻿using Simulator.Model;
 using Simulator.View;
 using System.Drawing.Drawing2D;
-using static System.ComponentModel.Design.ObjectSelectorEditor;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace Simulator
 {
@@ -23,12 +26,12 @@ namespace Simulator
         private Rectangle? ribbon = null;
         private bool partSelection = false;
 
-        public ModuleForm(PanelForm panelForm, Module module)
+        public ModuleForm(PanelForm panelForm, Simulator.Model.Module module)
         {
             InitializeComponent();
             this.panelForm = panelForm;
             Module = module;
-            items = module.Items;
+            items = module.Elements;
             items.Where(x => x.Instance is IChangeOrderDI).ToList().ForEach(dis.Add);
             items.Where(x => x.Instance is IChangeOrderDO).ToList().ForEach(dos.Add);
             links = module.Links;
@@ -768,7 +771,7 @@ namespace Simulator
         private int? segmentIndex;
         private bool? segmentVertical;
 
-        public Module Module { get; }
+        public Simulator.Model.Module Module { get; }
 
         public event EventHandler? ElementSelected;
 
@@ -1197,15 +1200,68 @@ namespace Simulator
                 case Keys.C:
                     if (e.Control)
                     {
+                        var root = new XElement("Clipboard");
+                        XDocument doc = new(new XComment("Выборка"), root);
+                        XElement xitems = new("Elements");
+                        root.Add(xitems);
                         foreach (var item in items.Where(x => x.Selected))
                         {
-                            if (item.Instance is ICopyPaste copy)
+                            var holder = new XElement("Element");
+                            item.Save(holder);
+                            xitems.Add(holder);
+                        }
+                        string xml = root.ToString();
+                        byte[] bytes = Encoding.UTF8.GetBytes(xml);
+                        using var xmlStream = new MemoryStream(bytes);
+                        Clipboard.SetData("XML Spreadsheet", xmlStream);
+                        //links.ForEach(x => x.Select(true));
+                        zoomPad.Invalidate();
+                    }
+                    break;
+                case Keys.V:
+                    if (e.Control)
+                    {
+                        if (Clipboard.ContainsData("XML Spreadsheet"))
+                        {
+                            var xmlStream = (MemoryStream?)Clipboard.GetData("XML Spreadsheet");
+                            if (xmlStream != null)
                             {
-                                copy.Copy();
+                                XDocument doc = XDocument.Load(xmlStream);
+                                /*
+<Clipboard>
+  <Elements>
+    <Element X="712" Y="280">
+      <Id>4845bb0d-a765-4b41-8fd0-3e75b64faca4</Id>
+      <Type>Simulator.Model.Logic.AND</Type>
+      <Instance>
+        <Inputs>
+          <Input Index="0" Invert="true">
+            <SourceId>7e208b14-868b-4b73-a13c-5d5e9fc0a6b2</SourceId>
+          </Input>
+          <Input Index="1">
+            <SourceId>b5c57ae9-a0eb-4ee1-8289-557febb877b2</SourceId>
+          </Input>
+        </Inputs>
+      </Instance>
+    </Element>
+    <Element X="824" Y="296">
+      <Id>727f23fe-56e6-4747-a15e-218e595a7bf2</Id>
+      <Type>Simulator.Model.Outputs.LAMP</Type>
+      <Instance>
+        <Inputs>
+          <Input Index="0">
+            <SourceId>4845bb0d-a765-4b41-8fd0-3e75b64faca4</SourceId>
+          </Input>
+        </Inputs>
+        <Description>Фаза 3</Description>
+        <Color>Lime</Color>
+      </Instance>
+    </Element>
+  </Elements>
+</Clipboard>
+                                 */
                             }
                         }
-
-                        //items.ForEach(x => x.Selected = true);
                         //links.ForEach(x => x.Select(true));
                         zoomPad.Invalidate();
                     }

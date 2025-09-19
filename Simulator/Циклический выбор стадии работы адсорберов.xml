@@ -3,12 +3,17 @@
 <Project>
   <Modules>
     <Module Name="PhaseSelector" Description="Последовательное переключение фаз">
-      <Items>
-        <Item X="88" Y="208">
+      <Elements>
+        <Element X="88" Y="208">
           <Id>ecb54d76-6d97-4c21-9b7c-eeb87980cc1a</Id>
           <Type>Simulator.Model.Logic.FE</Type>
-        </Item>
-        <Item X="312" Y="176">
+          <Instance>
+            <Inputs>
+              <Input Index="0" Value="true" />
+            </Inputs>
+          </Instance>
+        </Element>
+        <Element X="312" Y="176">
           <Id>77bf00ae-4938-4844-b964-ba32d64918a4</Id>
           <Type>Simulator.Model.Logic.AND3</Type>
           <Instance>
@@ -24,8 +29,8 @@
               </Input>
             </Inputs>
           </Instance>
-        </Item>
-        <Item X="304" Y="352">
+        </Element>
+        <Element X="304" Y="352">
           <Id>19bb26db-c0f2-4523-8b58-6b2fee531b69</Id>
           <Type>Simulator.Model.Logic.AND3</Type>
           <Instance>
@@ -41,8 +46,8 @@
               </Input>
             </Inputs>
           </Instance>
-        </Item>
-        <Item X="448" Y="48">
+        </Element>
+        <Element X="448" Y="48">
           <Id>7e208b14-868b-4b73-a13c-5d5e9fc0a6b2</Id>
           <Type>Simulator.Model.Trigger.RS</Type>
           <Instance>
@@ -71,8 +76,8 @@
               <Output Index="0" Name="Q" />
             </Outputs>
           </Instance>
-        </Item>
-        <Item X="456" Y="432">
+        </Element>
+        <Element X="448" Y="432">
           <Id>88cebd64-8b3f-4821-9e28-04f322d32e38</Id>
           <Type>Simulator.Model.Logic.AND</Type>
           <Instance>
@@ -85,8 +90,8 @@
               </Input>
             </Inputs>
           </Instance>
-        </Item>
-        <Item X="560" Y="352">
+        </Element>
+        <Element X="560" Y="352">
           <Id>b5c57ae9-a0eb-4ee1-8289-557febb877b2</Id>
           <Type>Simulator.Model.Trigger.RS</Type>
           <Instance>
@@ -115,8 +120,8 @@
               <Output Index="0" Name="Q" />
             </Outputs>
           </Instance>
-        </Item>
-        <Item X="824" Y="64">
+        </Element>
+        <Element X="712" Y="64">
           <Id>1f25c2f0-9543-4d5b-ad59-e466665197f3</Id>
           <Type>Simulator.Model.Logic.AND</Type>
           <Instance>
@@ -129,8 +134,8 @@
               </Input>
             </Inputs>
           </Instance>
-        </Item>
-        <Item X="824" Y="168">
+        </Element>
+        <Element X="712" Y="168">
           <Id>897b3c77-6388-4ba6-8a82-9312593d38cf</Id>
           <Type>Simulator.Model.Logic.AND</Type>
           <Instance>
@@ -143,8 +148,8 @@
               </Input>
             </Inputs>
           </Instance>
-        </Item>
-        <Item X="824" Y="280">
+        </Element>
+        <Element X="712" Y="280">
           <Id>4845bb0d-a765-4b41-8fd0-3e75b64faca4</Id>
           <Type>Simulator.Model.Logic.AND</Type>
           <Instance>
@@ -157,8 +162,8 @@
               </Input>
             </Inputs>
           </Instance>
-        </Item>
-        <Item X="944" Y="80">
+        </Element>
+        <Element X="824" Y="80">
           <Id>cbfc3c84-e696-4f04-bbc0-3fbdf771078a</Id>
           <Type>Simulator.Model.Outputs.LAMP</Type>
           <Instance>
@@ -170,8 +175,8 @@
             <Description>Фаза 1</Description>
             <Color>Lime</Color>
           </Instance>
-        </Item>
-        <Item X="944" Y="184">
+        </Element>
+        <Element X="824" Y="184">
           <Id>aaa7b5b0-9e28-4038-8127-3f5dd4116e2b</Id>
           <Type>Simulator.Model.Outputs.LAMP</Type>
           <Instance>
@@ -183,8 +188,8 @@
             <Description>Фаза 2</Description>
             <Color>Lime</Color>
           </Instance>
-        </Item>
-        <Item X="944" Y="296">
+        </Element>
+        <Element X="824" Y="296">
           <Id>727f23fe-56e6-4747-a15e-218e595a7bf2</Id>
           <Type>Simulator.Model.Outputs.LAMP</Type>
           <Instance>
@@ -196,8 +201,8 @@
             <Description>Фаза 3</Description>
             <Color>Lime</Color>
           </Instance>
-        </Item>
-      </Items>
+        </Element>
+      </Elements>
       <Links>
         <Link>
           <Id>d556beb4-66c2-4ea4-b2a7-4b7fdb6d8a19</Id>
@@ -264,8 +269,8 @@
           <Source Id="88cebd64-8b3f-4821-9e28-04f322d32e38" PinIndex="0" />
           <Destination Id="b5c57ae9-a0eb-4ee1-8289-557febb877b2" PinIndex="1" />
           <Points>
-            <Point X="512" Y="472" />
-            <Point X="512" Y="472" />
+            <Point X="504" Y="472" />
+            <Point X="504" Y="472" />
             <Point X="528" Y="472" />
             <Point X="528" Y="408" />
             <Point X="552" Y="408" />
@@ -286,8 +291,8 @@
           <Points>
             <Point X="504" Y="88" />
             <Point X="504" Y="88" />
-            <Point X="816" Y="88" />
-            <Point X="816" Y="88" />
+            <Point X="704" Y="88" />
+            <Point X="704" Y="88" />
           </Points>
           <Segments>
             <Segment Kind="None" />
@@ -304,8 +309,8 @@
             <Point X="504" Y="88" />
             <Point X="552" Y="88" />
             <Point X="552" Y="192" />
-            <Point X="816" Y="192" />
-            <Point X="816" Y="192" />
+            <Point X="704" Y="192" />
+            <Point X="704" Y="192" />
           </Points>
           <Segments>
             <Segment Kind="None" />
@@ -324,8 +329,8 @@
             <Point X="504" Y="88" />
             <Point X="552" Y="88" />
             <Point X="552" Y="304" />
-            <Point X="816" Y="304" />
-            <Point X="816" Y="304" />
+            <Point X="704" Y="304" />
+            <Point X="704" Y="304" />
           </Points>
           <Segments>
             <Segment Kind="None" />
@@ -392,8 +397,8 @@
             <Point X="616" Y="392" />
             <Point X="640" Y="392" />
             <Point X="640" Y="120" />
-            <Point X="816" Y="120" />
-            <Point X="816" Y="120" />
+            <Point X="704" Y="120" />
+            <Point X="704" Y="120" />
           </Points>
           <Segments>
             <Segment Kind="None" />
@@ -412,8 +417,8 @@
             <Point X="616" Y="392" />
             <Point X="640" Y="392" />
             <Point X="640" Y="224" />
-            <Point X="816" Y="224" />
-            <Point X="816" Y="224" />
+            <Point X="704" Y="224" />
+            <Point X="704" Y="224" />
           </Points>
           <Segments>
             <Segment Kind="None" />
@@ -432,8 +437,8 @@
             <Point X="616" Y="392" />
             <Point X="640" Y="392" />
             <Point X="640" Y="336" />
-            <Point X="816" Y="336" />
-            <Point X="816" Y="336" />
+            <Point X="704" Y="336" />
+            <Point X="704" Y="336" />
           </Points>
           <Segments>
             <Segment Kind="None" />
@@ -502,8 +507,8 @@
             <Point X="640" Y="536" />
             <Point X="416" Y="536" />
             <Point X="416" Y="456" />
-            <Point X="448" Y="456" />
-            <Point X="448" Y="456" />
+            <Point X="440" Y="456" />
+            <Point X="440" Y="456" />
           </Points>
           <Segments>
             <Segment Kind="None" />
@@ -560,8 +565,8 @@
             <Point X="144" Y="232" />
             <Point X="168" Y="232" />
             <Point X="168" Y="488" />
-            <Point X="448" Y="488" />
-            <Point X="448" Y="488" />
+            <Point X="440" Y="488" />
+            <Point X="440" Y="488" />
           </Points>
           <Segments>
             <Segment Kind="None" />
@@ -576,10 +581,10 @@
           <Source Id="1f25c2f0-9543-4d5b-ad59-e466665197f3" PinIndex="0" />
           <Destination Id="cbfc3c84-e696-4f04-bbc0-3fbdf771078a" PinIndex="0" />
           <Points>
-            <Point X="880" Y="104" />
-            <Point X="880" Y="104" />
-            <Point X="936" Y="104" />
-            <Point X="936" Y="104" />
+            <Point X="768" Y="104" />
+            <Point X="768" Y="104" />
+            <Point X="816" Y="104" />
+            <Point X="816" Y="104" />
           </Points>
           <Segments>
             <Segment Kind="None" />
@@ -592,10 +597,10 @@
           <Source Id="897b3c77-6388-4ba6-8a82-9312593d38cf" PinIndex="0" />
           <Destination Id="aaa7b5b0-9e28-4038-8127-3f5dd4116e2b" PinIndex="0" />
           <Points>
-            <Point X="880" Y="208" />
-            <Point X="880" Y="208" />
-            <Point X="936" Y="208" />
-            <Point X="936" Y="208" />
+            <Point X="768" Y="208" />
+            <Point X="768" Y="208" />
+            <Point X="816" Y="208" />
+            <Point X="816" Y="208" />
           </Points>
           <Segments>
             <Segment Kind="None" />
@@ -608,10 +613,10 @@
           <Source Id="4845bb0d-a765-4b41-8fd0-3e75b64faca4" PinIndex="0" />
           <Destination Id="727f23fe-56e6-4747-a15e-218e595a7bf2" PinIndex="0" />
           <Points>
-            <Point X="880" Y="320" />
-            <Point X="880" Y="320" />
-            <Point X="936" Y="320" />
-            <Point X="936" Y="320" />
+            <Point X="768" Y="320" />
+            <Point X="768" Y="320" />
+            <Point X="816" Y="320" />
+            <Point X="816" Y="320" />
           </Points>
           <Segments>
             <Segment Kind="None" />
@@ -622,16 +627,16 @@
       </Links>
     </Module>
     <Module Name="ValveControl" Description="Управление клапаном">
-      <Items>
-        <Item X="112" Y="144">
+      <Elements>
+        <Element X="112" Y="144">
           <Id>3629394c-3e68-426f-89c0-16a557352a1e</Id>
           <Type>Simulator.Model.Inputs.DI</Type>
           <Instance>
             <Order>0</Order>
             <Description>Команда ОТКРЫТЬ</Description>
           </Instance>
-        </Item>
-        <Item X="352" Y="144">
+        </Element>
+        <Element X="352" Y="144">
           <Id>1c83e13c-d923-4570-b5e5-5e56eef83260</Id>
           <Type>Simulator.Model.Logic.FE</Type>
           <Instance>
@@ -641,16 +646,16 @@
               </Input>
             </Inputs>
           </Instance>
-        </Item>
-        <Item X="112" Y="216">
+        </Element>
+        <Element X="112" Y="216">
           <Id>72148cfa-e251-4ebc-8ec8-d87cbf5a6675</Id>
           <Type>Simulator.Model.Inputs.DI</Type>
           <Instance>
             <Order>1</Order>
             <Description>Команда ЗАКРЫТЬ</Description>
           </Instance>
-        </Item>
-        <Item X="352" Y="216">
+        </Element>
+        <Element X="352" Y="216">
           <Id>660fbb53-9532-41f7-ad72-eb9f49e6b822</Id>
           <Type>Simulator.Model.Logic.FE</Type>
           <Instance>
@@ -660,8 +665,8 @@
               </Input>
             </Inputs>
           </Instance>
-        </Item>
-        <Item X="464" Y="144">
+        </Element>
+        <Element X="464" Y="144">
           <Id>0bf51bf1-4382-4fa4-b37c-092a9ec018e2</Id>
           <Type>Simulator.Model.Trigger.RS</Type>
           <Instance>
@@ -690,8 +695,8 @@
               <Output Index="0" Name="Q" />
             </Outputs>
           </Instance>
-        </Item>
-        <Item X="648" Y="200">
+        </Element>
+        <Element X="648" Y="200">
           <Id>8cea94e9-039d-4a1d-b7a7-998634ba4a1b</Id>
           <Type>Simulator.Model.Timer.ONDLY</Type>
           <Instance>
@@ -702,8 +707,8 @@
             </Inputs>
             <WaitTime>5</WaitTime>
           </Instance>
-        </Item>
-        <Item X="560" Y="296">
+        </Element>
+        <Element X="560" Y="296">
           <Id>5ace4d83-d7fb-46a3-a25d-1c1cd8df80d9</Id>
           <Type>Simulator.Model.Logic.NOT</Type>
           <Instance>
@@ -726,8 +731,8 @@
               <Output Index="0" Invert="true" />
             </Outputs>
           </Instance>
-        </Item>
-        <Item X="648" Y="296">
+        </Element>
+        <Element X="648" Y="296">
           <Id>a6953e1f-4464-4970-8ed8-716203a289cf</Id>
           <Type>Simulator.Model.Timer.ONDLY</Type>
           <Instance>
@@ -738,16 +743,16 @@
             </Inputs>
             <WaitTime>5</WaitTime>
           </Instance>
-        </Item>
-        <Item X="328" Y="392">
+        </Element>
+        <Element X="112" Y="392">
           <Id>7caff32e-6a7d-48c7-bdee-ee5eb5b6acca</Id>
           <Type>Simulator.Model.Inputs.DI</Type>
           <Instance>
             <Order>2</Order>
             <Description>Концевой ОТКРЫТ</Description>
           </Instance>
-        </Item>
-        <Item X="792" Y="200">
+        </Element>
+        <Element X="792" Y="200">
           <Id>93c97fb8-3342-4ae8-8bb6-5c69059cff40</Id>
           <Type>Simulator.Model.Logic.AND</Type>
           <Instance>
@@ -760,16 +765,16 @@
               </Input>
             </Inputs>
           </Instance>
-        </Item>
-        <Item X="328" Y="480">
+        </Element>
+        <Element X="112" Y="480">
           <Id>14512f72-a397-4908-b9a8-fdfcd826d433</Id>
           <Type>Simulator.Model.Inputs.DI</Type>
           <Instance>
             <Order>3</Order>
             <Description>Концевой ЗАКРЫТ</Description>
           </Instance>
-        </Item>
-        <Item X="792" Y="296">
+        </Element>
+        <Element X="792" Y="296">
           <Id>b35c01c8-005e-4c35-ae56-f798d0f9e262</Id>
           <Type>Simulator.Model.Logic.AND</Type>
           <Instance>
@@ -782,8 +787,8 @@
               </Input>
             </Inputs>
           </Instance>
-        </Item>
-        <Item X="792" Y="448">
+        </Element>
+        <Element X="792" Y="448">
           <Id>7c8612da-da95-4f0b-aead-9a41b5799f65</Id>
           <Type>Simulator.Model.Logic.AND</Type>
           <Instance>
@@ -796,8 +801,8 @@
               </Input>
             </Inputs>
           </Instance>
-        </Item>
-        <Item X="912" Y="160">
+        </Element>
+        <Element X="912" Y="160">
           <Id>d7cb0b62-ef20-49cf-98be-511f5addd7de</Id>
           <Type>Simulator.Model.Outputs.DO</Type>
           <Instance>
@@ -809,8 +814,8 @@
             <Order>0</Order>
             <Description>Управление клапаном</Description>
           </Instance>
-        </Item>
-        <Item X="912" Y="216">
+        </Element>
+        <Element X="912" Y="216">
           <Id>871ef549-ea30-4010-9b20-ba575ba427b3</Id>
           <Type>Simulator.Model.Outputs.LAMP</Type>
           <Instance>
@@ -822,8 +827,8 @@
             <Description>Отказ при открытии</Description>
             <Color>Red</Color>
           </Instance>
-        </Item>
-        <Item X="912" Y="312">
+        </Element>
+        <Element X="912" Y="312">
           <Id>b9553aa9-d37b-45ab-bf52-9a1506d529bf</Id>
           <Type>Simulator.Model.Outputs.LAMP</Type>
           <Instance>
@@ -835,8 +840,8 @@
             <Description>Отказ при закрытии</Description>
             <Color>Red</Color>
           </Instance>
-        </Item>
-        <Item X="912" Y="392">
+        </Element>
+        <Element X="912" Y="392">
           <Id>e5d63694-0e0b-4635-aaf0-1970962be63d</Id>
           <Type>Simulator.Model.Outputs.LAMP</Type>
           <Instance>
@@ -848,8 +853,8 @@
             <Description>Клапан открыт</Description>
             <Color>Lime</Color>
           </Instance>
-        </Item>
-        <Item X="912" Y="464">
+        </Element>
+        <Element X="912" Y="464">
           <Id>1f935a96-08c1-48cf-b86d-9551ab096221</Id>
           <Type>Simulator.Model.Outputs.LAMP</Type>
           <Instance>
@@ -861,8 +866,8 @@
             <Description>Недостоверное положение</Description>
             <Color>Red</Color>
           </Instance>
-        </Item>
-        <Item X="912" Y="520">
+        </Element>
+        <Element X="912" Y="520">
           <Id>cbf4cb51-df08-4568-a87c-c2656c409537</Id>
           <Type>Simulator.Model.Outputs.LAMP</Type>
           <Instance>
@@ -874,8 +879,8 @@
             <Description>Клапан закрыт</Description>
             <Color>Lime</Color>
           </Instance>
-        </Item>
-      </Items>
+        </Element>
+      </Elements>
       <Links>
         <Link>
           <Id>25bf54d5-e693-44dd-be39-4175b13c872d</Id>
@@ -1070,8 +1075,8 @@
           <Source Id="7caff32e-6a7d-48c7-bdee-ee5eb5b6acca" PinIndex="0" />
           <Destination Id="e5d63694-0e0b-4635-aaf0-1970962be63d" PinIndex="0" />
           <Points>
-            <Point X="528" Y="416" />
-            <Point X="528" Y="416" />
+            <Point X="312" Y="416" />
+            <Point X="312" Y="416" />
             <Point X="904" Y="416" />
             <Point X="904" Y="416" />
           </Points>
@@ -1086,8 +1091,8 @@
           <Source Id="7caff32e-6a7d-48c7-bdee-ee5eb5b6acca" PinIndex="0" />
           <Destination Id="93c97fb8-3342-4ae8-8bb6-5c69059cff40" PinIndex="1" />
           <Points>
-            <Point X="528" Y="416" />
-            <Point X="528" Y="416" />
+            <Point X="312" Y="416" />
+            <Point X="312" Y="416" />
             <Point X="760" Y="416" />
             <Point X="760" Y="256" />
             <Point X="784" Y="256" />
@@ -1106,8 +1111,8 @@
           <Source Id="7caff32e-6a7d-48c7-bdee-ee5eb5b6acca" PinIndex="0" />
           <Destination Id="7c8612da-da95-4f0b-aead-9a41b5799f65" PinIndex="0" />
           <Points>
-            <Point X="528" Y="416" />
-            <Point X="528" Y="416" />
+            <Point X="312" Y="416" />
+            <Point X="312" Y="416" />
             <Point X="760" Y="416" />
             <Point X="760" Y="472" />
             <Point X="784" Y="472" />
@@ -1126,8 +1131,8 @@
           <Source Id="14512f72-a397-4908-b9a8-fdfcd826d433" PinIndex="0" />
           <Destination Id="cbf4cb51-df08-4568-a87c-c2656c409537" PinIndex="0" />
           <Points>
-            <Point X="528" Y="504" />
-            <Point X="528" Y="504" />
+            <Point X="312" Y="504" />
+            <Point X="312" Y="504" />
             <Point X="728" Y="504" />
             <Point X="728" Y="544" />
             <Point X="904" Y="544" />
@@ -1146,8 +1151,8 @@
           <Source Id="14512f72-a397-4908-b9a8-fdfcd826d433" PinIndex="0" />
           <Destination Id="b35c01c8-005e-4c35-ae56-f798d0f9e262" PinIndex="1" />
           <Points>
-            <Point X="528" Y="504" />
-            <Point X="528" Y="504" />
+            <Point X="312" Y="504" />
+            <Point X="312" Y="504" />
             <Point X="728" Y="504" />
             <Point X="728" Y="352" />
             <Point X="784" Y="352" />
@@ -1166,8 +1171,8 @@
           <Source Id="14512f72-a397-4908-b9a8-fdfcd826d433" PinIndex="0" />
           <Destination Id="7c8612da-da95-4f0b-aead-9a41b5799f65" PinIndex="1" />
           <Points>
-            <Point X="528" Y="504" />
-            <Point X="528" Y="504" />
+            <Point X="312" Y="504" />
+            <Point X="312" Y="504" />
             <Point X="784" Y="504" />
             <Point X="784" Y="504" />
           </Points>
