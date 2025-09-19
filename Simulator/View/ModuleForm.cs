@@ -12,6 +12,10 @@ namespace Simulator
         private readonly List<Link> links;
         private Cell[,] grid = new Cell[0, 0];
 
+        private readonly List<Element> dis = [];
+        private readonly List<Element> dos = [];
+
+
         private Point firstMouseDown;
         private Point mousePosition;
 
@@ -21,6 +25,8 @@ namespace Simulator
             this.panelForm = panelForm;
             Module = module;
             items = module.Items;
+            items.Where(x => x.Instance is IChangeOrderDI).ToList().ForEach(dis.Add);
+            items.Where(x => x.Instance is IChangeOrderDO).ToList().ForEach(dos.Add);
             links = module.Links;
             panelForm.SimulationTick += Module_SimulationTick;
         }

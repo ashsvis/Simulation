@@ -1,6 +1,6 @@
 ﻿namespace Simulator.Model
 {
-    public interface IChangeOrder
+    public interface IChangeOrderDI
     {
         int Order { get; set; }
     }

@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace Simulator.Model.Outputs
 {
-    public class DO : CommonLogic, ICustomDraw, IChangeOrder
+    public class DO : CommonLogic, ICustomDraw, IChangeOrderDO
     {
         public DO() : base(LogicFunction.DigOut, 1, 0)
         {

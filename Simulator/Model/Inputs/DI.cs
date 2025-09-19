@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace Simulator.Model.Inputs
 {
-    public class DI : CommonLogic, ICustomDraw, IChangeOrder
+    public class DI : CommonLogic, ICustomDraw, IChangeOrderDI
     {
         public DI() : base(LogicFunction.DigInp, 0, 1)
         {
