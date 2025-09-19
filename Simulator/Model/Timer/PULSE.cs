@@ -7,7 +7,10 @@ namespace Simulator.Model.Timer
 {
     public class PULSE : CommonLogic, ICustomDraw
     {
-        public PULSE() : base(LogicFunction.Pulse, 1) { }
+        public PULSE() : base(LogicFunction.Pulse, 1) 
+        {
+            OutputValues[0] = false;
+        }
 
         [Browsable(false)]
         public override string FuncSymbol => "^-^"; // Импульс

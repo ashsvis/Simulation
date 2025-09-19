@@ -7,7 +7,10 @@ namespace Simulator.Model.Timer
 {
     public class OFFDLY : CommonLogic, ICustomDraw
     {
-        public OFFDLY() : base(LogicFunction.OffDelay, 1) { }
+        public OFFDLY() : base(LogicFunction.OffDelay, 1) 
+        {
+            OutputValues[0] = false;
+        }
 
         [Browsable(false)]
         public override string FuncSymbol => "^-"; // Задержка выключения

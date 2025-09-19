@@ -1,12 +1,13 @@
-﻿using System;
-using System.ComponentModel;
-using static System.Windows.Forms.DataFormats;
+﻿using System.ComponentModel;
 
 namespace Simulator.Model.Logic
 {
     public class FE : CommonLogic, ICustomDraw
     {
-        public FE() : base(LogicFunction.Fe, 1) { }
+        public FE() : base(LogicFunction.Fe, 1) 
+        {
+            OutputValues[0] = false;
+        }
 
         [Browsable(false)]
         public override string FuncSymbol => "FE"; // Детектор фронта

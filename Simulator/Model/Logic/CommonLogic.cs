@@ -5,7 +5,6 @@ namespace Simulator.Model.Logic
 {
     public class CommonLogic : FilterablePropertyBase, IFunction, ICalculate, ILinkSupport, ILoadSave, IDraw, IManualChange
     {
-        private bool @out = false;
         private readonly bool[] getInputs;
         private readonly bool[] getInverseInputs;
         private readonly GetLinkValueMethod?[] getLinkInputs;
@@ -108,11 +107,11 @@ namespace Simulator.Model.Logic
         [DynamicPropertyFilter(nameof(FuncName), "Not,And,Or,Xor,Rs,Sr,Fe,Pulse,OnDelay,OffDelay")]
         public virtual bool Out
         {
-            get => @out;
+            get => getOutputs.Length > 0 && (bool)(getOutputs[0] ?? false);
             protected set
             {
-                if (@out == value) return;
-                @out = value;
+                if (getOutputs.Length == 0 || (bool)(getOutputs[0] ?? false) == value) return;
+                getOutputs[0] = value;
                 ResultChanged?.Invoke(this, new ResultCalculateEventArgs(nameof(Out), value));
             }
         }
@@ -140,7 +139,7 @@ namespace Simulator.Model.Logic
                 {
                     if (getLinkInputs[i] is GetLinkValueMethod method)
                     {
-                        bool value = (bool)method();
+                        bool value = (bool)(method() ?? false);
                         list.Add(value);
                     }
                     else
@@ -195,14 +194,14 @@ namespace Simulator.Model.Logic
                     LogicFunction.And => result && input,
                     LogicFunction.Or => result || input,
                     LogicFunction.Xor => CalcXor(InputValues),
-                    LogicFunction.Rs => CalcRsTrigger(result, input, @out),
-                    LogicFunction.Sr => CalcSrTrigger(result, input, @out),
+                    LogicFunction.Rs => CalcRsTrigger(result, input, (bool)(getOutputs[0] ?? false)),
+                    LogicFunction.Sr => CalcSrTrigger(result, input, (bool)(getOutputs[0] ?? false)),
                     _ => logicFunction == LogicFunction.Not && !result,
                 };
             }
             if (logicFunction == LogicFunction.Rs)
                 InverseOut = false;
-            Out = result ^ InverseOut;
+            getOutputs[0] = result ^ InverseOut;
         }
 
         private static bool CalcXor(object[] inputValues)
@@ -222,7 +221,7 @@ namespace Simulator.Model.Logic
 
         public GetLinkValueMethod? GetResultLink(int outputIndex)
         {
-            return () => Out;
+            return () => getOutputs[0];
         }
 
         /// <summary>

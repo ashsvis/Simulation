@@ -7,7 +7,10 @@ namespace Simulator.Model.Timer
 {
     public class ONDLY : CommonLogic, ICustomDraw
     {
-        public ONDLY() : base(LogicFunction.OnDelay, 1) { }
+        public ONDLY() : base(LogicFunction.OnDelay, 1) 
+        {
+            OutputValues[0] = false;
+        }
 
         [Browsable(false)]
         public override string FuncSymbol => "_^"; // Задержка срабатывания
