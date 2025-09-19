@@ -288,6 +288,12 @@ namespace Simulator
             using var linkpen = new Pen(zoomPad.ForeColor);
             foreach (var link in links.Where(x => !x.Selected))
             {
+                Element? source = items.FirstOrDefault(x => x.Id == link.SourceId);
+                if (source?.Instance is ILinkSupport lsup && lsup != null && link.SourcePinIndex < lsup.OutputValues.Length)
+                {
+                    var pin = link.SourcePinIndex;
+                    link.SetValue(lsup.OutputValues[pin]);
+                }
                 link.Draw(graphics, zoomPad.ForeColor);
             }
             // прорисовка узлов на связях
@@ -765,7 +771,7 @@ namespace Simulator
                 TryGetPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
                 element != null && element.Instance != null && output == true)
             {
-                element.Selected = true;
+                element.Selected = output == null;
                 items.Where(item => item != element).ToList().ForEach(item => item.Selected = false);
                 links.ForEach(item => item.Select(false));
                 // выделение выходных связей элемента

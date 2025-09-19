@@ -21,6 +21,7 @@ namespace Simulator.Model
 
         private readonly bool[] busy = new bool[1];
         private readonly bool[] selected = new bool[1];
+        private readonly object[] value = new object[1];
 
         public Link(Guid id, Guid sourceId, int sourcePin, Guid destinationId, int destinationPin, params PointF[] points)
         {
@@ -195,13 +196,23 @@ namespace Simulator.Model
             selected[0] = value;
         }
 
+        [Browsable(false)]
+        public object Value => value[0];
+
+        public void SetValue(object val)
+        {
+            value[0] = val;
+        }
+
         public void Draw(Graphics graphics, Color foreColor)
         {
             if (busy[0]) return;
 
             if (points.Count > 1)
             {
-                using var pen = new Pen(selected[0] ? Color.Magenta : foreColor);
+                using var pen = new Pen(selected[0] 
+                    ? Color.Magenta 
+                    : (value[0] is bool v) ? (v == true) ? Color.Lime : Color.Red : foreColor);
                 graphics.DrawLines(pen, [SourcePoint, points[0]]);
                 graphics.DrawLines(pen, [.. points]);
                 graphics.DrawLines(pen, [points[^1], TargetPoint]);
