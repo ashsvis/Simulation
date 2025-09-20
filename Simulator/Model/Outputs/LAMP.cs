@@ -82,6 +82,7 @@ namespace Simulator.Model.Outputs
 
         public override void Save(XElement xtance)
         {
+            base.Save(xtance);
             xtance.Add(new XElement("Description", Description));
             xtance.Add(new XElement("Color", Color.Name));
         }

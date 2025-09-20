@@ -25,7 +25,9 @@ namespace Simulator.Model.Logic
                         if (index >= 0 && index < InputValues.Length)
                         {
                             bool value = (bool)InputValues[index];
-                            di.SetValueToOut(index, value);
+                            bool oldval = (bool)(di.GetValueFromOut(0) ?? false);
+                            if (oldval != value)
+                                di.SetValueToOut(0, value);
                         }
                     }
                 }
@@ -37,7 +39,7 @@ namespace Simulator.Model.Logic
                         var index = @do.Order;
                         if (index >= 0 && index < OutputValues.Length)
                         {
-                            bool value = ((bool?)@do.GetValueFromInp(index)) ?? false;
+                            bool value = ((bool?)@do.GetValueFromInp(0)) ?? false;
                             OutputValues[index] = value;
                         }
                     }

@@ -4,7 +4,7 @@
   <Modules>
     <Module>
       <Elements>
-        <Element X="144" Y="72">
+        <Element X="64" Y="48">
           <Id>4afc683a-40c9-4128-88b5-192c9b866ebe</Id>
           <Type>Simulator.Model.Logic.ASMBLY</Type>
           <Instance>
@@ -13,7 +13,8 @@
                 <Element X="40" Y="56">
                   <Id>6e509710-7d43-4089-8e9c-b2777fbfb75d</Id>
                   <Type>Simulator.Model.Inputs.DI</Type>
-                  <Instance>
+                  <Instance Name="DI0">
+                    <Outputs />
                     <Order>0</Order>
                     <Description>Дискретный вход</Description>
                   </Instance>
@@ -21,75 +22,134 @@
                 <Element X="352" Y="56">
                   <Id>4a139dc1-5a2d-4d56-adfe-5bdd950c6940</Id>
                   <Type>Simulator.Model.Logic.NOT</Type>
-                  <Instance Name="NOT0" />
+                  <Instance Name="NOT0">
+                    <Inputs>
+                      <Input Index="0">
+                        <SourceId>6e509710-7d43-4089-8e9c-b2777fbfb75d</SourceId>
+                      </Input>
+                    </Inputs>
+                    <Outputs>
+                      <Output Index="0" Invert="true" />
+                    </Outputs>
+                  </Instance>
                 </Element>
                 <Element X="496" Y="56">
                   <Id>feff15fc-2ab1-4693-a76c-00bf1f82ac18</Id>
                   <Type>Simulator.Model.Outputs.DO</Type>
-                  <Instance>
+                  <Instance Name="DO0">
+                    <Inputs>
+                      <Input Index="0">
+                        <SourceId>4a139dc1-5a2d-4d56-adfe-5bdd950c6940</SourceId>
+                      </Input>
+                    </Inputs>
                     <Order>0</Order>
                     <Description>Дискретный выход</Description>
                   </Instance>
                 </Element>
-                <Element X="40" Y="128">
-                  <Id>1cd078ff-ebac-4093-a954-f39087e8bb4e</Id>
+                <Element X="40" Y="136">
+                  <Id>010b45b1-e401-40e8-87b7-333760bd5ee8</Id>
                   <Type>Simulator.Model.Inputs.DI</Type>
-                  <Instance>
+                  <Instance Name="DI1">
+                    <Outputs />
                     <Order>1</Order>
                     <Description>Дискретный вход</Description>
                   </Instance>
                 </Element>
-                <Element X="352" Y="128">
-                  <Id>bb3a7958-f960-47bc-b6c2-aa560904d52f</Id>
+                <Element X="352" Y="136">
+                  <Id>ebadcdaa-c665-4d8c-9e54-ab74688dd191</Id>
                   <Type>Simulator.Model.Logic.NOT</Type>
-                  <Instance Name="NOT1" />
+                  <Instance Name="NOT0">
+                    <Inputs>
+                      <Input Index="0">
+                        <SourceId>010b45b1-e401-40e8-87b7-333760bd5ee8</SourceId>
+                      </Input>
+                    </Inputs>
+                    <Outputs>
+                      <Output Index="0" Invert="true" />
+                    </Outputs>
+                  </Instance>
                 </Element>
-                <Element X="496" Y="128">
-                  <Id>f9ace20c-d997-4489-81be-48a65df6cce2</Id>
+                <Element X="496" Y="136">
+                  <Id>82e9c7c7-4317-44d5-a04d-a219b9516e0b</Id>
                   <Type>Simulator.Model.Outputs.DO</Type>
-                  <Instance>
+                  <Instance Name="DO1">
+                    <Inputs>
+                      <Input Index="0">
+                        <SourceId>ebadcdaa-c665-4d8c-9e54-ab74688dd191</SourceId>
+                      </Input>
+                    </Inputs>
                     <Order>1</Order>
                     <Description>Дискретный выход</Description>
                   </Instance>
                 </Element>
-                <Element X="40" Y="200">
-                  <Id>6471041f-0fd1-43c4-9935-b14dbc10f9e2</Id>
+                <Element X="40" Y="216">
+                  <Id>2a8bbb7a-8fb6-4f90-91a2-9b27da6d2bb4</Id>
                   <Type>Simulator.Model.Inputs.DI</Type>
-                  <Instance>
+                  <Instance Name="DI2">
+                    <Outputs />
                     <Order>2</Order>
                     <Description>Дискретный вход</Description>
                   </Instance>
                 </Element>
-                <Element X="352" Y="200">
-                  <Id>dcc93db2-4934-481e-bd01-91b8a1b23e08</Id>
+                <Element X="352" Y="216">
+                  <Id>f2ceb481-ba2f-44cb-b420-bdf95d21ef15</Id>
                   <Type>Simulator.Model.Logic.NOT</Type>
-                  <Instance Name="NOT2" />
+                  <Instance Name="NOT0">
+                    <Inputs>
+                      <Input Index="0">
+                        <SourceId>2a8bbb7a-8fb6-4f90-91a2-9b27da6d2bb4</SourceId>
+                      </Input>
+                    </Inputs>
+                    <Outputs>
+                      <Output Index="0" Invert="true" />
+                    </Outputs>
+                  </Instance>
                 </Element>
-                <Element X="496" Y="200">
-                  <Id>235a7cb3-6622-4973-aef4-8904196d4855</Id>
+                <Element X="496" Y="216">
+                  <Id>6d428d56-2534-4255-af56-b0bd0c274666</Id>
                   <Type>Simulator.Model.Outputs.DO</Type>
-                  <Instance>
+                  <Instance Name="DO2">
+                    <Inputs>
+                      <Input Index="0">
+                        <SourceId>f2ceb481-ba2f-44cb-b420-bdf95d21ef15</SourceId>
+                      </Input>
+                    </Inputs>
                     <Order>2</Order>
                     <Description>Дискретный выход</Description>
                   </Instance>
                 </Element>
-                <Element X="40" Y="272">
-                  <Id>33f3287f-9e31-422b-bf5e-5979ac35bb62</Id>
+                <Element X="40" Y="296">
+                  <Id>9b777e2e-c386-495e-afa3-a8e178a2dc3e</Id>
                   <Type>Simulator.Model.Inputs.DI</Type>
-                  <Instance>
+                  <Instance Name="DI3">
+                    <Outputs />
                     <Order>3</Order>
                     <Description>Дискретный вход</Description>
                   </Instance>
                 </Element>
-                <Element X="352" Y="272">
-                  <Id>d8b017fc-5725-4f8b-bb60-c1280f0f020e</Id>
+                <Element X="352" Y="296">
+                  <Id>04ab8a15-f89d-4255-804f-982e24de77c7</Id>
                   <Type>Simulator.Model.Logic.NOT</Type>
-                  <Instance Name="NOT3" />
+                  <Instance Name="NOT0">
+                    <Inputs>
+                      <Input Index="0">
+                        <SourceId>9b777e2e-c386-495e-afa3-a8e178a2dc3e</SourceId>
+                      </Input>
+                    </Inputs>
+                    <Outputs>
+                      <Output Index="0" Invert="true" />
+                    </Outputs>
+                  </Instance>
                 </Element>
-                <Element X="496" Y="272">
-                  <Id>8922bac6-6474-4eea-9342-c927251079f4</Id>
+                <Element X="496" Y="296">
+                  <Id>5984fb81-7c00-4454-89aa-e0537e459e4b</Id>
                   <Type>Simulator.Model.Outputs.DO</Type>
-                  <Instance>
+                  <Instance Name="DO3">
+                    <Inputs>
+                      <Input Index="0">
+                        <SourceId>04ab8a15-f89d-4255-804f-982e24de77c7</SourceId>
+                      </Input>
+                    </Inputs>
                     <Order>3</Order>
                     <Description>Дискретный выход</Description>
                   </Instance>
@@ -97,7 +157,7 @@
               </Elements>
               <Links>
                 <Link>
-                  <Id>1499df01-29a0-4f66-a4de-2b5bdbe1f898</Id>
+                  <Id>465a4439-9cd5-46e4-a3cf-206c6f4a5431</Id>
                   <Source Id="6e509710-7d43-4089-8e9c-b2777fbfb75d" PinIndex="0" />
                   <Destination Id="4a139dc1-5a2d-4d56-adfe-5bdd950c6940" PinIndex="0" />
                   <Points>
@@ -113,7 +173,7 @@
                   </Segments>
                 </Link>
                 <Link>
-                  <Id>8c7d37d2-89ad-4b8e-a8bc-d2e76d0a7145</Id>
+                  <Id>ec220cfc-9ca4-48d8-9231-ffe550645a24</Id>
                   <Source Id="4a139dc1-5a2d-4d56-adfe-5bdd950c6940" PinIndex="0" />
                   <Destination Id="feff15fc-2ab1-4693-a76c-00bf1f82ac18" PinIndex="0" />
                   <Points>
@@ -129,14 +189,14 @@
                   </Segments>
                 </Link>
                 <Link>
-                  <Id>1499df01-29a0-4f66-a4de-2b5bdbe1f898</Id>
-                  <Source Id="1cd078ff-ebac-4093-a954-f39087e8bb4e" PinIndex="0" />
-                  <Destination Id="bb3a7958-f960-47bc-b6c2-aa560904d52f" PinIndex="0" />
+                  <Id>465a4439-9cd5-46e4-a3cf-206c6f4a5431</Id>
+                  <Source Id="010b45b1-e401-40e8-87b7-333760bd5ee8" PinIndex="0" />
+                  <Destination Id="ebadcdaa-c665-4d8c-9e54-ab74688dd191" PinIndex="0" />
                   <Points>
-                    <Point X="240" Y="152" />
-                    <Point X="240" Y="152" />
-                    <Point X="344" Y="152" />
-                    <Point X="344" Y="152" />
+                    <Point X="240" Y="160" />
+                    <Point X="240" Y="160" />
+                    <Point X="344" Y="160" />
+                    <Point X="344" Y="160" />
                   </Points>
                   <Segments>
                     <Segment Kind="None" />
@@ -145,14 +205,14 @@
                   </Segments>
                 </Link>
                 <Link>
-                  <Id>8c7d37d2-89ad-4b8e-a8bc-d2e76d0a7145</Id>
-                  <Source Id="bb3a7958-f960-47bc-b6c2-aa560904d52f" PinIndex="0" />
-                  <Destination Id="f9ace20c-d997-4489-81be-48a65df6cce2" PinIndex="0" />
+                  <Id>ec220cfc-9ca4-48d8-9231-ffe550645a24</Id>
+                  <Source Id="ebadcdaa-c665-4d8c-9e54-ab74688dd191" PinIndex="0" />
+                  <Destination Id="82e9c7c7-4317-44d5-a04d-a219b9516e0b" PinIndex="0" />
                   <Points>
-                    <Point X="408" Y="152" />
-                    <Point X="408" Y="152" />
-                    <Point X="488" Y="152" />
-                    <Point X="488" Y="152" />
+                    <Point X="408" Y="160" />
+                    <Point X="408" Y="160" />
+                    <Point X="488" Y="160" />
+                    <Point X="488" Y="160" />
                   </Points>
                   <Segments>
                     <Segment Kind="None" />
@@ -161,14 +221,14 @@
                   </Segments>
                 </Link>
                 <Link>
-                  <Id>1499df01-29a0-4f66-a4de-2b5bdbe1f898</Id>
-                  <Source Id="6471041f-0fd1-43c4-9935-b14dbc10f9e2" PinIndex="0" />
-                  <Destination Id="dcc93db2-4934-481e-bd01-91b8a1b23e08" PinIndex="0" />
+                  <Id>465a4439-9cd5-46e4-a3cf-206c6f4a5431</Id>
+                  <Source Id="2a8bbb7a-8fb6-4f90-91a2-9b27da6d2bb4" PinIndex="0" />
+                  <Destination Id="f2ceb481-ba2f-44cb-b420-bdf95d21ef15" PinIndex="0" />
                   <Points>
-                    <Point X="240" Y="224" />
-                    <Point X="240" Y="224" />
-                    <Point X="344" Y="224" />
-                    <Point X="344" Y="224" />
+                    <Point X="240" Y="240" />
+                    <Point X="240" Y="240" />
+                    <Point X="344" Y="240" />
+                    <Point X="344" Y="240" />
                   </Points>
                   <Segments>
                     <Segment Kind="None" />
@@ -177,14 +237,14 @@
                   </Segments>
                 </Link>
                 <Link>
-                  <Id>8c7d37d2-89ad-4b8e-a8bc-d2e76d0a7145</Id>
-                  <Source Id="dcc93db2-4934-481e-bd01-91b8a1b23e08" PinIndex="0" />
-                  <Destination Id="235a7cb3-6622-4973-aef4-8904196d4855" PinIndex="0" />
+                  <Id>ec220cfc-9ca4-48d8-9231-ffe550645a24</Id>
+                  <Source Id="f2ceb481-ba2f-44cb-b420-bdf95d21ef15" PinIndex="0" />
+                  <Destination Id="6d428d56-2534-4255-af56-b0bd0c274666" PinIndex="0" />
                   <Points>
-                    <Point X="408" Y="224" />
-                    <Point X="408" Y="224" />
-                    <Point X="488" Y="224" />
-                    <Point X="488" Y="224" />
+                    <Point X="408" Y="240" />
+                    <Point X="408" Y="240" />
+                    <Point X="488" Y="240" />
+                    <Point X="488" Y="240" />
                   </Points>
                   <Segments>
                     <Segment Kind="None" />
@@ -193,14 +253,14 @@
                   </Segments>
                 </Link>
                 <Link>
-                  <Id>1499df01-29a0-4f66-a4de-2b5bdbe1f898</Id>
-                  <Source Id="33f3287f-9e31-422b-bf5e-5979ac35bb62" PinIndex="0" />
-                  <Destination Id="d8b017fc-5725-4f8b-bb60-c1280f0f020e" PinIndex="0" />
+                  <Id>465a4439-9cd5-46e4-a3cf-206c6f4a5431</Id>
+                  <Source Id="9b777e2e-c386-495e-afa3-a8e178a2dc3e" PinIndex="0" />
+                  <Destination Id="04ab8a15-f89d-4255-804f-982e24de77c7" PinIndex="0" />
                   <Points>
-                    <Point X="240" Y="296" />
-                    <Point X="240" Y="296" />
-                    <Point X="344" Y="296" />
-                    <Point X="344" Y="296" />
+                    <Point X="240" Y="320" />
+                    <Point X="240" Y="320" />
+                    <Point X="344" Y="320" />
+                    <Point X="344" Y="320" />
                   </Points>
                   <Segments>
                     <Segment Kind="None" />
@@ -209,14 +269,14 @@
                   </Segments>
                 </Link>
                 <Link>
-                  <Id>8c7d37d2-89ad-4b8e-a8bc-d2e76d0a7145</Id>
-                  <Source Id="d8b017fc-5725-4f8b-bb60-c1280f0f020e" PinIndex="0" />
-                  <Destination Id="8922bac6-6474-4eea-9342-c927251079f4" PinIndex="0" />
+                  <Id>ec220cfc-9ca4-48d8-9231-ffe550645a24</Id>
+                  <Source Id="04ab8a15-f89d-4255-804f-982e24de77c7" PinIndex="0" />
+                  <Destination Id="5984fb81-7c00-4454-89aa-e0537e459e4b" PinIndex="0" />
                   <Points>
-                    <Point X="408" Y="296" />
-                    <Point X="408" Y="296" />
-                    <Point X="488" Y="296" />
-                    <Point X="488" Y="296" />
+                    <Point X="408" Y="320" />
+                    <Point X="408" Y="320" />
+                    <Point X="488" Y="320" />
+                    <Point X="488" Y="320" />
                   </Points>
                   <Segments>
                     <Segment Kind="None" />

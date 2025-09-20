@@ -21,11 +21,7 @@ namespace Simulator.Model.Inputs
         public override void Calculate()
         {
             bool output = (bool)(OutputValues[0] ?? false);
-            if (Out != output)
-            {
-                Out = output;
-                Debug.WriteLine($"{Name}={Out}");
-            }
+            Out = output;
         }
 
         public override void CalculateTargets(PointF location, ref SizeF size,
@@ -99,6 +95,7 @@ namespace Simulator.Model.Inputs
 
         public override void Save(XElement xtance)
         {
+            base.Save(xtance);
             xtance.Add(new XElement("Order", Order));
             xtance.Add(new XElement("Description", Description));
         }
