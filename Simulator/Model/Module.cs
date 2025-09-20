@@ -170,5 +170,37 @@ namespace Simulator.Model
                 }
             }
         }
+
+        public Action GetCalculationMethod()
+        {
+            return new Action(() =>
+            {
+                Elements.ForEach(item =>
+                {
+                    try
+                    {
+                        if (item.Instance is ICalculate instance)
+                            instance.Calculate();
+                    }
+                    catch
+                    {
+
+                    }
+                });
+                Elements.ForEach(item =>
+                {
+                    try
+                    {
+                        if (item.Instance is Model.Logic.FE frontEdgeDetector)
+                            frontEdgeDetector.Reset();
+                    }
+                    catch
+                    {
+
+                    }
+                });
+            });
+        }
+
     }
 }

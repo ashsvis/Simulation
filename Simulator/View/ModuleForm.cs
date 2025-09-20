@@ -26,7 +26,7 @@ namespace Simulator
         private Rectangle? ribbon = null;
         private bool partSelection = false;
 
-        public ModuleForm(PanelForm panelForm, Simulator.Model.Module module)
+        public ModuleForm(PanelForm panelForm, Model.Module module)
         {
             InitializeComponent();
             this.panelForm = panelForm;
@@ -63,31 +63,8 @@ namespace Simulator
 
         private void Module_SimulationTick(object? sender, EventArgs e)
         {
-            items.ForEach(item =>
-            {
-                try
-                {
-                    if (item.Instance is ICalculate instance)
-                        instance.Calculate();
-                }
-                catch
-                {
-
-                }
-            });
-            items.ForEach(item =>
-            {
-                try
-                {
-                    if (item.Instance is Model.Logic.FE frontEdgeDetector)
-                        frontEdgeDetector.Reset();
-                }
-                catch
-                {
-
-                }
-            });
-
+            var method = Module.GetCalculationMethod();
+            method();
             zoomPad.Invalidate();
         }
 
@@ -819,7 +796,7 @@ namespace Simulator
                             link.Select(true);
                     }
                 }
-
+                // выбор собственно элемента
                 if (output == null)
                 {
                     if (!element.Selected)
@@ -829,7 +806,14 @@ namespace Simulator
                 }
                 if (e.Button == MouseButtons.Left)
                 {
-                    dragging = output == null && element.Selected;
+                    if (e.Clicks >= 2 && element.Instance is IAssembly assembly)
+                    {
+                        if (assembly.InternalModule == null)
+                            assembly.InternalModule = new Model.Module() { Name = "InternalModule" };
+                        panelForm.EnsureShowModuleChildForm(assembly.InternalModule);
+                    }
+                    else
+                        dragging = output == null && element.Selected;
                 }
 
                 ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
@@ -904,7 +888,7 @@ namespace Simulator
                                 var dlg = new ChangeNumberDialog(changer.Index);
                                 if (dlg.ShowDialog() == DialogResult.OK)
                                 {
-                                    if (dlg.EnteredValue > 0)
+                                    if (dlg.EnteredValue > 0 && dlg.EnteredValue <= items.Count)
                                     {
                                         var tmp = items[changer.Index - 1];
                                         items.Remove(tmp);

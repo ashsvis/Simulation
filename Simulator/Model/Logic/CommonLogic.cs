@@ -11,6 +11,7 @@ namespace Simulator.Model.Logic
         private readonly (Guid, int)[] getLinkSources;
         private readonly string[] getInputNames;
         private readonly object[] getOutputs;
+        private readonly bool[] getInverseOutputs;
         private readonly string[] getOutputNames;
         private readonly LogicFunction logicFunction;
 
@@ -34,6 +35,7 @@ namespace Simulator.Model.Logic
             getLinkSources = [];
             getInputNames = [];
             getOutputs = [];
+            getInverseOutputs = [];
             getOutputNames = [];
             if (inputCount > 0)
             {
@@ -46,11 +48,7 @@ namespace Simulator.Model.Logic
                 getLinkInputs = new GetLinkValueMethod?[inputCount];
                 getLinkSources = new (Guid, int)[inputCount];
                 getInputNames = new string[inputCount];
-                if (func == LogicFunction.Not)
-                {
-                    InverseOut = true;
-                }
-                else if (func == LogicFunction.Rs || func == LogicFunction.Sr)
+                if (func == LogicFunction.Rs || func == LogicFunction.Sr)
                 {
                     getInputNames[0] = "S";
                     getInputNames[1] = "R";
@@ -59,8 +57,13 @@ namespace Simulator.Model.Logic
             if (outputCount > 0)
             {
                 getOutputs = new object[outputCount];
+                getInverseOutputs = new bool[outputCount];
                 getOutputNames = new string[outputCount];
-                if (func == LogicFunction.Rs || func == LogicFunction.Sr)
+                if (func == LogicFunction.Not)
+                {
+                    getInverseOutputs[0] = true;
+                }
+                else if (func == LogicFunction.Rs || func == LogicFunction.Sr)
                 {
                     getOutputNames[0] = "Q";
                 }
@@ -103,7 +106,7 @@ namespace Simulator.Model.Logic
         [DynamicPropertyFilter(nameof(FuncName), "And,Or")]
         public bool[] InverseInputs => getInverseInputs;
 
-        [Category("Выходы"), DisplayName("Выход")]
+        [Category("Выходы"), DisplayName("Выход 1")]
         [DynamicPropertyFilter(nameof(FuncName), "Not,And,Or,Xor,Rs,Sr,Fe,Pulse,OnDelay,OffDelay")]
         public virtual bool Out
         {
@@ -116,12 +119,13 @@ namespace Simulator.Model.Logic
             }
         }
 
-        [Category("Выходы"), DisplayName(" Инверсия"), DefaultValue(false)]
-        [DynamicPropertyFilter(nameof(FuncName), "And,Or")]
-        public bool InverseOut { get; set; } = false;
+        [Category("Выходы"), DisplayName("Состояние")]
+        [DynamicPropertyFilter(nameof(FuncName), "Assembly")]
+        public object[] Outputs => getOutputs;
 
-        [Browsable(false)]
-        public bool[] InverseOutputs => [InverseOut];
+        [Category("Выходы"), DisplayName(" Инверсия"), DefaultValue(false)]
+        [DynamicPropertyFilter(nameof(FuncName), "And,Or,Assembly")]
+        public bool[] InverseOutputs => getInverseOutputs;
 
         [Browsable(false)]
         public string[] InputNames => getInputNames;
@@ -212,8 +216,8 @@ namespace Simulator.Model.Logic
                 };
             }
             if (logicFunction == LogicFunction.Rs)
-                InverseOut = false;
-            getOutputs[0] = result ^ InverseOut;
+                getInverseOutputs[0] = false;
+            getOutputs[0] = result ^ getInverseOutputs[0];
         }
 
         private static bool CalcXor(object[] inputValues)
@@ -387,7 +391,8 @@ namespace Simulator.Model.Logic
             }
         }
 
-        public void Draw(Graphics graphics, Color foreColor, Color backColor, PointF location, SizeF size, int index, bool selected, CustomDraw? customDraw = null)
+        public void Draw(Graphics graphics, Color foreColor, Color backColor, PointF location, SizeF size, 
+            int index, bool selected, CustomDraw? customDraw = null)
         {
             using var brush = new SolidBrush(Color.FromArgb(255, backColor));
             using var pen = new Pen(selected ? Color.Magenta : foreColor, 1f);

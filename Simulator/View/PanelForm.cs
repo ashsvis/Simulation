@@ -1,5 +1,7 @@
 using Simulator.Model;
 using Simulator.View;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Simulator
 {
@@ -116,7 +118,7 @@ namespace Simulator
             AddModuleToProject();
         }
 
-        private void CreateNewModuleForm(Module module)
+        private void CreateNewModuleForm(Model.Module module)
         {
             var moduleForm = new ModuleForm(this, module) { MdiParent = this, WindowState = FormWindowState.Maximized, Text = module.ToString() };
             moduleForm.ElementSelected += ChildForm_ElementSelected;
@@ -261,7 +263,7 @@ namespace Simulator
                 if (tvModules.Nodes[0].Nodes.Count > 0)
                 {
                     var node = tvModules.Nodes[0].Nodes[0];
-                    if (node.Tag is Module module)
+                    if (node.Tag is Model.Module module)
                     {
                         tvModules.SelectedNode = node;
                         pgProps.SelectedObject = module;
@@ -299,7 +301,7 @@ namespace Simulator
             }
         }
 
-        public void RemoveModuleChildFormFromPanel(Module module)
+        public void RemoveModuleChildFormFromPanel(Model.Module module)
         {
             var form = MdiChildren.OfType<ModuleForm>().FirstOrDefault(x => x.Module == module);
             form?.Close();
@@ -314,7 +316,7 @@ namespace Simulator
                 tvModules.SelectedNode = node;
                 if (node.Tag is ProjectProxy project)
                     pgProps.SelectedObject = project;
-                else if (node.Tag is Module module)
+                else if (node.Tag is Model.Module module)
                     pgProps.SelectedObject = module;
                 if (e.Clicks > 1)
                     EnsureShowModuleChildForm();
@@ -417,12 +419,12 @@ namespace Simulator
             tsbCompile.Enabled = 
                 tsbShowModuleForm.Enabled = 
                 tsbDeleteModule.Enabled = 
-                tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Module _;
+                tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module _;
         }
 
         private void tsbDeleteModule_Click(object sender, EventArgs e)
         {
-            if (tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Module module)
+            if (tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module module)
             {
                 if (MessageBox.Show("Этот модуль будет удалён безвозвратно! Удалить?",
                     "Удаление текущего модуля", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
@@ -437,23 +439,23 @@ namespace Simulator
             EnsureShowModuleChildForm();
         }
 
-        private void EnsureShowModuleChildForm()
+        public void EnsureShowModuleChildForm(Model.Module? module = null)
         {
-            if (tvModules.SelectedNode is TreeNode node)
+            if (module == null)
             {
-                if (node.Tag is Module module)
-                {
-                    var form = MdiChildren.OfType<ModuleForm>().FirstOrDefault(x => x.Module == module);
-                    if (form != null)
-                    {
-                        form.WindowState = FormWindowState.Maximized;
-                        form.BringToFront();
-                        form.Show();
-                    }
-                    else
-                        CreateNewModuleForm(module);
-                }
+                if (tvModules.SelectedNode is not TreeNode node) return;
+                if (node.Tag is not Model.Module treeModule) return;
+                module = treeModule;
             }
+            var form = MdiChildren.OfType<ModuleForm>().FirstOrDefault(x => x.Module == module);
+            if (form != null)
+            {
+                form.WindowState = FormWindowState.Maximized;
+                form.BringToFront();
+                form.Show();
+            }
+            else
+                CreateNewModuleForm(module);
         }
 
         private void tsbHorizontalLayout_Click(object sender, EventArgs e)
@@ -468,7 +470,10 @@ namespace Simulator
 
         private void tsbCompile_Click(object sender, EventArgs e)
         {
-            //
+            if (tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module module)
+            {
+                var method = module.GetCalculationMethod();
+            }
         }
     }
 }

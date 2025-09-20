@@ -15,6 +15,7 @@
         OffDelay,
         Lamp,
         DigInp,
-        DigOut
+        DigOut,
+        Assembly
     }
 }

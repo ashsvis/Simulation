@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!---->
+<Project>
+  <Modules>
+    <Module>
+      <Elements>
+        <Element X="144" Y="72">
+          <Id>4afc683a-40c9-4128-88b5-192c9b866ebe</Id>
+          <Type>Simulator.Model.Logic.ASMBLY</Type>
+          <Instance>
+            <Module Name="InternalModule">
+              <Elements>
+                <Element X="216" Y="120">
+                  <Id>4a139dc1-5a2d-4d56-adfe-5bdd950c6940</Id>
+                  <Type>Simulator.Model.Logic.NOT</Type>
+                  <Instance>
+                    <Outputs>
+                      <Output Index="0" Invert="true" />
+                    </Outputs>
+                  </Instance>
+                </Element>
+              </Elements>
+              <Links />
+            </Module>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links />
+    </Module>
+  </Modules>
+</Project>
