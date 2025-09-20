@@ -414,7 +414,10 @@ namespace Simulator
 
         private void tvModules_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            tsbShowModuleForm.Enabled = tsbDeleteModule.Enabled = tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Module _;
+            tsbCompile.Enabled = 
+                tsbShowModuleForm.Enabled = 
+                tsbDeleteModule.Enabled = 
+                tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Module _;
         }
 
         private void tsbDeleteModule_Click(object sender, EventArgs e)
@@ -461,6 +464,11 @@ namespace Simulator
         private void tsbCascadeLayout_Click(object sender, EventArgs e)
         {
             LayoutMdi(MdiLayout.Cascade);
+        }
+
+        private void tsbCompile_Click(object sender, EventArgs e)
+        {
+            //
         }
     }
 }

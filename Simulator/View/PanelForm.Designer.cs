@@ -30,7 +30,7 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PanelForm));
-            TreeNode treeNode1 = new TreeNode("Библиотека");
+            TreeNode treeNode2 = new TreeNode("Библиотека");
             menuMainStrip = new MenuStrip();
             файлToolStripMenuItem = new ToolStripMenuItem();
             tsmiCreate = new ToolStripMenuItem();
@@ -67,6 +67,8 @@
             tpModiles = new TabPage();
             tvModules = new TreeView();
             tsToolModules = new ToolStrip();
+            tsbOpenProject = new ToolStripButton();
+            toolStripSeparator5 = new ToolStripSeparator();
             tsbAddModule = new ToolStripButton();
             tsbDeleteModule = new ToolStripButton();
             toolStripSeparator3 = new ToolStripSeparator();
@@ -91,8 +93,7 @@
             tsbScreenToRight = new ToolStripButton();
             tslScreenNumber = new ToolStripLabel();
             tsbScreenToLeft = new ToolStripButton();
-            tsbOpenProject = new ToolStripButton();
-            toolStripSeparator5 = new ToolStripSeparator();
+            tsbCompile = new ToolStripButton();
             menuMainStrip.SuspendLayout();
             panLeft.SuspendLayout();
             tlpTools.SuspendLayout();
@@ -328,7 +329,7 @@
             panLeft.Dock = DockStyle.Left;
             panLeft.Location = new Point(0, 49);
             panLeft.Name = "panLeft";
-            panLeft.Size = new Size(209, 456);
+            panLeft.Size = new Size(207, 456);
             panLeft.TabIndex = 4;
             // 
             // tlpTools
@@ -343,7 +344,7 @@
             tlpTools.Name = "tlpTools";
             tlpTools.RowCount = 1;
             tlpTools.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tlpTools.Size = new Size(209, 456);
+            tlpTools.Size = new Size(207, 456);
             tlpTools.TabIndex = 3;
             // 
             // splitContainer1
@@ -361,7 +362,7 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(tabControl1);
-            splitContainer1.Size = new Size(202, 450);
+            splitContainer1.Size = new Size(200, 450);
             splitContainer1.SplitterDistance = 221;
             splitContainer1.TabIndex = 2;
             // 
@@ -373,7 +374,7 @@
             tcTools.Margin = new Padding(3, 3, 0, 3);
             tcTools.Name = "tcTools";
             tcTools.SelectedIndex = 0;
-            tcTools.Size = new Size(202, 221);
+            tcTools.Size = new Size(200, 221);
             tcTools.TabIndex = 2;
             // 
             // tpModiles
@@ -383,7 +384,7 @@
             tpModiles.Location = new Point(4, 24);
             tpModiles.Name = "tpModiles";
             tpModiles.Padding = new Padding(3);
-            tpModiles.Size = new Size(194, 193);
+            tpModiles.Size = new Size(192, 193);
             tpModiles.TabIndex = 1;
             tpModiles.Text = "Проект";
             tpModiles.UseVisualStyleBackColor = true;
@@ -399,7 +400,7 @@
             tvModules.Location = new Point(3, 28);
             tvModules.Margin = new Padding(3, 3, 0, 3);
             tvModules.Name = "tvModules";
-            tvModules.Size = new Size(188, 162);
+            tvModules.Size = new Size(186, 162);
             tvModules.TabIndex = 2;
             tvModules.AfterSelect += tvModules_AfterSelect;
             tvModules.MouseDown += tvModules_MouseDown;
@@ -407,12 +408,27 @@
             // tsToolModules
             // 
             tsToolModules.GripStyle = ToolStripGripStyle.Hidden;
-            tsToolModules.Items.AddRange(new ToolStripItem[] { tsbOpenProject, toolStripSeparator5, tsbAddModule, tsbDeleteModule, toolStripSeparator3, tsbShowModuleForm, toolStripSeparator4, tsbCascadeLayout, tsbHorizontalLayout });
+            tsToolModules.Items.AddRange(new ToolStripItem[] { tsbOpenProject, toolStripSeparator5, tsbAddModule, tsbDeleteModule, toolStripSeparator3, tsbShowModuleForm, tsbCompile, toolStripSeparator4, tsbCascadeLayout, tsbHorizontalLayout });
             tsToolModules.Location = new Point(3, 3);
             tsToolModules.Name = "tsToolModules";
-            tsToolModules.Size = new Size(188, 25);
+            tsToolModules.Size = new Size(186, 25);
             tsToolModules.TabIndex = 3;
             tsToolModules.Text = "toolStrip1";
+            // 
+            // tsbOpenProject
+            // 
+            tsbOpenProject.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbOpenProject.Image = Properties.Resources.open;
+            tsbOpenProject.ImageTransparentColor = Color.Magenta;
+            tsbOpenProject.Name = "tsbOpenProject";
+            tsbOpenProject.Size = new Size(23, 22);
+            tsbOpenProject.Text = "Открыть проект";
+            tsbOpenProject.Click += tsmiOpen_Click;
+            // 
+            // toolStripSeparator5
+            // 
+            toolStripSeparator5.Name = "toolStripSeparator5";
+            toolStripSeparator5.Size = new Size(6, 25);
             // 
             // tsbAddModule
             // 
@@ -474,7 +490,7 @@
             tsbHorizontalLayout.Image = Properties.Resources.horizontallayout;
             tsbHorizontalLayout.ImageTransparentColor = Color.Magenta;
             tsbHorizontalLayout.Name = "tsbHorizontalLayout";
-            tsbHorizontalLayout.Size = new Size(23, 22);
+            tsbHorizontalLayout.Size = new Size(23, 20);
             tsbHorizontalLayout.Text = "Расположить окна по горизонтали";
             tsbHorizontalLayout.Click += tsbHorizontalLayout_Click;
             // 
@@ -486,7 +502,7 @@
             tabControl1.Margin = new Padding(3, 3, 0, 3);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(202, 225);
+            tabControl1.Size = new Size(200, 225);
             tabControl1.TabIndex = 1;
             // 
             // tpProps
@@ -495,7 +511,7 @@
             tpProps.Location = new Point(4, 24);
             tpProps.Name = "tpProps";
             tpProps.Padding = new Padding(3);
-            tpProps.Size = new Size(194, 197);
+            tpProps.Size = new Size(192, 197);
             tpProps.TabIndex = 1;
             tpProps.Text = "Свойства";
             tpProps.UseVisualStyleBackColor = true;
@@ -506,7 +522,7 @@
             pgProps.Location = new Point(3, 3);
             pgProps.Margin = new Padding(3, 3, 0, 3);
             pgProps.Name = "pgProps";
-            pgProps.Size = new Size(188, 191);
+            pgProps.Size = new Size(186, 191);
             pgProps.TabIndex = 0;
             pgProps.PropertyValueChanged += pgProps_PropertyValueChanged;
             // 
@@ -514,7 +530,7 @@
             // 
             pnLeftSize.Cursor = Cursors.VSplit;
             pnLeftSize.Dock = DockStyle.Right;
-            pnLeftSize.Location = new Point(205, 0);
+            pnLeftSize.Location = new Point(203, 0);
             pnLeftSize.Margin = new Padding(0);
             pnLeftSize.Name = "pnLeftSize";
             pnLeftSize.Size = new Size(4, 456);
@@ -534,9 +550,9 @@
             tvLibrary.LineColor = Color.WhiteSmoke;
             tvLibrary.Location = new Point(3, 3);
             tvLibrary.Name = "tvLibrary";
-            treeNode1.Name = "Узел0";
-            treeNode1.Text = "Библиотека";
-            tvLibrary.Nodes.AddRange(new TreeNode[] { treeNode1 });
+            treeNode2.Name = "Узел0";
+            treeNode2.Text = "Библиотека";
+            tvLibrary.Nodes.AddRange(new TreeNode[] { treeNode2 });
             tvLibrary.Size = new Size(188, 416);
             tvLibrary.TabIndex = 1;
             tvLibrary.MouseDown += tvLibrary_MouseDown;
@@ -678,20 +694,16 @@
             tsbScreenToLeft.ToolTipText = "Переместить влево";
             tsbScreenToLeft.Click += tsmiScreenMoveLeft_Click;
             // 
-            // tsbOpenProject
+            // tsbCompile
             // 
-            tsbOpenProject.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            tsbOpenProject.Image = Properties.Resources.open;
-            tsbOpenProject.ImageTransparentColor = Color.Magenta;
-            tsbOpenProject.Name = "tsbOpenProject";
-            tsbOpenProject.Size = new Size(23, 22);
-            tsbOpenProject.Text = "Открыть проект";
-            tsbOpenProject.Click += tsmiOpen_Click;
-            // 
-            // toolStripSeparator5
-            // 
-            toolStripSeparator5.Name = "toolStripSeparator5";
-            toolStripSeparator5.Size = new Size(6, 25);
+            tsbCompile.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbCompile.Enabled = false;
+            tsbCompile.Image = Properties.Resources.compile;
+            tsbCompile.ImageTransparentColor = Color.Magenta;
+            tsbCompile.Name = "tsbCompile";
+            tsbCompile.Size = new Size(23, 22);
+            tsbCompile.Text = "Компиляция модуля";
+            tsbCompile.Click += tsbCompile_Click;
             // 
             // PanelForm
             // 
@@ -804,5 +816,6 @@
         private ToolStripButton tsbHorizontalLayout;
         private ToolStripButton tsbOpenProject;
         private ToolStripSeparator toolStripSeparator5;
+        private ToolStripButton tsbCompile;
     }
 }
