@@ -7,11 +7,6 @@
         <Element X="88" Y="208">
           <Id>ecb54d76-6d97-4c21-9b7c-eeb87980cc1a</Id>
           <Type>Simulator.Model.Logic.FE</Type>
-          <Instance>
-            <Inputs>
-              <Input Index="0" Value="true" />
-            </Inputs>
-          </Instance>
         </Element>
         <Element X="312" Y="176">
           <Id>77bf00ae-4938-4844-b964-ba32d64918a4</Id>

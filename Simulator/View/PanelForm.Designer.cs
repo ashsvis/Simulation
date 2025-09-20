@@ -91,6 +91,8 @@
             tsbScreenToRight = new ToolStripButton();
             tslScreenNumber = new ToolStripLabel();
             tsbScreenToLeft = new ToolStripButton();
+            tsbOpenProject = new ToolStripButton();
+            toolStripSeparator5 = new ToolStripSeparator();
             menuMainStrip.SuspendLayout();
             panLeft.SuspendLayout();
             tlpTools.SuspendLayout();
@@ -405,7 +407,7 @@
             // tsToolModules
             // 
             tsToolModules.GripStyle = ToolStripGripStyle.Hidden;
-            tsToolModules.Items.AddRange(new ToolStripItem[] { tsbAddModule, tsbDeleteModule, toolStripSeparator3, tsbShowModuleForm, toolStripSeparator4, tsbCascadeLayout, tsbHorizontalLayout });
+            tsToolModules.Items.AddRange(new ToolStripItem[] { tsbOpenProject, toolStripSeparator5, tsbAddModule, tsbDeleteModule, toolStripSeparator3, tsbShowModuleForm, toolStripSeparator4, tsbCascadeLayout, tsbHorizontalLayout });
             tsToolModules.Location = new Point(3, 3);
             tsToolModules.Name = "tsToolModules";
             tsToolModules.Size = new Size(188, 25);
@@ -676,6 +678,21 @@
             tsbScreenToLeft.ToolTipText = "Переместить влево";
             tsbScreenToLeft.Click += tsmiScreenMoveLeft_Click;
             // 
+            // tsbOpenProject
+            // 
+            tsbOpenProject.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbOpenProject.Image = Properties.Resources.open;
+            tsbOpenProject.ImageTransparentColor = Color.Magenta;
+            tsbOpenProject.Name = "tsbOpenProject";
+            tsbOpenProject.Size = new Size(23, 22);
+            tsbOpenProject.Text = "Открыть проект";
+            tsbOpenProject.Click += tsmiOpen_Click;
+            // 
+            // toolStripSeparator5
+            // 
+            toolStripSeparator5.Name = "toolStripSeparator5";
+            toolStripSeparator5.Size = new Size(6, 25);
+            // 
             // PanelForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -785,5 +802,7 @@
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripButton tsbCascadeLayout;
         private ToolStripButton tsbHorizontalLayout;
+        private ToolStripButton tsbOpenProject;
+        private ToolStripSeparator toolStripSeparator5;
     }
 }
