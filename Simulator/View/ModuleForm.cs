@@ -1149,20 +1149,6 @@ namespace Simulator
             Project.Save();
         }
 
-        private void tsmiAddModule_Click(object sender, EventArgs e)
-        {
-            panelForm.AddModuleToProject();
-        }
-
-        private void tsbDeleteModule_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Этот модуль будет удалён безвозвратно! Удалить?",
-                "Удаление текущего модуля", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-            {
-                panelForm.RemoveModuleFromProject(Module);
-            }
-        }
-
         private void ModuleForm_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)

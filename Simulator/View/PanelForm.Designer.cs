@@ -66,6 +66,14 @@
             tcTools = new TabControl();
             tpModiles = new TabPage();
             tvModules = new TreeView();
+            tsToolModules = new ToolStrip();
+            tsbAddModule = new ToolStripButton();
+            tsbDeleteModule = new ToolStripButton();
+            toolStripSeparator3 = new ToolStripSeparator();
+            tsbShowModuleForm = new ToolStripButton();
+            toolStripSeparator4 = new ToolStripSeparator();
+            tsbCascadeLayout = new ToolStripButton();
+            tsbHorizontalLayout = new ToolStripButton();
             tabControl1 = new TabControl();
             tpProps = new TabPage();
             pgProps = new PropertyGrid();
@@ -92,6 +100,7 @@
             splitContainer1.SuspendLayout();
             tcTools.SuspendLayout();
             tpModiles.SuspendLayout();
+            tsToolModules.SuspendLayout();
             tabControl1.SuspendLayout();
             tpProps.SuspendLayout();
             panRight.SuspendLayout();
@@ -368,6 +377,7 @@
             // tpModiles
             // 
             tpModiles.Controls.Add(tvModules);
+            tpModiles.Controls.Add(tsToolModules);
             tpModiles.Location = new Point(4, 24);
             tpModiles.Name = "tpModiles";
             tpModiles.Padding = new Padding(3);
@@ -384,13 +394,87 @@
             tvModules.FullRowSelect = true;
             tvModules.HideSelection = false;
             tvModules.LineColor = Color.WhiteSmoke;
-            tvModules.Location = new Point(3, 3);
+            tvModules.Location = new Point(3, 28);
             tvModules.Margin = new Padding(3, 3, 0, 3);
             tvModules.Name = "tvModules";
-            tvModules.Size = new Size(188, 187);
+            tvModules.Size = new Size(188, 162);
             tvModules.TabIndex = 2;
-            tvModules.DoubleClick += tvModules_DoubleClick;
+            tvModules.AfterSelect += tvModules_AfterSelect;
             tvModules.MouseDown += tvModules_MouseDown;
+            // 
+            // tsToolModules
+            // 
+            tsToolModules.GripStyle = ToolStripGripStyle.Hidden;
+            tsToolModules.Items.AddRange(new ToolStripItem[] { tsbAddModule, tsbDeleteModule, toolStripSeparator3, tsbShowModuleForm, toolStripSeparator4, tsbCascadeLayout, tsbHorizontalLayout });
+            tsToolModules.Location = new Point(3, 3);
+            tsToolModules.Name = "tsToolModules";
+            tsToolModules.Size = new Size(188, 25);
+            tsToolModules.TabIndex = 3;
+            tsToolModules.Text = "toolStrip1";
+            // 
+            // tsbAddModule
+            // 
+            tsbAddModule.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbAddModule.Image = Properties.Resources.newitem;
+            tsbAddModule.ImageTransparentColor = Color.Magenta;
+            tsbAddModule.Name = "tsbAddModule";
+            tsbAddModule.Size = new Size(23, 22);
+            tsbAddModule.Text = "Добавить новый модуль";
+            tsbAddModule.Click += tsmiAddModule_Click;
+            // 
+            // tsbDeleteModule
+            // 
+            tsbDeleteModule.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbDeleteModule.Enabled = false;
+            tsbDeleteModule.Image = Properties.Resources.delitem;
+            tsbDeleteModule.ImageTransparentColor = Color.Magenta;
+            tsbDeleteModule.Name = "tsbDeleteModule";
+            tsbDeleteModule.Size = new Size(23, 22);
+            tsbDeleteModule.Text = "Удалить выбранный модуль";
+            tsbDeleteModule.Click += tsbDeleteModule_Click;
+            // 
+            // toolStripSeparator3
+            // 
+            toolStripSeparator3.Name = "toolStripSeparator3";
+            toolStripSeparator3.Size = new Size(6, 25);
+            // 
+            // tsbShowModuleForm
+            // 
+            tsbShowModuleForm.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbShowModuleForm.Enabled = false;
+            tsbShowModuleForm.Image = Properties.Resources.showform;
+            tsbShowModuleForm.ImageTransparentColor = Color.Magenta;
+            tsbShowModuleForm.Name = "tsbShowModuleForm";
+            tsbShowModuleForm.Size = new Size(23, 22);
+            tsbShowModuleForm.Text = "Показать содержимое модуля";
+            tsbShowModuleForm.Click += tsbShowModuleForm_Click;
+            // 
+            // toolStripSeparator4
+            // 
+            toolStripSeparator4.Name = "toolStripSeparator4";
+            toolStripSeparator4.Size = new Size(6, 25);
+            // 
+            // tsbCascadeLayout
+            // 
+            tsbCascadeLayout.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbCascadeLayout.Enabled = false;
+            tsbCascadeLayout.Image = Properties.Resources.cascadelayout;
+            tsbCascadeLayout.ImageTransparentColor = Color.Magenta;
+            tsbCascadeLayout.Name = "tsbCascadeLayout";
+            tsbCascadeLayout.Size = new Size(23, 22);
+            tsbCascadeLayout.Text = "Расположить окна каскадом";
+            tsbCascadeLayout.Click += tsbCascadeLayout_Click;
+            // 
+            // tsbHorizontalLayout
+            // 
+            tsbHorizontalLayout.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbHorizontalLayout.Enabled = false;
+            tsbHorizontalLayout.Image = Properties.Resources.horizontallayout;
+            tsbHorizontalLayout.ImageTransparentColor = Color.Magenta;
+            tsbHorizontalLayout.Name = "tsbHorizontalLayout";
+            tsbHorizontalLayout.Size = new Size(23, 22);
+            tsbHorizontalLayout.Text = "Расположить окна по горизонтали";
+            tsbHorizontalLayout.Click += tsbHorizontalLayout_Click;
             // 
             // tabControl1
             // 
@@ -624,6 +708,9 @@
             splitContainer1.ResumeLayout(false);
             tcTools.ResumeLayout(false);
             tpModiles.ResumeLayout(false);
+            tpModiles.PerformLayout();
+            tsToolModules.ResumeLayout(false);
+            tsToolModules.PerformLayout();
             tabControl1.ResumeLayout(false);
             tpProps.ResumeLayout(false);
             panRight.ResumeLayout(false);
@@ -690,5 +777,13 @@
         private TabControl tabControl3;
         private TabPage tabPage2;
         private Panel panRightSize;
+        private ToolStrip tsToolModules;
+        private ToolStripButton tsbAddModule;
+        private ToolStripButton tsbDeleteModule;
+        private ToolStripSeparator toolStripSeparator3;
+        private ToolStripButton tsbShowModuleForm;
+        private ToolStripSeparator toolStripSeparator4;
+        private ToolStripButton tsbCascadeLayout;
+        private ToolStripButton tsbHorizontalLayout;
     }
 }

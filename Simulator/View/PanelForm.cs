@@ -142,6 +142,8 @@ namespace Simulator
         private void timerInterface_Tick(object sender, EventArgs e)
         {
             окноToolStripMenuItem.Visible = MdiChildren.Length > 0;
+            tsbCascadeLayout.Enabled = MdiChildren.Length > 0;
+            tsbHorizontalLayout.Enabled = MdiChildren.Length > 0;
         }
 
         private void поГоризонталиToolStripMenuItem_Click(object sender, EventArgs e)
@@ -269,25 +271,6 @@ namespace Simulator
             }
         }
 
-        private void tvModules_DoubleClick(object sender, EventArgs e)
-        {
-            if (tvModules.SelectedNode is TreeNode node)
-            {
-                if (node.Tag is Module module)
-                {
-                    var form = MdiChildren.OfType<ModuleForm>().FirstOrDefault(x => x.Module == module);
-                    if (form != null)
-                    {
-                        form.WindowState = FormWindowState.Maximized;
-                        form.BringToFront();
-                        form.Show();
-                    }
-                    else
-                        CreateNewModuleForm(module);
-                }
-            }
-        }
-
         private void PanelForm_MdiChildActivate(object sender, EventArgs e)
         {
             if (ActiveMdiChild is ModuleForm form)
@@ -316,14 +299,10 @@ namespace Simulator
             }
         }
 
-        public void RemoveModuleFromProject(Module module)
+        public void RemoveModuleChildFormFromPanel(Module module)
         {
-            var node = tvModules.Nodes[0].Nodes.Cast<TreeNode>().FirstOrDefault(x => x.Tag == module);
-            if (node != null)
-                tvModules.Nodes[0].Nodes.Remove(node);
             var form = MdiChildren.OfType<ModuleForm>().FirstOrDefault(x => x.Module == module);
             form?.Close();
-            Project.RemoveModuleFromProject(module);
         }
 
         private void tvModules_MouseDown(object sender, MouseEventArgs e)
@@ -334,13 +313,11 @@ namespace Simulator
                 tvModules.SelectedNode = null;
                 tvModules.SelectedNode = node;
                 if (node.Tag is ProjectProxy project)
-                {
                     pgProps.SelectedObject = project;
-                }
                 else if (node.Tag is Module module)
-                {
                     pgProps.SelectedObject = module;
-                }
+                if (e.Clicks > 1)
+                    EnsureShowModuleChildForm();
             }
         }
 
@@ -433,6 +410,57 @@ namespace Simulator
         {
             Properties.Settings.Default.LeftToolsPanelWidth = panLeft.Width;
             Properties.Settings.Default.Save();
+        }
+
+        private void tvModules_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            tsbShowModuleForm.Enabled = tsbDeleteModule.Enabled = tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Module _;
+        }
+
+        private void tsbDeleteModule_Click(object sender, EventArgs e)
+        {
+            if (tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Module module)
+            {
+                if (MessageBox.Show("Этот модуль будет удалён безвозвратно! Удалить?",
+                    "Удаление текущего модуля", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                {
+                    Host.RemoveModuleChildWindowFromPanels(module);
+                }
+            }
+        }
+
+        private void tsbShowModuleForm_Click(object sender, EventArgs e)
+        {
+            EnsureShowModuleChildForm();
+        }
+
+        private void EnsureShowModuleChildForm()
+        {
+            if (tvModules.SelectedNode is TreeNode node)
+            {
+                if (node.Tag is Module module)
+                {
+                    var form = MdiChildren.OfType<ModuleForm>().FirstOrDefault(x => x.Module == module);
+                    if (form != null)
+                    {
+                        form.WindowState = FormWindowState.Maximized;
+                        form.BringToFront();
+                        form.Show();
+                    }
+                    else
+                        CreateNewModuleForm(module);
+                }
+            }
+        }
+
+        private void tsbHorizontalLayout_Click(object sender, EventArgs e)
+        {
+            LayoutMdi(MdiLayout.TileHorizontal);
+        }
+
+        private void tsbCascadeLayout_Click(object sender, EventArgs e)
+        {
+            LayoutMdi(MdiLayout.Cascade);
         }
     }
 }

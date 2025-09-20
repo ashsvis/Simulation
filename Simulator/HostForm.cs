@@ -1,4 +1,6 @@
-﻿using System.Windows.Forms;
+﻿using Simulator.Model;
+using System.Reflection;
+using System.Windows.Forms;
 
 namespace Simulator
 {
@@ -149,21 +151,13 @@ namespace Simulator
             SimulationTick?.Invoke(this, EventArgs.Empty);
         }
 
-        //public void LoadModel()
-        //{
-        //    Project.Load("project.xml");
-        //}
-
-        //[EnvironmentPermission(SecurityAction.LinkDemand, Unrestricted = true)]
-        //private static Process RunningInstance()
-        //{
-        //    var current = Process.GetCurrentProcess();
-        //    var processes = Process.GetProcessesByName(current.ProcessName);
-        //    // Просматриваем все процессы
-        //    return processes.Where(process => process.Id != current.Id).
-        //        FirstOrDefault(process => Assembly.GetExecutingAssembly().
-        //            Location.Replace("/", "\\") == current.MainModule.FileName);
-        //    // нет, таких процессов не найдено
-        //}
+        public void RemoveModuleChildWindowFromPanels(Model.Module module)
+        {
+            panels.ForEach(frm => 
+            {
+                frm.RemoveModuleChildFormFromPanel(module);
+            });
+            Project.RemoveModuleFromProject(module);
+        }
     }
 }
