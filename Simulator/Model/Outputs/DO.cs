@@ -1,5 +1,6 @@
 ﻿using Simulator.Model.Logic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Xml.Linq;
 
 namespace Simulator.Model.Outputs
@@ -21,7 +22,11 @@ namespace Simulator.Model.Outputs
         public override void Calculate()
         {
             bool input = (bool)InputValues[0];
-            @out = input;
+            if (@out != input)
+            {
+                @out = input;
+                Debug.WriteLine($"{Name}={@out}");
+            }
         }
 
         public override void CalculateTargets(PointF location, ref SizeF size,
@@ -79,15 +84,8 @@ namespace Simulator.Model.Outputs
             graphics.DrawString(Description, textFont, fontbrush, descrect, format);
         }
 
-        public override void Save(XElement xtem)
+        public override void Save(XElement xtance)
         {
-            base.Save(xtem);
-            XElement? xtance = xtem.Element("Instance");
-            if (xtance == null)
-            {
-                xtance = new XElement("Instance");
-                xtem.Add(xtance);
-            }
             xtance.Add(new XElement("Order", Order));
             xtance.Add(new XElement("Description", Description));
         }

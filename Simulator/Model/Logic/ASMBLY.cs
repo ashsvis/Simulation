@@ -1,7 +1,5 @@
 ﻿
 using System.ComponentModel;
-using System.Globalization;
-using System.Reflection;
 using System.Xml.Linq;
 
 namespace Simulator.Model.Logic
@@ -14,20 +12,44 @@ namespace Simulator.Model.Logic
         public override string FuncSymbol => "ASM"; // Детектор фронта
 
         [Browsable(false)]
-        public Model.Module? InternalModule { get; set; }
-
-        public override void Save(XElement xtem)
+        public Model.Module? ModuleInternal { get; set; }
+        public override void Calculate()
         {
-            base.Save(xtem);
-            XElement? xtance = xtem.Element("Instance");
-            if (xtance == null)
+            if (ModuleInternal != null) 
             {
-                xtance = new XElement("Instance");
-                xtem.Add(xtance);
+                foreach (var item in ModuleInternal.Elements)
+                {
+                    if (item.Instance is Model.Inputs.DI di)
+                    {
+                        var index = di.Order;
+                        if (index >= 0 && index < InputValues.Length)
+                        {
+                            bool value = (bool)InputValues[index];
+                            di.SetValueToOut(index, value);
+                        }
+                    }
+                }
+                ModuleInternal.GetCalculationMethod().Invoke();
+                foreach (var item in ModuleInternal.Elements)
+                {
+                    if (item.Instance is Model.Outputs.DO @do)
+                    {
+                        var index = @do.Order;
+                        if (index >= 0 && index < OutputValues.Length)
+                        {
+                            bool value = ((bool?)@do.GetValueFromInp(index)) ?? false;
+                            OutputValues[index] = value;
+                        }
+                    }
+                }
             }
+        }
+
+        public override void Save(XElement xtance)
+        {
             XElement xmodule = new("Module");
             xtance.Add(xmodule);
-            InternalModule?.Save(xmodule);
+            ModuleInternal?.Save(xmodule);
 
         }
 
@@ -35,8 +57,8 @@ namespace Simulator.Model.Logic
         {
             var xmodule = xtem?.Element("Module");
             if (xmodule == null) return;
-            InternalModule = InternalModule ?? new Module();
-            InternalModule.Load(xmodule);
+            ModuleInternal = ModuleInternal ?? new Module();
+            ModuleInternal.Load(xmodule);
         }
     }
 }

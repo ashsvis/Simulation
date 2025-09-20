@@ -2,6 +2,6 @@
 {
     public interface IAssembly
     {
-        Model.Module? InternalModule { get; set; }
+        Model.Module? ModuleInternal { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Xml.Linq;
 
 namespace Simulator.Model.Logic
@@ -217,7 +218,12 @@ namespace Simulator.Model.Logic
             }
             if (logicFunction == LogicFunction.Rs)
                 getInverseOutputs[0] = false;
-            getOutputs[0] = result ^ getInverseOutputs[0];
+            var oldval = (bool)(getOutputs[0] ?? false);
+            if (oldval != result ^ getInverseOutputs[0])
+            {
+                getOutputs[0] = result ^ getInverseOutputs[0];
+                Debug.WriteLine($"{Name}={getOutputs[0]}");
+            }
         }
 
         private static bool CalcXor(object[] inputValues)
@@ -286,21 +292,21 @@ namespace Simulator.Model.Logic
             return null;
         }
 
-        public virtual void Save(XElement xtem)
+        public virtual void Save(XElement xtance)
         {
-            var xtance = new XElement("Instance");
+            //var xtance = new XElement("Instance");
 
             if (!string.IsNullOrWhiteSpace(Name))
                 xtance.Add(new XAttribute("Name", Name));
             XElement xinputs = new("Inputs");
-            bool customInputs = false;
+            //bool customInputs = false;
             for (var i = 0; i < Inputs.Length; i++)
             {
                 (Guid id, int output) = getLinkSources[i];
                 if (string.IsNullOrWhiteSpace(InputNames[i]) &&
                     !InverseInputs[i] && !Inputs[i] &&
                     id == Guid.Empty) continue;
-                customInputs = true;
+                //customInputs = true;
                 XElement xinput = new("Input");
                 xinputs.Add(xinput);
                 xinput.Add(new XAttribute("Index", i));
@@ -318,17 +324,17 @@ namespace Simulator.Model.Logic
                         xinput.Add(new XElement("OutputIndex", output));
                 }
             }
-            if (customInputs)
-                xtance.Add(xinputs);
+            //if (customInputs)
+            //    xtance.Add(xinputs);
             if (OutputNames.Length > 0)
             {
                 XElement xoutputs = new("Outputs");
-                bool customOutputs = false;
+                //bool customOutputs = false;
                 for (var i = 0; i < InverseOutputs.Length; i++)
                 {
                     if (string.IsNullOrWhiteSpace(OutputNames[i]) &&
                         !InverseOutputs[i]) continue;
-                    customOutputs = true;
+                    //customOutputs = true;
                     XElement xoutput = new("Output");
                     xoutputs.Add(xoutput);
                     xoutput.Add(new XAttribute("Index", i));
@@ -337,14 +343,14 @@ namespace Simulator.Model.Logic
                     if (InverseOutputs[i])
                         xoutput.Add(new XAttribute("Invert", InverseOutputs[i]));
                 }
-                if (customOutputs)
-                {
-                    xtance.Add(xoutputs);
-                    xtem.Add(xtance);
-                }
+                //if (customOutputs)
+                //{
+                //    xtance.Add(xoutputs);
+                //    xtem.Add(xtance);
+                //}
             }
-            if (customInputs)
-                xtem.Add(xtance);
+            //if (customInputs)
+            //    xtem.Add(xtance);
         }
 
         public virtual void Load(XElement? xtance)

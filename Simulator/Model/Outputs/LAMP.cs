@@ -80,15 +80,8 @@ namespace Simulator.Model.Outputs
             graphics.DrawString(Description, textFont, fontbrush, descrect, format);
         }
 
-        public override void Save(XElement xtem)
+        public override void Save(XElement xtance)
         {
-            base.Save(xtem);
-            XElement? xtance = xtem.Element("Instance");
-            if (xtance == null)
-            {
-                xtance = new XElement("Instance");
-                xtem.Add(xtance);
-            }
             xtance.Add(new XElement("Description", Description));
             xtance.Add(new XElement("Color", Color.Name));
         }

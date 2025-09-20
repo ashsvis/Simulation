@@ -808,9 +808,9 @@ namespace Simulator
                 {
                     if (e.Clicks >= 2 && element.Instance is IAssembly assembly)
                     {
-                        if (assembly.InternalModule == null)
-                            assembly.InternalModule = new Model.Module() { Name = "InternalModule" };
-                        panelForm.EnsureShowModuleChildForm(assembly.InternalModule);
+                        assembly.ModuleInternal ??= new Model.Module() { Name = "InternalModule" };
+                        assembly.ModuleInternal.Changed = false;
+                        panelForm.EnsureShowModuleChildForm(assembly.ModuleInternal);
                     }
                     else
                         dragging = output == null && element.Selected;
@@ -1131,6 +1131,7 @@ namespace Simulator
         private void tsbSave_Click(object sender, EventArgs e)
         {
             Project.Save();
+            Module.Changed = false;
         }
 
         private void ModuleForm_KeyDown(object sender, KeyEventArgs e)

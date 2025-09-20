@@ -43,7 +43,13 @@ namespace Simulator.Model
             xtem.Add(new XAttribute("X", Location.X));
             xtem.Add(new XAttribute("Y", Location.Y));
             if (Instance is ILoadSave instance)
-                instance.Save(xtem);
+            {
+                var xtance = new XElement("Instance");
+                xtem.Add(xtance);
+                if (!string.IsNullOrWhiteSpace(instance.Name))
+                    xtance.Add(new XAttribute("Name", instance.Name));
+                instance.Save(xtance);
+            }
         }
 
         public void Load(XElement item, Type type)

@@ -71,16 +71,9 @@ namespace Simulator.Model.Timer
             }
         }
 
-        public override void Save(XElement xtem)
+        public override void Save(XElement xtance)
         {
-            base.Save(xtem);
-            XElement? xtance = xtem.Element("Instance");
             if (Math.Abs(WaitTime - 1.0) < 0.0001) return;
-            if (xtance == null )
-            {
-                xtance = new XElement("Instance");
-                xtem.Add(xtance);
-            }
             xtance.Add(new XElement("WaitTime", WaitTime));
         }
 
