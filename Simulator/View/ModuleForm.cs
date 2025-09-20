@@ -43,15 +43,16 @@ namespace Simulator
             zoomPad.Invalidate();
         }
 
-        private void ChildForm_Load(object sender, EventArgs e)
+        private void ModuleForm_Load(object sender, EventArgs e)
         {
             items.ForEach(item => item.Selected = false);
             links.ForEach(item => item.Select(false));
-
+            timerInterface.Enabled = true;
         }
 
-        private void ChildForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void ModuleForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            timerInterface.Enabled = false;
             items.ForEach(item =>
             {
                 if (item.Instance is IFunction instance)
@@ -88,7 +89,6 @@ namespace Simulator
             });
 
             zoomPad.Invalidate();
-            tsbSave.Enabled = Module.Changed;
         }
 
         private void zoomPad_DragEnter(object sender, DragEventArgs e)
@@ -238,7 +238,7 @@ namespace Simulator
             for (var i = links.Count - 1; i >= 0; i--)
             {
                 var link = links[i];
-                foreach(var segment in link.Segments)
+                foreach (var segment in link.Segments)
                 {
                     if (segment.Item1.Contains(point))
                     {
@@ -323,7 +323,7 @@ namespace Simulator
                             if (pt1.X != pt2.X || pt1.Y != pt2.Y)
                             {
                                 if (pt1.X != pt2.X || pt1.Y == pt2.Y)
-                                    rects.Add((new RectangleF(Math.Min(pt1.X, pt2.X) + 3f, pt1.Y - 1f , Math.Abs(pt1.X - pt2.X) - 6f, 3f), link.Id));
+                                    rects.Add((new RectangleF(Math.Min(pt1.X, pt2.X) + 3f, pt1.Y - 1f, Math.Abs(pt1.X - pt2.X) - 6f, 3f), link.Id));
                                 if (pt1.X == pt2.X || pt1.Y != pt2.Y)
                                     rects.Add((new RectangleF(pt1.X - 1f, Math.Min(pt1.Y, pt2.Y) + 3f, 3f, Math.Abs(pt1.Y - pt2.Y) - 6f), link.Id));
                             }
@@ -333,7 +333,7 @@ namespace Simulator
                     List<(PointF, Guid)> results = [];
                     foreach ((var point, var id1) in list)
                     {
-                        foreach((var rect, var id2) in rects)
+                        foreach ((var rect, var id2) in rects)
                         {
                             if (id1 != id2 && rect.Contains(point) && !results.Contains((point, id1)))
                                 results.Add((point, id1));
@@ -827,7 +827,7 @@ namespace Simulator
                     else if ((ModifierKeys & Keys.Control) == Keys.Control)
                         element.Selected = false;
                 }
-                if (e.Button == MouseButtons.Left) 
+                if (e.Button == MouseButtons.Left)
                 {
                     dragging = output == null && element.Selected;
                 }
@@ -846,7 +846,7 @@ namespace Simulator
             {
                 linkFirstPoint = null;
                 cmsContextMenu.Items.Clear();
-                ToolStripMenuItem item; 
+                ToolStripMenuItem item;
                 if (element?.Instance is ILinkSupport func)
                 {
                     if (output == false && pin != null && func.LinkedInputs[(int)pin])
@@ -1165,11 +1165,11 @@ namespace Simulator
 
         private void ModuleForm_KeyDown(object sender, KeyEventArgs e)
         {
-            switch (e.KeyCode) 
-            { 
+            switch (e.KeyCode)
+            {
                 case Keys.Delete:
                     if (items.Any(x => x.Selected) &&
-                        MessageBox.Show("Удалить выделенные элементы?", "Удаление элементов", 
+                        MessageBox.Show("Удалить выделенные элементы?", "Удаление элементов",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     {
                         DeleteAllSelectedElements();
@@ -1197,125 +1197,114 @@ namespace Simulator
                         zoomPad.Invalidate();
                     }
                     break;
+                case Keys.X:
+                    if (e.Control)
+                    {
+                        CutSelectedElementsAndLinkToClipboard();
+                    }
+                    break;
                 case Keys.C:
                     if (e.Control)
                     {
-                        var root = new XElement("Clipboard");
-                        XDocument doc = new(new XComment("Выборка"), root);
-                        XElement xitems = new("Elements");
-                        root.Add(xitems);
-                        foreach (var item in items.Where(x => x.Selected))
-                        {
-                            var holder = new XElement("Element");
-                            item.Save(holder);
-                            xitems.Add(holder);
-                        }
-                        XElement xlinks = new("Links");
-                        root.Add(xlinks);
-                        foreach (var item in links.Where(x => x.Selected))
-                        {
-                            var holder = new XElement("Link");
-                            item.Save(holder);
-                            xlinks.Add(holder);
-                        }
-                        string xml = root.ToString();
-                        byte[] bytes = Encoding.UTF8.GetBytes(xml);
-                        using var xmlStream = new MemoryStream(bytes);
-                        Clipboard.SetData("XML Spreadsheet", xmlStream);
-                        zoomPad.Invalidate();
+                        CopySelectedElementsAndLinkToClipboard();
                     }
                     break;
                 case Keys.V:
                     if (e.Control)
                     {
-                        if (Clipboard.ContainsData("XML Spreadsheet"))
-                        {
-                            var xmlStream = (MemoryStream?)Clipboard.GetData("XML Spreadsheet");
-                            if (xmlStream != null)
-                            {
-                                items.ForEach(item => item.Selected = false);
-                                links.ForEach(item => item.Select(false));
-                                List<Element> elements = [];
-                                List<Link> elementlinks = [];
-                                Dictionary<Guid, Guid> guids = [];
-                                XDocument doc = XDocument.Load(xmlStream);
-                                Model.Module.LoadElements(doc.Root, elements);
-                                // замена Id на новый, сохранение уникальности Id для копии элемента
-                                // составление словаря замен
-                                foreach (Element element in elements)
-                                {
-                                    var newId = Guid.NewGuid();
-                                    guids.Add(element.Id, newId);
-                                    element.Id = newId;
-                                }
-                                // замена SourceId для входный связей из словаря замен
-                                foreach (Element element in elements)
-                                {
-                                    if (element.Instance is ILinkSupport link)
-                                    {
-                                        foreach (var seek in link.InputLinkSources)
-                                            link.UpdateInputLinkSources(seek, 
-                                                guids.TryGetValue(seek.Item1, out Guid value) ? value : Guid.Empty);
-                                    }
-                                }
-                                // установление связей
-                                Model.Module.ConnectLinks(elements);
-                                Model.Module.LoadVisualLinks(doc.Root, elementlinks);
-
-                                foreach (Element element in elements)
-                                {
-                                    element.Selected = true;
-                                    items.Add(element);
-                                }
-                                foreach (Link link in elementlinks)
-                                {
-                                    link.SetSourceId(guids[link.SourceId]);
-                                    link.SetDestinationId(guids[link.DestinationId]);
-                                    link.Select(true);
-                                    links.Add(link);
-                                }
-
-                                Module.Changed = true;
-                                /*
-<Clipboard>
-  <Elements>
-    <Element X="712" Y="280">
-      <Id>4845bb0d-a765-4b41-8fd0-3e75b64faca4</Id>
-      <Type>Simulator.Model.Logic.AND</Type>
-      <Instance>
-        <Inputs>
-          <Input Index="0" Invert="true">
-            <SourceId>7e208b14-868b-4b73-a13c-5d5e9fc0a6b2</SourceId>
-          </Input>
-          <Input Index="1">
-            <SourceId>b5c57ae9-a0eb-4ee1-8289-557febb877b2</SourceId>
-          </Input>
-        </Inputs>
-      </Instance>
-    </Element>
-    <Element X="824" Y="296">
-      <Id>727f23fe-56e6-4747-a15e-218e595a7bf2</Id>
-      <Type>Simulator.Model.Outputs.LAMP</Type>
-      <Instance>
-        <Inputs>
-          <Input Index="0">
-            <SourceId>4845bb0d-a765-4b41-8fd0-3e75b64faca4</SourceId>
-          </Input>
-        </Inputs>
-        <Description>Фаза 3</Description>
-        <Color>Lime</Color>
-      </Instance>
-    </Element>
-  </Elements>
-</Clipboard>
-                                 */
-                            }
-                        }
-                        //links.ForEach(x => x.Select(true));
+                        PasteElementsAndLinksFromClipboard();
                         zoomPad.Invalidate();
                     }
                     break;
             }
+        }
+
+        private void PasteElementsAndLinksFromClipboard()
+        {
+            if (Clipboard.ContainsData("XML Spreadsheet"))
+            {
+                var xmlStream = (MemoryStream?)Clipboard.GetData("XML Spreadsheet");
+                if (xmlStream != null)
+                {
+                    items.ForEach(item => item.Selected = false);
+                    links.ForEach(item => item.Select(false));
+                    List<Element> elements = [];
+                    List<Link> elementlinks = [];
+                    Dictionary<Guid, Guid> guids = [];
+                    XDocument doc = XDocument.Load(xmlStream);
+                    Model.Module.LoadElements(doc.Root, elements);
+                    // замена Id на новый, сохранение уникальности Id для копии элемента
+                    // составление словаря замен
+                    foreach (Element element in elements)
+                    {
+                        var newId = Guid.NewGuid();
+                        guids.Add(element.Id, newId);
+                        element.Id = newId;
+                    }
+                    // замена SourceId для входный связей из словаря замен
+                    foreach (Element element in elements)
+                    {
+                        if (element.Instance is ILinkSupport link)
+                        {
+                            foreach (var seek in link.InputLinkSources)
+                                link.UpdateInputLinkSources(seek,
+                                    guids.TryGetValue(seek.Item1, out Guid value) ? value : Guid.Empty);
+                        }
+                    }
+                    // установление связей
+                    Model.Module.ConnectLinks(elements);
+                    Model.Module.LoadVisualLinks(doc.Root, elementlinks);
+
+                    foreach (Element element in elements)
+                    {
+                        element.Selected = true;
+                        items.Add(element);
+                    }
+                    foreach (Link link in elementlinks)
+                    {
+                        link.SetSourceId(guids[link.SourceId]);
+                        link.SetDestinationId(guids[link.DestinationId]);
+                        link.Select(true);
+                        links.Add(link);
+                    }
+                    Module.Changed = true;
+                }
+            }
+        }
+
+        private void CopySelectedElementsAndLinkToClipboard()
+        {
+            var root = new XElement("Clipboard");
+            XDocument doc = new(new XComment("Выборка"), root);
+            XElement xitems = new("Elements");
+            root.Add(xitems);
+            foreach (var item in items.Where(x => x.Selected))
+            {
+                var holder = new XElement("Element");
+                item.Save(holder);
+                xitems.Add(holder);
+            }
+            if (items.Any(x => x.Selected))
+            {
+                XElement xlinks = new("Links");
+                root.Add(xlinks);
+                foreach (var item in links.Where(x => x.Selected))
+                {
+                    var holder = new XElement("Link");
+                    item.Save(holder);
+                    xlinks.Add(holder);
+                }
+            }
+            string xml = root.ToString();
+            byte[] bytes = Encoding.UTF8.GetBytes(xml);
+            using var xmlStream = new MemoryStream(bytes);
+            Clipboard.SetData("XML Spreadsheet", xmlStream);
+        }
+
+        private void CutSelectedElementsAndLinkToClipboard()
+        {
+            CopySelectedElementsAndLinkToClipboard();
+            DeleteAllSelectedElements();
         }
 
         private void DeleteAllSelectedElements()
@@ -1344,6 +1333,28 @@ namespace Simulator
             }
             items.RemoveAll(x => x.Selected);
             Module.Changed = true;
+        }
+
+        private void timerInterface_Tick(object sender, EventArgs e)
+        {
+            tsbSave.Enabled = Module.Changed;
+            tsbCut.Enabled = tsbCopy.Enabled = items.Any(x => x.Selected);
+            tsbPaste.Enabled = Clipboard.ContainsData("XML Spreadsheet");
+        }
+
+        private void tsbCut_Click(object sender, EventArgs e)
+        {
+            CutSelectedElementsAndLinkToClipboard();
+        }
+
+        private void tsbCopy_Click(object sender, EventArgs e)
+        {
+            CopySelectedElementsAndLinkToClipboard();
+        }
+
+        private void tsbPaste_Click(object sender, EventArgs e)
+        {
+            PasteElementsAndLinksFromClipboard();
         }
     }
 }

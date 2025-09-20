@@ -38,11 +38,12 @@
             tsbSave = new ToolStripButton();
             печатьToolStripButton = new ToolStripButton();
             toolStripSeparator = new ToolStripSeparator();
-            вырезатьToolStripButton = new ToolStripButton();
-            копироватьToolStripButton = new ToolStripButton();
-            вставитьToolStripButton = new ToolStripButton();
+            tsbCut = new ToolStripButton();
+            tsbCopy = new ToolStripButton();
+            tsbPaste = new ToolStripButton();
             toolStripSeparator1 = new ToolStripSeparator();
             справкаToolStripButton = new ToolStripButton();
+            timerInterface = new System.Windows.Forms.Timer(components);
             toolStripModule.SuspendLayout();
             SuspendLayout();
             // 
@@ -72,12 +73,12 @@
             // cmsContextMenu
             // 
             cmsContextMenu.Name = "contextMenuStrip1";
-            cmsContextMenu.Size = new Size(181, 26);
+            cmsContextMenu.Size = new Size(61, 4);
             // 
             // toolStripModule
             // 
             toolStripModule.GripStyle = ToolStripGripStyle.Hidden;
-            toolStripModule.Items.AddRange(new ToolStripItem[] { tsmiAddModule, tsbDeleteModule, tsbSave, печатьToolStripButton, toolStripSeparator, вырезатьToolStripButton, копироватьToolStripButton, вставитьToolStripButton, toolStripSeparator1, справкаToolStripButton });
+            toolStripModule.Items.AddRange(new ToolStripItem[] { tsmiAddModule, tsbDeleteModule, tsbSave, печатьToolStripButton, toolStripSeparator, tsbCut, tsbCopy, tsbPaste, toolStripSeparator1, справкаToolStripButton });
             toolStripModule.Location = new Point(0, 0);
             toolStripModule.Name = "toolStripModule";
             toolStripModule.RenderMode = ToolStripRenderMode.System;
@@ -133,35 +134,38 @@
             toolStripSeparator.Name = "toolStripSeparator";
             toolStripSeparator.Size = new Size(6, 25);
             // 
-            // вырезатьToolStripButton
+            // tsbCut
             // 
-            вырезатьToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            вырезатьToolStripButton.Enabled = false;
-            вырезатьToolStripButton.Image = (Image)resources.GetObject("вырезатьToolStripButton.Image");
-            вырезатьToolStripButton.ImageTransparentColor = Color.Magenta;
-            вырезатьToolStripButton.Name = "вырезатьToolStripButton";
-            вырезатьToolStripButton.Size = new Size(23, 22);
-            вырезатьToolStripButton.Text = "Вы&резать";
+            tsbCut.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbCut.Enabled = false;
+            tsbCut.Image = (Image)resources.GetObject("tsbCut.Image");
+            tsbCut.ImageTransparentColor = Color.Magenta;
+            tsbCut.Name = "tsbCut";
+            tsbCut.Size = new Size(23, 22);
+            tsbCut.Text = "Вы&резать";
+            tsbCut.Click += tsbCut_Click;
             // 
-            // копироватьToolStripButton
+            // tsbCopy
             // 
-            копироватьToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            копироватьToolStripButton.Enabled = false;
-            копироватьToolStripButton.Image = (Image)resources.GetObject("копироватьToolStripButton.Image");
-            копироватьToolStripButton.ImageTransparentColor = Color.Magenta;
-            копироватьToolStripButton.Name = "копироватьToolStripButton";
-            копироватьToolStripButton.Size = new Size(23, 22);
-            копироватьToolStripButton.Text = "&Копировать";
+            tsbCopy.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbCopy.Enabled = false;
+            tsbCopy.Image = (Image)resources.GetObject("tsbCopy.Image");
+            tsbCopy.ImageTransparentColor = Color.Magenta;
+            tsbCopy.Name = "tsbCopy";
+            tsbCopy.Size = new Size(23, 22);
+            tsbCopy.Text = "&Копировать";
+            tsbCopy.Click += tsbCopy_Click;
             // 
-            // вставитьToolStripButton
+            // tsbPaste
             // 
-            вставитьToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            вставитьToolStripButton.Enabled = false;
-            вставитьToolStripButton.Image = (Image)resources.GetObject("вставитьToolStripButton.Image");
-            вставитьToolStripButton.ImageTransparentColor = Color.Magenta;
-            вставитьToolStripButton.Name = "вставитьToolStripButton";
-            вставитьToolStripButton.Size = new Size(23, 22);
-            вставитьToolStripButton.Text = "&Вставить";
+            tsbPaste.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbPaste.Enabled = false;
+            tsbPaste.Image = (Image)resources.GetObject("tsbPaste.Image");
+            tsbPaste.ImageTransparentColor = Color.Magenta;
+            tsbPaste.Name = "tsbPaste";
+            tsbPaste.Size = new Size(23, 22);
+            tsbPaste.Text = "&Вставить";
+            tsbPaste.Click += tsbPaste_Click;
             // 
             // toolStripSeparator1
             // 
@@ -178,6 +182,10 @@
             справкаToolStripButton.Size = new Size(23, 22);
             справкаToolStripButton.Text = "С&правка";
             // 
+            // timerInterface
+            // 
+            timerInterface.Tick += timerInterface_Tick;
+            // 
             // ModuleForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -189,8 +197,8 @@
             Name = "ModuleForm";
             StartPosition = FormStartPosition.WindowsDefaultBounds;
             Text = "Форма модуля";
-            FormClosing += ChildForm_FormClosing;
-            Load += ChildForm_Load;
+            FormClosing += ModuleForm_FormClosing;
+            Load += ModuleForm_Load;
             KeyDown += ModuleForm_KeyDown;
             toolStripModule.ResumeLayout(false);
             toolStripModule.PerformLayout();
@@ -208,10 +216,11 @@
         private ToolStripButton tsbSave;
         private ToolStripButton печатьToolStripButton;
         private ToolStripSeparator toolStripSeparator;
-        private ToolStripButton вырезатьToolStripButton;
-        private ToolStripButton копироватьToolStripButton;
-        private ToolStripButton вставитьToolStripButton;
+        private ToolStripButton tsbCut;
+        private ToolStripButton tsbCopy;
+        private ToolStripButton tsbPaste;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripButton справкаToolStripButton;
+        private System.Windows.Forms.Timer timerInterface;
     }
 }
