@@ -22,6 +22,7 @@ namespace Simulator.Model
         private readonly bool[] busy = new bool[1];
         private readonly bool[] selected = new bool[1];
         private readonly object[] value = new object[1];
+        private readonly Guid[] guids = new Guid[2];
 
         public Link(Guid id, Guid sourceId, int sourcePin, Guid destinationId, int destinationPin, params PointF[] points)
         {
@@ -40,9 +41,9 @@ namespace Simulator.Model
                 EndUpdate();
             }
             Id = id;
-            SourceId = sourceId;
+            guids[0] = sourceId;
+            guids[1] = destinationId;
             SourcePinIndex = sourcePin;
-            DestinationId = destinationId;
             DestinationPinIndex = destinationPin;
         }
 
@@ -177,13 +178,23 @@ namespace Simulator.Model
         public Guid Id { get; }
 
         [Category("Источник"), DisplayName("Идентификатор")]
-        public Guid SourceId { get; }
+        public Guid SourceId => guids[0];
+
+        public void SetSourceId(Guid id)
+        {
+            guids[0] = id;
+        }
 
         [Category("Источник"), DisplayName("Выход"), Description("Индекс выхода источника")]
         public int SourcePinIndex { get; }
 
         [Category("Приёмник"), DisplayName("Идентификатор")]
-        public Guid DestinationId { get; }
+        public Guid DestinationId => guids[1];
+
+        public void SetDestinationId(Guid id)
+        {
+            guids[1] = id;
+        }
 
         [Category("Приёмник"), DisplayName("Вход"), Description("Индекс входа приёмника")]
         public int DestinationPinIndex { get; }

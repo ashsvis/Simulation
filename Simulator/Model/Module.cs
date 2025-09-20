@@ -84,74 +84,89 @@ namespace Simulator.Model
                 var description = xmodule?.Attribute("Description")?.Value;
                 if (description != null)
                     Description = description;
-                var xitems = xmodule?.Element("Elements");
-                if (xitems != null)
+                LoadElements(xmodule, Elements);
+                ConnectLinks(Elements);
+                LoadVisualLinks(xmodule, Links);
+            }
+        }
+
+        public static void ConnectLinks(List<Element> elements)
+        {
+            // установление связей
+            foreach (var item in elements)
+            {
+                if (item.Instance is ILinkSupport function)
                 {
-                    foreach (XElement xitem in xitems.Elements("Element"))
+                    var n = 0;
+                    foreach (var (id, output) in function.InputLinkSources)
                     {
-                        if (!Guid.TryParse(xitem.Element("Id")?.Value, out Guid id)) continue;
-                        var xtype = xitem.Element("Type");
-                        if (xtype == null) continue;
-                        Type? type = Type.GetType(xtype.Value);
-                        if (type == null) continue;
-                        var element = new Element { Id = id, };
-                        element.Load(xitem, type);
-                        Elements.Add(element);
+                        if (id != Guid.Empty)
+                        {
+                            var sourceItem = elements.FirstOrDefault(x => x.Id == id);
+                            if (sourceItem != null && sourceItem.Instance is ILinkSupport source)
+                                function.SetValueLinkToInp(n, source.GetResultLink(output), id, output);
+                        }
+                        n++;
                     }
                 }
-                var xlinks = xmodule?.Element("Links");
-                if (xlinks != null)
+            }
+        }
+
+        public static void LoadVisualLinks(XElement? xmodule, List<Link> links)
+        {
+            var xlinks = xmodule?.Element("Links");
+            if (xlinks != null)
+            {
+                foreach (XElement xlink in xlinks.Elements("Link"))
                 {
-                    foreach (XElement xlink in xlinks.Elements("Link"))
+                    if (!Guid.TryParse(xlink.Element("Id")?.Value, out Guid id)) continue;
+                    var xsource = xlink.Element("Source");
+                    if (xsource == null) continue;
+                    if (!Guid.TryParse(xsource.Attribute("Id")?.Value, out Guid sourceId)) continue;
+                    if (!int.TryParse(xsource.Attribute("PinIndex")?.Value, out int sourcePinIndex)) continue;
+                    var xdest = xlink.Element("Destination");
+                    if (xdest == null) continue;
+                    if (!Guid.TryParse(xdest.Attribute("Id")?.Value, out Guid destinationId)) continue;
+                    if (!int.TryParse(xdest.Attribute("PinIndex")?.Value, out int destPinIndex)) continue;
+                    List<PointF> points = [];
+                    var xpoints = xlink.Element("Points");
+                    if (xpoints != null)
                     {
-                        if (!Guid.TryParse(xlink.Element("Id")?.Value, out Guid id)) continue;
-                        var xsource = xlink.Element("Source");
-                        if (xsource == null) continue;
-                        if (!Guid.TryParse(xsource.Attribute("Id")?.Value, out Guid sourceId)) continue;
-                        if (!int.TryParse(xsource.Attribute("PinIndex")?.Value, out int sourcePinIndex)) continue;
-                        var xdest = xlink.Element("Destination");
-                        if (xdest == null) continue;
-                        if (!Guid.TryParse(xdest.Attribute("Id")?.Value, out Guid destinationId)) continue;
-                        if (!int.TryParse(xdest.Attribute("PinIndex")?.Value, out int destPinIndex)) continue;
-                        List<PointF> points = [];
-                        var xpoints = xlink.Element("Points");
-                        if (xpoints != null)
+                        var fp = CultureInfo.GetCultureInfo("en-US");
+                        foreach (XElement xpoint in xpoints.Elements("Point"))
                         {
-                            var fp = CultureInfo.GetCultureInfo("en-US");
-                            foreach (XElement xpoint in xpoints.Elements("Point"))
+                            if (float.TryParse(xpoint.Attribute("X")?.Value, fp, out float x) &&
+                                float.TryParse(xpoint.Attribute("Y")?.Value, fp, out float y))
                             {
-                                if (float.TryParse(xpoint.Attribute("X")?.Value, fp, out float x) &&
-                                    float.TryParse(xpoint.Attribute("Y")?.Value, fp, out float y))
-                                {
-                                    points.Add(new PointF(x, y));
-                                }
+                                points.Add(new PointF(x, y));
                             }
                         }
-                        if (points.Count > 1)
-                        {
-                            var link = new Link(id, sourceId, sourcePinIndex, destinationId, destPinIndex, [..points]);
-                            link.Load(xlink);
-                            Links.Add(link);
-                        }
+                    }
+                    if (points.Count > 1)
+                    {
+                        var link = new Link(id, sourceId, sourcePinIndex, destinationId, destPinIndex, [.. points]);
+                        link.Load(xlink);
+                        links.Add(link);
                     }
                 }
-                // установление связей
-                foreach (var item in Elements)
+            }
+        }
+
+        public static void LoadElements(XElement? xmodule, List<Element> elements)
+        {
+            var xitems = xmodule?.Element("Elements");
+            if (xitems != null)
+            {
+                foreach (XElement xitem in xitems.Elements("Element"))
                 {
-                    if (item.Instance is ILinkSupport function)
-                    {
-                        var n = 0;
-                        foreach (var (id, output) in function.InputLinkSources)
-                        {
-                            if (id != Guid.Empty)
-                            {
-                                var sourceItem = Elements.FirstOrDefault(x => x.Id == id);
-                                if (sourceItem != null && sourceItem.Instance is ILinkSupport source)
-                                    function.SetValueLinkToInp(n, source.GetResultLink(output), id, output);
-                            }
-                            n++;
-                        }
-                    }
+                    if (!Guid.TryParse(xitem.Element("Id")?.Value, out Guid id)) continue;
+                    var xtype = xitem.Element("Type");
+                    if (xtype == null) continue;
+                    Type? type = Type.GetType(xtype.Value);
+                    if (type == null) continue;
+                    var element = new Element { Id = id, };
+                    element.Load(xitem, type);
+                    elements.Add(element);
                 }
             }
         }

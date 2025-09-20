@@ -66,6 +66,18 @@ namespace Simulator.Model.Diagram
         [Browsable(false)]
         public (Guid, int)[] InputLinkSources => getLinkSources;
 
+        public void UpdateInputLinkSources((Guid, int) seek, Guid newId)
+        {
+            for (var i = 0; i < getLinkSources.Length; i++)
+            {
+                (Guid id, int input) = getLinkSources[i];
+                if (id == seek.Item1 && input == seek.Item2)
+                {
+                    getLinkSources[i].Item1 = newId;
+                }
+            }
+        }
+
         [Browsable(false)]
         public object Out { get; set; }
 
