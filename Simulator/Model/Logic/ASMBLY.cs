@@ -25,9 +25,7 @@ namespace Simulator.Model.Logic
                         if (index >= 0 && index < InputValues.Length)
                         {
                             bool value = (bool)InputValues[index];
-                            bool oldval = (bool)(di.GetValueFromOut(0) ?? false);
-                            if (oldval != value)
-                                di.SetValueToOut(0, value);
+                            di.SetValueToOut(0, value);
                         }
                     }
                 }

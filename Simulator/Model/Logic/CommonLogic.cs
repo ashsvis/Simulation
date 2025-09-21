@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Diagnostics;
 using System.Xml.Linq;
 
 namespace Simulator.Model.Logic
@@ -258,19 +257,21 @@ namespace Simulator.Model.Logic
             return inputValues.Count(x => (bool)x == true) == 1;
         }
 
-        private static bool CalcRsTrigger(bool s, bool r, bool q)
-        {
-            return !r && (s || q);
-        }
+        //private static bool CalcRsTrigger(bool s, bool r, bool q)
+        //{
+        //    return !r && (s || q);
+        //}
 
-        private static bool CalcSrTrigger(bool s, bool r, bool q)
-        {
-            return s || (!r && q); 
-        }
+        //private static bool CalcSrTrigger(bool s, bool r, bool q)
+        //{
+        //    return s || (!r && q); 
+        //}
 
         public GetLinkValueMethod? GetResultLink(int outputIndex)
         {
-            return () => getOutputs[0];
+            if (outputIndex < 0 || outputIndex >= getOutputs.Length)
+                throw new ArgumentOutOfRangeException(nameof(outputIndex));
+            return () => getOutputs[outputIndex];
         }
 
         /// <summary>
@@ -281,42 +282,39 @@ namespace Simulator.Model.Logic
         /// <param name="getMethod">Ссылка на метод, записываемая в целевом элементе, для этого входа</param>
         public void SetValueLinkToInp(int inputIndex, GetLinkValueMethod? getMethod, Guid sourceId, int outputPinIndex)
         {
-            if (inputIndex >= 0 && inputIndex < getLinkInputs.Length)
-            {
-                getLinkInputs[inputIndex] = getMethod;
-                getLinkSources[inputIndex] = (sourceId, outputPinIndex);
-            }
+            if (inputIndex < 0 || inputIndex >= getLinkInputs.Length)
+                throw new ArgumentOutOfRangeException(nameof(inputIndex));
+            getLinkInputs[inputIndex] = getMethod;
+            getLinkSources[inputIndex] = (sourceId, outputPinIndex);
         }
 
         public void ResetValueLinkToInp(int inputIndex)
         {
-            if (inputIndex >= 0 && inputIndex < getLinkInputs.Length)
-            {
-                getLinkInputs[inputIndex] = null;
-                getLinkSources[inputIndex] = (Guid.Empty, 0);
-            }
+            if (inputIndex < 0 || inputIndex >= getLinkInputs.Length)
+                throw new ArgumentOutOfRangeException(nameof(inputIndex));
+            getLinkInputs[inputIndex] = null;
+            getLinkSources[inputIndex] = (Guid.Empty, 0);
         }
 
         public void SetValueToInp(int inputIndex, object? value)
         {
-            if (inputIndex >= 0 && inputIndex < getLinkInputs.Length &&
-                value != null && getLinkInputs[inputIndex] == null)
+            if (inputIndex < 0 || inputIndex >= getLinkInputs.Length)
+                throw new ArgumentOutOfRangeException(nameof(inputIndex));
+            if (value != null && !LinkedInputs[inputIndex])
                 getInputs[inputIndex] = (bool)value;
         }
 
         public object? GetValueFromInp(int inputIndex)
         {
-            if (inputIndex >= 0 && inputIndex < getLinkInputs.Length)
+            if (inputIndex < 0 || inputIndex >= getLinkInputs.Length)
+                throw new ArgumentOutOfRangeException(nameof(inputIndex));
+            if (getLinkInputs[inputIndex] != null)
             {
-                if (getLinkInputs[inputIndex] != null)
-                {
-                    var method = getLinkInputs[inputIndex];
-                    return method?.Invoke();
-                }
-                else
-                    return getInputs[inputIndex];
+                var method = getLinkInputs[inputIndex];
+                return method?.Invoke();
             }
-            return null;
+            else
+                return getInputs[inputIndex];
         }
 
         public virtual void Save(XElement xtance)
