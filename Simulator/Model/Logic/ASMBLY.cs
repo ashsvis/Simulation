@@ -17,6 +17,7 @@ namespace Simulator.Model.Logic
         {
             if (ModuleInternal != null) 
             {
+                // перезапись состояний входов сборки на элементы DI внутреннего модуля
                 foreach (var item in ModuleInternal.Elements)
                 {
                     if (item.Instance is Model.Inputs.DI di)
@@ -30,6 +31,7 @@ namespace Simulator.Model.Logic
                     }
                 }
                 ModuleInternal.GetCalculationMethod().Invoke();
+                // перезапись состояний выходов сборки из элементов DO внутреннего модуля
                 foreach (var item in ModuleInternal.Elements)
                 {
                     if (item.Instance is Model.Outputs.DO @do)
@@ -47,15 +49,17 @@ namespace Simulator.Model.Logic
 
         public override void Save(XElement xtance)
         {
+            base.Save(xtance);
             XElement xmodule = new("Module");
             xtance.Add(xmodule);
             ModuleInternal?.Save(xmodule);
 
         }
 
-        public override void Load(XElement? xtem)
+        public override void Load(XElement? xtance)
         {
-            var xmodule = xtem?.Element("Module");
+            base.Load(xtance);
+            var xmodule = xtance?.Element("Module");
             if (xmodule == null) return;
             ModuleInternal = ModuleInternal ?? new Module();
             ModuleInternal.Load(xmodule);

@@ -39,34 +39,18 @@ namespace Simulator.Model.Logic
             getOutputNames = [];
             if (inputCount > 0)
             {
-                if (func == LogicFunction.Not)
-                    inputCount = 1;
-                else if (func == LogicFunction.Rs || func == LogicFunction.Sr)
-                    inputCount = 2;
                 getInputs = new bool[inputCount];
                 getInverseInputs = new bool[inputCount];
                 getLinkInputs = new GetLinkValueMethod?[inputCount];
                 getLinkSources = new (Guid, int)[inputCount];
                 getInputNames = new string[inputCount];
-                if (func == LogicFunction.Rs || func == LogicFunction.Sr)
-                {
-                    getInputNames[0] = "S";
-                    getInputNames[1] = "R";
-                }
             }
             if (outputCount > 0)
             {
                 getOutputs = new object[outputCount];
+                for (var i = 0; i < outputCount; i++) getOutputs[i] = false;
                 getInverseOutputs = new bool[outputCount];
                 getOutputNames = new string[outputCount];
-                if (func == LogicFunction.Not)
-                {
-                    getInverseOutputs[0] = true;
-                }
-                else if (func == LogicFunction.Rs || func == LogicFunction.Sr)
-                {
-                    getOutputNames[0] = "Q";
-                }
             }
         }
 
@@ -84,10 +68,8 @@ namespace Simulator.Model.Logic
                 return logicFunction switch
                 {
                     LogicFunction.And => "&",
-                    LogicFunction.Not or LogicFunction.Or => "1",
+                    LogicFunction.Or => "1",
                     LogicFunction.Xor => "=1",
-                    LogicFunction.Rs => "RS",
-                    LogicFunction.Sr => "SR",
                     _ => "",
                 };
             } 
@@ -196,76 +178,25 @@ namespace Simulator.Model.Logic
 
         public virtual void Calculate()
         {
-            if (logicFunction == LogicFunction.Rs || logicFunction == LogicFunction.Sr)
+            bool result = (bool)InputValues[0] ^ getInverseInputs[0];
+            for (var i = 0; i < InputValues.Length; i++)
             {
-                getInverseInputs[0] = false;
-                getInverseInputs[1] = false;
-                getInverseOutputs[0] = false;
-            }
-            if (logicFunction == LogicFunction.Not)
-            {
-                getInverseInputs[0] = false;
-                getInverseOutputs[0] = true;
-            }
-            if (logicFunction == LogicFunction.Not ||
-                logicFunction == LogicFunction.Rs ||
-                logicFunction == LogicFunction.Sr)
-            {
-                switch (logicFunction)
+                var input = (bool)InputValues[i] ^ getInverseInputs[i];
+                result = logicFunction switch
                 {
-                    case LogicFunction.Rs:
-                        var S1 = (bool)InputValues[0];
-                        var R1 = (bool)InputValues[1];
-                        if (R1)
-                            Out = false;
-                        else if (S1)
-                            Out = true;
-                        break;
-                    case LogicFunction.Sr:
-                        var S2 = (bool)InputValues[0];
-                        var R2 = (bool)InputValues[1];
-                        if (S2)
-                            Out = true;
-                        else if (R2)
-                            Out = false;
-                        break;
-                    case LogicFunction.Not:
-                        Out = !(bool)InputValues[0];
-                        break;
-                }
+                    LogicFunction.And => result && input,
+                    LogicFunction.Or => result || input,
+                    LogicFunction.Xor => CalcXor(InputValues),
+                    _ => logicFunction == LogicFunction.None && result,
+                };
             }
-            else
-            {
-                bool result = (bool)InputValues[0] ^ getInverseInputs[0];
-                for (var i = 0; i < InputValues.Length; i++)
-                {
-                    var input = (bool)InputValues[i] ^ getInverseInputs[i];
-                    result = logicFunction switch
-                    {
-                        LogicFunction.And => result && input,
-                        LogicFunction.Or => result || input,
-                        LogicFunction.Xor => CalcXor(InputValues),
-                        _ => logicFunction == LogicFunction.None && result,
-                    };
-                }
-                Out = result ^ getInverseOutputs[0];
-            }
+            Out = result ^ getInverseOutputs[0];
         }
 
         private static bool CalcXor(object[] inputValues)
         {
             return inputValues.Count(x => (bool)x == true) == 1;
         }
-
-        //private static bool CalcRsTrigger(bool s, bool r, bool q)
-        //{
-        //    return !r && (s || q);
-        //}
-
-        //private static bool CalcSrTrigger(bool s, bool r, bool q)
-        //{
-        //    return s || (!r && q); 
-        //}
 
         public GetLinkValueMethod? GetResultLink(int outputIndex)
         {

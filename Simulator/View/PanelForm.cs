@@ -467,13 +467,5 @@ namespace Simulator
         {
             LayoutMdi(MdiLayout.Cascade);
         }
-
-        private void tsbCompile_Click(object sender, EventArgs e)
-        {
-            if (tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module module)
-            {
-                var method = module.GetCalculationMethod();
-            }
-        }
     }
 }

@@ -30,7 +30,7 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PanelForm));
-            TreeNode treeNode2 = new TreeNode("Библиотека");
+            TreeNode treeNode1 = new TreeNode("Библиотека");
             menuMainStrip = new MenuStrip();
             файлToolStripMenuItem = new ToolStripMenuItem();
             tsmiCreate = new ToolStripMenuItem();
@@ -73,6 +73,7 @@
             tsbDeleteModule = new ToolStripButton();
             toolStripSeparator3 = new ToolStripSeparator();
             tsbShowModuleForm = new ToolStripButton();
+            tsbCompile = new ToolStripButton();
             toolStripSeparator4 = new ToolStripSeparator();
             tsbCascadeLayout = new ToolStripButton();
             tsbHorizontalLayout = new ToolStripButton();
@@ -93,7 +94,6 @@
             tsbScreenToRight = new ToolStripButton();
             tslScreenNumber = new ToolStripLabel();
             tsbScreenToLeft = new ToolStripButton();
-            tsbCompile = new ToolStripButton();
             menuMainStrip.SuspendLayout();
             panLeft.SuspendLayout();
             tlpTools.SuspendLayout();
@@ -467,6 +467,16 @@
             tsbShowModuleForm.Text = "Показать содержимое модуля";
             tsbShowModuleForm.Click += tsbShowModuleForm_Click;
             // 
+            // tsbCompile
+            // 
+            tsbCompile.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbCompile.Enabled = false;
+            tsbCompile.Image = Properties.Resources.compile;
+            tsbCompile.ImageTransparentColor = Color.Magenta;
+            tsbCompile.Name = "tsbCompile";
+            tsbCompile.Size = new Size(23, 22);
+            tsbCompile.Text = "Компиляция модуля";
+            // 
             // toolStripSeparator4
             // 
             toolStripSeparator4.Name = "toolStripSeparator4";
@@ -550,9 +560,9 @@
             tvLibrary.LineColor = Color.WhiteSmoke;
             tvLibrary.Location = new Point(3, 3);
             tvLibrary.Name = "tvLibrary";
-            treeNode2.Name = "Узел0";
-            treeNode2.Text = "Библиотека";
-            tvLibrary.Nodes.AddRange(new TreeNode[] { treeNode2 });
+            treeNode1.Name = "Узел0";
+            treeNode1.Text = "Библиотека";
+            tvLibrary.Nodes.AddRange(new TreeNode[] { treeNode1 });
             tvLibrary.Size = new Size(188, 416);
             tvLibrary.TabIndex = 1;
             tvLibrary.MouseDown += tvLibrary_MouseDown;
@@ -693,17 +703,6 @@
             tsbScreenToLeft.Text = "Переместить левее";
             tsbScreenToLeft.ToolTipText = "Переместить влево";
             tsbScreenToLeft.Click += tsmiScreenMoveLeft_Click;
-            // 
-            // tsbCompile
-            // 
-            tsbCompile.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            tsbCompile.Enabled = false;
-            tsbCompile.Image = Properties.Resources.compile;
-            tsbCompile.ImageTransparentColor = Color.Magenta;
-            tsbCompile.Name = "tsbCompile";
-            tsbCompile.Size = new Size(23, 22);
-            tsbCompile.Text = "Компиляция модуля";
-            tsbCompile.Click += tsbCompile_Click;
             // 
             // PanelForm
             // 
