@@ -75,6 +75,8 @@ namespace Simulator.Model
                         foreach (XElement xmodule in xmodules.Elements("Module"))
                         {
                             var module = new Module();
+                            if (!Guid.TryParse(xmodule.Element("Id")?.Value, out Guid id))
+                                module.Id = id;
                             module.Load(xmodule);
                             Modules.Add(module);
                         }

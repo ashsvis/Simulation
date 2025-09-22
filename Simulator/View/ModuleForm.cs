@@ -1,10 +1,8 @@
 ﻿using Simulator.Model;
 using Simulator.View;
 using System.Drawing.Drawing2D;
-using System.IO;
 using System.Reflection;
 using System.Text;
-using System.Xml;
 using System.Xml.Linq;
 
 namespace Simulator
@@ -26,15 +24,31 @@ namespace Simulator
         private Rectangle? ribbon = null;
         private bool partSelection = false;
 
+        private Element? element;
+        private int? pin;
+        private bool? output;
+        private PointF? linkFirstPoint;
+
+        private Link? link;
+        private int? segmentIndex;
+        private bool? segmentVertical;
+
+        public Model.Module Module { get; }
+
+        public event EventHandler? ElementSelected;
+
+        private bool dragging = false;
+        private bool segmentmoving = false;
+
         public ModuleForm(PanelForm panelForm, Model.Module module)
         {
             InitializeComponent();
             this.panelForm = panelForm;
-            Module = module;
-            items = module.Elements;
+            Module = module.DeepCopy();
+            items = Module.Elements;
             items.Where(x => x.Instance is IChangeOrderDI).ToList().ForEach(dis.Add);
             items.Where(x => x.Instance is IChangeOrderDO).ToList().ForEach(dos.Add);
-            links = module.Links;
+            links = Module.Links;
             panelForm.SimulationTick += Module_SimulationTick;
         }
 
@@ -47,6 +61,7 @@ namespace Simulator
         {
             items.ForEach(item => item.Selected = false);
             links.ForEach(item => item.Select(false));
+            ElementSelected?.Invoke(Module, EventArgs.Empty);
             timerInterface.Enabled = true;
         }
 
@@ -739,22 +754,6 @@ namespace Simulator
             return grid;
         }
 
-        private Element? element;
-        private int? pin;
-        private bool? output;
-        private PointF? linkFirstPoint;
-
-        private Link? link;
-        private int? segmentIndex;
-        private bool? segmentVertical;
-
-        public Simulator.Model.Module Module { get; }
-
-        public event EventHandler? ElementSelected;
-
-        private bool dragging = false;
-        private bool segmentmoving = false;
-
         private void zoomPad_MouseDown(object sender, MouseEventArgs e)
         {
             mousePosition = firstMouseDown = e.Location;
@@ -816,7 +815,6 @@ namespace Simulator
                         dragging = output == null && element.Selected;
                 }
 
-                //ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
                 ElementSelected?.Invoke(items.Any(x => x.Selected) ?
                     items.Where(x => x.Selected).Select(x => x.Instance).ToArray() : null, EventArgs.Empty);
             }
@@ -826,7 +824,7 @@ namespace Simulator
                     linkFirstPoint = null;
                 items.ForEach(item => item.Selected = false);
                 links.ForEach(item => item.Select(false));
-                ElementSelected?.Invoke(null, EventArgs.Empty);
+                ElementSelected?.Invoke(Module, EventArgs.Empty);
             }
             if (e.Button == MouseButtons.Right)
             {
@@ -1134,7 +1132,17 @@ namespace Simulator
 
         private void tsbSave_Click(object sender, EventArgs e)
         {
-            Project.Save();
+            SaveModule();
+        }
+
+        private void SaveModule()
+        {
+            var module = Project.Modules.FirstOrDefault(x => x.Id == Module.Id);
+            if (module != null)
+            {
+                module?.Accept(Module);
+                Project.Save();
+            }
             Module.Changed = false;
         }
 
@@ -1191,6 +1199,12 @@ namespace Simulator
                         zoomPad.Invalidate();
                     }
                     break;
+                case Keys.S: 
+                    if (e.Control) 
+                    { 
+                        SaveModule(); 
+                    }
+                    break;
             }
         }
 
@@ -1208,7 +1222,8 @@ namespace Simulator
                     Dictionary<Guid, Guid> guids = [];
                     XDocument doc = XDocument.Load(xmlStream);
                     Model.Module.LoadElements(doc.Root, elements);
-                    if (items.Any(x => elements.Any(y => y.Id == x.Id)))
+                    var makedCopy = items.Any(x => elements.Any(y => y.Id == x.Id));
+                    if (makedCopy)
                     {
                         // замена Id на новый, сохранение уникальности Id для копии элемента
                         // составление словаря замен
@@ -1240,8 +1255,8 @@ namespace Simulator
                     }
                     foreach (Link link in elementlinks)
                     {
-                        link.SetSourceId(guids[link.SourceId]);
-                        link.SetDestinationId(guids[link.DestinationId]);
+                        link.SetSourceId(makedCopy ? guids[link.SourceId] : link.SourceId);
+                        link.SetDestinationId(makedCopy ? guids[link.DestinationId] : link.DestinationId);
                         link.Select(true);
                         links.Add(link);
                     }

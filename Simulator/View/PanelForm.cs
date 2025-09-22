@@ -328,8 +328,6 @@ namespace Simulator
                 tvModules.SelectedNode = node;
                 if (node.Tag is ProjectProxy project)
                     pgProps.SelectedObject = project;
-                else if (node.Tag is Model.Module module)
-                    pgProps.SelectedObject = module;
                 if (e.Clicks > 1)
                     EnsureShowModuleChildForm();
             }
@@ -459,7 +457,8 @@ namespace Simulator
                 if (node.Tag is not Model.Module treeModule) return;
                 module = treeModule;
             }
-            var form = MdiChildren.OfType<ModuleForm>().FirstOrDefault(x => x.Module == module);
+            pgProps.SelectedObject = module;
+            var form = MdiChildren.OfType<ModuleForm>().FirstOrDefault(x => x.Module.Id == module.Id);
             if (form != null)
             {
                 form.WindowState = FormWindowState.Maximized;

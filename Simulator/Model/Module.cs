@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Globalization;
+using System.Reflection;
+using System.Text;
 using System.Xml.Linq;
 
 namespace Simulator.Model
@@ -11,6 +13,9 @@ namespace Simulator.Model
 
         [Browsable(false)]
         public int Index { get; set; }
+
+        [Browsable(false)]
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Category("Задача"), DisplayName("Имя")]
         public string Name 
@@ -52,6 +57,7 @@ namespace Simulator.Model
 
         public void Save(XElement xmodule)
         {
+            xmodule.Add(new XElement("Id", Id));
             if (!string.IsNullOrWhiteSpace(Name))
                 xmodule.Add(new XAttribute("Name", Name));
             if (!string.IsNullOrWhiteSpace(Description))
@@ -202,5 +208,74 @@ namespace Simulator.Model
             });
         }
 
+        public Module DeepCopy()
+        {
+            var root = new XElement("DeepCopy");
+            XDocument docSource = new(new XComment("Полное копирование"), root);
+            root.Add(new XElement("Id", Id));
+            if (!string.IsNullOrWhiteSpace(Name))
+                root.Add(new XAttribute("Name", Name));
+            if (!string.IsNullOrWhiteSpace(Description))
+                root.Add(new XAttribute("Description", Description));
+            XElement xitems = new("Elements");
+            root.Add(xitems);
+            foreach (var item in Elements)
+            {
+                var holder = new XElement("Element");
+                item.Save(holder);
+                xitems.Add(holder);
+            }
+            XElement xlinks = new("Links");
+            root.Add(xlinks);
+            foreach (var item in Links)
+            {
+                var holder = new XElement("Link");
+                item.Save(holder);
+                xlinks.Add(holder);
+            }
+            string xml = root.ToString();
+            byte[] bytes = Encoding.UTF8.GetBytes(xml);
+            using var xmlStream = new MemoryStream(bytes);
+
+            var aCopy = new Module
+            {
+                Id = Id
+            };
+
+            List<Element> elements = [];
+            List<Link> elementlinks = [];
+            XDocument docCopy = XDocument.Load(xmlStream);
+            var name = docCopy.Root?.Attribute("Name")?.Value;
+            if (name != null)
+                aCopy.Name = name;
+            var description = docCopy.Root?.Attribute("Description")?.Value;
+            if (description != null)
+                aCopy.Description = description;
+            LoadElements(docCopy.Root, elements);
+            // установление связей
+            ConnectLinks(elements);
+            LoadVisualLinks(docCopy.Root, elementlinks);
+
+            foreach (Element element in elements)
+                aCopy.Elements.Add(element);
+            foreach (Link link in elementlinks)
+            {
+                link.SetSourceId(link.SourceId);
+                link.SetDestinationId(link.DestinationId);
+                aCopy.Links.Add(link);
+            }
+            return aCopy;
+        }
+
+        public void Accept(Module module)
+        {
+            Id = module.Id;
+            Name = module.Name;
+            Description = module.Description;
+            Elements.Clear();
+            Elements.AddRange(module.Elements);
+            Links.Clear();
+            Links.AddRange(module.Links);
+        }
     }
 }

@@ -2,17 +2,17 @@
 <!---->
 <Project>
   <Modules>
-    <Module>
+    <Module Name="TwoAssembly" Description="Две сборки">
+      <Id>084388f8-7845-4cef-9082-039cc04c7e99</Id>
       <Elements>
-        <Element X="280" Y="72">
+        <Element X="80" Y="48">
           <Id>83e58f3d-f2f6-402f-87f7-f1ae2e8f7c5f</Id>
           <Type>Simulator.Model.Logic.ASMBLY</Type>
           <Instance>
             <Inputs />
-            <Outputs>
-              <Output Index="0" Invert="true" />
-            </Outputs>
+            <Outputs />
             <Module>
+              <Id>267a3971-68e3-4b7a-8ab1-6b6944cb9aed</Id>
               <Elements>
                 <Element X="128" Y="80">
                   <Id>43e9acaa-39af-4f50-ba32-a2c4d279d453</Id>
@@ -96,7 +96,7 @@
             </Module>
           </Instance>
         </Element>
-        <Element X="440" Y="72">
+        <Element X="256" Y="112">
           <Id>080d6f73-2cb8-481e-8e6a-5f8af84cfcbb</Id>
           <Type>Simulator.Model.Logic.ASMBLY</Type>
           <Instance>
@@ -119,6 +119,7 @@
             </Inputs>
             <Outputs />
             <Module>
+              <Id>8b329fa3-235a-44f3-b9ad-b50cce3bd439</Id>
               <Elements>
                 <Element X="128" Y="80">
                   <Id>89c0aab2-4028-487a-8e66-6bd9d3872e43</Id>
@@ -202,15 +203,6 @@
             </Module>
           </Instance>
         </Element>
-        <Element X="584" Y="72">
-          <Id>41b7949e-ee70-4393-bd71-ee524df8adac</Id>
-          <Type>Simulator.Model.Logic.ASMBLY</Type>
-          <Instance>
-            <Inputs />
-            <Outputs />
-            <Module />
-          </Instance>
-        </Element>
       </Elements>
       <Links>
         <Link>
@@ -218,13 +210,17 @@
           <Source Id="83e58f3d-f2f6-402f-87f7-f1ae2e8f7c5f" PinIndex="0" />
           <Destination Id="080d6f73-2cb8-481e-8e6a-5f8af84cfcbb" PinIndex="0" />
           <Points>
-            <Point X="336" Y="96" />
-            <Point X="336" Y="96" />
-            <Point X="432" Y="96" />
-            <Point X="432" Y="96" />
+            <Point X="136" Y="72" />
+            <Point X="136" Y="72" />
+            <Point X="232" Y="72" />
+            <Point X="232" Y="136" />
+            <Point X="248" Y="136" />
+            <Point X="248" Y="136" />
           </Points>
           <Segments>
             <Segment Kind="None" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
             <Segment Kind="Horizontal" />
             <Segment Kind="None" />
           </Segments>
@@ -234,13 +230,17 @@
           <Source Id="83e58f3d-f2f6-402f-87f7-f1ae2e8f7c5f" PinIndex="1" />
           <Destination Id="080d6f73-2cb8-481e-8e6a-5f8af84cfcbb" PinIndex="1" />
           <Points>
-            <Point X="336" Y="128" />
-            <Point X="336" Y="128" />
-            <Point X="432" Y="128" />
-            <Point X="432" Y="128" />
+            <Point X="136" Y="104" />
+            <Point X="136" Y="104" />
+            <Point X="208" Y="104" />
+            <Point X="208" Y="168" />
+            <Point X="248" Y="168" />
+            <Point X="248" Y="168" />
           </Points>
           <Segments>
             <Segment Kind="None" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
             <Segment Kind="Horizontal" />
             <Segment Kind="None" />
           </Segments>
@@ -250,13 +250,17 @@
           <Source Id="83e58f3d-f2f6-402f-87f7-f1ae2e8f7c5f" PinIndex="2" />
           <Destination Id="080d6f73-2cb8-481e-8e6a-5f8af84cfcbb" PinIndex="2" />
           <Points>
-            <Point X="336" Y="160" />
-            <Point X="336" Y="160" />
-            <Point X="432" Y="160" />
-            <Point X="432" Y="160" />
+            <Point X="136" Y="136" />
+            <Point X="136" Y="136" />
+            <Point X="184" Y="136" />
+            <Point X="184" Y="200" />
+            <Point X="248" Y="200" />
+            <Point X="248" Y="200" />
           </Points>
           <Segments>
             <Segment Kind="None" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
             <Segment Kind="Horizontal" />
             <Segment Kind="None" />
           </Segments>
@@ -266,18 +270,27 @@
           <Source Id="83e58f3d-f2f6-402f-87f7-f1ae2e8f7c5f" PinIndex="3" />
           <Destination Id="080d6f73-2cb8-481e-8e6a-5f8af84cfcbb" PinIndex="3" />
           <Points>
-            <Point X="336" Y="192" />
-            <Point X="336" Y="192" />
-            <Point X="432" Y="192" />
-            <Point X="432" Y="192" />
+            <Point X="136" Y="168" />
+            <Point X="136" Y="168" />
+            <Point X="160" Y="168" />
+            <Point X="160" Y="232" />
+            <Point X="248" Y="232" />
+            <Point X="248" Y="232" />
           </Points>
           <Segments>
             <Segment Kind="None" />
+            <Segment Kind="Horizontal" />
+            <Segment Kind="Vertical" />
             <Segment Kind="Horizontal" />
             <Segment Kind="None" />
           </Segments>
         </Link>
       </Links>
+    </Module>
+    <Module>
+      <Id>20f706f9-7e31-4205-975f-1636defc4694</Id>
+      <Elements />
+      <Links />
     </Module>
   </Modules>
 </Project>
