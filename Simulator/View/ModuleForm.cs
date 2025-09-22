@@ -816,7 +816,9 @@ namespace Simulator
                         dragging = output == null && element.Selected;
                 }
 
-                ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
+                //ElementSelected?.Invoke(element.Instance, EventArgs.Empty);
+                ElementSelected?.Invoke(items.Any(x => x.Selected) ?
+                    items.Where(x => x.Selected).Select(x => x.Instance).ToArray() : null, EventArgs.Empty);
             }
             else
             {
@@ -999,7 +1001,7 @@ namespace Simulator
         {
             if (e.Button == MouseButtons.Left)
             {
-                if (ribbon != null)
+                if (ribbon != null) // выбор рамкой
                 {
                     var rect = PrepareRect((Rectangle)ribbon);
                     if ((ModifierKeys & Keys.Control) != Keys.Control)
@@ -1030,10 +1032,12 @@ namespace Simulator
                         if (items.Any(x => x.Selected && x.Id == link.SourceId) && items.Any(x => x.Selected && x.Id == link.DestinationId))
                             link.Select(true);
                     }
+                    ElementSelected?.Invoke(items.Any(x => x.Selected) ? 
+                        items.Where(x => x.Selected).Select(x => x.Instance).ToArray() : null, EventArgs.Empty);
 
                     ribbon = null;
                 }
-                if (dragging)
+                if (dragging)  // перетаскивание элемент(а,ов)
                 {
                     dragging = false;
                     foreach (var item in items.Where(x => x.Selected))
@@ -1047,7 +1051,7 @@ namespace Simulator
                             link.SnapPointsToGrid(SnapToGrid);
                     }
                 }
-                if (segmentmoving)
+                if (segmentmoving)  // перемещение сегмента линии связи
                 {
                     segmentmoving = false;
                     if (link != null)
@@ -1204,22 +1208,25 @@ namespace Simulator
                     Dictionary<Guid, Guid> guids = [];
                     XDocument doc = XDocument.Load(xmlStream);
                     Model.Module.LoadElements(doc.Root, elements);
-                    // замена Id на новый, сохранение уникальности Id для копии элемента
-                    // составление словаря замен
-                    foreach (Element element in elements)
+                    if (items.Any(x => elements.Any(y => y.Id == x.Id)))
                     {
-                        var newId = Guid.NewGuid();
-                        guids.Add(element.Id, newId);
-                        element.Id = newId;
-                    }
-                    // замена SourceId для входный связей из словаря замен
-                    foreach (Element element in elements)
-                    {
-                        if (element.Instance is ILinkSupport link)
+                        // замена Id на новый, сохранение уникальности Id для копии элемента
+                        // составление словаря замен
+                        foreach (Element element in elements)
                         {
-                            foreach (var seek in link.InputLinkSources)
-                                link.UpdateInputLinkSources(seek,
-                                    guids.TryGetValue(seek.Item1, out Guid value) ? value : Guid.Empty);
+                            var newId = Guid.NewGuid();
+                            guids.Add(element.Id, newId);
+                            element.Id = newId;
+                        }
+                        // замена SourceId для входный связей из словаря замен
+                        foreach (Element element in elements)
+                        {
+                            if (element.Instance is ILinkSupport link)
+                            {
+                                foreach (var seek in link.InputLinkSources)
+                                    link.UpdateInputLinkSources(seek,
+                                        guids.TryGetValue(seek.Item1, out Guid value) ? value : Guid.Empty);
+                            }
                         }
                     }
                     // установление связей
@@ -1304,6 +1311,7 @@ namespace Simulator
             }
             items.RemoveAll(x => x.Selected);
             Module.Changed = true;
+            ElementSelected?.Invoke(null, EventArgs.Empty);
         }
 
         private void timerInterface_Tick(object sender, EventArgs e)

@@ -129,11 +129,23 @@ namespace Simulator
         private void ChildForm_FormClosed(object? sender, FormClosedEventArgs e)
         {
             pgProps.SelectedObject = null;
+            pgProps.SelectedObjects = null;
         }
 
         private void ChildForm_ElementSelected(object? sender, EventArgs e)
         {
-            pgProps.SelectedObject = sender;
+            if (sender == null)
+            {
+                pgProps.SelectedObject = null;
+                pgProps.SelectedObjects = null;
+            }
+            else if (sender is object?[])
+                pgProps.SelectedObjects = (object[])sender;
+            else
+            {
+                pgProps.SelectedObjects = null;
+                pgProps.SelectedObject = sender;
+            }
         }
 
         /// <summary>
