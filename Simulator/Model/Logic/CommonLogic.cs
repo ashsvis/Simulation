@@ -106,7 +106,7 @@ namespace Simulator.Model.Logic
         public object[] Outputs => getOutputs;
 
         [Category("Выходы"), DisplayName(" Инверсия"), DefaultValue(false)]
-        [DynamicPropertyFilter(nameof(FuncName), "And,Or,Assembly")]
+        [DynamicPropertyFilter(nameof(FuncName), "And,Or")]
         public bool[] InverseOutputs => getInverseOutputs;
 
         [Browsable(false)]

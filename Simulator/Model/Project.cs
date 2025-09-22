@@ -11,6 +11,9 @@ namespace Simulator.Model
         [Browsable(false)]
         public static List<Module> Modules { get; set; } = [];
 
+        [Browsable(false)]
+        public static List<Module> Blocks { get; set; } = [];
+
         private static string file = string.Empty;
 
         [Browsable(false)]
@@ -34,6 +37,14 @@ namespace Simulator.Model
                 root.Add(new XAttribute("Name", Name));
             if (!string.IsNullOrWhiteSpace(Description))
                 root.Add(new XAttribute("Description", Description));
+            XElement xblocks = new("Blocks");
+            root.Add(xblocks);
+            foreach (var module in Blocks)
+            {
+                XElement xblock = new("Block");
+                xblocks.Add(xblock);
+                module.Save(xblock);
+            }
             XElement xmodules = new("Modules");
             root.Add(xmodules);
             foreach (var module in Modules)
@@ -46,6 +57,7 @@ namespace Simulator.Model
             {
                 doc.Save(filename);
                 Modules.ForEach(module => module.Changed = false);
+                Blocks.ForEach(block => block.Changed = false);
                 Changed = false;
             }
             catch { }
@@ -81,8 +93,21 @@ namespace Simulator.Model
                             Modules.Add(module);
                         }
                     }
+                    var xblocks = xproject?.Element("Blocks");
+                    if (xblocks != null)
+                    {
+                        foreach (XElement xblock in xblocks.Elements("Block"))
+                        {
+                            var block = new Module();
+                            if (!Guid.TryParse(xblock.Element("Id")?.Value, out Guid id))
+                                block.Id = id;
+                            block.Load(xblock);
+                            Blocks.Add(block);
+                        }
+                    }
                 }
                 Modules.ForEach(module => module.Changed = false);
+                Blocks.ForEach(block => block.Changed = false);
                 Changed = false;
                 OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.Load));
             }

@@ -202,7 +202,7 @@ namespace Simulator.Model
         [Browsable(false)]
         public bool Selected => selected[0];
 
-        public void Select(bool value)
+        public void SetSelect(bool value)
         {
             selected[0] = value;
         }

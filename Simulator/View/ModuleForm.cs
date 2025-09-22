@@ -45,6 +45,7 @@ namespace Simulator
             InitializeComponent();
             this.panelForm = panelForm;
             Module = module.DeepCopy();
+            Module.Changed = false;
             items = Module.Elements;
             items.Where(x => x.Instance is IChangeOrderDI).ToList().ForEach(dis.Add);
             items.Where(x => x.Instance is IChangeOrderDO).ToList().ForEach(dos.Add);
@@ -60,7 +61,7 @@ namespace Simulator
         private void ModuleForm_Load(object sender, EventArgs e)
         {
             items.ForEach(item => item.Selected = false);
-            links.ForEach(item => item.Select(false));
+            links.ForEach(item => item.SetSelect(false));
             ElementSelected?.Invoke(Module, EventArgs.Empty);
             timerInterface.Enabled = true;
         }
@@ -125,7 +126,7 @@ namespace Simulator
                     if (item.Instance is ILinkSupport link)
                         link.SetItemId(item.Id);
                     items.ForEach(item => item.Selected = false);
-                    links.ForEach(item => item.Select(false));
+                    links.ForEach(item => item.SetSelect(false));
                     item.Selected = true;
                     items.Add(item);
                     Module.Changed = true;
@@ -767,10 +768,10 @@ namespace Simulator
                 link != null && segmentIndex != null && segmentVertical != null)
             {
                 if (!((Link)link).Selected)
-                    ((Link)link).Select(true);
+                    ((Link)link).SetSelect(true);
                 else if ((ModifierKeys & Keys.Control) == Keys.Control)
-                    ((Link)link).Select(false);
-                links.Where(item => item.Id != ((Link)link).Id).ToList().ForEach(item => item.Select(false));
+                    ((Link)link).SetSelect(false);
+                links.Where(item => item.Id != ((Link)link).Id).ToList().ForEach(item => item.SetSelect(false));
                 if ((ModifierKeys & Keys.Control) != Keys.Control)
                     items.ForEach(item => item.Selected = false);
                 if (e.Button == MouseButtons.Left)
@@ -787,19 +788,27 @@ namespace Simulator
                 if (!element.Selected && (ModifierKeys & Keys.Control) != Keys.Control)
                 {
                     items.Where(item => item != element).ToList().ForEach(item => item.Selected = false);
-                    links.ForEach(item => item.Select(false));
+                    links.ForEach(item => item.SetSelect(false));
                     // выделение выходных связей элемента
                     foreach (var item in items.Where(x => x.Selected))
                     {
                         foreach (var link in links.Where(x => x.SourceId == item.Id))
-                            link.Select(true);
+                            link.SetSelect(true);
                     }
                 }
                 // выбор собственно элемента
                 if (output == null)
                 {
                     if (!element.Selected)
+                    {
                         element.Selected = true;
+                        // выделение выходных связей элемента
+                        foreach (var item in items.Where(x => x.Selected))
+                        {
+                            foreach (var link in links.Where(x => x.SourceId == item.Id))
+                                link.SetSelect(true);
+                        }
+                    }
                     else if ((ModifierKeys & Keys.Control) == Keys.Control)
                         element.Selected = false;
                 }
@@ -823,7 +832,7 @@ namespace Simulator
                 if (!(TryGetFreeInputPin(e.Location, out Element? element, out _, out _, out _) && element?.Instance is IManualChange _))
                     linkFirstPoint = null;
                 items.ForEach(item => item.Selected = false);
-                links.ForEach(item => item.Select(false));
+                links.ForEach(item => item.SetSelect(false));
                 ElementSelected?.Invoke(Module, EventArgs.Empty);
             }
             if (e.Button == MouseButtons.Right)
@@ -843,35 +852,6 @@ namespace Simulator
                             {
                                 fn.ResetValueLinkToInp((int)pin);
                                 links.RemoveAll(link => link.DestinationId == element.Id && link.DestinationPinIndex == (int)pin);
-                                Module.Changed = true;
-                            }
-                        };
-                        cmsContextMenu.Items.Add(item);
-                    }
-                    else if (output == true && items.Select(x => x.Instance as ILinkSupport)
-                        .Any(x => x != null && x.InputLinkSources.Any(y => y.Item1 == element.Id)))
-                    {
-                        item = new ToolStripMenuItem() { Text = "Удалить связи по выходу", Tag = element };
-                        item.Click += (s, e) =>
-                        {
-                            var menuItem = (ToolStripMenuItem?)s;
-                            if (menuItem?.Tag is Element element && element.Instance is IFunction fn)
-                            {
-                                foreach (var instance in items.Select(x => x.Instance as ILinkSupport)
-                                        .Where(instance => instance != null && instance.InputLinkSources.Any(y => y.Item1 == element.Id)))
-                                {
-                                    if (instance == null) continue;
-                                    var n = 0;
-                                    foreach (var source in instance.InputLinkSources)
-                                    {
-                                        if (source.Item1 == element.Id)
-                                        {
-                                            instance.ResetValueLinkToInp(n);
-                                            links.RemoveAll(link => link.SourceId == element.Id && link.SourcePinIndex == n);
-                                        }
-                                        n++;
-                                    }
-                                }
                                 Module.Changed = true;
                             }
                         };
@@ -1005,7 +985,7 @@ namespace Simulator
                     if ((ModifierKeys & Keys.Control) != Keys.Control)
                     {
                         items.ForEach(item => item.Selected = false);
-                        links.ForEach(item => item.Select(false));
+                        links.ForEach(item => item.SetSelect(false));
                     }
                     if (partSelection)
                     {
@@ -1028,7 +1008,7 @@ namespace Simulator
                     foreach (var link in links)
                     {
                         if (items.Any(x => x.Selected && x.Id == link.SourceId) && items.Any(x => x.Selected && x.Id == link.DestinationId))
-                            link.Select(true);
+                            link.SetSelect(true);
                     }
                     ElementSelected?.Invoke(items.Any(x => x.Selected) ? 
                         items.Where(x => x.Selected).Select(x => x.Instance).ToArray() : null, EventArgs.Empty);
@@ -1090,7 +1070,7 @@ namespace Simulator
                                 if (link != null)
                                 {
                                     elementFirst.Selected = false;
-                                    ((Link)link).Select(true);
+                                    ((Link)link).SetSelect(true);
                                     links.Add((Link)link);
                                     ((Link)link).UpdateSourcePoint(elementFirst.OutputPins[((Link)link).SourcePinIndex]);
                                     Module.Changed = true;
@@ -1107,7 +1087,7 @@ namespace Simulator
                                 if (link != null)
                                 {
                                     elementFirst.Selected = false;
-                                    ((Link)link).Select(true);
+                                    ((Link)link).SetSelect(true);
                                     links.Add((Link)link);
                                     ((Link)link).UpdateDestinationPoint(elementFirst.InputPins[((Link)link).DestinationPinIndex]);
                                     Module.Changed = true;
@@ -1142,8 +1122,8 @@ namespace Simulator
             {
                 module?.Accept(Module);
                 Project.Save();
+                Module.Changed = false;
             }
-            Module.Changed = false;
         }
 
         private void ModuleForm_KeyDown(object sender, KeyEventArgs e)
@@ -1156,6 +1136,7 @@ namespace Simulator
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     {
                         DeleteAllSelectedElements();
+                        Module.Changed = true;
                         zoomPad.Invalidate();
                     }
                     else if (links.Any(x => x.Selected) &&
@@ -1169,6 +1150,7 @@ namespace Simulator
                                 func.ResetValueLinkToInp(link.DestinationPinIndex);
                         }
                         links.RemoveAll(link => link.Selected);
+                        Module.Changed = true;
                         zoomPad.Invalidate();
                     }
                     break;
@@ -1176,7 +1158,7 @@ namespace Simulator
                     if (e.Control)
                     {
                         items.ForEach(x => x.Selected = true);
-                        links.ForEach(x => x.Select(true));
+                        links.ForEach(x => x.SetSelect(true));
                         zoomPad.Invalidate();
                     }
                     break;
@@ -1216,7 +1198,7 @@ namespace Simulator
                 if (xmlStream != null)
                 {
                     items.ForEach(item => item.Selected = false);
-                    links.ForEach(item => item.Select(false));
+                    links.ForEach(item => item.SetSelect(false));
                     List<Element> elements = [];
                     List<Link> elementlinks = [];
                     Dictionary<Guid, Guid> guids = [];
@@ -1257,7 +1239,7 @@ namespace Simulator
                     {
                         link.SetSourceId(makedCopy ? guids[link.SourceId] : link.SourceId);
                         link.SetDestinationId(makedCopy ? guids[link.DestinationId] : link.DestinationId);
-                        link.Select(true);
+                        link.SetSelect(true);
                         links.Add(link);
                     }
                     Module.Changed = true;
