@@ -16,6 +16,6 @@
         Lamp,
         DigInp,
         DigOut,
-        Assembly
+        Block
     }
 }

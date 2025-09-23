@@ -189,7 +189,7 @@ namespace Simulator.Model
             diagramNode.Nodes.Add(new TreeNode("Конец") { Tag = typeof(Diagram.FINISH) });
             var assemblyNode = new TreeNode("Сборки");
             rootNode.Nodes.Add(assemblyNode);
-            assemblyNode.Nodes.Add(new TreeNode("Сборка 4х4") { Tag = typeof(Logic.ASMBLY) });
+            assemblyNode.Nodes.Add(new TreeNode("Сборка 4х4") { Tag = typeof(Logic.BLK) });
 
             rootNode.ExpandAll();
             andNode.Collapse();

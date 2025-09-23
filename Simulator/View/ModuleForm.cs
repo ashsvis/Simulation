@@ -814,11 +814,11 @@ namespace Simulator
                 }
                 if (e.Button == MouseButtons.Left)
                 {
-                    if (e.Clicks >= 2 && element.Instance is IAssembly assembly)
+                    if (e.Clicks >= 2 && element.Instance is IBlock block)
                     {
-                        assembly.ModuleInternal ??= new Model.Module() { Name = "InternalModule" };
-                        assembly.ModuleInternal.Changed = false;
-                        panelForm.EnsureShowModuleChildForm(assembly.ModuleInternal);
+                        block.Internal ??= new Model.Module() { Name = "InternalModule" };
+                        block.Internal.Changed = false;
+                        panelForm.EnsureShowModuleChildForm(block.Internal);
                     }
                     else
                         dragging = output == null && element.Selected;

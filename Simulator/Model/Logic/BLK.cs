@@ -4,21 +4,21 @@ using System.Xml.Linq;
 
 namespace Simulator.Model.Logic
 {
-    public class ASMBLY : CommonLogic, IAssembly
+    public class BLK : CommonLogic, IBlock
     {
-        public ASMBLY() : base(LogicFunction.Assembly, 4, 4) { }
+        public BLK() : base(LogicFunction.Block, 4, 4) { }
 
         [Browsable(false)]
-        public override string FuncSymbol => "ASM"; // Детектор фронта
+        public override string FuncSymbol => "BLK"; // Функциональный блок с внутренним модулем
 
         [Browsable(false)]
-        public Model.Module? ModuleInternal { get; set; }
+        public Model.Module? Internal { get; set; }
         public override void Calculate()
         {
-            if (ModuleInternal != null) 
+            if (Internal != null) 
             {
                 // перезапись состояний входов сборки на элементы DI внутреннего модуля
-                foreach (var item in ModuleInternal.Elements)
+                foreach (var item in Internal.Elements)
                 {
                     if (item.Instance is Model.Inputs.DI di)
                     {
@@ -30,9 +30,9 @@ namespace Simulator.Model.Logic
                         }
                     }
                 }
-                ModuleInternal.GetCalculationMethod().Invoke();
+                Internal.GetCalculationMethod().Invoke();
                 // перезапись состояний выходов сборки из элементов DO внутреннего модуля
-                foreach (var item in ModuleInternal.Elements)
+                foreach (var item in Internal.Elements)
                 {
                     if (item.Instance is Model.Outputs.DO @do)
                     {
@@ -52,7 +52,7 @@ namespace Simulator.Model.Logic
             base.Save(xtance);
             XElement xmodule = new("Module");
             xtance.Add(xmodule);
-            ModuleInternal?.Save(xmodule);
+            Internal?.Save(xmodule);
 
         }
 
@@ -61,8 +61,8 @@ namespace Simulator.Model.Logic
             base.Load(xtance);
             var xmodule = xtance?.Element("Module");
             if (xmodule == null) return;
-            ModuleInternal = ModuleInternal ?? new Module();
-            ModuleInternal.Load(xmodule);
+            Internal = Internal ?? new Module();
+            Internal.Load(xmodule);
         }
     }
 }
