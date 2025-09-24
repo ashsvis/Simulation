@@ -18,7 +18,7 @@
         </Element>
         <Element X="392" Y="64">
           <Id>d59a1814-9351-4488-9e34-f4754f397f72</Id>
-          <Type>Simulator.Model.Logic.ASMBLY</Type>
+          <Type>Simulator.Model.Logic.BLK</Type>
           <Instance>
             <Inputs>
               <Input Index="3">
