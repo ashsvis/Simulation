@@ -89,6 +89,8 @@ namespace Simulator.Model
                             var module = new Module();
                             if (!Guid.TryParse(xmodule.Element("Id")?.Value, out Guid id))
                                 module.Id = id;
+                            if (module.Id == Guid.Empty)
+                                module.Id = Guid.NewGuid();
                             module.Load(xmodule);
                             Modules.Add(module);
                         }
@@ -101,6 +103,8 @@ namespace Simulator.Model
                             var block = new Module();
                             if (!Guid.TryParse(xblock.Element("Id")?.Value, out Guid id))
                                 block.Id = id;
+                            if (block.Id == Guid.Empty)
+                                block.Id = Guid.NewGuid();
                             block.Load(xblock);
                             Blocks.Add(block);
                         }

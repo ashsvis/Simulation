@@ -139,19 +139,25 @@ namespace Simulator.Model
                     if (xpoints != null)
                     {
                         var fp = CultureInfo.GetCultureInfo("en-US");
-                        foreach (XElement xpoint in xpoints.Elements("Point"))
+                        var xpa = xpoints.Attribute("Array")?.Value;
+                        if (xpa != null)
                         {
-                            if (float.TryParse(xpoint.Attribute("X")?.Value, fp, out float x) &&
-                                float.TryParse(xpoint.Attribute("Y")?.Value, fp, out float y))
+                            foreach (string[] xps in xpa.Split(' ').Select(x => x.Split(',')))
                             {
-                                points.Add(new PointF(x, y));
+                                if (xps.Length == 2 &&
+                                    float.TryParse(xps[0], fp, out float x) &&
+                                    float.TryParse(xps[1], fp, out float y))
+                                {
+                                    points.Add(new PointF(x, y));
+                                }
+
                             }
                         }
                     }
                     if (points.Count > 1)
                     {
                         var link = new Link(id, sourceId, sourcePinIndex, destinationId, destPinIndex, [.. points]);
-                        link.Load(xlink);
+                        //link.Load(xlink);
                         links.Add(link);
                     }
                 }

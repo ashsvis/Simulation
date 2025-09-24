@@ -4,7 +4,7 @@
   <Blocks />
   <Modules>
     <Module>
-      <Id>789d701b-9526-4caa-a21f-ad332b1ad7e5</Id>
+      <Id>21ae964d-f58d-4512-a9d0-ddb988c6b42c</Id>
       <Elements>
         <Element X="120" Y="64">
           <Id>e2b6c7e7-c6a2-4583-8535-7570e8dcae22</Id>
@@ -21,13 +21,13 @@
           <Type>Simulator.Model.Logic.BLK</Type>
           <Instance>
             <Inputs>
-              <Input Index="3">
+              <Input Index="3" Value="true">
                 <SourceId>e2b6c7e7-c6a2-4583-8535-7570e8dcae22</SourceId>
               </Input>
             </Inputs>
             <Outputs />
             <Module>
-              <Id>bc3c504f-1d01-46fe-a387-e7f0bfedb139</Id>
+              <Id>c3d70140-8e72-41e4-b0b6-1a6bbdfa19fe</Id>
               <Elements />
               <Links />
             </Module>
@@ -38,7 +38,7 @@
           <Type>Simulator.Model.Outputs.LAMP</Type>
           <Instance>
             <Inputs>
-              <Input Index="0">
+              <Input Index="0" Value="true">
                 <SourceId>d59a1814-9351-4488-9e34-f4754f397f72</SourceId>
                 <OutputIndex>3</OutputIndex>
               </Input>
@@ -52,8 +52,9 @@
           <Type>Simulator.Model.Logic.NOT</Type>
           <Instance>
             <Inputs>
-              <Input Index="0">
+              <Input Index="0" Value="true">
                 <SourceId>d59a1814-9351-4488-9e34-f4754f397f72</SourceId>
+                <OutputIndex>3</OutputIndex>
               </Input>
             </Inputs>
             <Outputs>
@@ -64,64 +65,22 @@
       </Elements>
       <Links>
         <Link>
-          <Id>1fa6d33d-aa23-42de-9f4e-b61d72d031f2</Id>
+          <Id>5fc9b49c-0e0d-4d4e-9955-7bf363b16d50</Id>
           <Source Id="e2b6c7e7-c6a2-4583-8535-7570e8dcae22" PinIndex="0" />
           <Destination Id="d59a1814-9351-4488-9e34-f4754f397f72" PinIndex="3" />
-          <Points>
-            <Point X="176" Y="88" />
-            <Point X="176" Y="88" />
-            <Point X="280" Y="88" />
-            <Point X="280" Y="184" />
-            <Point X="384" Y="184" />
-            <Point X="384" Y="184" />
-          </Points>
-          <Segments>
-            <Segment Kind="None" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="Vertical" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="None" />
-          </Segments>
+          <Points Array="176,88 176,88 216,88 216,184 384,184 384,184" />
         </Link>
         <Link>
-          <Id>3375a1d1-7cac-4eb0-94fe-208113824b50</Id>
-          <Source Id="d59a1814-9351-4488-9e34-f4754f397f72" PinIndex="0" />
+          <Id>6019911f-722a-44b9-9e0a-d37282785a19</Id>
+          <Source Id="d59a1814-9351-4488-9e34-f4754f397f72" PinIndex="3" />
           <Destination Id="d4863167-c083-45ab-b8f1-4edbb1a0111f" PinIndex="0" />
-          <Points>
-            <Point X="448" Y="88" />
-            <Point X="448" Y="88" />
-            <Point X="520" Y="88" />
-            <Point X="520" Y="32" />
-            <Point X="656" Y="32" />
-            <Point X="656" Y="32" />
-          </Points>
-          <Segments>
-            <Segment Kind="None" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="Vertical" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="None" />
-          </Segments>
+          <Points Array="448,184 448,184 544,184 544,32 656,32 656,32" />
         </Link>
         <Link>
-          <Id>9a936128-31f1-44c0-9b3a-7b17caf2a289</Id>
+          <Id>cc727c5d-a107-4d72-979d-10f4d633c441</Id>
           <Source Id="d59a1814-9351-4488-9e34-f4754f397f72" PinIndex="3" />
           <Destination Id="a8a4ed78-4abf-4c25-bcd2-6db4b632bbe1" PinIndex="0" />
-          <Points>
-            <Point X="448" Y="184" />
-            <Point X="448" Y="184" />
-            <Point X="584" Y="184" />
-            <Point X="584" Y="88" />
-            <Point X="656" Y="88" />
-            <Point X="656" Y="88" />
-          </Points>
-          <Segments>
-            <Segment Kind="None" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="Vertical" />
-            <Segment Kind="Horizontal" />
-            <Segment Kind="None" />
-          </Segments>
+          <Points Array="448,184 448,184 544,184 544,88 656,88 656,88" />
         </Link>
       </Links>
     </Module>

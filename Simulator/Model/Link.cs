@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Globalization;
 using System.Xml.Linq;
 
 namespace Simulator.Model
@@ -59,55 +60,11 @@ namespace Simulator.Model
             xdest.Add(new XAttribute("PinIndex", DestinationPinIndex));
             xtem.Add(xdest);
             XElement xpoints = new("Points");
-            foreach (var point in points)
-            {
-                XElement xpoint = new("Point");
-                xpoint.Add(new XAttribute("X", point.X));
-                xpoint.Add(new XAttribute("Y", point.Y));
-                xpoints.Add(xpoint);
-            }
             if (points.Count > 0)
+            {
+                var fp = CultureInfo.GetCultureInfo("en-Us");
+                xpoints.Add(new XAttribute("Array", string.Join(" ", points.Select(p => string.Create(fp, $"{p.X},{p.Y}")))));
                 xtem.Add(xpoints);
-            XElement xsegments = new("Segments");
-            for (int i = 1; i < points.Count; i++)
-            {
-                XElement xsegment = new("Segment");
-                xsegments.Add(xsegment);
-                var pt1 = points[i - 1];
-                var pt2 = points[i];
-                if (pt1.X == pt2.X && pt1.Y != pt2.Y)
-                {
-                    // вертикальный сегмент
-                    xsegment.Add(new XAttribute("Kind", LinkVector.Vertical));
-                }
-                else if (pt1.X != pt2.X && pt1.Y == pt2.Y)
-                {
-                    // горизонтальный сегмент
-                    xsegment.Add(new XAttribute("Kind", LinkVector.Horizontal));
-                }
-                else
-                {
-                    // скрытый сегмент
-                    xsegment.Add(new XAttribute("Kind", LinkVector.None));
-                }
-            }
-            if (points.Count > 1)
-                xtem.Add(xsegments);
-        }
-
-        public void Load(XElement xlink)
-        {
-            List<LinkVector> segments = [];
-            var xsegments = xlink.Element("Segments");
-            if (xsegments != null)
-            {
-                foreach (XElement xsegment in xsegments.Elements("Segment"))
-                {
-                    if (Enum.TryParse(xsegment?.Attribute("Kind")?.Value, out LinkVector linkVector))
-                    {
-                        segments.Add(linkVector);
-                    }
-                }
             }
         }
 
