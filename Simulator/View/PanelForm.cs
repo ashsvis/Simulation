@@ -1,7 +1,5 @@
 using Simulator.Model;
 using Simulator.View;
-using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Simulator
 {
@@ -208,6 +206,26 @@ namespace Simulator
                         MessageBox.Show(ex.Message, "Вставка элемента", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
+                else if (node.Tag is Model.Module block)
+                {
+                    try
+                    {
+                        var module = new Element() { Type = typeof(Model.Logic.BLK) };
+                        if (module != null)
+                        {
+                            module.Instance = new Model.Logic.BLK(block.Id);
+                            var ret = tvLibrary.DoDragDrop(module, DragDropEffects.Copy);
+                            if (ret == DragDropEffects.None)
+                            {
+                                Cursor = Cursors.Default;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Вставка блока", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
                 if (e.Clicks > 1)
                     EnsureShowBlockChildForm();
             }
@@ -277,11 +295,6 @@ namespace Simulator
 
                 tvLibrary.Nodes.Clear();
                 tvLibrary.Nodes.AddRange(Project.GetLibraryTree());
-                //var blocksNode = tvLibrary.Nodes[0].Nodes.Cast<TreeNode>().FirstOrDefault(x => x.Tag == Project.Blocks);
-                //blocksNode?.Nodes.Clear();
-                //foreach (var block in Project.Blocks)
-                //    blocksNode?.Nodes.Add(new TreeNode(block.Name) { Tag = block });
-                //blocksNode?.Expand();
 
                 tvModules.Nodes.Clear();
                 tvModules.Nodes.AddRange(Project.GetModulesTree());

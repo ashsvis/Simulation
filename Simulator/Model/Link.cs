@@ -50,7 +50,7 @@ namespace Simulator.Model
 
         public void Save(XElement xtem)
         {
-            xtem.Add(new XElement("Id", Id));
+            xtem.Add(new XAttribute("Id", Id));
             var xsource = new XElement("Source");
             xsource.Add(new XAttribute("Id", SourceId));
             xsource.Add(new XAttribute("PinIndex", SourcePinIndex));

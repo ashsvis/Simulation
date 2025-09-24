@@ -119,7 +119,9 @@ namespace Simulator
             {
                 if (e.Data.GetData(typeof(Element)) is Element item && item.Type != null)
                 {
-                    item.Instance = Activator.CreateInstance(item.Type);
+                    item.Instance ??= Activator.CreateInstance(item.Type);
+                    if (item.Instance is IBlock block)
+                        block.ConnectToLibrary();
                     item.Location = SnapToGrid(PrepareMousePosition(zoomPad.PointToClient(new Point(e.X, e.Y))));
                     if (item.Instance is IFunction instance)
                         instance.ResultChanged += Item_ResultChanged;
@@ -814,13 +816,13 @@ namespace Simulator
                 }
                 if (e.Button == MouseButtons.Left)
                 {
-                    if (e.Clicks >= 2 && element.Instance is IBlock block)
-                    {
-                        block.Internal ??= new Model.Module() { Name = "InternalModule" };
-                        block.Internal.Changed = false;
-                        panelForm.EnsureShowModuleChildForm(block.Internal);
-                    }
-                    else
+                    //if (e.Clicks >= 2 && element.Instance is IBlock block)
+                    //{
+                    //    block.Internal ??= new Model.Module() { Name = "InternalModule" };
+                    //    block.Internal.Changed = false;
+                    //    panelForm.EnsureShowModuleChildForm(block.Internal);
+                    //}
+                    //else
                         dragging = output == null && element.Selected;
                 }
 
@@ -1118,7 +1120,7 @@ namespace Simulator
         private void SaveModule()
         {
             var module = Project.Modules.FirstOrDefault(x => x.Id == Module.Id);
-            if (module != null)
+            if (module != null && Module.Changed)
             {
                 module?.Accept(Module);
                 Project.Save();
@@ -1127,10 +1129,18 @@ namespace Simulator
             else
             {
                 var block = Project.Blocks.FirstOrDefault(x => x.Id == Module.Id);
-                if (block != null)
+                if (block != null && Module.Changed)
                 {
                     block?.Accept(Module);
                     Project.Save();
+                    foreach (var mod in Project.Modules)
+                    {
+                        foreach (var item in mod.Elements)
+                        {
+                            if (item is IBlock blk)
+                                blk.ConnectToLibrary();
+                        }
+                    }
                     Module.Changed = false;
                 }
             }

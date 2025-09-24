@@ -8,11 +8,26 @@ namespace Simulator.Model.Logic
     {
         public BLK() : base(LogicFunction.Block, 4, 4) { }
 
+        public BLK(Guid id) : base(LogicFunction.Block, 4, 4) 
+        { 
+            LibraryId = id;
+        }
+
         [Browsable(false)]
         public override string FuncSymbol => "BLK"; // Функциональный блок с внутренним модулем
 
         [Browsable(false)]
-        public Model.Module? Internal { get; set; }
+        public Guid LibraryId { get; set; }
+
+        [Browsable(false)]
+        private Model.Module? Internal { get; set; }
+
+        [Category("Библиотека"), DisplayName("Имя")]
+        public string LibraryName { get; private set; } = string.Empty;
+
+        [Category("Библиотека"), DisplayName("Описание")]
+        public string LibraryDescription { get; private set; } = string.Empty;
+
         public override void Calculate()
         {
             if (Internal != null) 
@@ -50,19 +65,28 @@ namespace Simulator.Model.Logic
         public override void Save(XElement xtance)
         {
             base.Save(xtance);
-            XElement xmodule = new("Module");
-            xtance.Add(xmodule);
-            Internal?.Save(xmodule);
-
+            xtance.Add(new XElement("LibraryId", LibraryId));
         }
 
         public override void Load(XElement? xtance)
         {
             base.Load(xtance);
-            var xmodule = xtance?.Element("Module");
-            if (xmodule == null) return;
-            Internal = Internal ?? new Module();
-            Internal.Load(xmodule);
+            if (Guid.TryParse(xtance?.Element("LibraryId")?.Value, out Guid id))
+            {
+                LibraryId = id;
+                ConnectToLibrary();
+            }
+        }
+
+        public void ConnectToLibrary()
+        {
+            var lib = Project.Blocks.FirstOrDefault(x => x.Id == LibraryId);
+            if (lib != null)
+            {
+                Internal = lib.DeepCopy();
+                LibraryName = lib.Name;
+                LibraryDescription = lib.Description;
+            }
         }
     }
 }

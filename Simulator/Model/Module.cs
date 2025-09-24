@@ -125,7 +125,7 @@ namespace Simulator.Model
             {
                 foreach (XElement xlink in xlinks.Elements("Link"))
                 {
-                    if (!Guid.TryParse(xlink.Element("Id")?.Value, out Guid id)) continue;
+                    if (!Guid.TryParse(xlink.Attribute("Id")?.Value, out Guid id)) continue;
                     var xsource = xlink.Element("Source");
                     if (xsource == null) continue;
                     if (!Guid.TryParse(xsource.Attribute("Id")?.Value, out Guid sourceId)) continue;
@@ -170,8 +170,9 @@ namespace Simulator.Model
             {
                 foreach (XElement xitem in xitems.Elements("Element"))
                 {
-                    if (!Guid.TryParse(xitem.Element("Id")?.Value, out Guid id)) continue;
-                    var xtype = xitem.Element("Type");
+                    if (!Guid.TryParse(xitem.Attribute("Id")?.Value, out Guid id)) continue;
+                    var xtance = xitem.Element("Instance");
+                    var xtype = xtance?.Attribute("Type");
                     if (xtype == null) continue;
                     Type? type = Type.GetType(xtype.Value);
                     if (type == null) continue;

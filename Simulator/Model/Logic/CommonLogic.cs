@@ -253,13 +253,14 @@ namespace Simulator.Model.Logic
             if (Inputs.Length > 0)
             {
                 XElement xinputs = new("Inputs");
-                xtance.Add(xinputs);
+                var customInps = false;
                 for (var i = 0; i < Inputs.Length; i++)
                 {
                     (Guid id, int output) = getLinkSources[i];
                     if (string.IsNullOrWhiteSpace(InputNames[i]) &&
                         !InverseInputs[i] && !Inputs[i] &&
                         id == Guid.Empty) continue;
+                    customInps = true;
                     XElement xinput = new("Input");
                     xinputs.Add(xinput);
                     xinput.Add(new XAttribute("Index", i));
@@ -272,20 +273,25 @@ namespace Simulator.Model.Logic
                         xinput.Add(new XAttribute("Value", Inputs[i]));
                     if (id != Guid.Empty)
                     {
-                        xinput.Add(new XElement("SourceId", id));
+                        XElement xsource = new("Source");
+                        xsource.Add(new XAttribute("Id", id));
                         if (output > 0)
-                            xinput.Add(new XElement("OutputIndex", output));
+                            xsource.Add(new XAttribute("PinIndex", output));
+                        xinput.Add(xsource);
                     }
                 }
+                if (customInps)
+                    xtance.Add(xinputs);
             }
             if (OutputNames.Length > 0)
             {
                 XElement xoutputs = new("Outputs");
-                xtance.Add(xoutputs);
+                var customOuts = false;
                 for (var i = 0; i < InverseOutputs.Length; i++)
                 {
                     if (string.IsNullOrWhiteSpace(OutputNames[i]) &&
                         !InverseOutputs[i]) continue;
+                    customOuts = true;
                     XElement xoutput = new("Output");
                     xoutputs.Add(xoutput);
                     xoutput.Add(new XAttribute("Index", i));
@@ -294,6 +300,8 @@ namespace Simulator.Model.Logic
                     if (InverseOutputs[i])
                         xoutput.Add(new XAttribute("Invert", InverseOutputs[i]));
                 }
+                if (customOuts)
+                    xtance.Add(xoutputs);
             }
         }
 
@@ -313,12 +321,16 @@ namespace Simulator.Model.Logic
                         if (name != null) InputNames[index] = name;
                         if (bool.TryParse(item.Attribute("Invert")?.Value, out bool invert))
                             InverseInputs[index] = invert;
-                        if (Guid.TryParse(item.Element("SourceId")?.Value, out Guid guid) && guid != Guid.Empty)
+                        var xsource = item.Element("Source");
+                        if (xsource != null) 
                         {
-                            if (int.TryParse(item.Element("OutputIndex")?.Value, out int outputIndex))
-                                getLinkSources[index] = (guid, outputIndex);
-                            else
-                                getLinkSources[index] = (guid, 0);
+                            if (Guid.TryParse(xsource.Attribute("Id")?.Value, out Guid guid) && guid != Guid.Empty)
+                            {
+                                if (int.TryParse(xsource.Attribute("PinIndex")?.Value, out int outputIndex))
+                                    getLinkSources[index] = (guid, outputIndex);
+                                else
+                                    getLinkSources[index] = (guid, 0);
+                            }
                         }
                         else if (bool.TryParse(item.Attribute("Value")?.Value, out bool value))
                             getInputs[index] = value;

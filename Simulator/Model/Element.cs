@@ -4,7 +4,7 @@ namespace Simulator.Model
 {
     public class Element: IChangeIndex, ICopyPaste
     {
-        public const float Step = 8f;//6f;
+        public const float Step = 8f;
 
         public Element() 
         { 
@@ -38,13 +38,13 @@ namespace Simulator.Model
 
         public void Save(XElement xtem)
         {
-            xtem.Add(new XElement("Id", Id));
-            xtem.Add(new XElement("Type", Instance?.GetType()));
+            xtem.Add(new XAttribute("Id", Id));
             xtem.Add(new XAttribute("X", Location.X));
             xtem.Add(new XAttribute("Y", Location.Y));
             if (Instance is ILoadSave instance)
             {
                 var xtance = new XElement("Instance");
+                xtance.Add(new XAttribute("Type", instance.GetType()));
                 xtem.Add(xtance);
                 if (!string.IsNullOrWhiteSpace(instance.Name))
                     xtance.Add(new XAttribute("Name", instance.Name));

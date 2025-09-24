@@ -82,32 +82,32 @@ namespace Simulator.Model
                     var description = xproject?.Attribute("Description")?.Value;
                     if (description != null)
                         Description = description;
-                    var xmodules = xproject?.Element("Modules");
-                    if (xmodules != null)
-                    {
-                        foreach (XElement xmodule in xmodules.Elements("Module"))
-                        {
-                            var module = new Module();
-                            if (!Guid.TryParse(xmodule.Element("Id")?.Value, out Guid id))
-                                module.Id = id;
-                            if (module.Id == Guid.Empty)
-                                module.Id = Guid.NewGuid();
-                            module.Load(xmodule);
-                            Modules.Add(module);
-                        }
-                    }
                     var xblocks = xproject?.Element("Blocks");
                     if (xblocks != null)
                     {
                         foreach (XElement xblock in xblocks.Elements("Block"))
                         {
                             var block = new Module();
-                            if (!Guid.TryParse(xblock.Element("Id")?.Value, out Guid id))
+                            if (Guid.TryParse(xblock.Element("Id")?.Value, out Guid id))
                                 block.Id = id;
                             if (block.Id == Guid.Empty)
                                 block.Id = Guid.NewGuid();
                             block.Load(xblock);
                             Blocks.Add(block);
+                        }
+                    }
+                    var xmodules = xproject?.Element("Modules");
+                    if (xmodules != null)
+                    {
+                        foreach (XElement xmodule in xmodules.Elements("Module"))
+                        {
+                            var module = new Module();
+                            if (Guid.TryParse(xmodule.Element("Id")?.Value, out Guid id))
+                                module.Id = id;
+                            if (module.Id == Guid.Empty)
+                                module.Id = Guid.NewGuid();
+                            module.Load(xmodule);
+                            Modules.Add(module);
                         }
                     }
                 }

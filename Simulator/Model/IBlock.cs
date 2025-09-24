@@ -2,6 +2,6 @@
 {
     public interface IBlock
     {
-        Model.Module? Internal { get; set; }
+        void ConnectToLibrary();
     }
 }
