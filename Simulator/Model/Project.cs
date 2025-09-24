@@ -68,6 +68,7 @@ namespace Simulator.Model
             Name = string.Empty;
             Description = string.Empty;
             Modules.Clear();
+            Blocks.Clear();
             file = filename;
             var xdoc = XDocument.Load(filename);
             try
@@ -191,11 +192,11 @@ namespace Simulator.Model
             rootNode.Nodes.Add(diagramNode);
             diagramNode.Nodes.Add(new TreeNode("Начало") { Tag = typeof(Diagram.START) });
             diagramNode.Nodes.Add(new TreeNode("Конец") { Tag = typeof(Diagram.FINISH) });
-            var assemblyNode = new TreeNode("Блоки");
-            rootNode.Nodes.Add(assemblyNode);
-            assemblyNode.Nodes.Add(new TreeNode("Блок 4х4") { Tag = typeof(Logic.BLK) });
-
-            rootNode.ExpandAll();
+            var blocksNode = new TreeNode("Блоки") { Tag = Blocks };
+            rootNode.Nodes.Add(blocksNode);
+            foreach (var block in Blocks)
+                blocksNode.Nodes.Add(new TreeNode(block.Name) { Tag = block });
+            rootNode.Expand();
             andNode.Collapse();
             orNode.Collapse();
             xorNode.Collapse();
@@ -208,6 +209,7 @@ namespace Simulator.Model
             Description = string.Empty;
             file = string.Empty;
             Modules.Clear();
+            Blocks.Clear();
             Changed = false;
             OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.Clear));
         }
@@ -227,6 +229,22 @@ namespace Simulator.Model
             OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.RemoveModule));
         }
 
+        public static Module AddBlockToProject()
+        {
+            var module = new Module() { Name = $"Block{Blocks.Count}" };
+            Blocks.Add(module);
+            Changed = true;
+            OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.AddBlock));
+            return module;
+        }
+
+        public static void RemoveBlockFromProject(Module module)
+        {
+            Blocks.Remove(module);
+            Changed = true;
+            OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.RemoveBlock));
+        }
+
         public static event ProjectEventHandler? OnChanged;
     }
 
@@ -236,6 +254,8 @@ namespace Simulator.Model
         Load,
         AddModule,
         RemoveModule,
+        AddBlock,
+        RemoveBlock,
     }
 
     public delegate void ProjectEventHandler(object? sender, ProjectEventArgs args);

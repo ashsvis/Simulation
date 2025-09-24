@@ -87,6 +87,10 @@
             panRightSize = new Panel();
             tabControl3 = new TabControl();
             tabPage2 = new TabPage();
+            tsToolLibrary = new ToolStrip();
+            tsbAddBock = new ToolStripButton();
+            tsbShowBlockForm = new ToolStripButton();
+            tsbDeleteBlock = new ToolStripButton();
             toolStripCaption = new ToolStrip();
             tsbHostClose = new ToolStripButton();
             tslPanelCaption = new ToolStripLabel();
@@ -110,6 +114,7 @@
             tlpLibrary.SuspendLayout();
             tabControl3.SuspendLayout();
             tabPage2.SuspendLayout();
+            tsToolLibrary.SuspendLayout();
             toolStripCaption.SuspendLayout();
             SuspendLayout();
             // 
@@ -500,7 +505,7 @@
             tsbHorizontalLayout.Image = Properties.Resources.horizontallayout;
             tsbHorizontalLayout.ImageTransparentColor = Color.Magenta;
             tsbHorizontalLayout.Name = "tsbHorizontalLayout";
-            tsbHorizontalLayout.Size = new Size(23, 20);
+            tsbHorizontalLayout.Size = new Size(23, 22);
             tsbHorizontalLayout.Text = "Расположить окна по горизонтали";
             tsbHorizontalLayout.Click += tsbHorizontalLayout_Click;
             // 
@@ -558,13 +563,14 @@
             tvLibrary.FullRowSelect = true;
             tvLibrary.HideSelection = false;
             tvLibrary.LineColor = Color.WhiteSmoke;
-            tvLibrary.Location = new Point(3, 3);
+            tvLibrary.Location = new Point(3, 28);
             tvLibrary.Name = "tvLibrary";
             treeNode1.Name = "Узел0";
             treeNode1.Text = "Библиотека";
             tvLibrary.Nodes.AddRange(new TreeNode[] { treeNode1 });
-            tvLibrary.Size = new Size(188, 416);
+            tvLibrary.Size = new Size(188, 391);
             tvLibrary.TabIndex = 1;
+            tvLibrary.AfterSelect += tvLibrary_AfterSelect;
             tvLibrary.MouseDown += tvLibrary_MouseDown;
             // 
             // panRight
@@ -619,6 +625,7 @@
             // tabPage2
             // 
             tabPage2.Controls.Add(tvLibrary);
+            tabPage2.Controls.Add(tsToolLibrary);
             tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
@@ -626,6 +633,48 @@
             tabPage2.TabIndex = 0;
             tabPage2.Text = "Библиотека";
             tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // tsToolLibrary
+            // 
+            tsToolLibrary.GripStyle = ToolStripGripStyle.Hidden;
+            tsToolLibrary.Items.AddRange(new ToolStripItem[] { tsbAddBock, tsbShowBlockForm, tsbDeleteBlock });
+            tsToolLibrary.Location = new Point(3, 3);
+            tsToolLibrary.Name = "tsToolLibrary";
+            tsToolLibrary.Size = new Size(188, 25);
+            tsToolLibrary.TabIndex = 2;
+            tsToolLibrary.Text = "toolStrip1";
+            // 
+            // tsbAddBock
+            // 
+            tsbAddBock.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbAddBock.Image = Properties.Resources.newitem;
+            tsbAddBock.ImageTransparentColor = Color.Magenta;
+            tsbAddBock.Name = "tsbAddBock";
+            tsbAddBock.Size = new Size(23, 22);
+            tsbAddBock.Text = "Добавить новый блок";
+            tsbAddBock.Click += tsbAddBock_Click;
+            // 
+            // tsbShowBlockForm
+            // 
+            tsbShowBlockForm.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbShowBlockForm.Enabled = false;
+            tsbShowBlockForm.Image = Properties.Resources.showform;
+            tsbShowBlockForm.ImageTransparentColor = Color.Magenta;
+            tsbShowBlockForm.Name = "tsbShowBlockForm";
+            tsbShowBlockForm.Size = new Size(23, 22);
+            tsbShowBlockForm.Text = "Показать содержимое блока";
+            tsbShowBlockForm.Click += tsbShowBlockForm_Click;
+            // 
+            // tsbDeleteBlock
+            // 
+            tsbDeleteBlock.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbDeleteBlock.Enabled = false;
+            tsbDeleteBlock.Image = Properties.Resources.delitem;
+            tsbDeleteBlock.ImageTransparentColor = Color.Magenta;
+            tsbDeleteBlock.Name = "tsbDeleteBlock";
+            tsbDeleteBlock.Size = new Size(23, 22);
+            tsbDeleteBlock.Text = "Удалить выбранный блок";
+            tsbDeleteBlock.Click += tsbDeleteBlock_Click;
             // 
             // toolStripCaption
             // 
@@ -745,6 +794,9 @@
             tlpLibrary.ResumeLayout(false);
             tabControl3.ResumeLayout(false);
             tabPage2.ResumeLayout(false);
+            tabPage2.PerformLayout();
+            tsToolLibrary.ResumeLayout(false);
+            tsToolLibrary.PerformLayout();
             toolStripCaption.ResumeLayout(false);
             toolStripCaption.PerformLayout();
             ResumeLayout(false);
@@ -816,5 +868,9 @@
         private ToolStripButton tsbOpenProject;
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripButton tsbCompile;
+        private ToolStrip tsToolLibrary;
+        private ToolStripButton tsbAddBock;
+        private ToolStripButton tsbShowBlockForm;
+        private ToolStripButton tsbDeleteBlock;
     }
 }

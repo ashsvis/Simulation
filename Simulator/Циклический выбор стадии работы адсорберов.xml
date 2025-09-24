@@ -1,10 +1,61 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!---->
 <Project>
-  <Blocks />
+  <Blocks>
+    <Block Name="Block0" Description="Лампа">
+      <Id>97fde390-5181-499e-8145-60b0279ee12e</Id>
+      <Elements>
+        <Element X="304" Y="80">
+          <Id>d759a8af-5f71-4257-8cd1-c0752691013d</Id>
+          <Type>Simulator.Model.Outputs.LAMP</Type>
+          <Instance>
+            <Inputs />
+            <Description>Индикаторная лампа</Description>
+            <Color>Red</Color>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links />
+    </Block>
+    <Block Name="Block1" Description="RS-триггер">
+      <Id>a9cb392b-439f-40d4-a006-2775edcfceaa</Id>
+      <Elements>
+        <Element X="96" Y="40">
+          <Id>ccae35f4-e33e-4422-82c1-972928383524</Id>
+          <Type>Simulator.Model.Trigger.RS</Type>
+          <Instance>
+            <Inputs>
+              <Input Index="0" Name="S" />
+              <Input Index="1" Name="R" />
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Name="Q" />
+            </Outputs>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links />
+    </Block>
+    <Block Name="Block2" Description="Инвертор">
+      <Id>e6e680ae-603c-4573-b514-c3654d08b575</Id>
+      <Elements>
+        <Element X="144" Y="64">
+          <Id>539cb44a-5f92-496c-929f-ac8b10868aba</Id>
+          <Type>Simulator.Model.Logic.NOT</Type>
+          <Instance>
+            <Inputs />
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links />
+    </Block>
+  </Blocks>
   <Modules>
     <Module Name="PhaseSelector" Description="Последовательное переключение фаз">
-      <Id>73264b40-d768-4e4f-9f97-ba6ff64d36bf</Id>
+      <Id>2144a639-ac41-48a4-85fa-702ba7712a33</Id>
       <Elements>
         <Element X="88" Y="208">
           <Id>ecb54d76-6d97-4c21-9b7c-eeb87980cc1a</Id>
@@ -314,7 +365,7 @@
       </Links>
     </Module>
     <Module Name="ValveControl" Description="Управление клапаном">
-      <Id>58bcbe05-d1db-4f62-b29c-1aecf927eb78</Id>
+      <Id>fe68af9a-79f4-4791-8c5f-0f96b014e3ab</Id>
       <Elements>
         <Element X="112" Y="144">
           <Id>3629394c-3e68-426f-89c0-16a557352a1e</Id>

@@ -205,9 +205,11 @@ namespace Simulator
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "Вставка модуля", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(ex.Message, "Вставка элемента", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
+                if (e.Clicks > 1)
+                    EnsureShowBlockChildForm();
             }
         }
 
@@ -267,9 +269,20 @@ namespace Simulator
             var dlg = new OpenFileDialog() { DefaultExt = "xml", Filter = "*.xml|*.xml" };
             if (dlg.ShowDialog() == DialogResult.OK)
             {
+
+
                 pgProps.SelectedObject = null;
                 MdiChildren.ToList().ForEach(x => x.Close());
                 Project.Load(dlg.FileName);
+
+                tvLibrary.Nodes.Clear();
+                tvLibrary.Nodes.AddRange(Project.GetLibraryTree());
+                //var blocksNode = tvLibrary.Nodes[0].Nodes.Cast<TreeNode>().FirstOrDefault(x => x.Tag == Project.Blocks);
+                //blocksNode?.Nodes.Clear();
+                //foreach (var block in Project.Blocks)
+                //    blocksNode?.Nodes.Add(new TreeNode(block.Name) { Tag = block });
+                //blocksNode?.Expand();
+
                 tvModules.Nodes.Clear();
                 tvModules.Nodes.AddRange(Project.GetModulesTree());
                 if (tvModules.Nodes[0].Nodes.Count > 0)
@@ -315,7 +328,7 @@ namespace Simulator
 
         public void RemoveModuleChildFormFromPanel(Model.Module module)
         {
-            var form = MdiChildren.OfType<ModuleForm>().FirstOrDefault(x => x.Module == module);
+            var form = MdiChildren.OfType<ModuleForm>().FirstOrDefault(x => x.Module.Id == module.Id);
             form?.Close();
         }
 
@@ -426,9 +439,9 @@ namespace Simulator
 
         private void tvModules_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            tsbCompile.Enabled = 
-                tsbShowModuleForm.Enabled = 
-                tsbDeleteModule.Enabled = 
+            tsbCompile.Enabled =
+                tsbShowModuleForm.Enabled =
+                tsbDeleteModule.Enabled =
                 tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module _;
         }
 
@@ -439,6 +452,7 @@ namespace Simulator
                 if (MessageBox.Show("Этот модуль будет удалён безвозвратно! Удалить?",
                     "Удаление текущего модуля", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                 {
+                    Project.RemoveModuleFromProject(module);
                     Host.RemoveModuleChildWindowFromPanels(module);
                 }
             }
@@ -477,6 +491,84 @@ namespace Simulator
         private void tsbCascadeLayout_Click(object sender, EventArgs e)
         {
             LayoutMdi(MdiLayout.Cascade);
+        }
+
+        private void tvLibrary_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if (tvLibrary.SelectedNode != null && tvLibrary.SelectedNode.Tag is Model.Module block)
+            {
+                tsbShowBlockForm.Enabled = true;
+                tsbDeleteBlock.Enabled = true;
+            }
+            else
+            {
+                tsbShowBlockForm.Enabled = false;
+                tsbDeleteBlock.Enabled = false;
+            }
+        }
+
+        public void AddBlockToProject()
+        {
+            var module = Project.AddBlockToProject();
+
+            var blocksNode = tvLibrary.Nodes[0].Nodes.Cast<TreeNode>().FirstOrDefault(x => x.Tag == Project.Blocks);
+            blocksNode?.Nodes.Clear();
+            foreach (var block in Project.Blocks)
+                blocksNode?.Nodes.Add(new TreeNode(block.Name) { Tag = block });
+            var node = blocksNode?.Nodes.Cast<TreeNode>().FirstOrDefault(x => x.Tag == module);
+            if (node != null)
+            {
+                tvLibrary.SelectedNode = node;
+                node.EnsureVisible();
+                pgProps.SelectedObject = module;
+            }
+
+            CreateNewModuleForm(module);
+        }
+
+        private void tsbAddBock_Click(object sender, EventArgs e)
+        {
+            AddBlockToProject();
+        }
+
+        private void tsbShowBlockForm_Click(object sender, EventArgs e)
+        {
+            EnsureShowBlockChildForm();
+        }
+
+        public void EnsureShowBlockChildForm(Model.Module? module = null)
+        {
+            if (module == null)
+            {
+                if (tvLibrary.SelectedNode is not TreeNode node) return;
+                if (node.Tag is not Model.Module treeModule) return;
+                module = treeModule;
+            }
+            pgProps.SelectedObject = module;
+            var form = MdiChildren.OfType<ModuleForm>().FirstOrDefault(x => x.Module.Id == module.Id);
+            if (form != null)
+            {
+                form.WindowState = FormWindowState.Maximized;
+                form.BringToFront();
+                form.Show();
+            }
+            else
+                CreateNewModuleForm(module);
+        }
+
+        private void tsbDeleteBlock_Click(object sender, EventArgs e)
+        {
+            if (tvLibrary.SelectedNode != null && tvLibrary.SelectedNode.Tag is Model.Module module)
+            {
+                if (MessageBox.Show("Этот блок будет удалён безвозвратно! Удалить?",
+                    "Удаление текущего блока", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                {
+                    Project.RemoveBlockFromProject(module);
+                    Host.RemoveModuleChildWindowFromPanels(module);
+                    tvLibrary.SelectedNode.Remove();
+                }
+            }
+
         }
     }
 }

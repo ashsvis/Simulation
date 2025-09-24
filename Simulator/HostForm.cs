@@ -157,7 +157,6 @@ namespace Simulator
             {
                 frm.RemoveModuleChildFormFromPanel(module);
             });
-            Project.RemoveModuleFromProject(module);
         }
     }
 }

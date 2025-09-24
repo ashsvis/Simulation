@@ -1124,6 +1124,16 @@ namespace Simulator
                 Project.Save();
                 Module.Changed = false;
             }
+            else
+            {
+                var block = Project.Blocks.FirstOrDefault(x => x.Id == Module.Id);
+                if (block != null)
+                {
+                    block?.Accept(Module);
+                    Project.Save();
+                    Module.Changed = false;
+                }
+            }
         }
 
         private void ModuleForm_KeyDown(object sender, KeyEventArgs e)

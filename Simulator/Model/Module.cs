@@ -157,7 +157,6 @@ namespace Simulator.Model
                     if (points.Count > 1)
                     {
                         var link = new Link(id, sourceId, sourcePinIndex, destinationId, destPinIndex, [.. points]);
-                        //link.Load(xlink);
                         links.Add(link);
                     }
                 }
