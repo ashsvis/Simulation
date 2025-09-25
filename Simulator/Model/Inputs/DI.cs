@@ -22,6 +22,7 @@ namespace Simulator.Model.Inputs
         {
             bool output = (bool)(OutputValues[0] ?? false);
             Out = output;
+            Project.WriteBoolValue($"{ItemId}\t{0}", Out);
         }
 
         public override void CalculateTargets(PointF location, ref SizeF size,

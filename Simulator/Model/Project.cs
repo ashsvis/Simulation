@@ -1,10 +1,51 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Concurrent;
+using System.ComponentModel;
 using System.Xml.Linq;
 
 namespace Simulator.Model
 {
     public static class Project
     {
+        private static readonly ConcurrentDictionary<string, bool> boolVals = [];
+
+        public static void WriteBoolValue(string key, bool value)
+        {
+            if (boolVals.TryGetValue(key, out bool a) && a.Equals(value)) return; // одинаковые значения игнорируем   
+            boolVals.AddOrUpdate(key, a,
+                (akey, existingVal) =>
+                {
+                    existingVal = value;
+                    return existingVal;
+                });
+        }
+
+        public static bool? ReadBoolValue(string key)
+        {
+            if (boolVals.TryGetValue(key, out bool value))
+                return value;
+            return null;
+        }
+
+        private static readonly ConcurrentDictionary<string, double> realVals = [];
+
+        public static void WriteRealValue(string key, double value)
+        {
+            if (realVals.TryGetValue(key, out double a) && a.Equals(value)) return; // одинаковые значения игнорируем   
+            realVals.AddOrUpdate(key, a,
+                (akey, existingVal) =>
+                {
+                    existingVal = value;
+                    return existingVal;
+                });
+        }
+
+        public static double? ReadRealValue(string key)
+        {
+            if (realVals.TryGetValue(key, out double value))
+                return value;
+            return null;
+        }
+
         public static string Name { get; set; } = string.Empty;
         public static string Description { get; set; } = string.Empty;
 

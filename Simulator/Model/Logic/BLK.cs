@@ -56,6 +56,7 @@ namespace Simulator.Model.Logic
                         {
                             bool value = ((bool?)@do.GetValueFromInp(0)) ?? false;
                             OutputValues[index] = value;
+                            Project.WriteBoolValue($"{ItemId}\t{index}", value);
                         }
                     }
                 }

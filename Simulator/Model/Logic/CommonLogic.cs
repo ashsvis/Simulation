@@ -45,13 +45,10 @@ namespace Simulator.Model.Logic
                 getLinkSources = new (Guid, int)[inputCount];
                 getInputNames = new string[inputCount];
             }
-            //if (outputCount > 0)
-            //{
-                getOutputs = new object[outputCount];
-                for (var i = 0; i < outputCount; i++) getOutputs[i] = false;
-                getInverseOutputs = new bool[outputCount];
-                getOutputNames = new string[outputCount];
-            //}
+            getOutputs = new object[outputCount];
+            for (var i = 0; i < outputCount; i++) getOutputs[i] = false;
+            getInverseOutputs = new bool[outputCount];
+            getOutputNames = new string[outputCount];
         }
 
         [Category(" Общие"), DisplayName("Функция")]
@@ -191,6 +188,7 @@ namespace Simulator.Model.Logic
                 };
             }
             Out = result ^ getInverseOutputs[0];
+            Project.WriteBoolValue($"{itemId}\t{0}", Out);
         }
 
         private static bool CalcXor(object[] inputValues)
