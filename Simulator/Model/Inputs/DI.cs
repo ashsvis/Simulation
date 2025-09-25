@@ -121,6 +121,7 @@ namespace Simulator.Model.Inputs
             if (outputIndex >= 0 && outputIndex < OutputValues.Length)
             {
                 OutputValues[outputIndex] = (bool)(value ?? false);
+                Project.WriteBoolValue($"{ItemId}\t{outputIndex}", (bool)(value ?? false));
             }
         }
 

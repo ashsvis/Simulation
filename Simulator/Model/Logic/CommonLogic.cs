@@ -126,7 +126,19 @@ namespace Simulator.Model.Logic
                         list.Add(value);
                     }
                     else
-                        list.Add(getInputs[i]);
+                    {
+                        (Guid id, int pinout) = getLinkSources[i];
+                        if (id != Guid.Empty)
+                        {
+                            bool? value = Project.ReadBoolValue($"{id}\t{pinout}");
+                            if (value != null)
+                                list.Add((bool)value);
+                            else
+                                list.Add(getInputs[i]);
+                        }
+                        else
+                            list.Add(getInputs[i]);
+                    }
                 }
                 return [.. list];
             }
@@ -158,10 +170,8 @@ namespace Simulator.Model.Logic
                 List<bool> list = [];
                 for (var i = 0; i < getInputs.Length; i++)
                 {
-                    if (getLinkInputs[i] is GetLinkValueMethod _)
-                        list.Add(true);
-                    else
-                        list.Add(false);
+                    (Guid id, _) = getLinkSources[i];
+                    list.Add(id != Guid.Empty);
                 }
                 return [.. list];
             } 

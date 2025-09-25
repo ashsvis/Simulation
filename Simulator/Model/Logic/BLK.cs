@@ -42,6 +42,7 @@ namespace Simulator.Model.Logic
                         {
                             bool value = (bool)InputValues[index];
                             di.SetValueToOut(0, value);
+                            Project.WriteBoolValue($"{di.ItemId}\t{0}", value);
                         }
                     }
                 }
