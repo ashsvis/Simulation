@@ -413,7 +413,7 @@
             // tsToolModules
             // 
             tsToolModules.GripStyle = ToolStripGripStyle.Hidden;
-            tsToolModules.Items.AddRange(new ToolStripItem[] { tsbOpenProject, toolStripSeparator5, tsbAddModule, tsbDeleteModule, toolStripSeparator3, tsbShowModuleForm, tsbCompile, toolStripSeparator4, tsbCascadeLayout, tsbHorizontalLayout });
+            tsToolModules.Items.AddRange(new ToolStripItem[] { tsbOpenProject, toolStripSeparator5, tsbAddModule, tsbShowModuleForm, tsbDeleteModule, toolStripSeparator3, tsbCompile, toolStripSeparator4, tsbCascadeLayout, tsbHorizontalLayout });
             tsToolModules.Location = new Point(3, 3);
             tsToolModules.Name = "tsToolModules";
             tsToolModules.Size = new Size(186, 25);

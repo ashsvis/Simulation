@@ -844,20 +844,45 @@ namespace Simulator
                 ToolStripMenuItem item;
                 if (element?.Instance is ILinkSupport func)
                 {
-                    if (output == false && pin != null && func.LinkedInputs[(int)pin])
+                    if (output == false && pin != null)
                     {
-                        item = new ToolStripMenuItem() { Text = "Удалить связь по входу", Tag = element };
-                        item.Click += (s, e) =>
+                        if (func.LinkedInputs[(int)pin])
                         {
-                            var menuItem = (ToolStripMenuItem?)s;
-                            if (menuItem?.Tag is Element element && element.Instance is ILinkSupport fn)
+                            item = new ToolStripMenuItem() { Text = "Удалить связь по входу", Tag = element };
+                            item.Click += (s, e) =>
                             {
-                                fn.ResetValueLinkToInp((int)pin);
-                                links.RemoveAll(link => link.DestinationId == element.Id && link.DestinationPinIndex == (int)pin);
-                                Module.Changed = true;
-                            }
-                        };
-                        cmsContextMenu.Items.Add(item);
+                                var menuItem = (ToolStripMenuItem?)s;
+                                if (menuItem?.Tag is Element element && element.Instance is ILinkSupport fn)
+                                {
+                                    fn.ResetValueLinkToInp((int)pin);
+                                    links.RemoveAll(link => link.DestinationId == element.Id && link.DestinationPinIndex == (int)pin);
+                                    Module.Changed = true;
+                                }
+                            };
+                            cmsContextMenu.Items.Add(item);
+                        }
+                        else
+                        {
+                            item = new ToolStripMenuItem() { Text = "Настроить связь по входу...", Tag = element };
+                            item.Click += (s, e) =>
+                            {
+                                var menuItem = (ToolStripMenuItem?)s;
+                                if (menuItem?.Tag is Element element && element.Instance is ILinkSupport fn)
+                                {
+                                    var dlg = new SelectLinkSourceForm();
+                                    if (dlg.ShowDialog() == DialogResult.OK)
+                                    {
+                                        (GetLinkValueMethod? method, int pinOut) = dlg.Result;
+                                        if (!fn.LinkedInputs[(int)pin])
+                                        {
+                                            fn.SetValueLinkToInp((int)pin, method, element.Id, pinOut);
+
+                                        }
+                                    }
+                                }
+                            };
+                            cmsContextMenu.Items.Add(item);
+                        }
                     }
                     else if (output == null)
                     {
@@ -952,7 +977,6 @@ namespace Simulator
                 {
                     if (dragging)
                     {
-                        //element.Location = PointF.Add(element.Location, delta);
                         foreach (var item in items.Where(x => x.Selected))
                         {
                             item.Location = PointF.Add(item.Location, delta);
@@ -1257,6 +1281,7 @@ namespace Simulator
                     }
                     foreach (Link link in elementlinks)
                     {
+                        if (makedCopy && (!guids.ContainsKey(link.SourceId) || !guids.ContainsKey(link.DestinationId))) continue;
                         link.SetSourceId(makedCopy ? guids[link.SourceId] : link.SourceId);
                         link.SetDestinationId(makedCopy ? guids[link.DestinationId] : link.DestinationId);
                         link.SetSelect(true);

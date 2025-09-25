@@ -91,7 +91,7 @@ namespace Simulator.Model
                 if (description != null)
                     Description = description;
                 LoadElements(xmodule, Elements);
-                ConnectLinks(Elements);
+                //ConnectLinks(Elements);
                 LoadVisualLinks(xmodule, Links);
             }
         }
@@ -109,7 +109,7 @@ namespace Simulator.Model
                         if (id != Guid.Empty)
                         {
                             var sourceItem = elements.FirstOrDefault(x => x.Id == id);
-                            if (sourceItem != null && sourceItem.Instance is ILinkSupport source)
+                            if (sourceItem != null && sourceItem.Instance is ILinkSupport source && source.OutputValues.Length > 0)
                                 function.SetValueLinkToInp(n, source.GetResultLink(output), id, output);
                         }
                         n++;

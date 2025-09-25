@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!---->
+<Project>
+  <Blocks />
+  <Modules>
+    <Module>
+      <Id>c22cdae4-f168-4a04-9c30-b1e8f465443a</Id>
+      <Elements>
+        <Element Id="750aebdb-353d-47dd-b769-2ebcddb11c2c" X="160" Y="56">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="8a3688b8-ae49-4bbd-af86-9bd318ca4832" X="160" Y="120">
+          <Instance Type="Simulator.Model.Logic.FE" />
+        </Element>
+      </Elements>
+      <Links />
+    </Module>
+    <Module>
+      <Id>561c9071-9d28-4f87-b3de-1ea655c56872</Id>
+      <Elements>
+        <Element Id="e6d5ad5d-386c-4de6-a11e-f322a42affea" X="368" Y="24">
+          <Instance Type="Simulator.Model.Outputs.LAMP">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="e6d5ad5d-386c-4de6-a11e-f322a42affea" />
+              </Input>
+            </Inputs>
+            <Description>Индикаторная лампа</Description>
+            <Color>Red</Color>
+          </Instance>
+        </Element>
+        <Element Id="9b55263d-1c4c-40e4-a327-7f125f946dde" X="368" Y="88">
+          <Instance Type="Simulator.Model.Outputs.LAMP">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="9b55263d-1c4c-40e4-a327-7f125f946dde" />
+              </Input>
+            </Inputs>
+            <Description>Индикаторная лампа</Description>
+            <Color>Red</Color>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links />
+    </Module>
+  </Modules>
+</Project>

@@ -109,6 +109,10 @@ namespace Simulator.Model
                             module.Load(xmodule);
                             Modules.Add(module);
                         }
+
+                        foreach (var module in Modules)
+                            Module.ConnectLinks(module.Elements);
+
                     }
                 }
                 Modules.ForEach(module => module.Changed = false);

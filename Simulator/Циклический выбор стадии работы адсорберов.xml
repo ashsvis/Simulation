@@ -368,12 +368,12 @@
                 <Source Id="8cea94e9-039d-4a1d-b7a7-998634ba4a1b" />
               </Input>
               <Input Index="1" Invert="true">
-                <Source Id="7caff32e-6a7d-48c7-bdee-ee5eb5b6acca" />
+                <Source Id="ebc21a14-ee4f-42bc-91f6-9a8a19caad13" />
               </Input>
             </Inputs>
           </Instance>
         </Element>
-        <Element Id="14512f72-a397-4908-b9a8-fdfcd826d433" X="32" Y="368">
+        <Element Id="14512f72-a397-4908-b9a8-fdfcd826d433" X="32" Y="392">
           <Instance Type="Simulator.Model.Inputs.DI" Name="VC">
             <Order>3</Order>
             <Description>Концевой ЗАКРЫТ</Description>
@@ -386,7 +386,7 @@
                 <Source Id="a6953e1f-4464-4970-8ed8-716203a289cf" />
               </Input>
               <Input Index="1" Invert="true">
-                <Source Id="14512f72-a397-4908-b9a8-fdfcd826d433" />
+                <Source Id="e764aea7-055a-4d36-bd49-a0a58b1b7db2" />
               </Input>
             </Inputs>
           </Instance>
@@ -395,10 +395,10 @@
           <Instance Type="Simulator.Model.Logic.AND">
             <Inputs>
               <Input Index="0">
-                <Source Id="7caff32e-6a7d-48c7-bdee-ee5eb5b6acca" />
+                <Source Id="ebc21a14-ee4f-42bc-91f6-9a8a19caad13" />
               </Input>
               <Input Index="1">
-                <Source Id="14512f72-a397-4908-b9a8-fdfcd826d433" />
+                <Source Id="e764aea7-055a-4d36-bd49-a0a58b1b7db2" />
               </Input>
             </Inputs>
           </Instance>
@@ -410,7 +410,7 @@
                 <Source Id="0bf51bf1-4382-4fa4-b37c-092a9ec018e2" />
               </Input>
             </Inputs>
-            <Order>0</Order>
+            <Order>2</Order>
             <Description>Управление клапаном</Description>
           </Instance>
         </Element>
@@ -436,11 +436,11 @@
             <Color>Red</Color>
           </Instance>
         </Element>
-        <Element Id="e5d63694-0e0b-4635-aaf0-1970962be63d" X="832" Y="280">
+        <Element Id="e5d63694-0e0b-4635-aaf0-1970962be63d" X="832" Y="264">
           <Instance Type="Simulator.Model.Outputs.LAMP">
             <Inputs>
               <Input Index="0">
-                <Source Id="7caff32e-6a7d-48c7-bdee-ee5eb5b6acca" />
+                <Source Id="ebc21a14-ee4f-42bc-91f6-9a8a19caad13" />
               </Input>
             </Inputs>
             <Description>Клапан открыт</Description>
@@ -462,7 +462,7 @@
           <Instance Type="Simulator.Model.Outputs.LAMP">
             <Inputs>
               <Input Index="0">
-                <Source Id="14512f72-a397-4908-b9a8-fdfcd826d433" />
+                <Source Id="e764aea7-055a-4d36-bd49-a0a58b1b7db2" />
               </Input>
             </Inputs>
             <Description>Клапан закрыт</Description>
@@ -493,6 +493,84 @@
             </Inputs>
             <Order>1</Order>
             <Description>Авария клапана</Description>
+          </Instance>
+        </Element>
+        <Element Id="ebc21a14-ee4f-42bc-91f6-9a8a19caad13" X="328" Y="248">
+          <Instance Type="Simulator.Model.Logic.OR" Name="EMU_OPENED">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="7caff32e-6a7d-48c7-bdee-ee5eb5b6acca" />
+              </Input>
+              <Input Index="1">
+                <Source Id="8e4c3a68-8b2f-41a6-b87c-b2b6546d2581" />
+              </Input>
+            </Inputs>
+          </Instance>
+        </Element>
+        <Element Id="e764aea7-055a-4d36-bd49-a0a58b1b7db2" X="328" Y="392">
+          <Instance Type="Simulator.Model.Logic.OR" Name="EMU_CLOSED">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="14512f72-a397-4908-b9a8-fdfcd826d433" />
+              </Input>
+              <Input Index="1">
+                <Source Id="aa492904-23d3-4f3e-ae69-19097575950c" />
+              </Input>
+            </Inputs>
+          </Instance>
+        </Element>
+        <Element Id="8e4c3a68-8b2f-41a6-b87c-b2b6546d2581" X="488" Y="296">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="0bf51bf1-4382-4fa4-b37c-092a9ec018e2" />
+              </Input>
+            </Inputs>
+            <WaitTime>3</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="07221d49-bee6-4bbe-87fe-fee5986a84b7" X="432" Y="456">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="0bf51bf1-4382-4fa4-b37c-092a9ec018e2" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="aa492904-23d3-4f3e-ae69-19097575950c" X="520" Y="456">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="07221d49-bee6-4bbe-87fe-fee5986a84b7" />
+              </Input>
+            </Inputs>
+            <WaitTime>3</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="3fbfb43a-6fb2-4ea5-8ab5-7e5a3ae32ec1" X="1176" Y="296">
+          <Instance Type="Simulator.Model.Outputs.DO" Name="O">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="ebc21a14-ee4f-42bc-91f6-9a8a19caad13" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан точно открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="006ac726-f2c0-495d-9cd2-9fbc2ef64080" X="1176" Y="456">
+          <Instance Type="Simulator.Model.Outputs.DO" Name="C">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="e764aea7-055a-4d36-bd49-a0a58b1b7db2" />
+              </Input>
+            </Inputs>
+            <Order>3</Order>
+            <Description>Клапан точно закрыт</Description>
           </Instance>
         </Element>
       </Elements>
@@ -552,36 +630,6 @@
           <Destination Id="d7cb0b62-ef20-49cf-98be-511f5addd7de" PinIndex="0" />
           <Points Array="440,72 440,72 824,72 824,72" />
         </Link>
-        <Link Id="1ab5e3f1-4039-4d17-9a7a-b3c947768f08">
-          <Source Id="7caff32e-6a7d-48c7-bdee-ee5eb5b6acca" PinIndex="0" />
-          <Destination Id="e5d63694-0e0b-4635-aaf0-1970962be63d" PinIndex="0" />
-          <Points Array="232,304 232,304 824,304 824,304" />
-        </Link>
-        <Link Id="f684cbe3-4380-4183-9a07-a0888b646460">
-          <Source Id="7caff32e-6a7d-48c7-bdee-ee5eb5b6acca" PinIndex="0" />
-          <Destination Id="93c97fb8-3342-4ae8-8bb6-5c69059cff40" PinIndex="1" />
-          <Points Array="232,304 232,304 680,304 680,144 704,144 704,144" />
-        </Link>
-        <Link Id="f5d7b31a-dc04-46d9-b9b5-fac9c6029f46">
-          <Source Id="7caff32e-6a7d-48c7-bdee-ee5eb5b6acca" PinIndex="0" />
-          <Destination Id="7c8612da-da95-4f0b-aead-9a41b5799f65" PinIndex="0" />
-          <Points Array="232,304 232,304 680,304 680,360 704,360 704,360" />
-        </Link>
-        <Link Id="6471058f-0e4b-43ab-88b1-61a6b0f36795">
-          <Source Id="14512f72-a397-4908-b9a8-fdfcd826d433" PinIndex="0" />
-          <Destination Id="cbf4cb51-df08-4568-a87c-c2656c409537" PinIndex="0" />
-          <Points Array="232,392 232,392 648,392 648,432 824,432 824,432" />
-        </Link>
-        <Link Id="41a3b483-21b2-4ec8-a336-cb2e03ba11d1">
-          <Source Id="14512f72-a397-4908-b9a8-fdfcd826d433" PinIndex="0" />
-          <Destination Id="b35c01c8-005e-4c35-ae56-f798d0f9e262" PinIndex="1" />
-          <Points Array="232,392 232,392 648,392 648,240 704,240 704,240" />
-        </Link>
-        <Link Id="4d2224c2-ae82-41cc-8c99-5317b0b19a69">
-          <Source Id="14512f72-a397-4908-b9a8-fdfcd826d433" PinIndex="0" />
-          <Destination Id="7c8612da-da95-4f0b-aead-9a41b5799f65" PinIndex="1" />
-          <Points Array="232,392 232,392 704,392 704,392" />
-        </Link>
         <Link Id="0ce53bae-233d-42bc-984e-c6a81735efa4">
           <Source Id="3629394c-3e68-426f-89c0-16a557352a1e" PinIndex="0" />
           <Destination Id="1c83e13c-d923-4570-b5e5-5e56eef83260" PinIndex="0" />
@@ -611,6 +659,81 @@
           <Source Id="b06eb063-a420-4ea2-81ed-39a22b0891e4" PinIndex="0" />
           <Destination Id="01698b40-7ca3-4302-96f2-b15b702b1d2f" PinIndex="0" />
           <Points Array="1136,200 1136,200 1168,200 1168,200" />
+        </Link>
+        <Link Id="a271448e-5d82-414a-adc5-3c4e88aca748">
+          <Source Id="7caff32e-6a7d-48c7-bdee-ee5eb5b6acca" PinIndex="0" />
+          <Destination Id="ebc21a14-ee4f-42bc-91f6-9a8a19caad13" PinIndex="0" />
+          <Points Array="232,304 232,304 272,304 272,272 320,272 320,272" />
+        </Link>
+        <Link Id="89c5f55b-c6af-45cd-8a44-c968c276e3f9">
+          <Source Id="ebc21a14-ee4f-42bc-91f6-9a8a19caad13" PinIndex="0" />
+          <Destination Id="93c97fb8-3342-4ae8-8bb6-5c69059cff40" PinIndex="1" />
+          <Points Array="384,288 384,288 672,288 672,144 704,144 704,144" />
+        </Link>
+        <Link Id="f4482940-e7a6-44cd-b01f-a40bbfe77577">
+          <Source Id="ebc21a14-ee4f-42bc-91f6-9a8a19caad13" PinIndex="0" />
+          <Destination Id="7c8612da-da95-4f0b-aead-9a41b5799f65" PinIndex="0" />
+          <Points Array="384,288 384,288 672,288 672,360 704,360 704,360" />
+        </Link>
+        <Link Id="12590793-ad9d-4832-81d6-91b8d521d229">
+          <Source Id="ebc21a14-ee4f-42bc-91f6-9a8a19caad13" PinIndex="0" />
+          <Destination Id="e5d63694-0e0b-4635-aaf0-1970962be63d" PinIndex="0" />
+          <Points Array="384,288 384,288 824,288 824,288" />
+        </Link>
+        <Link Id="c8221ee4-9103-485a-a53b-ecd506af8c40">
+          <Source Id="14512f72-a397-4908-b9a8-fdfcd826d433" PinIndex="0" />
+          <Destination Id="e764aea7-055a-4d36-bd49-a0a58b1b7db2" PinIndex="0" />
+          <Points Array="232,416 232,416 320,416 320,416" />
+        </Link>
+        <Link Id="0db0baf0-0a07-4d96-9db5-dec9161d6b2f">
+          <Source Id="e764aea7-055a-4d36-bd49-a0a58b1b7db2" PinIndex="0" />
+          <Destination Id="b35c01c8-005e-4c35-ae56-f798d0f9e262" PinIndex="1" />
+          <Points Array="384,432 384,432 648,432 648,240 704,240 704,240" />
+        </Link>
+        <Link Id="cdc4d275-331c-4334-a1fa-c9aa67df0b50">
+          <Source Id="e764aea7-055a-4d36-bd49-a0a58b1b7db2" PinIndex="0" />
+          <Destination Id="7c8612da-da95-4f0b-aead-9a41b5799f65" PinIndex="1" />
+          <Points Array="384,432 384,432 648,432 648,392 704,392 704,392" />
+        </Link>
+        <Link Id="96349a05-0740-4a5d-a0f0-4970b6faa9be">
+          <Source Id="e764aea7-055a-4d36-bd49-a0a58b1b7db2" PinIndex="0" />
+          <Destination Id="cbf4cb51-df08-4568-a87c-c2656c409537" PinIndex="0" />
+          <Points Array="384,432 384,432 824,432 824,432" />
+        </Link>
+        <Link Id="927e419b-bcdf-4108-901c-85a6c7986412">
+          <Source Id="0bf51bf1-4382-4fa4-b37c-092a9ec018e2" PinIndex="0" />
+          <Destination Id="8e4c3a68-8b2f-41a6-b87c-b2b6546d2581" PinIndex="0" />
+          <Points Array="440,72 440,72 464,72 464,320 480,320 480,320" />
+        </Link>
+        <Link Id="05c68b1e-fded-4422-99bd-c9c000e968ed">
+          <Source Id="8e4c3a68-8b2f-41a6-b87c-b2b6546d2581" PinIndex="0" />
+          <Destination Id="ebc21a14-ee4f-42bc-91f6-9a8a19caad13" PinIndex="1" />
+          <Points Array="544,320 544,320 560,320 560,360 296,360 296,304 320,304 320,304" />
+        </Link>
+        <Link Id="5cca699a-a08d-4213-921b-9eb6ead40ce7">
+          <Source Id="07221d49-bee6-4bbe-87fe-fee5986a84b7" PinIndex="0" />
+          <Destination Id="aa492904-23d3-4f3e-ae69-19097575950c" PinIndex="0" />
+          <Points Array="488,480 488,480 512,480 512,480" />
+        </Link>
+        <Link Id="1efc16f5-a87a-428c-a2d8-e3d401393d4b">
+          <Source Id="0bf51bf1-4382-4fa4-b37c-092a9ec018e2" PinIndex="0" />
+          <Destination Id="07221d49-bee6-4bbe-87fe-fee5986a84b7" PinIndex="0" />
+          <Points Array="440,72 440,72 464,72 464,320 408,320 408,480 424,480 424,480" />
+        </Link>
+        <Link Id="1aa3be25-2a95-40cd-8c69-48ec6801d7d1">
+          <Source Id="aa492904-23d3-4f3e-ae69-19097575950c" PinIndex="0" />
+          <Destination Id="e764aea7-055a-4d36-bd49-a0a58b1b7db2" PinIndex="1" />
+          <Points Array="576,480 576,480 600,480 600,528 296,528 296,448 320,448 320,448" />
+        </Link>
+        <Link Id="b064711d-4880-474c-ae2a-15d1f8a905ea">
+          <Source Id="ebc21a14-ee4f-42bc-91f6-9a8a19caad13" PinIndex="0" />
+          <Destination Id="3fbfb43a-6fb2-4ea5-8ab5-7e5a3ae32ec1" PinIndex="0" />
+          <Points Array="384,288 384,288 672,288 672,320 1168,320 1168,320" />
+        </Link>
+        <Link Id="83fc1f1e-a904-4810-90ad-2b824b307bcc">
+          <Source Id="e764aea7-055a-4d36-bd49-a0a58b1b7db2" PinIndex="0" />
+          <Destination Id="006ac726-f2c0-495d-9cd2-9fbc2ef64080" PinIndex="0" />
+          <Points Array="384,432 384,432 648,432 648,480 1168,480 1168,480" />
         </Link>
       </Links>
     </Block>
@@ -1171,14 +1294,20 @@
         <Element Id="7d129569-d568-4e19-82c2-85e675f1001d" X="88" Y="96">
           <Instance Type="Simulator.Model.Logic.BLK" Name="V228">
             <Inputs>
-              <Input Index="0" Name="OP" />
-              <Input Index="1" Name="CL" />
+              <Input Index="0" Name="OP">
+                <Source Id="fd12be2e-dc97-4758-bcf7-a354181831e1" />
+              </Input>
+              <Input Index="1" Name="CL">
+                <Source Id="dec425b4-3c2f-4676-948b-286274d6f09a" />
+              </Input>
               <Input Index="2" Name="VO" />
-              <Input Index="3" Name="VC" Value="true" />
+              <Input Index="3" Name="VC" />
             </Inputs>
             <Outputs>
-              <Output Index="0" Name="VO" />
+              <Output Index="0" Name="O" />
               <Output Index="1" Name="ER" />
+              <Output Index="2" Name="VO" />
+              <Output Index="3" Name="C" />
             </Outputs>
             <LibraryId>ed60bd8b-87b0-4100-b26e-e8650b1c7422</LibraryId>
           </Instance>
@@ -1196,15 +1325,17 @@
           <Instance Type="Simulator.Model.Logic.BLK" Name="V223">
             <Inputs>
               <Input Index="0" Name="OP" />
-              <Input Index="1" Name="CL" Value="true">
+              <Input Index="1" Name="CL">
                 <Source Id="e3826ad9-cc2c-47a3-afbd-1797eb264170" />
               </Input>
               <Input Index="2" Name="VO" />
-              <Input Index="3" Name="VC" Value="true" />
+              <Input Index="3" Name="VC" />
             </Inputs>
             <Outputs>
-              <Output Index="0" Name="VO" />
+              <Output Index="0" Name="O" />
               <Output Index="1" Name="ER" />
+              <Output Index="2" Name="VO" />
+              <Output Index="3" Name="C" />
             </Outputs>
             <LibraryId>ed60bd8b-87b0-4100-b26e-e8650b1c7422</LibraryId>
           </Instance>
@@ -1213,15 +1344,17 @@
           <Instance Type="Simulator.Model.Logic.BLK" Name="V214">
             <Inputs>
               <Input Index="0" Name="OP" />
-              <Input Index="1" Name="CL" Value="true">
+              <Input Index="1" Name="CL">
                 <Source Id="e3826ad9-cc2c-47a3-afbd-1797eb264170" />
               </Input>
               <Input Index="2" Name="VO" />
-              <Input Index="3" Name="VC" Value="true" />
+              <Input Index="3" Name="VC" />
             </Inputs>
             <Outputs>
-              <Output Index="0" Name="VO" />
+              <Output Index="0" Name="O" />
               <Output Index="1" Name="ER" />
+              <Output Index="2" Name="VO" />
+              <Output Index="3" Name="C" />
             </Outputs>
             <LibraryId>ed60bd8b-87b0-4100-b26e-e8650b1c7422</LibraryId>
           </Instance>
@@ -1229,10 +1362,10 @@
         <Element Id="8170351b-fc49-452e-b43e-02c0945eabaf" X="464" Y="112">
           <Instance Type="Simulator.Model.Logic.AND">
             <Inputs>
-              <Input Index="0" Invert="true" Value="true">
+              <Input Index="0" Invert="true">
                 <Source Id="c74c6d8b-5088-443e-a91e-958710905ce4" />
               </Input>
-              <Input Index="1" Invert="true" Value="true">
+              <Input Index="1" Invert="true">
                 <Source Id="d70be074-1ef1-404e-b237-54c4b5eeca62" />
               </Input>
             </Inputs>
@@ -1241,7 +1374,7 @@
         <Element Id="86fdb767-06ee-4046-a7c7-a8666c362d10" X="560" Y="128">
           <Instance Type="Simulator.Model.Logic.FE">
             <Inputs>
-              <Input Index="0" Value="true">
+              <Input Index="0">
                 <Source Id="8170351b-fc49-452e-b43e-02c0945eabaf" />
               </Input>
             </Inputs>
@@ -1250,10 +1383,10 @@
         <Element Id="9f86c6f7-5067-47f6-a5cb-339183f26d36" X="560" Y="184">
           <Instance Type="Simulator.Model.Logic.AND">
             <Inputs>
-              <Input Index="0" Value="true">
+              <Input Index="0">
                 <Source Id="8170351b-fc49-452e-b43e-02c0945eabaf" />
               </Input>
-              <Input Index="1" Value="true">
+              <Input Index="1">
                 <Source Id="e3826ad9-cc2c-47a3-afbd-1797eb264170" />
               </Input>
             </Inputs>
@@ -1262,10 +1395,10 @@
         <Element Id="d92742eb-544d-4a2c-9785-303c20e7c758" X="656" Y="168">
           <Instance Type="Simulator.Model.Logic.OR">
             <Inputs>
-              <Input Index="0" Value="true">
+              <Input Index="0">
                 <Source Id="86fdb767-06ee-4046-a7c7-a8666c362d10" />
               </Input>
-              <Input Index="1" Value="true">
+              <Input Index="1">
                 <Source Id="9f86c6f7-5067-47f6-a5cb-339183f26d36" />
               </Input>
             </Inputs>
@@ -1274,18 +1407,20 @@
         <Element Id="ff3ca4b3-6d9c-4df4-809f-a8a16cfe74a4" X="752" Y="248">
           <Instance Type="Simulator.Model.Logic.BLK" Name="V213/1">
             <Inputs>
-              <Input Index="0" Name="OP" Value="true">
+              <Input Index="0" Name="OP">
                 <Source Id="d92742eb-544d-4a2c-9785-303c20e7c758" />
               </Input>
-              <Input Index="1" Name="CL" Value="true">
+              <Input Index="1" Name="CL">
                 <Source Id="f6240d00-9cca-41c9-9546-92ff911e9bd1" />
               </Input>
               <Input Index="2" Name="VO" />
-              <Input Index="3" Name="VC" Value="true" />
+              <Input Index="3" Name="VC" />
             </Inputs>
             <Outputs>
-              <Output Index="0" Name="VO" />
+              <Output Index="0" Name="O" />
               <Output Index="1" Name="ER" />
+              <Output Index="2" Name="VO" />
+              <Output Index="3" Name="C" />
             </Outputs>
             <LibraryId>ed60bd8b-87b0-4100-b26e-e8650b1c7422</LibraryId>
           </Instance>
@@ -1293,7 +1428,7 @@
         <Element Id="9bf589c5-aa9a-405a-891a-ced73f9dfcae" X="88" Y="472">
           <Instance Type="Simulator.Model.Timer.ONDLY">
             <Inputs>
-              <Input Index="0" Value="true">
+              <Input Index="0">
                 <Source Id="ff3ca4b3-6d9c-4df4-809f-a8a16cfe74a4" />
               </Input>
             </Inputs>
@@ -1303,16 +1438,18 @@
         <Element Id="850ff333-d003-447b-8fac-6f5218c9fcd3" X="200" Y="472">
           <Instance Type="Simulator.Model.Logic.BLK" Name="V213">
             <Inputs>
-              <Input Index="0" Name="OP" Value="true">
+              <Input Index="0" Name="OP">
                 <Source Id="9bf589c5-aa9a-405a-891a-ced73f9dfcae" />
               </Input>
               <Input Index="1" Name="CL" />
               <Input Index="2" Name="VO" />
-              <Input Index="3" Name="VC" Value="true" />
+              <Input Index="3" Name="VC" />
             </Inputs>
             <Outputs>
-              <Output Index="0" Name="VO" />
+              <Output Index="0" Name="O" />
               <Output Index="1" Name="ER" />
+              <Output Index="2" Name="VO" />
+              <Output Index="3" Name="C" />
             </Outputs>
             <LibraryId>ed60bd8b-87b0-4100-b26e-e8650b1c7422</LibraryId>
           </Instance>
@@ -1320,16 +1457,18 @@
         <Element Id="c607dc15-f057-4051-a155-cd1e970f7061" X="200" Y="664">
           <Instance Type="Simulator.Model.Logic.BLK" Name="V222">
             <Inputs>
-              <Input Index="0" Name="OP" Value="true">
+              <Input Index="0" Name="OP">
                 <Source Id="9bf589c5-aa9a-405a-891a-ced73f9dfcae" />
               </Input>
               <Input Index="1" Name="CL" />
               <Input Index="2" Name="VO" />
-              <Input Index="3" Name="VC" Value="true" />
+              <Input Index="3" Name="VC" />
             </Inputs>
             <Outputs>
-              <Output Index="0" Name="VO" />
+              <Output Index="0" Name="O" />
               <Output Index="1" Name="ER" />
+              <Output Index="2" Name="VO" />
+              <Output Index="3" Name="C" />
             </Outputs>
             <LibraryId>ed60bd8b-87b0-4100-b26e-e8650b1c7422</LibraryId>
           </Instance>
@@ -1337,10 +1476,10 @@
         <Element Id="8184b1db-6120-4807-900a-44489093dc6b" X="336" Y="472">
           <Instance Type="Simulator.Model.Logic.AND">
             <Inputs>
-              <Input Index="0" Value="true">
+              <Input Index="0">
                 <Source Id="850ff333-d003-447b-8fac-6f5218c9fcd3" />
               </Input>
-              <Input Index="1" Value="true">
+              <Input Index="1">
                 <Source Id="c607dc15-f057-4051-a155-cd1e970f7061" />
               </Input>
             </Inputs>
@@ -1349,7 +1488,7 @@
         <Element Id="e021ecb0-afe2-4e54-ae58-2ade2dc1367d" X="432" Y="488">
           <Instance Type="Simulator.Model.Logic.FE">
             <Inputs>
-              <Input Index="0" Value="true">
+              <Input Index="0">
                 <Source Id="8184b1db-6120-4807-900a-44489093dc6b" />
               </Input>
             </Inputs>
@@ -1358,10 +1497,10 @@
         <Element Id="ff94c816-13f4-4593-b02f-79edef24f2a2" X="432" Y="576">
           <Instance Type="Simulator.Model.Logic.AND">
             <Inputs>
-              <Input Index="0" Value="true">
+              <Input Index="0">
                 <Source Id="8184b1db-6120-4807-900a-44489093dc6b" />
               </Input>
-              <Input Index="1" Value="true">
+              <Input Index="1">
                 <Source Id="9bf589c5-aa9a-405a-891a-ced73f9dfcae" />
               </Input>
             </Inputs>
@@ -1370,11 +1509,413 @@
         <Element Id="f6240d00-9cca-41c9-9546-92ff911e9bd1" X="536" Y="560">
           <Instance Type="Simulator.Model.Logic.OR">
             <Inputs>
-              <Input Index="0" Value="true">
+              <Input Index="0">
                 <Source Id="e021ecb0-afe2-4e54-ae58-2ade2dc1367d" />
               </Input>
-              <Input Index="1" Value="true">
+              <Input Index="1">
                 <Source Id="ff94c816-13f4-4593-b02f-79edef24f2a2" />
+              </Input>
+            </Inputs>
+          </Instance>
+        </Element>
+        <Element Id="d89d7fc0-db6f-4c2d-9767-4a67c44146ae" X="656" Y="472">
+          <Instance Type="Simulator.Model.Logic.BLK" Name="V207">
+            <Inputs>
+              <Input Index="0" Name="OP" />
+              <Input Index="1" Name="CL">
+                <Source Id="f6240d00-9cca-41c9-9546-92ff911e9bd1" />
+              </Input>
+              <Input Index="2" Name="VO" />
+              <Input Index="3" Name="VC" />
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Name="O" />
+              <Output Index="1" Name="ER" />
+              <Output Index="2" Name="VO" />
+              <Output Index="3" Name="C" />
+            </Outputs>
+            <LibraryId>ed60bd8b-87b0-4100-b26e-e8650b1c7422</LibraryId>
+          </Instance>
+        </Element>
+        <Element Id="b5173441-1076-4c57-bbb4-89f2411b2012" X="656" Y="664">
+          <Instance Type="Simulator.Model.Logic.BLK" Name="V216">
+            <Inputs>
+              <Input Index="0" Name="OP" />
+              <Input Index="1" Name="CL">
+                <Source Id="f6240d00-9cca-41c9-9546-92ff911e9bd1" />
+              </Input>
+              <Input Index="2" Name="VO" />
+              <Input Index="3" Name="VC" />
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Name="O" />
+              <Output Index="1" Name="ER" />
+              <Output Index="2" Name="VO" />
+              <Output Index="3" Name="C" />
+            </Outputs>
+            <LibraryId>ed60bd8b-87b0-4100-b26e-e8650b1c7422</LibraryId>
+          </Instance>
+        </Element>
+        <Element Id="0f708a5a-dc17-446b-a50e-8dc5bf5a5ba7" X="792" Y="472">
+          <Instance Type="Simulator.Model.Logic.AND3">
+            <Inputs>
+              <Input Index="0" Invert="true">
+                <Source Id="ff3ca4b3-6d9c-4df4-809f-a8a16cfe74a4" />
+              </Input>
+              <Input Index="1" Invert="true">
+                <Source Id="d89d7fc0-db6f-4c2d-9767-4a67c44146ae" />
+              </Input>
+              <Input Index="2" Invert="true">
+                <Source Id="b5173441-1076-4c57-bbb4-89f2411b2012" />
+              </Input>
+            </Inputs>
+          </Instance>
+        </Element>
+        <Element Id="1b3e8d9f-6f5d-4395-b6ab-0b7cd19ba4da" X="904" Y="504">
+          <Instance Type="Simulator.Model.Logic.FE">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="0f708a5a-dc17-446b-a50e-8dc5bf5a5ba7" />
+              </Input>
+            </Inputs>
+          </Instance>
+        </Element>
+        <Element Id="3bf528a6-4e84-45cb-8ebd-ef91adbc021c" X="904" Y="576">
+          <Instance Type="Simulator.Model.Logic.AND">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="0f708a5a-dc17-446b-a50e-8dc5bf5a5ba7" />
+              </Input>
+              <Input Index="1">
+                <Source Id="f6240d00-9cca-41c9-9546-92ff911e9bd1" />
+              </Input>
+            </Inputs>
+          </Instance>
+        </Element>
+        <Element Id="c2665f1e-379c-468e-b20a-d4d13c498006" X="1008" Y="560">
+          <Instance Type="Simulator.Model.Logic.OR">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="1b3e8d9f-6f5d-4395-b6ab-0b7cd19ba4da" />
+              </Input>
+              <Input Index="1">
+                <Source Id="3bf528a6-4e84-45cb-8ebd-ef91adbc021c" />
+              </Input>
+            </Inputs>
+          </Instance>
+        </Element>
+        <Element Id="35690887-0a26-4e3b-a542-9e9a95466f25" X="904" Y="736">
+          <Instance Type="Simulator.Model.Logic.BLK" Name="V209/1">
+            <Inputs>
+              <Input Index="0" Name="OP">
+                <Source Id="c2665f1e-379c-468e-b20a-d4d13c498006" />
+              </Input>
+              <Input Index="1" Name="CL">
+                <Source Id="a279db77-511a-4f40-a660-4ee4dfb5f9fb" />
+              </Input>
+              <Input Index="2" Name="VO" />
+              <Input Index="3" Name="VC" />
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Name="O" />
+              <Output Index="1" Name="ER" />
+              <Output Index="2" Name="VO" />
+              <Output Index="3" Name="C" />
+            </Outputs>
+            <LibraryId>ed60bd8b-87b0-4100-b26e-e8650b1c7422</LibraryId>
+          </Instance>
+        </Element>
+        <Element Id="24ab5987-0a99-40cf-8fe3-2c52f3e50ec1" X="96" Y="920">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="35690887-0a26-4e3b-a542-9e9a95466f25" />
+              </Input>
+            </Inputs>
+            <WaitTime>20</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="88ccd1c6-78c5-483e-9786-f6e6fd82c397" X="208" Y="920">
+          <Instance Type="Simulator.Model.Logic.BLK" Name="V209">
+            <Inputs>
+              <Input Index="0" Name="OP">
+                <Source Id="24ab5987-0a99-40cf-8fe3-2c52f3e50ec1" />
+              </Input>
+              <Input Index="1" Name="CL" />
+              <Input Index="2" Name="VO" />
+              <Input Index="3" Name="VC" />
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Name="O" />
+              <Output Index="1" Name="ER" />
+              <Output Index="2" Name="VO" />
+              <Output Index="3" Name="C" />
+            </Outputs>
+            <LibraryId>ed60bd8b-87b0-4100-b26e-e8650b1c7422</LibraryId>
+          </Instance>
+        </Element>
+        <Element Id="4b16b437-c36b-4959-9cae-97cd8682d3cb" X="208" Y="1112">
+          <Instance Type="Simulator.Model.Logic.BLK" Name="V218">
+            <Inputs>
+              <Input Index="0" Name="OP">
+                <Source Id="24ab5987-0a99-40cf-8fe3-2c52f3e50ec1" />
+              </Input>
+              <Input Index="1" Name="CL" />
+              <Input Index="2" Name="VO" />
+              <Input Index="3" Name="VC" />
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Name="O" />
+              <Output Index="1" Name="ER" />
+              <Output Index="2" Name="VO" />
+              <Output Index="3" Name="C" />
+            </Outputs>
+            <LibraryId>ed60bd8b-87b0-4100-b26e-e8650b1c7422</LibraryId>
+          </Instance>
+        </Element>
+        <Element Id="b05e22ef-7aa6-4db3-94bd-a45e2cba6302" X="344" Y="920">
+          <Instance Type="Simulator.Model.Logic.AND">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="88ccd1c6-78c5-483e-9786-f6e6fd82c397" />
+              </Input>
+              <Input Index="1">
+                <Source Id="4b16b437-c36b-4959-9cae-97cd8682d3cb" />
+              </Input>
+            </Inputs>
+          </Instance>
+        </Element>
+        <Element Id="e580d506-fa4b-4dad-b3ef-26ecf40f7982" X="440" Y="1016">
+          <Instance Type="Simulator.Model.Logic.AND">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="b05e22ef-7aa6-4db3-94bd-a45e2cba6302" />
+              </Input>
+              <Input Index="1">
+                <Source Id="24ab5987-0a99-40cf-8fe3-2c52f3e50ec1" />
+              </Input>
+            </Inputs>
+          </Instance>
+        </Element>
+        <Element Id="ce81a3fe-1f39-43eb-b2b4-1621f9b0aa79" X="440" Y="936">
+          <Instance Type="Simulator.Model.Logic.FE">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="b05e22ef-7aa6-4db3-94bd-a45e2cba6302" />
+              </Input>
+            </Inputs>
+          </Instance>
+        </Element>
+        <Element Id="a279db77-511a-4f40-a660-4ee4dfb5f9fb" X="544" Y="1000">
+          <Instance Type="Simulator.Model.Logic.OR">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="ce81a3fe-1f39-43eb-b2b4-1621f9b0aa79" />
+              </Input>
+              <Input Index="1">
+                <Source Id="e580d506-fa4b-4dad-b3ef-26ecf40f7982" />
+              </Input>
+            </Inputs>
+          </Instance>
+        </Element>
+        <Element Id="eeba760f-c68a-48d6-b744-d63fef01ea11" X="664" Y="920">
+          <Instance Type="Simulator.Model.Logic.BLK" Name="V221">
+            <Inputs>
+              <Input Index="0" Name="OP" />
+              <Input Index="1" Name="CL">
+                <Source Id="a279db77-511a-4f40-a660-4ee4dfb5f9fb" />
+              </Input>
+              <Input Index="2" Name="VO" />
+              <Input Index="3" Name="VC" />
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Name="O" />
+              <Output Index="1" Name="ER" />
+              <Output Index="2" Name="VO" />
+              <Output Index="3" Name="C" />
+            </Outputs>
+            <LibraryId>ed60bd8b-87b0-4100-b26e-e8650b1c7422</LibraryId>
+          </Instance>
+        </Element>
+        <Element Id="4096dc69-4229-4168-9ac5-2c822b8d33b9" X="664" Y="1112">
+          <Instance Type="Simulator.Model.Logic.BLK" Name="V212">
+            <Inputs>
+              <Input Index="0" Name="OP" />
+              <Input Index="1" Name="CL">
+                <Source Id="a279db77-511a-4f40-a660-4ee4dfb5f9fb" />
+              </Input>
+              <Input Index="2" Name="VO" />
+              <Input Index="3" Name="VC" />
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Name="O" />
+              <Output Index="1" Name="ER" />
+              <Output Index="2" Name="VO" />
+              <Output Index="3" Name="C" />
+            </Outputs>
+            <LibraryId>ed60bd8b-87b0-4100-b26e-e8650b1c7422</LibraryId>
+          </Instance>
+        </Element>
+        <Element Id="1c021471-75a0-485e-b966-e89b6cb292f9" X="800" Y="920">
+          <Instance Type="Simulator.Model.Logic.AND3">
+            <Inputs>
+              <Input Index="0" Invert="true">
+                <Source Id="35690887-0a26-4e3b-a542-9e9a95466f25" />
+              </Input>
+              <Input Index="1" Invert="true">
+                <Source Id="eeba760f-c68a-48d6-b744-d63fef01ea11" />
+              </Input>
+              <Input Index="2" Invert="true">
+                <Source Id="4096dc69-4229-4168-9ac5-2c822b8d33b9" />
+              </Input>
+            </Inputs>
+          </Instance>
+        </Element>
+        <Element Id="c989c33c-5274-4979-a282-02deb19300d8" X="912" Y="952">
+          <Instance Type="Simulator.Model.Logic.FE">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="1c021471-75a0-485e-b966-e89b6cb292f9" />
+              </Input>
+            </Inputs>
+          </Instance>
+        </Element>
+        <Element Id="c8e3127e-cd1f-4c83-b4f5-154c8fb3aaf1" X="912" Y="1032">
+          <Instance Type="Simulator.Model.Logic.AND">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="1c021471-75a0-485e-b966-e89b6cb292f9" />
+              </Input>
+              <Input Index="1">
+                <Source Id="a279db77-511a-4f40-a660-4ee4dfb5f9fb" />
+              </Input>
+            </Inputs>
+          </Instance>
+        </Element>
+        <Element Id="10c0b7a4-c137-41fc-b8cd-60d075d86dc5" X="1016" Y="1016">
+          <Instance Type="Simulator.Model.Logic.OR">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="c989c33c-5274-4979-a282-02deb19300d8" />
+              </Input>
+              <Input Index="1">
+                <Source Id="c8e3127e-cd1f-4c83-b4f5-154c8fb3aaf1" />
+              </Input>
+            </Inputs>
+          </Instance>
+        </Element>
+        <Element Id="74204c4c-88b6-4173-a766-946ad161911c" X="1120" Y="920">
+          <Instance Type="Simulator.Model.Logic.BLK" Name="V213">
+            <Inputs>
+              <Input Index="0" Name="OP">
+                <Source Id="10c0b7a4-c137-41fc-b8cd-60d075d86dc5" />
+              </Input>
+              <Input Index="1" Name="CL" />
+              <Input Index="2" Name="VO" />
+              <Input Index="3" Name="VC" />
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Name="O" />
+              <Output Index="1" Name="ER" />
+              <Output Index="2" Name="VO" />
+              <Output Index="3" Name="C" />
+            </Outputs>
+            <LibraryId>ed60bd8b-87b0-4100-b26e-e8650b1c7422</LibraryId>
+          </Instance>
+        </Element>
+        <Element Id="2ec6e48c-942b-43f3-b2ad-da1d3ac498ee" X="1120" Y="1112">
+          <Instance Type="Simulator.Model.Logic.BLK" Name="V222">
+            <Inputs>
+              <Input Index="0" Name="OP">
+                <Source Id="10c0b7a4-c137-41fc-b8cd-60d075d86dc5" />
+              </Input>
+              <Input Index="1" Name="CL" />
+              <Input Index="2" Name="VO" />
+              <Input Index="3" Name="VC" />
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Name="O" />
+              <Output Index="1" Name="ER" />
+              <Output Index="2" Name="VO" />
+              <Output Index="3" Name="C" />
+            </Outputs>
+            <LibraryId>ed60bd8b-87b0-4100-b26e-e8650b1c7422</LibraryId>
+          </Instance>
+        </Element>
+        <Element Id="ecba2767-a564-4d27-ad5a-ea9b256aee3d" X="1256" Y="920">
+          <Instance Type="Simulator.Model.Logic.AND">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="74204c4c-88b6-4173-a766-946ad161911c" />
+              </Input>
+              <Input Index="1">
+                <Source Id="2ec6e48c-942b-43f3-b2ad-da1d3ac498ee" />
+              </Input>
+            </Inputs>
+          </Instance>
+        </Element>
+        <Element Id="efb1e951-50ed-47f0-a297-23eb6daf34c3" X="1352" Y="936">
+          <Instance Type="Simulator.Model.Logic.FE">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="ecba2767-a564-4d27-ad5a-ea9b256aee3d" />
+              </Input>
+            </Inputs>
+          </Instance>
+        </Element>
+        <Element Id="97776556-3851-44f1-94f8-d55aecf10f48" X="1352" Y="1024">
+          <Instance Type="Simulator.Model.Logic.AND">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="ecba2767-a564-4d27-ad5a-ea9b256aee3d" />
+              </Input>
+              <Input Index="1">
+                <Source Id="10c0b7a4-c137-41fc-b8cd-60d075d86dc5" />
+              </Input>
+            </Inputs>
+          </Instance>
+        </Element>
+        <Element Id="dec425b4-3c2f-4676-948b-286274d6f09a" X="1456" Y="1008">
+          <Instance Type="Simulator.Model.Logic.OR">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="efb1e951-50ed-47f0-a297-23eb6daf34c3" />
+              </Input>
+              <Input Index="1">
+                <Source Id="97776556-3851-44f1-94f8-d55aecf10f48" />
+              </Input>
+            </Inputs>
+          </Instance>
+        </Element>
+        <Element Id="d31532ff-7272-4b06-bd45-520ec6ef39a2" X="-192" Y="128">
+          <Instance Type="Simulator.Model.Logic.OR3">
+            <Inputs>
+              <Input Index="2">
+                <Source Id="dec425b4-3c2f-4676-948b-286274d6f09a" />
+              </Input>
+            </Inputs>
+          </Instance>
+        </Element>
+        <Element Id="69489475-c03c-4158-89be-750e62a7758b" X="-80" Y="240">
+          <Instance Type="Simulator.Model.Logic.BLK">
+            <Inputs>
+              <Input Index="0" Name="ST">
+                <Source Id="d31532ff-7272-4b06-bd45-520ec6ef39a2" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Name="F1" />
+              <Output Index="1" Name="F2" />
+              <Output Index="2" Name="F3" />
+            </Outputs>
+            <LibraryId>d4a4af77-19d9-4e60-9bc5-cc895f04f6c6</LibraryId>
+          </Instance>
+        </Element>
+        <Element Id="fd12be2e-dc97-4758-bcf7-a354181831e1" X="-80" Y="96">
+          <Instance Type="Simulator.Model.Logic.FE">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="d31532ff-7272-4b06-bd45-520ec6ef39a2" />
               </Input>
             </Inputs>
           </Instance>
@@ -1490,6 +2031,236 @@
           <Source Id="f6240d00-9cca-41c9-9546-92ff911e9bd1" PinIndex="0" />
           <Destination Id="ff3ca4b3-6d9c-4df4-809f-a8a16cfe74a4" PinIndex="1" />
           <Points Array="592,600 592,600 608,600 608,304 744,304 744,304" />
+        </Link>
+        <Link Id="83820f6a-6f0f-4b1a-b3cb-1768a70b4a82">
+          <Source Id="f6240d00-9cca-41c9-9546-92ff911e9bd1" PinIndex="0" />
+          <Destination Id="d89d7fc0-db6f-4c2d-9767-4a67c44146ae" PinIndex="1" />
+          <Points Array="592,600 592,600 608,600 608,528 648,528 648,528" />
+        </Link>
+        <Link Id="315ffe31-66a3-4d17-b7e4-12a3a4fa98fc">
+          <Source Id="f6240d00-9cca-41c9-9546-92ff911e9bd1" PinIndex="0" />
+          <Destination Id="b5173441-1076-4c57-bbb4-89f2411b2012" PinIndex="1" />
+          <Points Array="592,600 592,600 608,600 608,720 648,720 648,720" />
+        </Link>
+        <Link Id="bd18a18d-d6a5-475a-9601-a7dbbea86126">
+          <Source Id="ff3ca4b3-6d9c-4df4-809f-a8a16cfe74a4" PinIndex="0" />
+          <Destination Id="0f708a5a-dc17-446b-a50e-8dc5bf5a5ba7" PinIndex="0" />
+          <Points Array="808,272 808,272 840,272 840,440 768,440 768,496 784,496 784,496" />
+        </Link>
+        <Link Id="5805a10d-04e1-4b79-8b72-1842d39df289">
+          <Source Id="d89d7fc0-db6f-4c2d-9767-4a67c44146ae" PinIndex="0" />
+          <Destination Id="0f708a5a-dc17-446b-a50e-8dc5bf5a5ba7" PinIndex="1" />
+          <Points Array="712,496 712,496 744,496 744,528 784,528 784,528" />
+        </Link>
+        <Link Id="631275d9-4106-4bba-be5d-7d5b990475e1">
+          <Source Id="b5173441-1076-4c57-bbb4-89f2411b2012" PinIndex="0" />
+          <Destination Id="0f708a5a-dc17-446b-a50e-8dc5bf5a5ba7" PinIndex="2" />
+          <Points Array="712,688 712,688 744,688 744,560 784,560 784,560" />
+        </Link>
+        <Link Id="b7813b89-9238-47b2-bf11-7f2cab96547f">
+          <Source Id="0f708a5a-dc17-446b-a50e-8dc5bf5a5ba7" PinIndex="0" />
+          <Destination Id="1b3e8d9f-6f5d-4395-b6ab-0b7cd19ba4da" PinIndex="0" />
+          <Points Array="848,528 848,528 896,528 896,528" />
+        </Link>
+        <Link Id="0fb3b82d-d1ba-4412-858a-8c4af8096254">
+          <Source Id="0f708a5a-dc17-446b-a50e-8dc5bf5a5ba7" PinIndex="0" />
+          <Destination Id="3bf528a6-4e84-45cb-8ebd-ef91adbc021c" PinIndex="0" />
+          <Points Array="848,528 848,528 872,528 872,600 896,600 896,600" />
+        </Link>
+        <Link Id="e46fd630-c390-4a8c-9dff-a93d09ce7376">
+          <Source Id="f6240d00-9cca-41c9-9546-92ff911e9bd1" PinIndex="0" />
+          <Destination Id="3bf528a6-4e84-45cb-8ebd-ef91adbc021c" PinIndex="1" />
+          <Points Array="592,600 592,600 608,600 608,632 896,632 896,632" />
+        </Link>
+        <Link Id="64b19db2-7c04-4229-8e38-48603b658670">
+          <Source Id="1b3e8d9f-6f5d-4395-b6ab-0b7cd19ba4da" PinIndex="0" />
+          <Destination Id="c2665f1e-379c-468e-b20a-d4d13c498006" PinIndex="0" />
+          <Points Array="960,528 960,528 976,528 976,584 1000,584 1000,584" />
+        </Link>
+        <Link Id="997e4205-f33f-4ae2-a4ea-670364a5222f">
+          <Source Id="3bf528a6-4e84-45cb-8ebd-ef91adbc021c" PinIndex="0" />
+          <Destination Id="c2665f1e-379c-468e-b20a-d4d13c498006" PinIndex="1" />
+          <Points Array="960,616 960,616 1000,616 1000,616" />
+        </Link>
+        <Link Id="aeec5be8-0f07-45be-9784-12c9f92af61a">
+          <Source Id="c2665f1e-379c-468e-b20a-d4d13c498006" PinIndex="0" />
+          <Destination Id="35690887-0a26-4e3b-a542-9e9a95466f25" PinIndex="0" />
+          <Points Array="1064,600 1064,600 1072,600 1072,680 872,680 872,760 896,760 896,760" />
+        </Link>
+        <Link Id="27350b8a-6b3c-4be4-8214-ad5f6b1c9803">
+          <Source Id="24ab5987-0a99-40cf-8fe3-2c52f3e50ec1" PinIndex="0" />
+          <Destination Id="88ccd1c6-78c5-483e-9786-f6e6fd82c397" PinIndex="0" />
+          <Points Array="152,944 152,944 200,944 200,944" />
+        </Link>
+        <Link Id="9ef5a680-0ccf-4a12-b5ba-710ba3fb9228">
+          <Source Id="24ab5987-0a99-40cf-8fe3-2c52f3e50ec1" PinIndex="0" />
+          <Destination Id="4b16b437-c36b-4959-9cae-97cd8682d3cb" PinIndex="0" />
+          <Points Array="152,944 152,944 168,944 168,1136 200,1136 200,1136" />
+        </Link>
+        <Link Id="a1e785c3-865b-4ea2-971f-ea4394a40229">
+          <Source Id="88ccd1c6-78c5-483e-9786-f6e6fd82c397" PinIndex="0" />
+          <Destination Id="b05e22ef-7aa6-4db3-94bd-a45e2cba6302" PinIndex="0" />
+          <Points Array="264,944 264,944 336,944 336,944" />
+        </Link>
+        <Link Id="880526b0-a479-441d-9743-4010e230bfb6">
+          <Source Id="4b16b437-c36b-4959-9cae-97cd8682d3cb" PinIndex="0" />
+          <Destination Id="b05e22ef-7aa6-4db3-94bd-a45e2cba6302" PinIndex="1" />
+          <Points Array="264,1136 264,1136 296,1136 296,976 336,976 336,976" />
+        </Link>
+        <Link Id="ab187524-0ce4-4520-a0a8-cf5941c42d27">
+          <Source Id="b05e22ef-7aa6-4db3-94bd-a45e2cba6302" PinIndex="0" />
+          <Destination Id="ce81a3fe-1f39-43eb-b2b4-1621f9b0aa79" PinIndex="0" />
+          <Points Array="400,960 400,960 432,960 432,960" />
+        </Link>
+        <Link Id="25538a94-c607-4aa6-946e-df242979e41d">
+          <Source Id="24ab5987-0a99-40cf-8fe3-2c52f3e50ec1" PinIndex="0" />
+          <Destination Id="e580d506-fa4b-4dad-b3ef-26ecf40f7982" PinIndex="1" />
+          <Points Array="152,944 152,944 168,944 168,1072 432,1072 432,1072" />
+        </Link>
+        <Link Id="6964b77c-50e1-47e4-a2f3-733f8a8388a5">
+          <Source Id="b05e22ef-7aa6-4db3-94bd-a45e2cba6302" PinIndex="0" />
+          <Destination Id="e580d506-fa4b-4dad-b3ef-26ecf40f7982" PinIndex="0" />
+          <Points Array="400,960 400,960 416,960 416,1040 432,1040 432,1040" />
+        </Link>
+        <Link Id="918245e0-45c3-45e3-8239-d2df4edbfd05">
+          <Source Id="e580d506-fa4b-4dad-b3ef-26ecf40f7982" PinIndex="0" />
+          <Destination Id="a279db77-511a-4f40-a660-4ee4dfb5f9fb" PinIndex="1" />
+          <Points Array="496,1056 496,1056 536,1056 536,1056" />
+        </Link>
+        <Link Id="299c86cc-d2e9-4d9b-a4bf-b223274e48b3">
+          <Source Id="ce81a3fe-1f39-43eb-b2b4-1621f9b0aa79" PinIndex="0" />
+          <Destination Id="a279db77-511a-4f40-a660-4ee4dfb5f9fb" PinIndex="0" />
+          <Points Array="496,960 496,960 512,960 512,1024 536,1024 536,1024" />
+        </Link>
+        <Link Id="f7d94fbf-90aa-4484-8c4f-61154090a532">
+          <Source Id="35690887-0a26-4e3b-a542-9e9a95466f25" PinIndex="0" />
+          <Destination Id="24ab5987-0a99-40cf-8fe3-2c52f3e50ec1" PinIndex="0" />
+          <Points Array="960,760 960,760 1008,760 1008,896 72,896 72,944 88,944 88,944" />
+        </Link>
+        <Link Id="5805a10d-04e1-4b79-8b72-1842d39df289">
+          <Source Id="eeba760f-c68a-48d6-b744-d63fef01ea11" PinIndex="0" />
+          <Destination Id="1c021471-75a0-485e-b966-e89b6cb292f9" PinIndex="1" />
+          <Points Array="720,944 720,944 752,944 752,976 792,976 792,976" />
+        </Link>
+        <Link Id="631275d9-4106-4bba-be5d-7d5b990475e1">
+          <Source Id="4096dc69-4229-4168-9ac5-2c822b8d33b9" PinIndex="0" />
+          <Destination Id="1c021471-75a0-485e-b966-e89b6cb292f9" PinIndex="2" />
+          <Points Array="720,1136 720,1136 752,1136 752,1008 792,1008 792,1008" />
+        </Link>
+        <Link Id="b7813b89-9238-47b2-bf11-7f2cab96547f">
+          <Source Id="1c021471-75a0-485e-b966-e89b6cb292f9" PinIndex="0" />
+          <Destination Id="c989c33c-5274-4979-a282-02deb19300d8" PinIndex="0" />
+          <Points Array="856,976 856,976 904,976 904,976" />
+        </Link>
+        <Link Id="0fb3b82d-d1ba-4412-858a-8c4af8096254">
+          <Source Id="1c021471-75a0-485e-b966-e89b6cb292f9" PinIndex="0" />
+          <Destination Id="c8e3127e-cd1f-4c83-b4f5-154c8fb3aaf1" PinIndex="0" />
+          <Points Array="856,976 856,976 880,976 880,1056 904,1056 904,1056" />
+        </Link>
+        <Link Id="64b19db2-7c04-4229-8e38-48603b658670">
+          <Source Id="c989c33c-5274-4979-a282-02deb19300d8" PinIndex="0" />
+          <Destination Id="10c0b7a4-c137-41fc-b8cd-60d075d86dc5" PinIndex="0" />
+          <Points Array="968,976 968,976 984,976 984,1040 1008,1040 1008,1040" />
+        </Link>
+        <Link Id="997e4205-f33f-4ae2-a4ea-670364a5222f">
+          <Source Id="c8e3127e-cd1f-4c83-b4f5-154c8fb3aaf1" PinIndex="0" />
+          <Destination Id="10c0b7a4-c137-41fc-b8cd-60d075d86dc5" PinIndex="1" />
+          <Points Array="968,1072 968,1072 1008,1072 1008,1072" />
+        </Link>
+        <Link Id="8f9ea44a-7cbf-4242-ba18-681dc2af7b50">
+          <Source Id="a279db77-511a-4f40-a660-4ee4dfb5f9fb" PinIndex="0" />
+          <Destination Id="eeba760f-c68a-48d6-b744-d63fef01ea11" PinIndex="1" />
+          <Points Array="600,1040 600,1040 624,1040 624,976 656,976 656,976" />
+        </Link>
+        <Link Id="f62fb8c1-c329-4a71-a0e1-e5f0c0da12eb">
+          <Source Id="a279db77-511a-4f40-a660-4ee4dfb5f9fb" PinIndex="0" />
+          <Destination Id="4096dc69-4229-4168-9ac5-2c822b8d33b9" PinIndex="1" />
+          <Points Array="600,1040 600,1040 624,1040 624,1168 656,1168 656,1168" />
+        </Link>
+        <Link Id="d49d7487-0042-43ee-9365-1aeb578aedf8">
+          <Source Id="a279db77-511a-4f40-a660-4ee4dfb5f9fb" PinIndex="0" />
+          <Destination Id="35690887-0a26-4e3b-a542-9e9a95466f25" PinIndex="1" />
+          <Points Array="600,1040 600,1040 624,1040 624,856 872,856 872,792 896,792 896,792" />
+        </Link>
+        <Link Id="efa9c1b9-8845-4361-a150-f46ca088072e">
+          <Source Id="35690887-0a26-4e3b-a542-9e9a95466f25" PinIndex="0" />
+          <Destination Id="1c021471-75a0-485e-b966-e89b6cb292f9" PinIndex="0" />
+          <Points Array="960,760 960,760 1008,760 1008,896 768,896 768,944 792,944 792,944" />
+        </Link>
+        <Link Id="a1e785c3-865b-4ea2-971f-ea4394a40229">
+          <Source Id="74204c4c-88b6-4173-a766-946ad161911c" PinIndex="0" />
+          <Destination Id="ecba2767-a564-4d27-ad5a-ea9b256aee3d" PinIndex="0" />
+          <Points Array="1176,944 1176,944 1248,944 1248,944" />
+        </Link>
+        <Link Id="880526b0-a479-441d-9743-4010e230bfb6">
+          <Source Id="2ec6e48c-942b-43f3-b2ad-da1d3ac498ee" PinIndex="0" />
+          <Destination Id="ecba2767-a564-4d27-ad5a-ea9b256aee3d" PinIndex="1" />
+          <Points Array="1176,1136 1176,1136 1208,1136 1208,976 1248,976 1248,976" />
+        </Link>
+        <Link Id="ab187524-0ce4-4520-a0a8-cf5941c42d27">
+          <Source Id="ecba2767-a564-4d27-ad5a-ea9b256aee3d" PinIndex="0" />
+          <Destination Id="efb1e951-50ed-47f0-a297-23eb6daf34c3" PinIndex="0" />
+          <Points Array="1312,960 1312,960 1344,960 1344,960" />
+        </Link>
+        <Link Id="6964b77c-50e1-47e4-a2f3-733f8a8388a5">
+          <Source Id="ecba2767-a564-4d27-ad5a-ea9b256aee3d" PinIndex="0" />
+          <Destination Id="97776556-3851-44f1-94f8-d55aecf10f48" PinIndex="0" />
+          <Points Array="1312,960 1312,960 1328,960 1328,1048 1344,1048 1344,1048" />
+        </Link>
+        <Link Id="918245e0-45c3-45e3-8239-d2df4edbfd05">
+          <Source Id="97776556-3851-44f1-94f8-d55aecf10f48" PinIndex="0" />
+          <Destination Id="dec425b4-3c2f-4676-948b-286274d6f09a" PinIndex="1" />
+          <Points Array="1408,1064 1408,1064 1448,1064 1448,1064" />
+        </Link>
+        <Link Id="299c86cc-d2e9-4d9b-a4bf-b223274e48b3">
+          <Source Id="efb1e951-50ed-47f0-a297-23eb6daf34c3" PinIndex="0" />
+          <Destination Id="dec425b4-3c2f-4676-948b-286274d6f09a" PinIndex="0" />
+          <Points Array="1408,960 1408,960 1424,960 1424,1032 1448,1032 1448,1032" />
+        </Link>
+        <Link Id="c25b8372-a429-4e11-bb0b-781276cb2f3e">
+          <Source Id="10c0b7a4-c137-41fc-b8cd-60d075d86dc5" PinIndex="0" />
+          <Destination Id="74204c4c-88b6-4173-a766-946ad161911c" PinIndex="0" />
+          <Points Array="1072,1056 1072,1056 1088,1056 1088,944 1112,944 1112,944" />
+        </Link>
+        <Link Id="8257dd9b-8324-4391-894a-767f3356fda8">
+          <Source Id="10c0b7a4-c137-41fc-b8cd-60d075d86dc5" PinIndex="0" />
+          <Destination Id="2ec6e48c-942b-43f3-b2ad-da1d3ac498ee" PinIndex="0" />
+          <Points Array="1072,1056 1072,1056 1088,1056 1088,1136 1112,1136 1112,1136" />
+        </Link>
+        <Link Id="da18407f-b1c7-4efd-bc2f-cede73ca85c8">
+          <Source Id="10c0b7a4-c137-41fc-b8cd-60d075d86dc5" PinIndex="0" />
+          <Destination Id="97776556-3851-44f1-94f8-d55aecf10f48" PinIndex="1" />
+          <Points Array="1072,1056 1072,1056 1088,1056 1088,1080 1344,1080 1344,1080" />
+        </Link>
+        <Link Id="4915f5ea-82cc-4b11-b519-413aef8ab451">
+          <Source Id="a279db77-511a-4f40-a660-4ee4dfb5f9fb" PinIndex="0" />
+          <Destination Id="c8e3127e-cd1f-4c83-b4f5-154c8fb3aaf1" PinIndex="1" />
+          <Points Array="600,1040 600,1040 624,1040 624,1088 904,1088 904,1088" />
+        </Link>
+        <Link Id="1bb4e6a5-105f-4afc-8142-829ce4a9caae">
+          <Source Id="dec425b4-3c2f-4676-948b-286274d6f09a" PinIndex="0" />
+          <Destination Id="d31532ff-7272-4b06-bd45-520ec6ef39a2" PinIndex="2" />
+          <Points Array="1512,1048 1512,1048 1528,1048 1528,1288 -224,1288 -224,216 -200,216 -200,216" />
+        </Link>
+        <Link Id="0435617e-5326-413c-a68e-dc954cf81c13">
+          <Source Id="d31532ff-7272-4b06-bd45-520ec6ef39a2" PinIndex="0" />
+          <Destination Id="69489475-c03c-4158-89be-750e62a7758b" PinIndex="0" />
+          <Points Array="-136,184 -136,184 -112,184 -112,264 -88,264 -88,264" />
+        </Link>
+        <Link Id="f5bac3c7-ed10-49a2-b1ef-584ee64536e6">
+          <Source Id="d31532ff-7272-4b06-bd45-520ec6ef39a2" PinIndex="0" />
+          <Destination Id="fd12be2e-dc97-4758-bcf7-a354181831e1" PinIndex="0" />
+          <Points Array="-136,184 -136,184 -112,184 -112,120 -88,120 -88,120" />
+        </Link>
+        <Link Id="c933dc06-e971-4246-9f29-ee114bf2bb50">
+          <Source Id="fd12be2e-dc97-4758-bcf7-a354181831e1" PinIndex="0" />
+          <Destination Id="7d129569-d568-4e19-82c2-85e675f1001d" PinIndex="0" />
+          <Points Array="-24,120 -24,120 80,120 80,120" />
+        </Link>
+        <Link Id="9f820c2b-72a6-41ca-a023-9732ea041ecd">
+          <Source Id="dec425b4-3c2f-4676-948b-286274d6f09a" PinIndex="0" />
+          <Destination Id="7d129569-d568-4e19-82c2-85e675f1001d" PinIndex="1" />
+          <Points Array="1512,1048 1512,1048 1528,1048 1528,1288 16,1288 16,152 80,152 80,152" />
         </Link>
       </Links>
     </Module>
