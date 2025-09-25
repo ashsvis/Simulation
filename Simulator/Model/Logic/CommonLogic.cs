@@ -360,7 +360,8 @@ namespace Simulator.Model.Logic
             using var pen = new Pen(selected ? Color.Magenta : foreColor, 1f);
             using var font = new Font("Consolas", Element.Step + 2f);
             using var fontbrush = new SolidBrush(selected ? Color.Magenta : foreColor);
-            var named = !string.IsNullOrEmpty(Name);
+            using var format = new StringFormat();
+            format.Alignment = StringAlignment.Center;
             var max = Math.Max(InverseInputs.Length, InverseOutputs.Length);
             var step = Element.Step;
             var height = step + max * step * 4 + step;
@@ -370,13 +371,14 @@ namespace Simulator.Model.Logic
             {
                 graphics.FillRectangle(brush, rect);
                 graphics.DrawRectangles(pen, [rect]);
+                // обозначение функции, текст по-центру, в верхней части рамки элемента
+                var named = !string.IsNullOrEmpty(Name);
+                if (named)
+                {
+                    var msn = graphics.MeasureString(Name, font);
+                    graphics.DrawString(Name, font, fontbrush, new PointF(location.X + width / 2, location.Y - msn.Height), format);
+                }
             }
-            // обозначение функции, текст по-центру, в верхней части рамки элемента
-            using var format = new StringFormat();
-            format.Alignment = StringAlignment.Center;
-            var msn = graphics.MeasureString(Name, font);
-            if (named)
-                graphics.DrawString(Name, font, fontbrush, new PointF(location.X + width / 2, location.Y - msn.Height), format);
             graphics.DrawString(FuncSymbol, font, fontbrush, new PointF(location.X + width / 2, location.Y), format);
             // входы
             var y = step + location.Y;

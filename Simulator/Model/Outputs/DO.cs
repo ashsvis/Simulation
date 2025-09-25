@@ -50,11 +50,18 @@ namespace Simulator.Model.Outputs
         {
             graphics.FillRectangle(brush, rect);
             graphics.DrawRectangles(pen, [rect]);
+            using var format = new StringFormat();
+            format.Alignment = StringAlignment.Center;
+            // обозначение функции, текст по-центру, в верхней части рамки элемента
+            var named = !string.IsNullOrEmpty(Name);
+            if (named)
+            {
+                var msn = graphics.MeasureString(Name, font);
+                graphics.DrawString(Name, font, fontbrush, new PointF(rect.X + rect.Height / 2, rect.Y - msn.Height), format);
+            }
 
             var funcrect = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height / 3);
             var text = $"DO{Order}";
-            using var format = new StringFormat();
-            format.Alignment = StringAlignment.Center;
             format.LineAlignment = StringAlignment.Center;
             using var lampFont = new Font(font.FontFamily, font.Size);
             graphics.DrawString(text, lampFont, fontbrush, funcrect, format);

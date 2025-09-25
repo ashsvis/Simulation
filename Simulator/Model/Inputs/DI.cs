@@ -50,6 +50,15 @@ namespace Simulator.Model.Inputs
         {
             graphics.FillRectangle(brush, rect);
             graphics.DrawRectangles(pen, [rect]);
+            using var format = new StringFormat();
+            format.Alignment = StringAlignment.Center;
+            // обозначение функции, текст по-центру, в верхней части рамки элемента
+            var named = !string.IsNullOrEmpty(Name);
+            if (named)
+            {
+                var msn = graphics.MeasureString(Name, font);
+                graphics.DrawString(Name, font, fontbrush, new PointF(rect.X + rect.Width - rect.Height / 2, rect.Y - msn.Height), format);
+            }
 
             // горизонтальная риска справа, напротив выхода
             graphics.DrawLine(pen, new PointF(rect.Right, rect.Y + rect.Height / 2),
@@ -65,8 +74,6 @@ namespace Simulator.Model.Inputs
 
             var funcrect = new RectangleF(rect.X + rect.Height * 3, rect.Y, rect.Height, rect.Height / 3);
             var text = $"DI{Order}";
-            using var format = new StringFormat();
-            format.Alignment = StringAlignment.Center;
             format.LineAlignment = StringAlignment.Center;
             using var lampFont = new Font(font.FontFamily, font.Size);
             graphics.DrawString(text, lampFont, fontbrush, funcrect, format);

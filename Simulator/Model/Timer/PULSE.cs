@@ -45,6 +45,15 @@ namespace Simulator.Model.Timer
         {
             graphics.FillRectangle(brush, rect);
             graphics.DrawRectangles(pen, [rect]);
+            using var format = new StringFormat();
+            format.Alignment = StringAlignment.Center;
+            // обозначение функции, текст по-центру, в верхней части рамки элемента
+            var named = !string.IsNullOrEmpty(Name);
+            if (named)
+            {
+                var msn = graphics.MeasureString(Name, font);
+                graphics.DrawString(Name, font, fontbrush, new PointF(rect.X + rect.Height / 2, rect.Y - msn.Height), format);
+            }
             rect.Inflate(-1, -1);
             graphics.FillRectangle(brush, rect);
             var sym = new RectangleF(rect.Location, new SizeF(rect.Width, rect.Height / 3));
@@ -56,8 +65,6 @@ namespace Simulator.Model.Timer
                 new PointF(sym.Right - w, sym.Bottom), new PointF(sym.Right, sym.Bottom)]);
 
             // время импульса, текст по-центру, в нижней части рамки элемента
-            using var format = new StringFormat();
-            format.Alignment = StringAlignment.Center;
             var text = $"{WaitTime:0.#}s";
             var ms = graphics.MeasureString(text, font);
             var pt = new PointF(rect.X + rect.Width / 2, rect.Y + (rect.Height - ms.Height) / 2);

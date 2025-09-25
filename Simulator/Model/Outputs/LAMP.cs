@@ -47,9 +47,16 @@ namespace Simulator.Model.Outputs
         {
             graphics.FillRectangle(brush, rect);
             graphics.DrawRectangles(pen, [rect]);
-            var text = "Лампа";
             using var format = new StringFormat();
             format.Alignment = StringAlignment.Center;
+            // обозначение функции, текст по-центру, в верхней части рамки элемента
+            var named = !string.IsNullOrEmpty(Name);
+            if (named)
+            {
+                var msn = graphics.MeasureString(Name, font);
+                graphics.DrawString(Name, font, fontbrush, new PointF(rect.X + rect.Height / 2, rect.Y - msn.Height), format);
+            }
+            var text = "Лампа";
             using var lampFont = new Font(font.FontFamily, font.Size - 2f);
             graphics.DrawString(text, lampFont, fontbrush, new PointF(rect.X + rect.Height / 2, rect.Y), format);
             // индекс элемента в списке
