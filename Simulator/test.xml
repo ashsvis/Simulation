@@ -13,31 +13,32 @@
             </Outputs>
           </Instance>
         </Element>
-        <Element Id="8a3688b8-ae49-4bbd-af86-9bd318ca4832" X="160" Y="120">
-          <Instance Type="Simulator.Model.Logic.FE" />
-        </Element>
-      </Elements>
-      <Links />
-    </Module>
-    <Module>
-      <Id>561c9071-9d28-4f87-b3de-1ea655c56872</Id>
-      <Elements>
-        <Element Id="e6d5ad5d-386c-4de6-a11e-f322a42affea" X="368" Y="24">
-          <Instance Type="Simulator.Model.Outputs.LAMP">
+        <Element Id="8a3688b8-ae49-4bbd-af86-9bd318ca4832" X="264" Y="56">
+          <Instance Type="Simulator.Model.Logic.FE">
             <Inputs>
               <Input Index="0">
-                <Source Id="e6d5ad5d-386c-4de6-a11e-f322a42affea" />
+                <Source Id="750aebdb-353d-47dd-b769-2ebcddb11c2c" />
               </Input>
             </Inputs>
-            <Description>Индикаторная лампа</Description>
-            <Color>Red</Color>
           </Instance>
         </Element>
-        <Element Id="9b55263d-1c4c-40e4-a327-7f125f946dde" X="368" Y="88">
+      </Elements>
+      <Links>
+        <Link Id="9db02090-1dc5-438b-b1cb-20f0be1b3fe5">
+          <Source Id="750aebdb-353d-47dd-b769-2ebcddb11c2c" PinIndex="0" />
+          <Destination Id="8a3688b8-ae49-4bbd-af86-9bd318ca4832" PinIndex="0" />
+          <Points Array="216,80 216,80 256,80 256,80" />
+        </Link>
+      </Links>
+    </Module>
+    <Module>
+      <Id>dcec595f-dc8b-4965-80d9-7bd64a450a31</Id>
+      <Elements>
+        <Element Id="6e2082bb-3172-4f00-b745-a3e880eb3f07" X="288" Y="64">
           <Instance Type="Simulator.Model.Outputs.LAMP">
             <Inputs>
               <Input Index="0">
-                <Source Id="9b55263d-1c4c-40e4-a327-7f125f946dde" />
+                <Source Id="8a3688b8-ae49-4bbd-af86-9bd318ca4832" />
               </Input>
             </Inputs>
             <Description>Индикаторная лампа</Description>

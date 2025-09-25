@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
@@ -91,7 +92,7 @@ namespace Simulator.Model
                 if (description != null)
                     Description = description;
                 LoadElements(xmodule, Elements);
-                //ConnectLinks(Elements);
+                ConnectLinks(Elements);
                 LoadVisualLinks(xmodule, Links);
             }
         }
@@ -263,7 +264,16 @@ namespace Simulator.Model
             LoadVisualLinks(docCopy.Root, elementlinks);
 
             foreach (Element element in elements)
+            {
                 aCopy.Elements.Add(element);
+
+                //if (element.Instance is ILinkSupport link)
+                //{
+                //    foreach (var seek in link.InputLinkSources)
+                //        link.UpdateInputLinkSources(seek, element.Id);
+                //}
+
+            }
             foreach (Link link in elementlinks)
             {
                 link.SetSourceId(link.SourceId);

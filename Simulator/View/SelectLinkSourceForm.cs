@@ -18,7 +18,7 @@ namespace Simulator.View
             InitializeComponent();
         }
 
-        public (GetLinkValueMethod?, int) Result { get; private set; }
+        public (Guid, GetLinkValueMethod?, int) Result { get; private set; }
 
         private void SelectLinkSourceForm_Load(object sender, EventArgs e)
         {
@@ -37,7 +37,7 @@ namespace Simulator.View
                         if (func.OutputNames.Length == 1)
                         {
                             var outputName = string.IsNullOrWhiteSpace(func.OutputNames[0]) ? "Out" : func.OutputNames[0];
-                            var outputNode = new TreeNode($"{elementName}.{outputName}") { Tag = new Tuple<ILinkSupport, int>(link, 0) };
+                            var outputNode = new TreeNode($"{elementName}.{outputName}") { Tag = new Tuple<Guid, ILinkSupport, int>(item.Id, link, 0) };
                             moduleNode.Nodes.Add(outputNode);
                         }
                         else if (func.OutputNames.Length > 1)
@@ -47,7 +47,7 @@ namespace Simulator.View
                             for (var i = 0; i < func.OutputNames.Length; i++)
                             {
                                 var outputName = string.IsNullOrWhiteSpace(func.OutputNames[i]) ? "Out" : func.OutputNames[i];
-                                var outputNode = new TreeNode($"{i + 1}. {outputName}") { Tag = new Tuple<ILinkSupport, int>(link, i) };
+                                var outputNode = new TreeNode($"{i + 1}. {outputName}") { Tag = new Tuple<Guid, ILinkSupport, int>(item.Id, link, i) };
                                 elementNode.Nodes.Add(outputNode);
                             }
                         }
@@ -67,8 +67,8 @@ namespace Simulator.View
                 {
                     if (node == e.Node)
                     {
-                        var tuple = (Tuple<ILinkSupport, int>)e.Node.Tag;
-                        Result = (tuple.Item1.GetResultLink(tuple.Item2), tuple.Item2);
+                        var tuple = (Tuple<Guid, ILinkSupport, int>)e.Node.Tag;
+                        Result = (tuple.Item1, tuple.Item2.GetResultLink(tuple.Item3), tuple.Item3);
                         break;
                     }
                     n++;

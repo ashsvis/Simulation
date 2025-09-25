@@ -872,11 +872,11 @@ namespace Simulator
                                     var dlg = new SelectLinkSourceForm();
                                     if (dlg.ShowDialog() == DialogResult.OK)
                                     {
-                                        (GetLinkValueMethod? method, int pinOut) = dlg.Result;
+                                        (Guid idSource, GetLinkValueMethod? method, int pinOut) = dlg.Result;
                                         if (!fn.LinkedInputs[(int)pin])
                                         {
-                                            fn.SetValueLinkToInp((int)pin, method, element.Id, pinOut);
-
+                                            fn.SetValueLinkToInp((int)pin, method, idSource, pinOut);
+                                            Module.Changed = true;
                                         }
                                     }
                                 }

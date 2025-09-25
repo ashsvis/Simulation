@@ -110,9 +110,27 @@ namespace Simulator.Model
                             Modules.Add(module);
                         }
 
-                        foreach (var module in Modules)
-                            Module.ConnectLinks(module.Elements);
-
+                        // установление межмодульных связей после загрузки всех модулей
+                        //foreach (var module in Modules)
+                        //{
+                        //    foreach (var item in module.Elements)
+                        //    {
+                        //        if (item.Instance is ILinkSupport function)
+                        //        {
+                        //            var n = 0;
+                        //            foreach (var (id, output) in function.InputLinkSources)
+                        //            {
+                        //                if (id != Guid.Empty && !module.Elements.Any(x => x.Id == id))
+                        //                {
+                        //                    var sourceItem = Modules.Where(m => !module.Elements.Any(x => x.Id == id)).Select(item => item.Elements.FirstOrDefault(x => x.Id == id)).First();
+                        //                    if (sourceItem != null && sourceItem.Instance is ILinkSupport source && source.OutputValues.Length > 0)
+                        //                        function.SetValueLinkToInp(n, source.GetResultLink(output), id, output);
+                        //                }
+                        //                n++;
+                        //            }
+                        //        }
+                        //    }
+                        //}
                     }
                 }
                 Modules.ForEach(module => module.Changed = false);
