@@ -86,6 +86,19 @@ namespace Simulator.Model.Logic
                 Internal = lib.DeepCopy();
                 LibraryName = lib.Name;
                 LibraryDescription = lib.Description;
+                foreach (var item in Internal.Elements)
+                {
+                    if (item.Instance is Model.Inputs.DI di)
+                    {
+                        if (di.Order < InputNames.Length)
+                            InputNames[di.Order] = di.Name ?? "";
+                    }
+                    if (item.Instance is Model.Outputs.DO @do)
+                    {
+                        if (@do.Order < OutputNames.Length)
+                            OutputNames[@do.Order] = @do.Name ?? "";
+                    }
+                }
             }
         }
     }
