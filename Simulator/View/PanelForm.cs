@@ -27,9 +27,6 @@ namespace Simulator
 
         private void Panel_SimulationTick(object? sender, EventArgs e)
         {
-            lvVariables.VirtualListSize = Project.CountVariables;
-            lvVariables.Invalidate();
-
             SimulationTick?.Invoke(this, EventArgs.Empty);
         }
 
@@ -585,29 +582,6 @@ namespace Simulator
                 }
             }
 
-        }
-
-        private void lvVariables_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
-        {
-            ValueItem? data = Project.GetVariableByIndex(e.ItemIndex);
-            var item = new ListViewItem("1");
-            e.Item = item;
-            item.SubItems.Add("2");
-            item.SubItems.Add("3");
-            item.SubItems.Add("4");
-            item.SubItems.Add("5");
-            item.SubItems.Add("6");
-
-            if (data != null) 
-            {
-                (var moduleName, var elementName) = Project.GetAddressById(data.ElementId);
-                item.Text = moduleName;
-                item.SubItems[1].Text = elementName;
-                item.SubItems[2].Text = $"{data.Side}";
-                item.SubItems[3].Text = $"{data.Pin}";
-                item.SubItems[4].Text = $"{data.Kind}";
-                item.SubItems[5].Text = $"{data.Value}";
-            }
         }
     }
 }

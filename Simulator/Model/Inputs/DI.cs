@@ -21,10 +21,11 @@ namespace Simulator.Model.Inputs
 
         public override void Calculate()
         {
-            bool output = (bool)(OutputValues[0] ?? false);
-            Out = output;
+            //bool output = (bool)(OutputValues[0] ?? false);
+            bool output = (bool)(Project.ReadValue(ItemId, 0, ValueSide.Input, ValueKind.Digital)?.Value ?? false);
+            //Out = output;
             //Project.WriteBoolValue(ItemId, 0, Out);
-            Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
+            //Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, output);
         }
 
         public override void CalculateTargets(PointF location, ref SizeF size,
@@ -67,10 +68,9 @@ namespace Simulator.Model.Inputs
             graphics.DrawLine(pen, new PointF(rect.Right, rect.Y + rect.Height / 2),
                 new PointF(rect.Right + Element.Step, rect.Y + rect.Height / 2));
             // значение выхода
-            if (VisibleValues && this is ILinkSupport link)
+            if (VisibleValues)
             {
-                var value = link.OutputValues[0];
-                var textval = value != null && value.GetType() == typeof(bool) ? (bool)value ? "T" : "F" : $"{value}";
+                var textval = $"{Project.ReadValue(ItemId, 0, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
                 var ms = graphics.MeasureString(textval, font);
                 graphics.DrawString(textval, font, fontbrush, new PointF(rect.Right, rect.Y + rect.Height / 2 - ms.Height));
             }
@@ -93,8 +93,9 @@ namespace Simulator.Model.Inputs
 
             var staterect = new RectangleF(rect.X + rect.Height * 3, rect.Y, rect.Height, rect.Height / 3);
             staterect.Offset(0, rect.Height / 3);
-            using var statebrush = new SolidBrush(Out ? Color.Lime : Color.Red);
-            graphics.DrawString(Out ? "\"1\"" : "\"0\"", font, statebrush, staterect, format);
+            var value = (bool)(Project.ReadValue(ItemId, 0, ValueSide.Output, ValueKind.Digital)?.Value ?? false);
+            using var statebrush = new SolidBrush(value ? Color.Lime : Color.Red);
+            graphics.DrawString(value ? "\"1\"" : "\"0\"", font, statebrush, staterect, format);
 
             var descrect = new RectangleF(rect.X, rect.Y, rect.Height * 3, rect.Height);
             graphics.FillRectangle(brush, descrect);
@@ -122,8 +123,7 @@ namespace Simulator.Model.Inputs
         {
             if (outputIndex >= 0 && outputIndex < OutputValues.Length)
             {
-                OutputValues[outputIndex] = (bool)(value ?? false);
-                //Project.WriteBoolValue(ItemId, outputIndex, (bool)(value ?? false));
+                //OutputValues[outputIndex] = (bool)(value ?? false);
                 Project.WriteValue(ItemId, outputIndex, ValueSide.Output, ValueKind.Digital, (bool)(value ?? false));
             }
         }
@@ -133,7 +133,6 @@ namespace Simulator.Model.Inputs
             if (outputIndex >= 0 && outputIndex < OutputValues.Length)
             {
                 ValueItem? value = Model.Project.ReadValue(ItemId, outputIndex, ValueSide.Output, ValueKind.Digital);
-                //return (bool)(OutputValues[outputIndex] ?? false);
                 return value?.Value;
             }
             return null;

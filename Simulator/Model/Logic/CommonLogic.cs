@@ -1,6 +1,7 @@
 ﻿using Simulator.Model.Interfaces;
 using System.ComponentModel;
 using System.Xml.Linq;
+using static System.Windows.Forms.LinkLabel;
 
 namespace Simulator.Model.Logic
 {
@@ -202,7 +203,7 @@ namespace Simulator.Model.Logic
             var @out = result ^ getInverseOutputs[0];
             var changed = @out != Out;
             Out = @out;
-            //if (changed)
+            if (changed)
             Project.WriteValue(itemId, 0, ValueSide.Output, ValueKind.Digital, Out);
         }
 
@@ -413,15 +414,14 @@ namespace Simulator.Model.Logic
                     graphics.DrawString(InputNames[i], font, fontbrush, new PointF(x + step, y - ms.Height / 2));
                 }
                 // значение входа - отображаются только не связанные (свободные) входы
-                if (VisibleValues && this is ILinkSupport link && !link.LinkedInputs[i])
+                if (VisibleValues)
                 {
-                    //var value = link.InputValues[i];
-                    ValueItem? value = Project.ReadValue(itemId, i, ValueSide.Input, ValueKind.Digital); // link.InputValues[i];
-                    var text = $"{value}";
+                    var text = $"{GetInputValue(i)}"[..1].ToUpper();
                     var ms = graphics.MeasureString(text, font);
                     using var iformat = new StringFormat();
                     iformat.Alignment = StringAlignment.Near;
-                    graphics.DrawString(text, font, fontbrush, new PointF(x - ms.Width + step, y - ms.Height), iformat);
+                    using var br = new SolidBrush(this is ILinkSupport link && !link.LinkedInputs[i] ? foreColor : Color.Gray);
+                    graphics.DrawString(text, font, br, new PointF(x - ms.Width + step, y - ms.Height), iformat);
                 }
                 y += step * 2;
             }
@@ -455,8 +455,7 @@ namespace Simulator.Model.Logic
                 // значение выхода
                 if (OutputNames.Length > 0 && VisibleValues && this is ILinkSupport link)
                 {
-                    ValueItem? value = Project.ReadValue(itemId, i, ValueSide.Output, ValueKind.Digital);  //link.OutputValues[i];
-                    var text = $"{value}";
+                    var text = $"{Project.ReadValue(itemId, i, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
                     var ms = graphics.MeasureString(text, font);
                     graphics.DrawString(text, font, fontbrush, new PointF(x, y - ms.Height));
                 }

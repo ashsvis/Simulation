@@ -9,16 +9,13 @@ namespace Simulator.Model
     {
         private static readonly ConcurrentDictionary<string, ValueItem> vals = [];
 
-        internal static int CountVariables => vals.Count;
+        internal static int CountVariables(Guid moduleId) => vals.Where(x => GetModuleIdById(x.Value.ElementId) == moduleId).Count();
 
-        internal static ValueItem? GetVariableByIndex(int itemIndex)
+        internal static ValueItem? GetVariableByIndex(Guid moduleId, int itemIndex)
         {
-            var keys = vals.Select(x => x.Key).ToArray();
-            if (itemIndex < keys.Length)
-            {
-                if (vals.TryGetValue(keys[itemIndex], out ValueItem? a))
-                    return a;
-            }
+            var keys = vals.Where(x => GetModuleIdById(x.Value.ElementId) == moduleId).OrderBy(x => $"{GetElementById(x.Value.ElementId)}{x.Value.Side}{x.Value.Pin}").Select(x => x.Key).ToList();
+            if (vals.TryGetValue(keys[itemIndex], out ValueItem? a))
+                return a;
             return null;
         }
 
@@ -35,6 +32,51 @@ namespace Simulator.Model
                 }
             }
             return ("", "");
+        }
+
+        internal static string GetModuleNameById(Guid id)
+        {
+            foreach (var module in Modules)
+            {
+                var n = 1;
+                foreach (var element in module.Elements)
+                {
+                    if (id == element.Id)
+                        return module.Name;
+                    n++;
+                }
+            }
+            return string.Empty;
+        }
+
+        internal static Guid GetModuleIdById(Guid id)
+        {
+            foreach (var module in Modules)
+            {
+                var n = 1;
+                foreach (var element in module.Elements)
+                {
+                    if (id == element.Id)
+                        return module.Id;
+                    n++;
+                }
+            }
+            return Guid.Empty;
+        }
+
+        internal static string GetElementById(Guid id)
+        {
+            foreach (var module in Modules)
+            {
+                var n = 1;
+                foreach (var element in module.Elements)
+                {
+                    if (id == element.Id)
+                        return "L" + n;
+                    n++;
+                }
+            }
+            return string.Empty;
         }
 
         internal static void WriteValue(Guid elementId, int pin, ValueSide side, ValueKind kind, object? value)
@@ -120,6 +162,7 @@ namespace Simulator.Model
             Name = string.Empty;
             Description = string.Empty;
             Modules.Clear();
+            vals.Clear();
             Blocks.Clear();
             file = filename;
             var xdoc = XDocument.Load(filename);

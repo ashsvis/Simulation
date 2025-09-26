@@ -65,6 +65,9 @@ namespace Simulator
             links.ForEach(item => item.SetSelect(false));
             ElementSelected?.Invoke(Module, EventArgs.Empty);
             timerInterface.Enabled = true;
+
+            lvVariables.VirtualListSize = Project.CountVariables(Module.Id);
+            lvVariables.Invalidate();
         }
 
         private void ModuleForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -80,7 +83,6 @@ namespace Simulator
 
         private void Module_SimulationTick(object? sender, EventArgs e)
         {
-            //Module.Calculate();
             zoomPad.Invalidate();
         }
 
@@ -827,7 +829,7 @@ namespace Simulator
                     //    panelForm.EnsureShowModuleChildForm(block.Internal);
                     //}
                     //else
-                        dragging = output == null && element.Selected;
+                    dragging = output == null && element.Selected;
                 }
 
                 ElementSelected?.Invoke(items.Any(x => x.Selected) ?
@@ -1040,7 +1042,7 @@ namespace Simulator
                         if (items.Any(x => x.Selected && x.Id == link.SourceId) && items.Any(x => x.Selected && x.Id == link.DestinationId))
                             link.SetSelect(true);
                     }
-                    ElementSelected?.Invoke(items.Any(x => x.Selected) ? 
+                    ElementSelected?.Invoke(items.Any(x => x.Selected) ?
                         items.Where(x => x.Selected).Select(x => x.Instance).ToArray() : null, EventArgs.Empty);
 
                     ribbon = null;
@@ -1076,13 +1078,20 @@ namespace Simulator
                     if (value is bool bval)
                         tar.SetValueToInp((int)pin, !bval);
 
+                    lvVariables.VirtualListSize = Project.CountVariables(Module.Id);
+                    lvVariables.Invalidate();
+
                 }
                 if (TryGetPin(e.Location, out element, out pin, out _, out output) &&
                     element != null && pin != null && element.Instance is IManualCommand comm && output == true)
                 {
-                    var value = comm.GetValueFromOut((int)pin);
+                    var value = comm.GetValueFromOut((int)pin) ?? false;
                     if (value is bool bval)
                         comm.SetValueToOut((int)pin, !bval);
+
+                    lvVariables.VirtualListSize = Project.CountVariables(Module.Id);
+                    lvVariables.Invalidate();
+
                 }
                 if (TryGetPin(e.Location, out Element? elementSecond, out int? pinSecond, out PointF? linkSecondPoint, out bool? outputSecond) &&
                      elementSecond?.Instance is ILinkSupport target && elementFirst?.Instance is ILinkSupport source)
@@ -1139,6 +1148,9 @@ namespace Simulator
         public void UpdateView()
         {
             zoomPad.Invalidate();
+
+            lvVariables.VirtualListSize = Project.CountVariables(Module.Id);
+            lvVariables.Invalidate();
         }
 
         private void tsbSave_Click(object sender, EventArgs e)
@@ -1230,10 +1242,10 @@ namespace Simulator
                         zoomPad.Invalidate();
                     }
                     break;
-                case Keys.S: 
-                    if (e.Control) 
-                    { 
-                        SaveModule(); 
+                case Keys.S:
+                    if (e.Control)
+                    {
+                        SaveModule();
                     }
                     break;
             }
@@ -1381,6 +1393,30 @@ namespace Simulator
         private void tsbPaste_Click(object sender, EventArgs e)
         {
             PasteElementsAndLinksFromClipboard();
+        }
+
+        private void lvVariables_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
+        {
+            ValueItem? data = Project.GetVariableByIndex(Module.Id, e.ItemIndex);
+            var item = new ListViewItem("1");
+            e.Item = item;
+            item.SubItems.Add("2");
+            item.SubItems.Add("3");
+            item.SubItems.Add("4");
+            item.SubItems.Add("5");
+
+            if (data != null)
+            {
+                try
+                {
+                    item.Text = Project.GetElementById(data.ElementId);
+                    item.SubItems[1].Text = $"{data.Side}";
+                    item.SubItems[2].Text = $"{data.Pin}";
+                    item.SubItems[3].Text = $"{data.Kind}";
+                    item.SubItems[4].Text = $"{data}";
+                }
+                catch { }
+            }
         }
     }
 }
