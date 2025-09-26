@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using Simulator.Model.Interfaces;
+using System.Xml.Linq;
 
 namespace Simulator.Model
 {

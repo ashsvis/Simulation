@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace Simulator.Model
+namespace Simulator.Model.Interfaces
 {
     public interface ILoadSave
     {

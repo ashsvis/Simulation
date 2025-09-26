@@ -1,4 +1,5 @@
 ﻿using Simulator.Model;
+using Simulator.Model.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

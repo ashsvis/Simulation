@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Simulator.Model.Interfaces;
+using System.ComponentModel;
 using static System.Windows.Forms.DataFormats;
 
 namespace Simulator.Model.Logic

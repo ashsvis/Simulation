@@ -1,4 +1,6 @@
-﻿namespace Simulator.Model.Diagram
+﻿using Simulator.Model.Interfaces;
+
+namespace Simulator.Model.Diagram
 {
     public class FINISH : CommonDiagram, ICustomDraw
     {

@@ -1,6 +1,6 @@
 ﻿using Simulator.Model.Logic;
 
-namespace Simulator.Model
+namespace Simulator.Model.Interfaces
 {
     public interface IFunction
     {

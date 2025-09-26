@@ -1,4 +1,5 @@
-﻿using Simulator.Model.Logic;
+﻿using Simulator.Model.Interfaces;
+using Simulator.Model.Logic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Xml.Linq;

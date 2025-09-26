@@ -1,4 +1,4 @@
-﻿namespace Simulator.Model
+﻿namespace Simulator.Model.Interfaces
 {
     public interface ICalculate
     {

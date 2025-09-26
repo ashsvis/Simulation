@@ -1,4 +1,5 @@
 ﻿using Simulator.Model;
+using Simulator.Model.Interfaces;
 using Simulator.View;
 using System.Drawing.Drawing2D;
 using System.Reflection;

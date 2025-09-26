@@ -1,5 +1,7 @@
 ﻿
 
+using Simulator.Model.Interfaces;
+
 namespace Simulator.Model.Diagram
 {
     public class START : CommonDiagram, ICustomDraw
