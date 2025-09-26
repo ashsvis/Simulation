@@ -100,7 +100,7 @@ namespace Simulator.Model
             }
         }
 
-        public static void ConnectLinks(List<Element> elements)
+        public void ConnectLinks(List<Element> elements)
         {
             // установление связей
             foreach (var item in elements)
@@ -118,6 +118,7 @@ namespace Simulator.Model
                         }
                         n++;
                     }
+                    function.SetVarManager(projectProxy);
                 }
             }
         }
@@ -300,6 +301,7 @@ namespace Simulator.Model
         }
 
         private readonly ConcurrentDictionary<string, ValueItem> vals = [];
+        private ProjectProxy projectProxy = new();
 
         public int CountVariables(Guid moduleId) => vals.Where(x => Project.GetModuleIdById(x.Value.ElementId) == moduleId).Count();
 

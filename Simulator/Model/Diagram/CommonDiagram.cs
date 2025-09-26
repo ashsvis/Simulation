@@ -18,8 +18,16 @@ namespace Simulator.Model.Diagram
             itemId = id;
         }
 
+        private IVariable varManager;
+        public void SetVarManager(IVariable varManager)
+        {
+            this.varManager = varManager;
+        }
+
         [Category(" Общие"), DisplayName("Идентификатор")]
         public Guid ItemId => itemId;
+
+        public IVariable VarManager => varManager;
 
         public CommonDiagram() : this(DiagramFunction.None)
         {

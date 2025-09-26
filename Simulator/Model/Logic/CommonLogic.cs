@@ -16,7 +16,6 @@ namespace Simulator.Model.Logic
         private readonly LogicFunction logicFunction;
 
         private Guid itemId;
-
         public void SetItemId(Guid id)
         {
             itemId = id;
@@ -24,8 +23,14 @@ namespace Simulator.Model.Logic
             {
                 (Guid sourceId, _) = getLinkSources[i];
                 if (sourceId == Guid.Empty)
-                    Project.WriteValue(id, i, ValueSide.Input, ValueKind.Digital, getInputs[i]);
+                    varManager?.WriteValue(id, i, ValueSide.Input, ValueKind.Digital, getInputs[i]);
             }
+        }
+
+        protected IVariable? varManager;
+        public void SetVarManager(IVariable varManager)
+        {
+            this.varManager = varManager;
         }
 
         public CommonLogic() : this(LogicFunction.None, 1)
@@ -60,6 +65,8 @@ namespace Simulator.Model.Logic
 
         [Category(" Общие"), DisplayName("Идентификатор")]
         public Guid ItemId => itemId;
+
+        public IVariable VarManager => varManager;
 
         [Browsable(false)]
         public virtual string FuncSymbol 
@@ -127,18 +134,18 @@ namespace Simulator.Model.Logic
                     (Guid id, int pinout) = getLinkSources[i];
                     if (id != Guid.Empty)
                     {
-                        ValueItem? value = Project.ReadValue(id, pinout, ValueSide.Output, ValueKind.Digital);
+                        ValueItem? value = varManager?.ReadValue(id, pinout, ValueSide.Output, ValueKind.Digital);
                         if (value != null && value.Value != null)
                             list.Add(value.Value);
                         else
                         {
-                            ValueItem? val = Project.ReadValue(itemId, i, ValueSide.Input, ValueKind.Digital);
+                            ValueItem? val = varManager?.ReadValue(itemId, i, ValueSide.Input, ValueKind.Digital);
                             list.Add(val?.Value ?? false);
                         }
                     }
                     else
                     {
-                        ValueItem? value = Project.ReadValue(itemId, i, ValueSide.Input, ValueKind.Digital);
+                        ValueItem? value = varManager?.ReadValue(itemId, i, ValueSide.Input, ValueKind.Digital);
                         list.Add(value?.Value ?? false);
                     }
                 }
@@ -182,7 +189,6 @@ namespace Simulator.Model.Logic
         [Browsable(false)]
         public object[] LinkedOutputs => [Out];
 
-
         public event ResultCalculateEventHandler? ResultChanged;
 
         public virtual void Calculate()
@@ -203,15 +209,15 @@ namespace Simulator.Model.Logic
             var changed = @out != Out;
             Out = @out;
             if (changed)
-            Project.WriteValue(itemId, 0, ValueSide.Output, ValueKind.Digital, Out);
+                varManager?.WriteValue(itemId, 0, ValueSide.Output, ValueKind.Digital, Out);
         }
 
         protected bool GetInputValue(int pin)
         {
             (Guid id, int pinout) = getLinkSources[pin];
             if (id != Guid.Empty)
-                return (bool)(Project.ReadValue(id, pinout, ValueSide.Output, ValueKind.Digital)?.Value ?? false);
-            return (bool)(Project.ReadValue(itemId, pin, ValueSide.Input, ValueKind.Digital)?.Value ?? false);
+                return (bool)(varManager?.ReadValue(id, pinout, ValueSide.Output, ValueKind.Digital)?.Value ?? false);
+            return (bool)(varManager?.ReadValue(itemId, pin, ValueSide.Input, ValueKind.Digital)?.Value ?? false);
         }
 
         private static bool CalcXor(object[] inputValues)
@@ -246,7 +252,7 @@ namespace Simulator.Model.Logic
             if (value != null && !LinkedInputs[inputIndex])
             {
                 getInputs[inputIndex] = (bool)value;
-                Project.WriteValue(itemId, inputIndex, ValueSide.Input, ValueKind.Digital, (bool)value);
+                varManager?.WriteValue(itemId, inputIndex, ValueSide.Input, ValueKind.Digital, (bool)value);
             }
         }
 
@@ -257,12 +263,12 @@ namespace Simulator.Model.Logic
             (Guid id, int pin) = getLinkSources[inputIndex];
             if (id != Guid.Empty)
             { 
-                ValueItem? valtem = Project.ReadValue(id, pin, ValueSide.Output, ValueKind.Digital);
+                ValueItem? valtem = varManager?.ReadValue(id, pin, ValueSide.Output, ValueKind.Digital);
                 return valtem?.Value;
             }
             else
             {
-                ValueItem? valtem = Project.ReadValue(itemId, inputIndex, ValueSide.Input, ValueKind.Digital);
+                ValueItem? valtem = varManager?.ReadValue(itemId, inputIndex, ValueSide.Input, ValueKind.Digital);
                 return valtem?.Value;
             }
         }
@@ -343,7 +349,7 @@ namespace Simulator.Model.Logic
                         if (bool.TryParse(item.Attribute("Value")?.Value, out bool value))
                         {
                             getInputs[index] = value;
-                            Project.WriteValue(itemId, index, ValueSide.Input, ValueKind.Digital, value);
+                            varManager?.WriteValue(itemId, index, ValueSide.Input, ValueKind.Digital, value);
                         }
                     }
                 }
@@ -454,7 +460,7 @@ namespace Simulator.Model.Logic
                 // значение выхода
                 if (OutputNames.Length > 0 && VisibleValues && this is ILinkSupport link)
                 {
-                    var text = $"{Project.ReadValue(itemId, i, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
+                    var text = $"{varManager?.ReadValue(itemId, i, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
                     var ms = graphics.MeasureString(text, font);
                     graphics.DrawString(text, font, fontbrush, new PointF(x, y - ms.Height));
                 }

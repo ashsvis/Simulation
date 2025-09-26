@@ -25,12 +25,12 @@ namespace Simulator.Model.Logic
             //InverseInputs[0] = false;
             //InverseOutputs[0] = true;
             //bool input = (bool)InputValues[0];
-            ValueItem? val = Project.ReadValue(ItemId, 0, ValueSide.Input, ValueKind.Digital);
+            ValueItem? val = varManager?.ReadValue(ItemId, 0, ValueSide.Input, ValueKind.Digital);
             bool input = (bool)(val?.Value ?? false);
             var changed = Out != !input;
             Out = !input;
             //if (changed)
-                Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
+            varManager?.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
         }
 
     }

@@ -32,8 +32,7 @@ namespace Simulator.Model.Trigger
                 Out = false;
             else if (s)
                 Out = true;
-            //Project.WriteBoolValue(ItemId, 0, Out);
-            Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
+            varManager?.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
         }
     }
 }

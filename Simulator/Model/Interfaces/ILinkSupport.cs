@@ -8,7 +8,6 @@
         void UpdateInputLinkSources((Guid, int) seek, Guid newId);
         object[] InputValues { get; }
         object[] OutputValues { get; }
-        //GetLinkValueMethod? GetResultLink(int outputIndex);
         void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex);
         void ResetValueLinkToInp(int inputIndex);
         void CalculateTargets(PointF location, ref SizeF size,
@@ -17,7 +16,8 @@
 
         Guid ItemId { get; }
         void SetItemId(Guid itemId);
-    }
 
-    //public delegate object GetLinkValueMethod();
+        IVariable VarManager { get; }
+        void SetVarManager(IVariable varManager);
+    }
 }

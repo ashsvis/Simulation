@@ -1288,7 +1288,7 @@ namespace Simulator
                         }
                     }
                     // установление связей
-                    Model.Module.ConnectLinks(elements);
+                    Module.ConnectLinks(elements);
                     Model.Module.LoadVisualLinks(doc.Root, elementlinks);
 
                     foreach (Element element in elements)

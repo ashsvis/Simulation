@@ -21,11 +21,7 @@ namespace Simulator.Model.Inputs
 
         public override void Calculate()
         {
-            //bool output = (bool)(OutputValues[0] ?? false);
-            bool output = (bool)(Project.ReadValue(ItemId, 0, ValueSide.Input, ValueKind.Digital)?.Value ?? false);
-            //Out = output;
-            //Project.WriteBoolValue(ItemId, 0, Out);
-            //Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, output);
+            bool output = (bool)(varManager?.ReadValue(ItemId, 0, ValueSide.Input, ValueKind.Digital)?.Value ?? false);
         }
 
         public override void CalculateTargets(PointF location, ref SizeF size,
@@ -70,7 +66,7 @@ namespace Simulator.Model.Inputs
             // значение выхода
             if (VisibleValues)
             {
-                var textval = $"{Project.ReadValue(ItemId, 0, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
+                var textval = $"{varManager?.ReadValue(ItemId, 0, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
                 var ms = graphics.MeasureString(textval, font);
                 graphics.DrawString(textval, font, fontbrush, new PointF(rect.Right, rect.Y + rect.Height / 2 - ms.Height));
             }
@@ -93,7 +89,7 @@ namespace Simulator.Model.Inputs
 
             var staterect = new RectangleF(rect.X + rect.Height * 3, rect.Y, rect.Height, rect.Height / 3);
             staterect.Offset(0, rect.Height / 3);
-            var value = (bool)(Project.ReadValue(ItemId, 0, ValueSide.Output, ValueKind.Digital)?.Value ?? false);
+            var value = (bool)(varManager?.ReadValue(ItemId, 0, ValueSide.Output, ValueKind.Digital)?.Value ?? false);
             using var statebrush = new SolidBrush(value ? Color.Lime : Color.Red);
             graphics.DrawString(value ? "\"1\"" : "\"0\"", font, statebrush, staterect, format);
 
@@ -123,8 +119,7 @@ namespace Simulator.Model.Inputs
         {
             if (outputIndex >= 0 && outputIndex < OutputValues.Length)
             {
-                //OutputValues[outputIndex] = (bool)(value ?? false);
-                Project.WriteValue(ItemId, outputIndex, ValueSide.Output, ValueKind.Digital, (bool)(value ?? false));
+                varManager?.WriteValue(ItemId, outputIndex, ValueSide.Output, ValueKind.Digital, (bool)(value ?? false));
             }
         }
 
@@ -132,7 +127,7 @@ namespace Simulator.Model.Inputs
         {
             if (outputIndex >= 0 && outputIndex < OutputValues.Length)
             {
-                ValueItem? value = Model.Project.ReadValue(ItemId, outputIndex, ValueSide.Output, ValueKind.Digital);
+                ValueItem? value = varManager?.ReadValue(ItemId, outputIndex, ValueSide.Output, ValueKind.Digital);
                 return value?.Value;
             }
             return null;
