@@ -46,6 +46,8 @@ namespace Simulator.Model
         [Browsable(false)]
         public List<Element> Elements { get; set; } = [];
 
+        public List<IFunction> Functions => Elements.Select(x => x.Instance as IFunction).ToList();
+
         [Browsable(false)]
         public List<Link> Links { get; set; } = [];
 
@@ -185,35 +187,37 @@ namespace Simulator.Model
             }
         }
 
+        public void Calculate()
+        {
+            Elements.ForEach(item =>
+            {
+                try
+                {
+                    if (item.Instance is ICalculate instance)
+                        instance.Calculate();
+                }
+                catch
+                {
+
+                }
+            });
+            Elements.ForEach(item =>
+            {
+                try
+                {
+                    if (item.Instance is Model.Logic.FE frontEdgeDetector)
+                        frontEdgeDetector.Reset();
+                }
+                catch
+                {
+
+                }
+            });
+        }
+
         public Action GetCalculationMethod()
         {
-            return new Action(() =>
-            {
-                Elements.ForEach(item =>
-                {
-                    try
-                    {
-                        if (item.Instance is ICalculate instance)
-                            instance.Calculate();
-                    }
-                    catch
-                    {
-
-                    }
-                });
-                Elements.ForEach(item =>
-                {
-                    try
-                    {
-                        if (item.Instance is Model.Logic.FE frontEdgeDetector)
-                            frontEdgeDetector.Reset();
-                    }
-                    catch
-                    {
-
-                    }
-                });
-            });
+            return new Action(Calculate);
         }
 
         public Module DeepCopy()

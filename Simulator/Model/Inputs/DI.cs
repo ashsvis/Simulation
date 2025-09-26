@@ -23,7 +23,7 @@ namespace Simulator.Model.Inputs
         {
             bool output = (bool)(OutputValues[0] ?? false);
             Out = output;
-            Project.WriteBoolValue($"{ItemId}\t{0}", Out);
+            Project.WriteBoolValue(ItemId, 0, Out);
         }
 
         public override void CalculateTargets(PointF location, ref SizeF size,
@@ -122,7 +122,7 @@ namespace Simulator.Model.Inputs
             if (outputIndex >= 0 && outputIndex < OutputValues.Length)
             {
                 OutputValues[outputIndex] = (bool)(value ?? false);
-                Project.WriteBoolValue($"{ItemId}\t{outputIndex}", (bool)(value ?? false));
+                Project.WriteBoolValue(ItemId, outputIndex, (bool)(value ?? false));
             }
         }
 

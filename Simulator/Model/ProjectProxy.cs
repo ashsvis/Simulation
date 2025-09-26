@@ -28,5 +28,8 @@ namespace Simulator.Model
             }
         }
 
+        [Category("Проект"), DisplayName("Задачи")]
+        public List<Module> Modules => Project.Modules;
+
     }
 }

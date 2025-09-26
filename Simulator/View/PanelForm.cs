@@ -28,7 +28,6 @@ namespace Simulator
         private void Panel_SimulationTick(object? sender, EventArgs e)
         {
             SimulationTick?.Invoke(this, EventArgs.Empty);
-            tsmiSave.Enabled = Project.Changed || Project.Modules.Any(x => x.Changed);
         }
 
         private void UpdateScreenControls(HostForm host)
@@ -153,6 +152,7 @@ namespace Simulator
         /// <param name="e"></param>
         private void timerInterface_Tick(object sender, EventArgs e)
         {
+            tsmiSave.Enabled = Project.Changed || Project.Modules.Any(x => x.Changed);
             îêíîToolStripMenuItem.Visible = MdiChildren.Length > 0;
             tsbCascadeLayout.Enabled = MdiChildren.Length > 0;
             tsbHorizontalLayout.Enabled = MdiChildren.Length > 0;

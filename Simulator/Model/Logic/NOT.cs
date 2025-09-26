@@ -26,7 +26,7 @@ namespace Simulator.Model.Logic
             InverseOutputs[0] = true;
             bool input = (bool)InputValues[0];
             Out = !input;
-            Project.WriteBoolValue($"{ItemId}\t{0}", Out);
+            Project.WriteBoolValue(ItemId, 0, Out);
         }
 
     }

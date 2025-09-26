@@ -80,8 +80,7 @@ namespace Simulator
 
         private void Module_SimulationTick(object? sender, EventArgs e)
         {
-            var method = Module.GetCalculationMethod();
-            method();
+            //Module.Calculate();
             zoomPad.Invalidate();
         }
 
@@ -297,7 +296,8 @@ namespace Simulator
                 if (source?.Instance is ILinkSupport lsup && lsup != null && link.SourcePinIndex < lsup.OutputValues.Length)
                 {
                     var pin = link.SourcePinIndex;
-                    link.SetValue(lsup.OutputValues[pin]);
+                    object? value = Project.ReadBoolValue(lsup.ItemId, pin);
+                    link.SetValue(value ?? Project.ReadRealValue(lsup.ItemId, pin)); //lsup.OutputValues[pin]
                 }
                 link.Draw(graphics, zoomPad.ForeColor);
             }

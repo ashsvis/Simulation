@@ -72,7 +72,7 @@
         <Element Id="96f56fbd-2eab-46c6-b149-7edda48572f2" X="432" Y="136">
           <Instance Type="Simulator.Model.Outputs.LAMP">
             <Inputs>
-              <Input Index="0" Value="true">
+              <Input Index="0">
                 <Source Id="8dff068d-1a6b-4825-a7a4-52c70fc54e7c" />
               </Input>
             </Inputs>

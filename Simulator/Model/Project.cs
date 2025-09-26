@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.ComponentModel;
+using System.Windows.Forms;
 using System.Xml.Linq;
 
 namespace Simulator.Model
@@ -8,7 +9,12 @@ namespace Simulator.Model
     {
         private static readonly ConcurrentDictionary<string, bool> boolVals = [];
 
-        public static void WriteBoolValue(string key, bool value)
+        public static void WriteBoolValue(Guid id, int pin, bool value)
+        {
+            WriteBoolValue($"{id}\t{pin}", value);
+        }
+
+        private static void WriteBoolValue(string key, bool value)
         {
             if (boolVals.TryGetValue(key, out bool a) && a.Equals(value)) return; // одинаковые значения игнорируем   
             boolVals.AddOrUpdate(key, a,
@@ -19,7 +25,12 @@ namespace Simulator.Model
                 });
         }
 
-        public static bool? ReadBoolValue(string key)
+        public static bool? ReadBoolValue(Guid id, int pin)
+        {
+            return ReadBoolValue($"{id}\t{pin}");
+        }
+
+        private static bool? ReadBoolValue(string key)
         {
             if (boolVals.TryGetValue(key, out bool value))
                 return value;
@@ -28,7 +39,12 @@ namespace Simulator.Model
 
         private static readonly ConcurrentDictionary<string, double> realVals = [];
 
-        public static void WriteRealValue(string key, double value)
+        public static void WriteRealValue(Guid id, int pin, double value)
+        {
+            WriteRealValue($"{id}\t{pin}", value);
+        }
+
+        private static void WriteRealValue(string key, double value)
         {
             if (realVals.TryGetValue(key, out double a) && a.Equals(value)) return; // одинаковые значения игнорируем   
             realVals.AddOrUpdate(key, a,
@@ -39,7 +55,12 @@ namespace Simulator.Model
                 });
         }
 
-        public static double? ReadRealValue(string key)
+        public static double? ReadRealValue(Guid id, int pin)
+        {
+            return ReadRealValue($"{id}\t{pin}");
+        }
+
+        private static double? ReadRealValue(string key)
         {
             if (realVals.TryGetValue(key, out double value))
                 return value;
@@ -150,28 +171,6 @@ namespace Simulator.Model
                             module.Load(xmodule);
                             Modules.Add(module);
                         }
-
-                        // установление межмодульных связей после загрузки всех модулей
-                        //foreach (var module in Modules)
-                        //{
-                        //    foreach (var item in module.Elements)
-                        //    {
-                        //        if (item.Instance is ILinkSupport function)
-                        //        {
-                        //            var n = 0;
-                        //            foreach (var (id, output) in function.InputLinkSources)
-                        //            {
-                        //                if (id != Guid.Empty && !module.Elements.Any(x => x.Id == id))
-                        //                {
-                        //                    var sourceItem = Modules.Where(m => !module.Elements.Any(x => x.Id == id)).Select(item => item.Elements.FirstOrDefault(x => x.Id == id)).First();
-                        //                    if (sourceItem != null && sourceItem.Instance is ILinkSupport source && source.OutputValues.Length > 0)
-                        //                        function.SetValueLinkToInp(n, source.GetResultLink(output), id, output);
-                        //                }
-                        //                n++;
-                        //            }
-                        //        }
-                        //    }
-                        //}
                     }
                 }
                 Modules.ForEach(module => module.Changed = false);

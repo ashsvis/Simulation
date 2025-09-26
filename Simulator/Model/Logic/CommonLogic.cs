@@ -121,17 +121,17 @@ namespace Simulator.Model.Logic
                 List<object> list = [];
                 for (var i = 0; i < getInputs.Length; i++)
                 {
-                    if (getLinkInputs[i] is GetLinkValueMethod method)
-                    {
-                        bool value = (bool)(method() ?? false);
-                        list.Add(value);
-                    }
-                    else
-                    {
+                    //if (getLinkInputs[i] is GetLinkValueMethod method)
+                    //{
+                    //    bool value = (bool)(method() ?? false);
+                    //    list.Add(value);
+                    //}
+                    //else
+                    //{
                         (Guid id, int pinout) = getLinkSources[i];
                         if (id != Guid.Empty)
                         {
-                            bool? value = Project.ReadBoolValue($"{id}\t{pinout}");
+                            bool? value = Project.ReadBoolValue(id, pinout);
                             if (value != null)
                                 list.Add((bool)value);
                             else
@@ -139,7 +139,7 @@ namespace Simulator.Model.Logic
                         }
                         else
                             list.Add(getInputs[i]);
-                    }
+                    //}
                 }
                 return [.. list];
             }
@@ -199,7 +199,7 @@ namespace Simulator.Model.Logic
                 };
             }
             Out = result ^ getInverseOutputs[0];
-            Project.WriteBoolValue($"{itemId}\t{0}", Out);
+            Project.WriteBoolValue(itemId, 0, Out);
         }
 
         private static bool CalcXor(object[] inputValues)
@@ -452,8 +452,8 @@ namespace Simulator.Model.Logic
                 // значение выхода
                 if (OutputNames.Length > 0 && VisibleValues && this is ILinkSupport link)
                 {
-                    var value = link.OutputValues[i];
-                    var text = value != null && value.GetType() == typeof(bool) ? (bool)value ? "T" : "F" : $"{value}";
+                    var value = Project.ReadBoolValue(itemId, i);  //link.OutputValues[i];
+                    var text = value != null && value.GetType() == typeof(bool) ? (bool)value ? "T" : "F" : $"{Project.ReadRealValue(itemId, i)}";
                     var ms = graphics.MeasureString(text, font);
                     graphics.DrawString(text, font, fontbrush, new PointF(x, y - ms.Height));
                 }

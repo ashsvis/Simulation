@@ -27,7 +27,7 @@ namespace Simulator.Model.Logic
             }
             else
                 Out = time > DateTime.Now;
-            Project.WriteBoolValue($"{ItemId}\t{0}", Out);
+            Project.WriteBoolValue(ItemId, 0, Out);
         }
 
         public void Reset()

@@ -1,6 +1,4 @@
 ﻿using Simulator.Model;
-using System.Reflection;
-using System.Windows.Forms;
 
 namespace Simulator
 {
@@ -148,6 +146,7 @@ namespace Simulator
         /// <param name="e"></param>
         private void timerSimulation_Tick(object sender, EventArgs e)
         {
+            Project.Modules.ForEach(module => module.Calculate());
             SimulationTick?.Invoke(this, EventArgs.Empty);
         }
 

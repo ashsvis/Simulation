@@ -32,7 +32,7 @@ namespace Simulator.Model.Trigger
                 Out = false;
             else if (s)
                 Out = true;
-            Project.WriteBoolValue($"{ItemId}\t{0}", Out);
+            Project.WriteBoolValue(ItemId, 0, Out);
         }
     }
 }
