@@ -46,7 +46,7 @@
             // 
             btnAccept.DialogResult = DialogResult.OK;
             btnAccept.Enabled = false;
-            btnAccept.Location = new Point(12, 259);
+            btnAccept.Location = new Point(123, 259);
             btnAccept.Name = "btnAccept";
             btnAccept.Size = new Size(75, 23);
             btnAccept.TabIndex = 1;
@@ -56,7 +56,7 @@
             // btnCancel
             // 
             btnCancel.DialogResult = DialogResult.Cancel;
-            btnCancel.Location = new Point(137, 259);
+            btnCancel.Location = new Point(23, 259);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(75, 23);
             btnCancel.TabIndex = 1;

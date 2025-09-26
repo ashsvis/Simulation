@@ -1,91 +1,51 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!---->
-<Project>
+<Project Name="Project">
   <Blocks />
   <Modules>
-    <Module>
+    <Module Name="Task1">
       <Id>c22cdae4-f168-4a04-9c30-b1e8f465443a</Id>
       <Elements>
-        <Element Id="750aebdb-353d-47dd-b769-2ebcddb11c2c" X="160" Y="56">
-          <Instance Type="Simulator.Model.Logic.NOT">
+        <Element Id="9afb7267-53ee-4426-8efb-0ca8c4f4b844" X="80" Y="32">
+          <Instance Type="Simulator.Model.Logic.OR3">
+            <Inputs>
+              <Input Index="0" />
+              <Input Index="1" Value="true" />
+              <Input Index="2" />
+            </Inputs>
             <Outputs>
-              <Output Index="0" Invert="true" />
+              <Output Index="0" />
             </Outputs>
           </Instance>
         </Element>
-        <Element Id="8a3688b8-ae49-4bbd-af86-9bd318ca4832" X="264" Y="56">
-          <Instance Type="Simulator.Model.Logic.FE">
-            <Inputs>
-              <Input Index="0">
-                <Source Id="750aebdb-353d-47dd-b769-2ebcddb11c2c" />
-              </Input>
-            </Inputs>
-          </Instance>
-        </Element>
-        <Element Id="a354e060-fca5-421b-bad9-11ad5488f96c" X="440" Y="48">
-          <Instance Type="Simulator.Model.Logic.NOT">
-            <Inputs>
-              <Input Index="0">
-                <Source Id="8dff068d-1a6b-4825-a7a4-52c70fc54e7c" />
-              </Input>
-            </Inputs>
-            <Outputs>
-              <Output Index="0" Invert="true" />
-            </Outputs>
-          </Instance>
-        </Element>
-      </Elements>
-      <Links>
-        <Link Id="9db02090-1dc5-438b-b1cb-20f0be1b3fe5">
-          <Source Id="750aebdb-353d-47dd-b769-2ebcddb11c2c" PinIndex="0" />
-          <Destination Id="8a3688b8-ae49-4bbd-af86-9bd318ca4832" PinIndex="0" />
-          <Points Array="216,80 216,80 256,80 256,80" />
-        </Link>
-      </Links>
-    </Module>
-    <Module>
-      <Id>dcec595f-dc8b-4965-80d9-7bd64a450a31</Id>
-      <Elements>
-        <Element Id="6e2082bb-3172-4f00-b745-a3e880eb3f07" X="288" Y="64">
+        <Element Id="b3f079a8-1434-4f9a-906a-f938093902b1" X="192" Y="64">
           <Instance Type="Simulator.Model.Outputs.LAMP">
             <Inputs>
               <Input Index="0">
-                <Source Id="8a3688b8-ae49-4bbd-af86-9bd318ca4832" />
+                <Source Id="9afb7267-53ee-4426-8efb-0ca8c4f4b844" />
               </Input>
             </Inputs>
             <Description>Индикаторная лампа</Description>
             <Color>Red</Color>
           </Instance>
         </Element>
-        <Element Id="8dff068d-1a6b-4825-a7a4-52c70fc54e7c" X="288" Y="136">
-          <Instance Type="Simulator.Model.Logic.NOT">
+        <Element Id="52d2ee43-ec3f-46ed-a7e4-4ca6ddbff858" X="192" Y="128">
+          <Instance Type="Simulator.Model.Outputs.DO">
             <Inputs>
-              <Input Index="0">
-                <Source Id="8a3688b8-ae49-4bbd-af86-9bd318ca4832" />
+              <Input Index="0" Value="true">
+                <Source Id="9afb7267-53ee-4426-8efb-0ca8c4f4b844" />
               </Input>
             </Inputs>
-            <Outputs>
-              <Output Index="0" Invert="true" />
-            </Outputs>
-          </Instance>
-        </Element>
-        <Element Id="96f56fbd-2eab-46c6-b149-7edda48572f2" X="432" Y="136">
-          <Instance Type="Simulator.Model.Outputs.LAMP">
-            <Inputs>
-              <Input Index="0">
-                <Source Id="8dff068d-1a6b-4825-a7a4-52c70fc54e7c" />
-              </Input>
-            </Inputs>
-            <Description>Индикаторная лампа</Description>
-            <Color>Red</Color>
+            <Order>0</Order>
+            <Description>Дискретный выход</Description>
           </Instance>
         </Element>
       </Elements>
       <Links>
-        <Link Id="75820b4a-7498-405b-82c1-1515e3a53e62">
-          <Source Id="8dff068d-1a6b-4825-a7a4-52c70fc54e7c" PinIndex="0" />
-          <Destination Id="96f56fbd-2eab-46c6-b149-7edda48572f2" PinIndex="0" />
-          <Points Array="344,160 344,160 424,160 424,160" />
+        <Link Id="a32a5b2f-d15e-497f-9cac-8500cccc84f0">
+          <Source Id="9afb7267-53ee-4426-8efb-0ca8c4f4b844" PinIndex="0" />
+          <Destination Id="52d2ee43-ec3f-46ed-a7e4-4ca6ddbff858" PinIndex="0" />
+          <Points Array="136,88 136,88 160,88 160,152 184,152 184,152" />
         </Link>
       </Links>
     </Module>

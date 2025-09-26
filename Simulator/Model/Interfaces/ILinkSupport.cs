@@ -8,8 +8,8 @@
         void UpdateInputLinkSources((Guid, int) seek, Guid newId);
         object[] InputValues { get; }
         object[] OutputValues { get; }
-        GetLinkValueMethod? GetResultLink(int outputIndex);
-        void SetValueLinkToInp(int inputIndex, GetLinkValueMethod? getMethod, Guid sourceId, int outputPinIndex);
+        //GetLinkValueMethod? GetResultLink(int outputIndex);
+        void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex);
         void ResetValueLinkToInp(int inputIndex);
         void CalculateTargets(PointF location, ref SizeF size,
              Dictionary<int, RectangleF> itargets, Dictionary<int, PointF> ipins,
@@ -19,5 +19,5 @@
         void SetItemId(Guid itemId);
     }
 
-    public delegate object GetLinkValueMethod();
+    //public delegate object GetLinkValueMethod();
 }

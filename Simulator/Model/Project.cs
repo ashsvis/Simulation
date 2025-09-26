@@ -7,63 +7,53 @@ namespace Simulator.Model
 {
     public static class Project
     {
-        private static readonly ConcurrentDictionary<string, bool> boolVals = [];
+        private static readonly ConcurrentDictionary<string, ValueItem> vals = [];
 
-        public static void WriteBoolValue(Guid id, int pin, bool value)
-        {
-            WriteBoolValue($"{id}\t{pin}", value);
-        }
+        internal static int CountVariables => vals.Count;
 
-        private static void WriteBoolValue(string key, bool value)
+        internal static ValueItem? GetVariableByIndex(int itemIndex)
         {
-            if (boolVals.TryGetValue(key, out bool a) && a.Equals(value)) return; // одинаковые значения игнорируем   
-            boolVals.AddOrUpdate(key, a,
-                (akey, existingVal) =>
-                {
-                    existingVal = value;
-                    return existingVal;
-                });
-        }
-
-        public static bool? ReadBoolValue(Guid id, int pin)
-        {
-            return ReadBoolValue($"{id}\t{pin}");
-        }
-
-        private static bool? ReadBoolValue(string key)
-        {
-            if (boolVals.TryGetValue(key, out bool value))
-                return value;
+            var keys = vals.Select(x => x.Key).ToArray();
+            if (itemIndex < keys.Length)
+            {
+                if (vals.TryGetValue(keys[itemIndex], out ValueItem? a))
+                    return a;
+            }
             return null;
         }
 
-        private static readonly ConcurrentDictionary<string, double> realVals = [];
-
-        public static void WriteRealValue(Guid id, int pin, double value)
+        internal static (string, string) GetAddressById(Guid id)
         {
-            WriteRealValue($"{id}\t{pin}", value);
+            foreach (var module in Modules)
+            {
+                var n = 1;
+                foreach (var element in module.Elements)
+                {
+                    if (id == element.Id)
+                        return (module.Name, "L" + n);
+                    n++;
+                }
+            }
+            return ("", "");
         }
 
-        private static void WriteRealValue(string key, double value)
+        internal static void WriteValue(Guid elementId, int pin, ValueSide side, ValueKind kind, object? value)
         {
-            if (realVals.TryGetValue(key, out double a) && a.Equals(value)) return; // одинаковые значения игнорируем   
-            realVals.AddOrUpdate(key, a,
+            var key = $"{elementId}\t{pin}\t{side}\t{kind}";
+            if (vals.TryGetValue(key, out ValueItem? a) && a.Equals(value)) return; // одинаковые значения игнорируем   
+            a = new ValueItem() { ElementId = elementId, Side = side, Pin = pin, Kind = kind, Value = value };
+            vals.AddOrUpdate(key, a,
                 (akey, existingVal) =>
                 {
-                    existingVal = value;
+                    existingVal.Value = value;
                     return existingVal;
                 });
         }
 
-        public static double? ReadRealValue(Guid id, int pin)
+        internal static ValueItem? ReadValue(Guid elementId, int pin, ValueSide side, ValueKind kind)
         {
-            return ReadRealValue($"{id}\t{pin}");
-        }
-
-        private static double? ReadRealValue(string key)
-        {
-            if (realVals.TryGetValue(key, out double value))
-                return value;
+            var key = $"{elementId}\t{pin}\t{side}\t{kind}";
+            if (vals.TryGetValue(key, out ValueItem? a)) return a;
             return null;
         }
 
@@ -141,7 +131,9 @@ namespace Simulator.Model
                     var name = xproject?.Attribute("Name")?.Value;
                     if (name != null)
                         Name = name;
-                    var description = xproject?.Attribute("Description")?.Value;
+                    else
+                        Name = "Project";
+                     var description = xproject?.Attribute("Description")?.Value;
                     if (description != null)
                         Description = description;
                     var xblocks = xproject?.Element("Blocks");
@@ -170,6 +162,8 @@ namespace Simulator.Model
                                 module.Id = Guid.NewGuid();
                             module.Load(xmodule);
                             Modules.Add(module);
+                            if (string.IsNullOrEmpty(module.Name))
+                                module.Name = "Task" + Modules.Count;
                         }
                     }
                 }
@@ -308,6 +302,38 @@ namespace Simulator.Model
         }
 
         public static event ProjectEventHandler? OnChanged;
+    }
+
+    public enum ValueKind
+    {
+        None,
+        Digital,
+        Analog,
+    }
+
+    public enum ValueSide
+    {
+        Input,
+        Output,
+    }
+
+    public class ValueItem
+    {
+        public ValueKind Kind { get; set; }
+        public ValueSide Side { get; set; }
+        public object? Value { get; set; }
+        public int Pin { get; set; }
+        public Guid ElementId { get; set; }
+
+        public override string ToString()
+        {
+            return Kind switch
+            {
+                ValueKind.Analog => $"{Value}",
+                ValueKind.Digital => $"{Value ?? false}"[..1].ToUpper(),
+                _ => string.Empty,
+            };
+        }
     }
 
     public enum ProjectChangeKind

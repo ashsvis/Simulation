@@ -43,7 +43,8 @@ namespace Simulator.Model.Logic
                         {
                             bool value = (bool)InputValues[index];
                             di.SetValueToOut(0, value);
-                            Project.WriteBoolValue(di.ItemId, 0, value);
+                            //Project.WriteBoolValue(di.ItemId, 0, value);
+                            Project.WriteValue(item.Id, 0, ValueSide.Input, ValueKind.Digital, value);
                         }
                     }
                 }
@@ -58,7 +59,8 @@ namespace Simulator.Model.Logic
                         {
                             bool value = ((bool?)@do.GetValueFromInp(0)) ?? false;
                             OutputValues[index] = value;
-                            Project.WriteBoolValue(ItemId, index, value);
+                            //Project.WriteBoolValue(ItemId, index, value);
+                            Project.WriteValue(item.Id, 0, ValueSide.Output, ValueKind.Digital, value);
                         }
                     }
                 }

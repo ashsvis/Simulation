@@ -1,14 +1,6 @@
 ﻿using Simulator.Model;
 using Simulator.Model.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Simulator.View
 {
@@ -19,14 +11,14 @@ namespace Simulator.View
             InitializeComponent();
         }
 
-        public (Guid, GetLinkValueMethod?, int) Result { get; private set; }
+        public (Guid, int) Result { get; private set; }
 
         private void SelectLinkSourceForm_Load(object sender, EventArgs e)
         {
             tvSources.Nodes.Clear();
             foreach (var module in Project.Modules)
             {
-                var moduleNode = new TreeNode(string.IsNullOrWhiteSpace(module.Name) ? $"Модуль {module.Index}" : module.Name);
+                var moduleNode = new TreeNode(string.IsNullOrWhiteSpace(module.Name) ? $"Задача {module.Index}" : module.Name);
                 tvSources.Nodes.Add(moduleNode);
                 var n = 1;
                 foreach (var item in module.Elements)
@@ -38,7 +30,7 @@ namespace Simulator.View
                         if (func.OutputNames.Length == 1)
                         {
                             var outputName = string.IsNullOrWhiteSpace(func.OutputNames[0]) ? "Out" : func.OutputNames[0];
-                            var outputNode = new TreeNode($"{elementName}.{outputName}") { Tag = new Tuple<Guid, ILinkSupport, int>(item.Id, link, 0) };
+                            var outputNode = new TreeNode($"{elementName}.{outputName}") { Tag = new Tuple<Guid, int>(item.Id, 0) };
                             moduleNode.Nodes.Add(outputNode);
                         }
                         else if (func.OutputNames.Length > 1)
@@ -48,7 +40,7 @@ namespace Simulator.View
                             for (var i = 0; i < func.OutputNames.Length; i++)
                             {
                                 var outputName = string.IsNullOrWhiteSpace(func.OutputNames[i]) ? "Out" : func.OutputNames[i];
-                                var outputNode = new TreeNode($"{i + 1}. {outputName}") { Tag = new Tuple<Guid, ILinkSupport, int>(item.Id, link, i) };
+                                var outputNode = new TreeNode($"{i + 1}. {outputName}") { Tag = new Tuple<Guid, int>(item.Id, i) };
                                 elementNode.Nodes.Add(outputNode);
                             }
                         }
@@ -68,8 +60,8 @@ namespace Simulator.View
                 {
                     if (node == e.Node)
                     {
-                        var tuple = (Tuple<Guid, ILinkSupport, int>)e.Node.Tag;
-                        Result = (tuple.Item1, tuple.Item2.GetResultLink(tuple.Item3), tuple.Item3);
+                        var tuple = (Tuple<Guid, int>)e.Node.Tag;
+                        Result = (tuple.Item1, tuple.Item2);
                         break;
                     }
                     n++;

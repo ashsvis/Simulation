@@ -23,7 +23,8 @@ namespace Simulator.Model.Inputs
         {
             bool output = (bool)(OutputValues[0] ?? false);
             Out = output;
-            Project.WriteBoolValue(ItemId, 0, Out);
+            //Project.WriteBoolValue(ItemId, 0, Out);
+            Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
         }
 
         public override void CalculateTargets(PointF location, ref SizeF size,
@@ -122,14 +123,19 @@ namespace Simulator.Model.Inputs
             if (outputIndex >= 0 && outputIndex < OutputValues.Length)
             {
                 OutputValues[outputIndex] = (bool)(value ?? false);
-                Project.WriteBoolValue(ItemId, outputIndex, (bool)(value ?? false));
+                //Project.WriteBoolValue(ItemId, outputIndex, (bool)(value ?? false));
+                Project.WriteValue(ItemId, outputIndex, ValueSide.Output, ValueKind.Digital, (bool)(value ?? false));
             }
         }
 
         public object? GetValueFromOut(int outputIndex)
         {
             if (outputIndex >= 0 && outputIndex < OutputValues.Length)
-                return (bool)(OutputValues[outputIndex] ?? false);
+            {
+                ValueItem? value = Model.Project.ReadValue(ItemId, outputIndex, ValueSide.Output, ValueKind.Digital);
+                //return (bool)(OutputValues[outputIndex] ?? false);
+                return value?.Value;
+            }
             return null;
         }
     }

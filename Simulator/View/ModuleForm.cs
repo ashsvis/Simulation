@@ -126,7 +126,9 @@ namespace Simulator
                     if (item.Instance is IFunction instance)
                         instance.ResultChanged += Item_ResultChanged;
                     if (item.Instance is ILinkSupport link)
+                    {
                         link.SetItemId(item.Id);
+                    }
                     items.ForEach(item => item.Selected = false);
                     links.ForEach(item => item.SetSelect(false));
                     item.Selected = true;
@@ -296,8 +298,9 @@ namespace Simulator
                 if (source?.Instance is ILinkSupport lsup && lsup != null && link.SourcePinIndex < lsup.OutputValues.Length)
                 {
                     var pin = link.SourcePinIndex;
-                    object? value = Project.ReadBoolValue(lsup.ItemId, pin);
-                    link.SetValue(value ?? Project.ReadRealValue(lsup.ItemId, pin)); //lsup.OutputValues[pin]
+                    ValueItem? value = Project.ReadValue(lsup.ItemId, pin, ValueSide.Output, ValueKind.Digital);
+                    if (value != null && value.Value != null)
+                        link.SetValue(value.Value); //lsup.OutputValues[pin]
                 }
                 link.Draw(graphics, zoomPad.ForeColor);
             }
@@ -873,10 +876,10 @@ namespace Simulator
                                     var dlg = new SelectLinkSourceForm();
                                     if (dlg.ShowDialog() == DialogResult.OK)
                                     {
-                                        (Guid idSource, GetLinkValueMethod? method, int pinOut) = dlg.Result;
+                                        (Guid idSource, int pinOut) = dlg.Result;
                                         if (!fn.LinkedInputs[(int)pin])
                                         {
-                                            fn.SetValueLinkToInp((int)pin, method, idSource, pinOut);
+                                            fn.SetValueLinkToInp((int)pin, idSource, pinOut);
                                             Module.Changed = true;
                                         }
                                     }
@@ -1072,6 +1075,7 @@ namespace Simulator
                     var value = tar.GetValueFromInp((int)pin);
                     if (value is bool bval)
                         tar.SetValueToInp((int)pin, !bval);
+
                 }
                 if (TryGetPin(e.Location, out element, out pin, out _, out output) &&
                     element != null && pin != null && element.Instance is IManualCommand comm && output == true)
@@ -1092,7 +1096,7 @@ namespace Simulator
                             // от выхода ко входу
                             if (!target.LinkedInputs[(int)pinSecond])
                             {
-                                target.SetValueLinkToInp((int)pinSecond, source.GetResultLink((int)pinFirst), elementFirst.Id, (int)pinFirst);
+                                target.SetValueLinkToInp((int)pinSecond, elementFirst.Id, (int)pinFirst);
                                 var link = BuildLink(elementFirst.Id, (int)pinFirst, (PointF)linkFirstPoint, elementSecond.Id, (int)pinSecond, (PointF)linkSecondPoint);
                                 if (link != null)
                                 {
@@ -1109,7 +1113,7 @@ namespace Simulator
                             // от входа к выходу
                             if (!source.LinkedInputs[(int)pinFirst])
                             {
-                                source.SetValueLinkToInp((int)pinFirst, target.GetResultLink((int)pinSecond), elementSecond.Id, (int)pinSecond);
+                                source.SetValueLinkToInp((int)pinFirst, elementSecond.Id, (int)pinSecond);
                                 var link = BuildLink(elementSecond.Id, (int)pinSecond, (PointF)linkSecondPoint, elementFirst.Id, (int)pinFirst, (PointF)linkFirstPoint);
                                 if (link != null)
                                 {

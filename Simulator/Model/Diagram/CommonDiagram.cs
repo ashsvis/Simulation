@@ -8,7 +8,7 @@ namespace Simulator.Model.Diagram
     {
         private readonly object[] getInputs;
         private readonly object[] getOutputs;
-        private readonly GetLinkValueMethod?[] getLinkInputs;
+        //private readonly GetLinkValueMethod?[] getLinkInputs;
         private readonly (Guid, int)[] getLinkSources;
 
         private Guid itemId;
@@ -29,7 +29,7 @@ namespace Simulator.Model.Diagram
         {
             getInputs = [];
             getOutputs = [];
-            getLinkInputs = [];
+            //getLinkInputs = [];
             getLinkSources = [];
             Out = new object();
             var inputCount = 1;
@@ -40,7 +40,7 @@ namespace Simulator.Model.Diagram
                 inputCount = 0;
             getInputs = new object[inputCount];
             getOutputs = new object[outputCount];
-            getLinkInputs = new GetLinkValueMethod?[inputCount];
+            //getLinkInputs = new GetLinkValueMethod?[inputCount];
             getLinkSources = new (Guid, int)[inputCount];
         }
 
@@ -52,10 +52,8 @@ namespace Simulator.Model.Diagram
                 List<bool> list = [];
                 for (var i = 0; i < getInputs.Length; i++)
                 {
-                    if (getLinkInputs[i] is GetLinkValueMethod _)
-                        list.Add(true);
-                    else
-                        list.Add(false);
+                    (Guid id, int _) = getLinkSources[i];
+                    list.Add(id != Guid.Empty);
                 }
                 return [.. list];
             }
@@ -88,27 +86,16 @@ namespace Simulator.Model.Diagram
 
         public string? Name { get; set; }
 
-        public GetLinkValueMethod? GetResultLink(int outputIndex)
-        {
-            return () => Out;
-        }
-
         public void ResetValueLinkToInp(int inputIndex)
         {
-            if (inputIndex >= 0 && inputIndex < getLinkInputs.Length)
-            {
-                getLinkInputs[inputIndex] = null;
+            if (inputIndex >= 0 && inputIndex < getLinkSources.Length)
                 getLinkSources[inputIndex] = (Guid.Empty, 0);
-            }
         }
 
-        public void SetValueLinkToInp(int inputIndex, GetLinkValueMethod? getMethod, Guid sourceId, int outputPinIndex)
+        public void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex)
         {
-            if (inputIndex >= 0 && inputIndex < getLinkInputs.Length)
-            {
-                getLinkInputs[inputIndex] = getMethod;
+            if (inputIndex >= 0 && inputIndex < getLinkSources.Length)
                 getLinkSources[inputIndex] = (sourceId, outputPinIndex);
-            }
         }
 
         public void Load(XElement? xtance)

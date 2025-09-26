@@ -114,7 +114,7 @@ namespace Simulator.Model
                         {
                             var sourceItem = elements.FirstOrDefault(x => x.Id == id);
                             if (sourceItem != null && sourceItem.Instance is ILinkSupport source && source.OutputValues.Length > 0)
-                                function.SetValueLinkToInp(n, source.GetResultLink(output), id, output);
+                                function.SetValueLinkToInp(n, id, output);
                         }
                         n++;
                     }

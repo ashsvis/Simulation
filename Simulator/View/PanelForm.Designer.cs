@@ -70,9 +70,9 @@
             tsbOpenProject = new ToolStripButton();
             toolStripSeparator5 = new ToolStripSeparator();
             tsbAddModule = new ToolStripButton();
+            tsbShowModuleForm = new ToolStripButton();
             tsbDeleteModule = new ToolStripButton();
             toolStripSeparator3 = new ToolStripSeparator();
-            tsbShowModuleForm = new ToolStripButton();
             tsbCompile = new ToolStripButton();
             toolStripSeparator4 = new ToolStripSeparator();
             tsbCascadeLayout = new ToolStripButton();
@@ -98,6 +98,13 @@
             tsbScreenToRight = new ToolStripButton();
             tslScreenNumber = new ToolStripLabel();
             tsbScreenToLeft = new ToolStripButton();
+            lvVariables = new ListView();
+            columnHeader1 = new ColumnHeader();
+            columnHeader2 = new ColumnHeader();
+            columnHeader3 = new ColumnHeader();
+            columnHeader4 = new ColumnHeader();
+            columnHeader5 = new ColumnHeader();
+            columnHeader6 = new ColumnHeader();
             menuMainStrip.SuspendLayout();
             panLeft.SuspendLayout();
             tlpTools.SuspendLayout();
@@ -445,6 +452,17 @@
             tsbAddModule.Text = "Добавить новый модуль";
             tsbAddModule.Click += tsmiAddModule_Click;
             // 
+            // tsbShowModuleForm
+            // 
+            tsbShowModuleForm.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbShowModuleForm.Enabled = false;
+            tsbShowModuleForm.Image = Properties.Resources.showform;
+            tsbShowModuleForm.ImageTransparentColor = Color.Magenta;
+            tsbShowModuleForm.Name = "tsbShowModuleForm";
+            tsbShowModuleForm.Size = new Size(23, 22);
+            tsbShowModuleForm.Text = "Показать содержимое модуля";
+            tsbShowModuleForm.Click += tsbShowModuleForm_Click;
+            // 
             // tsbDeleteModule
             // 
             tsbDeleteModule.DisplayStyle = ToolStripItemDisplayStyle.Image;
@@ -460,17 +478,6 @@
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
             toolStripSeparator3.Size = new Size(6, 25);
-            // 
-            // tsbShowModuleForm
-            // 
-            tsbShowModuleForm.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            tsbShowModuleForm.Enabled = false;
-            tsbShowModuleForm.Image = Properties.Resources.showform;
-            tsbShowModuleForm.ImageTransparentColor = Color.Magenta;
-            tsbShowModuleForm.Name = "tsbShowModuleForm";
-            tsbShowModuleForm.Size = new Size(23, 22);
-            tsbShowModuleForm.Text = "Показать содержимое модуля";
-            tsbShowModuleForm.Click += tsbShowModuleForm_Click;
             // 
             // tsbCompile
             // 
@@ -753,11 +760,51 @@
             tsbScreenToLeft.ToolTipText = "Переместить влево";
             tsbScreenToLeft.Click += tsmiScreenMoveLeft_Click;
             // 
+            // lvVariables
+            // 
+            lvVariables.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2, columnHeader3, columnHeader4, columnHeader5, columnHeader6 });
+            lvVariables.Dock = DockStyle.Bottom;
+            lvVariables.FullRowSelect = true;
+            lvVariables.GridLines = true;
+            lvVariables.Location = new Point(207, 362);
+            lvVariables.Name = "lvVariables";
+            lvVariables.Size = new Size(586, 143);
+            lvVariables.TabIndex = 10;
+            lvVariables.UseCompatibleStateImageBehavior = false;
+            lvVariables.View = System.Windows.Forms.View.Details;
+            lvVariables.VirtualMode = true;
+            lvVariables.RetrieveVirtualItem += lvVariables_RetrieveVirtualItem;
+            // 
+            // columnHeader1
+            // 
+            columnHeader1.Text = "Модуль";
+            // 
+            // columnHeader2
+            // 
+            columnHeader2.Text = "Элемент";
+            // 
+            // columnHeader3
+            // 
+            columnHeader3.Text = "Направление";
+            // 
+            // columnHeader4
+            // 
+            columnHeader4.Text = "Индекс";
+            // 
+            // columnHeader5
+            // 
+            columnHeader5.Text = "Тип";
+            // 
+            // columnHeader6
+            // 
+            columnHeader6.Text = "Значение";
+            // 
             // PanelForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1002, 527);
+            Controls.Add(lvVariables);
             Controls.Add(panRight);
             Controls.Add(panLeft);
             Controls.Add(statusMainStrip);
@@ -872,5 +919,12 @@
         private ToolStripButton tsbAddBock;
         private ToolStripButton tsbShowBlockForm;
         private ToolStripButton tsbDeleteBlock;
+        private ListView lvVariables;
+        private ColumnHeader columnHeader1;
+        private ColumnHeader columnHeader2;
+        private ColumnHeader columnHeader3;
+        private ColumnHeader columnHeader4;
+        private ColumnHeader columnHeader5;
+        private ColumnHeader columnHeader6;
     }
 }

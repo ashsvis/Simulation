@@ -7,7 +7,7 @@ namespace Simulator.Model.Outputs
 {
     public class LAMP : CommonLogic, ICustomDraw
     {
-        private bool @out;
+        //private bool @out;
 
         public LAMP() : base(LogicFunction.Lamp, 1, 0) 
         {
@@ -21,8 +21,9 @@ namespace Simulator.Model.Outputs
 
         public override void Calculate()
         {
-            bool input = (bool)InputValues[0];
-            @out = input;
+            bool input = GetInputValue(0); //(bool)InputValues[0];
+            Project.WriteValue(ItemId, 0, ValueSide.Input, ValueKind.Digital, input);
+            //@out = input;
         }
 
         public override void CalculateTargets(PointF location, ref SizeF size,
@@ -71,7 +72,7 @@ namespace Simulator.Model.Outputs
             var lamprect = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height);
             lamprect.Inflate(-rect.Height / 3, -rect.Height / 3);
             lamprect.Offset(0, -2);
-            if (@out)
+            if (GetInputValue(0))
             {
                 using var fill = new SolidBrush(Color);
                 graphics.FillEllipse(fill, lamprect);

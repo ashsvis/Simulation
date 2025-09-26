@@ -8,7 +8,7 @@ namespace Simulator.Model.Outputs
 {
     public class DO : CommonLogic, ICustomDraw, IChangeOrderDO
     {
-        private bool @out;
+        //private bool @out;
 
         public DO() : base(LogicFunction.DigOut, 1, 0)
         {
@@ -22,8 +22,9 @@ namespace Simulator.Model.Outputs
 
         public override void Calculate()
         {
-            bool input = (bool)InputValues[0];
-            @out = input;
+            bool input = GetInputValue(0); //(bool)InputValues[0];
+            Project.WriteValue(ItemId, 0, ValueSide.Input, ValueKind.Digital, input);
+            //@out = input;
         }
 
         public override void CalculateTargets(PointF location, ref SizeF size,
@@ -79,8 +80,9 @@ namespace Simulator.Model.Outputs
 
             var staterect = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height / 3);
             staterect.Offset(0, rect.Height / 3);
-            using var statebrush = new SolidBrush(@out ? Color.Lime : Color.Red);
-            graphics.DrawString(@out ? "\"1\"" : "\"0\"", font, statebrush, staterect, format);
+            bool value = GetInputValue(0);
+            using var statebrush = new SolidBrush(value ? Color.Lime : Color.Red);
+            graphics.DrawString(value ? "\"1\"" : "\"0\"", font, statebrush, staterect, format);
 
             var descrect = new RectangleF(rect.X + rect.Height, rect.Y, rect.Height * 3, rect.Height);
             graphics.DrawRectangles(pen, [descrect]);

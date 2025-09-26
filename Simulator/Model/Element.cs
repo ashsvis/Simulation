@@ -55,14 +55,15 @@ namespace Simulator.Model
 
         public void Load(XElement item, Type type)
         {
+            //if (Guid.TryParse(item.Attribute("Id")?.Value, out Guid guid) || guid == Guid.Empty) return;
             if (!int.TryParse(item.Attribute("X")?.Value, out int x)) return;
             if (!int.TryParse(item.Attribute("Y")?.Value, out int y)) return;
             Instance = Activator.CreateInstance(type);
             Location = new Point(x, y);
-            if (Instance is ILoadSave inst) 
-                inst.Load(item.Element("Instance"));
             if (Instance is ILinkSupport link)
                 link.SetItemId(Id);
+            if (Instance is ILoadSave inst) 
+                inst.Load(item.Element("Instance"));
         }
 
         public SizeF Size { get => size; set => size = value; }

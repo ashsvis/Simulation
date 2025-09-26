@@ -34,7 +34,8 @@ namespace Simulator.Model.Timer
             else
                 state = time > DateTime.Now;
             Out = !state && input;
-            Project.WriteBoolValue(ItemId, 0, Out);
+            //Project.WriteBoolValue(ItemId, 0, Out);
+            Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
         }
 
         public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush, int index)

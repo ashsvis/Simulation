@@ -40,7 +40,8 @@ namespace Simulator.Model.Timer
             }
             else
                 Out = time > DateTime.Now;
-            Project.WriteBoolValue(ItemId, 0, Out);
+            //Project.WriteBoolValue(ItemId, 0, Out);
+            Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
         }
 
         public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush, int index)
