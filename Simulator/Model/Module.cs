@@ -118,7 +118,6 @@ namespace Simulator.Model
                         }
                         n++;
                     }
-                    function.SetVarManager(projectProxy);
                 }
             }
         }
@@ -168,7 +167,7 @@ namespace Simulator.Model
             }
         }
 
-        public static void LoadElements(XElement? xmodule, List<Element> elements)
+        public void LoadElements(XElement? xmodule, List<Element> elements)
         {
             var xitems = xmodule?.Element("Elements");
             if (xitems != null)
@@ -182,7 +181,7 @@ namespace Simulator.Model
                     Type? type = Type.GetType(xtype.Value);
                     if (type == null) continue;
                     var element = new Element { Id = id, };
-                    element.Load(xitem, type);
+                    element.Load(xitem, type, projectProxy);
                     elements.Add(element);
                 }
             }

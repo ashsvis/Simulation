@@ -1264,7 +1264,7 @@ namespace Simulator
                     List<Link> elementlinks = [];
                     Dictionary<Guid, Guid> guids = [];
                     XDocument doc = XDocument.Load(xmlStream);
-                    Model.Module.LoadElements(doc.Root, elements);
+                    Module.LoadElements(doc.Root, elements);
                     var makedCopy = items.Any(x => elements.Any(y => y.Id == x.Id));
                     if (makedCopy)
                     {
