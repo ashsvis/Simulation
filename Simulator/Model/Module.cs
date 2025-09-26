@@ -1,14 +1,13 @@
 ﻿using Simulator.Model.Interfaces;
-using System;
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Globalization;
-using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
 
 namespace Simulator.Model
 {
-    public class Module
+    public class Module : IVariable
     {
         private string name = string.Empty;
         private string description = string.Empty;
@@ -88,6 +87,7 @@ namespace Simulator.Model
         {
             if (xmodule != null)
             {
+                vals.Clear();
                 var name = xmodule?.Attribute("Name")?.Value;
                 if (name != null)
                     Name = name;
@@ -297,6 +297,43 @@ namespace Simulator.Model
             Elements.AddRange(module.Elements);
             Links.Clear();
             Links.AddRange(module.Links);
+        }
+
+        private readonly ConcurrentDictionary<string, ValueItem> vals = [];
+
+        public int CountVariables(Guid moduleId) => vals.Where(x => Project.GetModuleIdById(x.Value.ElementId) == moduleId).Count();
+
+        public ValueItem? GetVariableByIndex(Guid moduleId, int itemIndex)
+        {
+            var keys = vals.Where(x => Project.GetModuleIdById(x.Value.ElementId) == moduleId).OrderBy(x => $"{Project.GetElementById(x.Value.ElementId)}{x.Value.Side}{x.Value.Pin}").Select(x => x.Key).ToList();
+            if (vals.TryGetValue(keys[itemIndex], out ValueItem? a))
+                return a;
+            return null;
+        }
+
+        public void WriteValue(Guid elementId, int pin, ValueSide side, ValueKind kind, object? value)
+        {
+            var key = $"{elementId}\t{pin}\t{side}\t{kind}";
+            if (vals.TryGetValue(key, out ValueItem? a) && a.Equals(value)) return; // одинаковые значения игнорируем   
+            a = new ValueItem() { ElementId = elementId, Side = side, Pin = pin, Kind = kind, Value = value };
+            vals.AddOrUpdate(key, a,
+                (akey, existingVal) =>
+                {
+                    existingVal.Value = value;
+                    return existingVal;
+                });
+        }
+
+        public ValueItem? ReadValue(Guid elementId, int pin, ValueSide side, ValueKind kind)
+        {
+            var key = $"{elementId}\t{pin}\t{side}\t{kind}";
+            if (vals.TryGetValue(key, out ValueItem? a)) return a;
+            return null;
+        }
+
+        public void Clear()
+        {
+            vals.Clear();
         }
     }
 }

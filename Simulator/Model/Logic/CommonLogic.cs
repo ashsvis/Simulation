@@ -1,7 +1,6 @@
 ﻿using Simulator.Model.Interfaces;
 using System.ComponentModel;
 using System.Xml.Linq;
-using static System.Windows.Forms.LinkLabel;
 
 namespace Simulator.Model.Logic
 {

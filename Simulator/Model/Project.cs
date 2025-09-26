@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.ComponentModel;
-using System.Windows.Forms;
 using System.Xml.Linq;
 
 namespace Simulator.Model
@@ -157,7 +156,7 @@ namespace Simulator.Model
             catch { }
         }
 
-        public static void Load(string filename) 
+        public static void Load(string filename)
         {
             Name = string.Empty;
             Description = string.Empty;
@@ -176,7 +175,7 @@ namespace Simulator.Model
                         Name = name;
                     else
                         Name = "Project";
-                     var description = xproject?.Attribute("Description")?.Value;
+                    var description = xproject?.Attribute("Description")?.Value;
                     if (description != null)
                         Description = description;
                     var xblocks = xproject?.Element("Blocks");
@@ -224,7 +223,7 @@ namespace Simulator.Model
             var rootNode = new TreeNode("Проект") { Tag = new ProjectProxy() };
             collection.Add(rootNode);
             int nmodule = 1;
-            foreach(var module in Modules)
+            foreach (var module in Modules)
             {
                 module.Index = nmodule++;
                 var moduleNode = new TreeNode(module.ToString()) { Tag = module };

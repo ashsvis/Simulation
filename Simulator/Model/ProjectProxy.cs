@@ -1,8 +1,9 @@
-﻿using System.ComponentModel;
+﻿using Simulator.Model.Interfaces;
+using System.ComponentModel;
 
 namespace Simulator.Model
 {
-    public class ProjectProxy
+    public class ProjectProxy : IVariable
     {
         [Category("Проект"), DisplayName("Имя")]
         public string Name 
@@ -31,5 +32,29 @@ namespace Simulator.Model
         [Category("Проект"), DisplayName("Задачи")]
         public List<Module> Modules => Project.Modules;
 
+        public void Clear()
+        {
+            Project.Clear();
+        }
+
+        public int CountVariables(Guid moduleId)
+        {
+            return Project.CountVariables(moduleId);
+        }
+
+        public ValueItem? GetVariableByIndex(Guid moduleId, int itemIndex)
+        {
+            return Project.GetVariableByIndex(moduleId, itemIndex);
+        }
+
+        public ValueItem? ReadValue(Guid elementId, int pin, ValueSide side, ValueKind kind)
+        {
+            return Project.ReadValue(elementId, pin, side, kind);
+        }
+
+        public void WriteValue(Guid elementId, int pin, ValueSide side, ValueKind kind, object? value)
+        {
+            Project.WriteValue(elementId, pin, side, kind, value);
+        }
     }
 }
