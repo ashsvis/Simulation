@@ -42,6 +42,11 @@ namespace Simulator.Model
             return Project.CountVariables(moduleId);
         }
 
+        public ValueItem[] GetElementVariablesByIndex(Guid elementId)
+        {
+            return Project.GetElementVariablesByIndex(elementId);
+        }
+
         public ValueItem? GetVariableByIndex(Guid moduleId, int itemIndex)
         {
             return Project.GetVariableByIndex(moduleId, itemIndex);

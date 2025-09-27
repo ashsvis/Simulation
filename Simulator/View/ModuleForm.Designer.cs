@@ -1,4 +1,6 @@
-﻿namespace Simulator
+﻿using Simulator.View;
+
+namespace Simulator
 {
     partial class ModuleForm
     {
@@ -43,12 +45,21 @@
             toolStripSeparator1 = new ToolStripSeparator();
             timerInterface = new System.Windows.Forms.Timer(components);
             splitContainer1 = new SplitContainer();
-            lvVariables = new ListView();
-            columnHeader2 = new ColumnHeader();
-            columnHeader3 = new ColumnHeader();
-            columnHeader4 = new ColumnHeader();
-            columnHeader5 = new ColumnHeader();
-            columnHeader6 = new ColumnHeader();
+            lvVariables = new CustomListView();
+            chElement = new ColumnHeader();
+            chInput1 = new ColumnHeader();
+            chInput2 = new ColumnHeader();
+            chInput3 = new ColumnHeader();
+            chInput4 = new ColumnHeader();
+            chInput5 = new ColumnHeader();
+            chInput6 = new ColumnHeader();
+            chInput7 = new ColumnHeader();
+            chInput8 = new ColumnHeader();
+            chOutput1 = new ColumnHeader();
+            chOutput2 = new ColumnHeader();
+            chOutput3 = new ColumnHeader();
+            chOutput4 = new ColumnHeader();
+            chOutput5 = new ColumnHeader();
             tableLayoutPanel1 = new TableLayoutPanel();
             toolStripModule.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
@@ -196,7 +207,7 @@
             // 
             // lvVariables
             // 
-            lvVariables.Columns.AddRange(new ColumnHeader[] { columnHeader2, columnHeader3, columnHeader4, columnHeader5, columnHeader6 });
+            lvVariables.Columns.AddRange(new ColumnHeader[] { chElement, chInput1, chInput2, chInput3, chInput4, chInput5, chInput6, chInput7, chInput8, chOutput1, chOutput2, chOutput3, chOutput4, chOutput5 });
             lvVariables.Dock = DockStyle.Fill;
             lvVariables.FullRowSelect = true;
             lvVariables.GridLines = true;
@@ -209,33 +220,88 @@
             lvVariables.VirtualMode = true;
             lvVariables.RetrieveVirtualItem += lvVariables_RetrieveVirtualItem;
             // 
-            // columnHeader2
+            // chElement
             // 
-            columnHeader2.Text = "Элемент";
-            columnHeader2.Width = 80;
+            chElement.Text = "Элемент";
+            chElement.Width = 80;
             // 
-            // columnHeader3
+            // chInput1
             // 
-            columnHeader3.Text = "Направление";
-            columnHeader3.TextAlign = HorizontalAlignment.Center;
-            columnHeader3.Width = 90;
+            chInput1.Text = "Вход 1";
+            chInput1.TextAlign = HorizontalAlignment.Center;
+            chInput1.Width = 56;
             // 
-            // columnHeader4
+            // chInput2
             // 
-            columnHeader4.Text = "Индекс";
-            columnHeader4.TextAlign = HorizontalAlignment.Center;
-            columnHeader4.Width = 55;
+            chInput2.Text = "Вход 2";
+            chInput2.TextAlign = HorizontalAlignment.Center;
+            chInput2.Width = 56;
             // 
-            // columnHeader5
+            // chInput3
             // 
-            columnHeader5.Text = "Тип";
-            columnHeader5.TextAlign = HorizontalAlignment.Center;
+            chInput3.Text = "Вход 3";
+            chInput3.TextAlign = HorizontalAlignment.Center;
+            chInput3.Width = 56;
             // 
-            // columnHeader6
+            // chInput4
             // 
-            columnHeader6.Text = "Значение";
-            columnHeader6.TextAlign = HorizontalAlignment.Center;
-            columnHeader6.Width = 70;
+            chInput4.Text = "Вход 4";
+            chInput4.TextAlign = HorizontalAlignment.Center;
+            chInput4.Width = 56;
+            // 
+            // chInput5
+            // 
+            chInput5.Text = "Вход 5";
+            chInput5.TextAlign = HorizontalAlignment.Center;
+            chInput5.Width = 56;
+            // 
+            // chInput6
+            // 
+            chInput6.Text = "Вход 6";
+            chInput6.TextAlign = HorizontalAlignment.Center;
+            chInput6.Width = 56;
+            // 
+            // chInput7
+            // 
+            chInput7.Text = "Вход 7";
+            chInput7.TextAlign = HorizontalAlignment.Center;
+            chInput7.Width = 56;
+            // 
+            // chInput8
+            // 
+            chInput8.Text = "Вход 8";
+            chInput8.TextAlign = HorizontalAlignment.Center;
+            chInput8.Width = 56;
+            // 
+            // chOutput1
+            // 
+            chOutput1.Text = "Выход 1";
+            chOutput1.TextAlign = HorizontalAlignment.Center;
+            chOutput1.Width = 56;
+            // 
+            // chOutput2
+            // 
+            chOutput2.Text = "Выход 2";
+            chOutput2.TextAlign = HorizontalAlignment.Center;
+            chOutput2.Width = 56;
+            // 
+            // chOutput3
+            // 
+            chOutput3.Text = "Выход 3";
+            chOutput3.TextAlign = HorizontalAlignment.Center;
+            chOutput3.Width = 56;
+            // 
+            // chOutput4
+            // 
+            chOutput4.Text = "Выход 4";
+            chOutput4.TextAlign = HorizontalAlignment.Center;
+            chOutput4.Width = 56;
+            // 
+            // chOutput5
+            // 
+            chOutput5.Text = "Выход 5";
+            chOutput5.TextAlign = HorizontalAlignment.Center;
+            chOutput5.Width = 56;
             // 
             // tableLayoutPanel1
             // 
@@ -292,11 +358,20 @@
         private System.Windows.Forms.Timer timerInterface;
         private SplitContainer splitContainer1;
         private TableLayoutPanel tableLayoutPanel1;
-        private ListView lvVariables;
-        private ColumnHeader columnHeader2;
-        private ColumnHeader columnHeader3;
-        private ColumnHeader columnHeader4;
-        private ColumnHeader columnHeader5;
-        private ColumnHeader columnHeader6;
+        private CustomListView lvVariables;
+        private ColumnHeader chElement;
+        private ColumnHeader chInput1;
+        private ColumnHeader chInput2;
+        private ColumnHeader chInput3;
+        private ColumnHeader chInput4;
+        private ColumnHeader chInput5;
+        private ColumnHeader chInput6;
+        private ColumnHeader chInput7;
+        private ColumnHeader chInput8;
+        private ColumnHeader chOutput1;
+        private ColumnHeader chOutput2;
+        private ColumnHeader chOutput3;
+        private ColumnHeader chOutput4;
+        private ColumnHeader chOutput5;
     }
 }

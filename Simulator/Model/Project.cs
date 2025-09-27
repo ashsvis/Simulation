@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.ComponentModel;
+using System.Reflection;
 using System.Xml.Linq;
 
 namespace Simulator.Model
@@ -341,6 +342,24 @@ namespace Simulator.Model
             Blocks.Remove(module);
             Changed = true;
             OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.RemoveBlock));
+        }
+
+        internal static ValueItem[] GetElementVariablesByIndex(Guid elementId)
+        {
+            List<ValueItem> result = [];
+            var inputkeys = vals.Where(x => x.Value.ElementId == elementId && x.Value.Side == ValueSide.Input).OrderBy(x => x.Value.Pin).Select(x => x.Key).ToList();
+            foreach (var key in inputkeys)
+            {
+                if (vals.TryGetValue(key, out ValueItem? a))
+                    result.Add(a);
+            }
+            var outputkeys = vals.Where(x => x.Value.ElementId == elementId && x.Value.Side == ValueSide.Output).OrderBy(x => x.Value.Pin).Select(x => x.Key).ToList();
+            foreach (var key in outputkeys)
+            {
+                if (vals.TryGetValue(key, out ValueItem? a))
+                    result.Add(a);
+            }
+            return [.. result];
         }
 
         public static event ProjectEventHandler? OnChanged;

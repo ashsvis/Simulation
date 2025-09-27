@@ -41,6 +41,34 @@ namespace Simulator
         private bool dragging = false;
         private bool segmentmoving = false;
 
+        private readonly List<ValueItem[]> elements = [];
+
+        private readonly ProjectProxy projectProxy = new();
+
+        private int BuildTableElements()
+        {
+            elements.Clear();
+            if (projectProxy is IVariable manager)
+            {
+                foreach (var element in Module.Elements)
+                {
+                    List<ValueItem> items = [];
+                    for (var i = 0; i < 8; i++)
+                    {
+                        ValueItem? item = manager.ReadValue(element.Id, i, ValueSide.Input, ValueKind.Digital);
+                        items.Add(item ?? new ValueItem());
+                    }
+                    for (var i = 0; i < 5; i++)
+                    {
+                        ValueItem? item = manager.ReadValue(element.Id, i, ValueSide.Output, ValueKind.Digital);
+                        items.Add(item ?? new ValueItem());
+                    }
+                    elements.Add([..items]);
+                }
+            }
+            return elements.Count;
+        }
+
         public ModuleForm(PanelForm panelForm, Model.Module module)
         {
             InitializeComponent();
@@ -51,12 +79,18 @@ namespace Simulator
             items.Where(x => x.Instance is IChangeOrderDI).ToList().ForEach(dis.Add);
             items.Where(x => x.Instance is IChangeOrderDO).ToList().ForEach(dos.Add);
             links = Module.Links;
+            items.ForEach(item =>
+            {
+                if (item.Instance is IFunction instance)
+                    instance.ResultChanged += Item_ResultChanged;
+            });
             panelForm.SimulationTick += Module_SimulationTick;
         }
 
         private void Item_ResultChanged(object sender, ResultCalculateEventArgs args)
         {
             zoomPad.Invalidate();
+            lvVariables.Invalidate();
         }
 
         private void ModuleForm_Load(object sender, EventArgs e)
@@ -66,7 +100,7 @@ namespace Simulator
             ElementSelected?.Invoke(Module, EventArgs.Empty);
             timerInterface.Enabled = true;
 
-            lvVariables.VirtualListSize = Project.CountVariables(Module.Id);
+            lvVariables.VirtualListSize = BuildTableElements();
             lvVariables.Invalidate();
         }
 
@@ -84,6 +118,7 @@ namespace Simulator
         private void Module_SimulationTick(object? sender, EventArgs e)
         {
             zoomPad.Invalidate();
+            lvVariables.Invalidate();
         }
 
         private void zoomPad_DragEnter(object sender, DragEventArgs e)
@@ -1078,7 +1113,7 @@ namespace Simulator
                     if (value is bool bval)
                         tar.SetValueToInp((int)pin, !bval);
 
-                    lvVariables.VirtualListSize = Project.CountVariables(Module.Id);
+                    lvVariables.VirtualListSize = BuildTableElements();
                     lvVariables.Invalidate();
 
                 }
@@ -1089,7 +1124,7 @@ namespace Simulator
                     if (value is bool bval)
                         comm.SetValueToOut((int)pin, !bval);
 
-                    lvVariables.VirtualListSize = Project.CountVariables(Module.Id);
+                    lvVariables.VirtualListSize = BuildTableElements();
                     lvVariables.Invalidate();
 
                 }
@@ -1149,7 +1184,7 @@ namespace Simulator
         {
             zoomPad.Invalidate();
 
-            lvVariables.VirtualListSize = Project.CountVariables(Module.Id);
+            lvVariables.VirtualListSize = BuildTableElements();
             lvVariables.Invalidate();
         }
 
@@ -1397,23 +1432,21 @@ namespace Simulator
 
         private void lvVariables_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
-            ValueItem? data = Project.GetVariableByIndex(Module.Id, e.ItemIndex);
-            var item = new ListViewItem("1");
+            ValueItem[] data = elements[e.ItemIndex];
+            var item = new ListViewItem($"L{e.ItemIndex + 1}");
             e.Item = item;
-            item.SubItems.Add("2");
-            item.SubItems.Add("3");
-            item.SubItems.Add("4");
-            item.SubItems.Add("5");
+            foreach (var a in data)
+                item.SubItems.Add($"{a}");
 
             if (data != null)
             {
                 try
                 {
-                    item.Text = Project.GetElementById(data.ElementId);
-                    item.SubItems[1].Text = $"{data.Side}";
-                    item.SubItems[2].Text = $"{data.Pin}";
-                    item.SubItems[3].Text = $"{data.Kind}";
-                    item.SubItems[4].Text = $"{data}";
+                    //item.Text = Project.GetElementById(data.ElementId);
+                    //item.SubItems[1].Text = $"{data.Side}";
+                    //item.SubItems[2].Text = $"{data.Pin}";
+                    //item.SubItems[3].Text = $"{data.Kind}";
+                    //item.SubItems[4].Text = $"{data}";
                 }
                 catch { }
             }

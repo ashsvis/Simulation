@@ -300,7 +300,7 @@ namespace Simulator.Model
         }
 
         private readonly ConcurrentDictionary<string, ValueItem> vals = [];
-        private ProjectProxy projectProxy = new();
+        private readonly ProjectProxy projectProxy = new();
 
         public int CountVariables(Guid moduleId) => vals.Where(x => Project.GetModuleIdById(x.Value.ElementId) == moduleId).Count();
 
@@ -335,6 +335,24 @@ namespace Simulator.Model
         public void Clear()
         {
             vals.Clear();
+        }
+
+        public ValueItem[] GetElementVariablesByIndex(Guid elementId)
+        {
+            List<ValueItem> result = [];
+            var inputkeys = vals.Where(x => x.Value.ElementId == elementId && x.Value.Side == ValueSide.Input).OrderBy(x => x.Value.Pin).Select(x => x.Key).ToList();
+            foreach (var key in inputkeys)
+            {
+                if (vals.TryGetValue(key, out ValueItem? a))
+                    result.Add(a);
+            }
+            var outputkeys = vals.Where(x => x.Value.ElementId == elementId && x.Value.Side == ValueSide.Output).OrderBy(x => x.Value.Pin).Select(x => x.Key).ToList();
+            foreach (var key in outputkeys)
+            {
+                if (vals.TryGetValue(key, out ValueItem? a))
+                    result.Add(a);
+            }
+            return [.. result];
         }
     }
 }
