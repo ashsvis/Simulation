@@ -81,6 +81,8 @@ namespace Simulator.Model.Logic
             }
         }
 
+        private readonly ProjectProxy projectProxy = new();
+
         public void ConnectToLibrary()
         {
             var lib = Project.Blocks.FirstOrDefault(x => x.Id == LibraryId);
@@ -93,7 +95,7 @@ namespace Simulator.Model.Logic
                 {
                     if (item.Instance is ILinkSupport link)
                     {
-                        link.SetVarManager(Internal);
+                        link.SetVarManager(projectProxy);
                     }
 
                     if (item.Instance is Model.Inputs.DI di)

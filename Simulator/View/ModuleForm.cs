@@ -73,7 +73,7 @@ namespace Simulator
         {
             InitializeComponent();
             this.panelForm = panelForm;
-            Module = module.DeepCopy();
+            Module = module; //module.DeepCopy();
             Module.Changed = false;
             items = Module.Elements;
             items.Where(x => x.Instance is IChangeOrderDI).ToList().ForEach(dis.Add);
@@ -1195,30 +1195,10 @@ namespace Simulator
 
         private void SaveModule()
         {
-            var module = Project.Modules.FirstOrDefault(x => x.Id == Module.Id);
-            if (module != null && Module.Changed)
+            if (Module.Changed)
             {
-                module?.Accept(Module);
                 Project.Save();
                 Module.Changed = false;
-            }
-            else
-            {
-                var block = Project.Blocks.FirstOrDefault(x => x.Id == Module.Id);
-                if (block != null && Module.Changed)
-                {
-                    block?.Accept(Module);
-                    Project.Save();
-                    foreach (var mod in Project.Modules)
-                    {
-                        foreach (var item in mod.Elements)
-                        {
-                            if (item is IBlock blk)
-                                blk.ConnectToLibrary();
-                        }
-                    }
-                    Module.Changed = false;
-                }
             }
         }
 
@@ -1437,19 +1417,6 @@ namespace Simulator
             e.Item = item;
             foreach (var a in data)
                 item.SubItems.Add($"{a}");
-
-            if (data != null)
-            {
-                try
-                {
-                    //item.Text = Project.GetElementById(data.ElementId);
-                    //item.SubItems[1].Text = $"{data.Side}";
-                    //item.SubItems[2].Text = $"{data.Pin}";
-                    //item.SubItems[3].Text = $"{data.Kind}";
-                    //item.SubItems[4].Text = $"{data}";
-                }
-                catch { }
-            }
         }
     }
 }

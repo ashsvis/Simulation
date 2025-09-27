@@ -7,7 +7,7 @@ using System.Xml.Linq;
 
 namespace Simulator.Model
 {
-    public class Module : IVariable
+    public class Module
     {
         private string name = string.Empty;
         private string description = string.Empty;
@@ -44,8 +44,6 @@ namespace Simulator.Model
 
         [Browsable(false)]
         public List<Element> Elements { get; set; } = [];
-
-        public List<IFunction> Functions => Elements.Select(x => x.Instance as IFunction).ToList();
 
         [Browsable(false)]
         public List<Link> Links { get; set; } = [];
