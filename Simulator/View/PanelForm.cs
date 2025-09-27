@@ -354,8 +354,8 @@ namespace Simulator
                 tvModules.SelectedNode = node;
                 if (node.Tag is ProjectProxy project)
                     pgProps.SelectedObject = project;
-                if (e.Clicks > 1)
-                    EnsureShowModuleChildForm();
+                if (e.Clicks > 1 && node.Tag is Model.Module treeModule)
+                    EnsureShowModuleChildForm(treeModule);
             }
         }
 
@@ -473,19 +473,21 @@ namespace Simulator
 
         private void tsbShowModuleForm_Click(object sender, EventArgs e)
         {
-            EnsureShowModuleChildForm();
+            if (tvModules.SelectedNode is not TreeNode node) return;
+            if (node.Tag is not Model.Module treeModule) return;
+            EnsureShowModuleChildForm(treeModule);
         }
 
-        public void EnsureShowModuleChildForm(Model.Module? module = null)
+        public void EnsureShowModuleChildForm(Model.Module? module)
         {
-            if (module == null)
-            {
-                if (tvModules.SelectedNode is not TreeNode node) return;
-                if (node.Tag is not Model.Module treeModule) return;
-                module = treeModule;
-            }
+            //if (module == null)
+            //{
+            //    if (tvModules.SelectedNode is not TreeNode node) return;
+            //    if (node.Tag is not Model.Module treeModule) return;
+            //    module = treeModule;
+            //}
             pgProps.SelectedObject = module;
-            var form = MdiChildren.OfType<ModuleForm>().FirstOrDefault(x => x.Module.Id == module.Id);
+            var form = MdiChildren.OfType<ModuleForm>().FirstOrDefault(frm => frm.Module == module);
             if (form != null)
             {
                 form.WindowState = FormWindowState.Maximized;
