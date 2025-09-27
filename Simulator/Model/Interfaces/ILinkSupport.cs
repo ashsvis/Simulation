@@ -4,11 +4,11 @@
     {
         bool[] LinkedInputs { get; }
         object[] LinkedOutputs { get; }
-        (Guid, int)[] InputLinkSources { get; }
-        void UpdateInputLinkSources((Guid, int) seek, Guid newId);
+        (Guid, int, bool)[] InputLinkSources { get; }
+        void UpdateInputLinkSources((Guid, int, bool) seek, Guid newId);
         object[] InputValues { get; }
         object[] OutputValues { get; }
-        void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex);
+        void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog);
         void ResetValueLinkToInp(int inputIndex);
         void CalculateTargets(PointF location, ref SizeF size,
              Dictionary<int, RectangleF> itargets, Dictionary<int, PointF> ipins,

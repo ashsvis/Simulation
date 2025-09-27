@@ -335,9 +335,9 @@ namespace Simulator
                 if (source?.Instance is ILinkSupport lsup && lsup != null && link.SourcePinIndex < lsup.OutputValues.Length)
                 {
                     var pin = link.SourcePinIndex;
-                    ValueItem? value = Project.ReadValue(lsup.ItemId, pin, ValueSide.Output, ValueKind.Digital);
-                    if (value != null && value.Value != null)
-                        link.SetValue(value.Value); //lsup.OutputValues[pin]
+                    ValueItem? val = Project.ReadValue(lsup.ItemId, pin, ValueSide.Output, ValueKind.Digital);
+                    if (val != null && val.Value != null)
+                        link.SetValue(val.Value);
                 }
                 link.Draw(graphics, zoomPad.ForeColor);
             }
@@ -384,6 +384,30 @@ namespace Simulator
                     }
                 }
             }
+
+            using var exlinkpen = new Pen(Color.Gray);
+            using var exlinkbrush = new SolidBrush(Color.Gray);
+            using var font = new Font("Consolas", Element.Step + 2f);
+            // прорисовка внешних связей
+            foreach (var item in items)
+            {
+                if (item.Instance is ILinkSupport sup)
+                {
+                    for (var i = 0; i < sup.InputLinkSources.Length; i++)
+                    {
+                        var (id, pinout, external) = sup.InputLinkSources[i];
+                        if (!external) continue;
+                        var pt = item.InputPins[i];
+                        graphics.DrawLine(exlinkpen, PointF.Subtract(pt, new SizeF(Element.Step * 3, 0)), pt);
+                        var (moduleName, elementName) = Project.GetAddressById(id);
+                        var text = $"{moduleName}.{elementName}.{pinout}";
+                        var ms = graphics.MeasureString(text, font);
+                        var rect = new RectangleF(pt.X - Element.Step * 3 - ms.Width, pt.Y, ms.Width, ms.Height);
+                        graphics.DrawRectangles(exlinkpen, [rect]);
+                        graphics.DrawString(text, font, exlinkbrush, rect.Location);
+                    }
+                }
+            }    
 
             // прорисовка элементов
             var np = 1;
@@ -787,7 +811,7 @@ namespace Simulator
                 for (int x = 0; x < lengthX; x++)
                 {
                     if (items.Select(item => new RectangleF(
-                        item.Bounds.X, item.Bounds.Y, item.Bounds.Width + Element.Step, item.Bounds.Height + Element.Step))
+                        item.Bounds.X + Element.Step, item.Bounds.Y + Element.Step, item.Bounds.Width + Element.Step * 3, item.Bounds.Height + Element.Step * 3))
                         .Any(rect => rect.Contains(grid[y, x].Point)))
                     {
                         if (!mustBeFree.Contains(grid[y, x].Point))
@@ -916,7 +940,7 @@ namespace Simulator
                                         (Guid idSource, int pinOut) = dlg.Result;
                                         if (!fn.LinkedInputs[(int)pin])
                                         {
-                                            fn.SetValueLinkToInp((int)pin, idSource, pinOut);
+                                            fn.SetValueLinkToInp((int)pin, idSource, pinOut, true);
                                             Module.Changed = true;
                                         }
                                     }
@@ -954,7 +978,7 @@ namespace Simulator
                             var menuItem = (ToolStripMenuItem?)s;
                             if (menuItem?.Tag is Element element)
                             {
-                                if (MessageBox.Show("Чо, реально удалить?", "Удаление элемента",
+                                if (MessageBox.Show("Не, реально удалить?", "Удаление элемента",
                                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                                 {
                                     DeleteOneElement(element);
@@ -981,7 +1005,7 @@ namespace Simulator
                         if (islinked)
                         {
                             var linkSources = func.InputLinkSources;
-                            (Guid id, int index) = linkSources[n];
+                            (Guid id, int index, bool external) = linkSources[n];
                             if (items.FirstOrDefault(x => x.Id == id) == element)
                             {
                                 func.ResetValueLinkToInp(n);
@@ -1140,7 +1164,7 @@ namespace Simulator
                             // от выхода ко входу
                             if (!target.LinkedInputs[(int)pinSecond])
                             {
-                                target.SetValueLinkToInp((int)pinSecond, elementFirst.Id, (int)pinFirst);
+                                target.SetValueLinkToInp((int)pinSecond, elementFirst.Id, (int)pinFirst, false);
                                 var link = BuildLink(elementFirst.Id, (int)pinFirst, (PointF)linkFirstPoint, elementSecond.Id, (int)pinSecond, (PointF)linkSecondPoint);
                                 if (link != null)
                                 {
@@ -1157,7 +1181,7 @@ namespace Simulator
                             // от входа к выходу
                             if (!source.LinkedInputs[(int)pinFirst])
                             {
-                                source.SetValueLinkToInp((int)pinFirst, elementSecond.Id, (int)pinSecond);
+                                source.SetValueLinkToInp((int)pinFirst, elementSecond.Id, (int)pinSecond, false);
                                 var link = BuildLink(elementSecond.Id, (int)pinSecond, (PointF)linkSecondPoint, elementFirst.Id, (int)pinFirst, (PointF)linkFirstPoint);
                                 if (link != null)
                                 {
@@ -1371,7 +1395,7 @@ namespace Simulator
                         if (islinked)
                         {
                             var linkSources = func.InputLinkSources;
-                            (Guid id, int index) = linkSources[n];
+                            (Guid id, int index, bool external) = linkSources[n];
                             var source = items.FirstOrDefault(x => x.Id == id);
                             if (source != null && source.Selected)
                             {

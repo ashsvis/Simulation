@@ -103,16 +103,16 @@ namespace Simulator.Model
             // установление связей
             foreach (var item in elements)
             {
-                if (item.Instance is ILinkSupport function)
+                if (item.Instance is ILinkSupport func)
                 {
                     var n = 0;
-                    foreach (var (id, output) in function.InputLinkSources)
+                    foreach (var (id, output, external) in func.InputLinkSources)
                     {
                         if (id != Guid.Empty)
                         {
                             var sourceItem = elements.FirstOrDefault(x => x.Id == id);
                             if (sourceItem != null && sourceItem.Instance is ILinkSupport source && source.OutputValues.Length > 0)
-                                function.SetValueLinkToInp(n, id, output);
+                                func.SetValueLinkToInp(n, id, output, false);
                         }
                         n++;
                     }

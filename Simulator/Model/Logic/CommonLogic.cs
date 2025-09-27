@@ -8,7 +8,7 @@ namespace Simulator.Model.Logic
     {
         private readonly bool[] getInputs;
         private readonly bool[] getInverseInputs;
-        private readonly (Guid, int)[] getLinkSources;
+        private readonly (Guid, int, bool)[] getLinkSources;
         private readonly string[] getInputNames;
         private readonly object[] getOutputs;
         private readonly bool[] getInverseOutputs;
@@ -21,7 +21,7 @@ namespace Simulator.Model.Logic
             itemId = id;
             for (var i = 0; i < getLinkSources.Length; i++) 
             {
-                (Guid sourceId, _) = getLinkSources[i];
+                (Guid sourceId, _, _) = getLinkSources[i];
                 if (sourceId == Guid.Empty)
                     varManager?.WriteValue(id, i, ValueSide.Input, ValueKind.Digital, getInputs[i]);
             }
@@ -51,7 +51,7 @@ namespace Simulator.Model.Logic
             {
                 getInputs = new bool[inputCount];
                 getInverseInputs = new bool[inputCount];
-                getLinkSources = new (Guid, int)[inputCount];
+                getLinkSources = new (Guid, int, bool)[inputCount];
                 getInputNames = new string[inputCount];
             }
             getOutputs = new object[outputCount];
@@ -66,7 +66,7 @@ namespace Simulator.Model.Logic
         [Category(" Общие"), DisplayName("Идентификатор")]
         public Guid ItemId => itemId;
 
-        public IVariable VarManager => varManager;
+        public IVariable VarManager => varManager ??= new ProjectProxy();
 
         [Browsable(false)]
         public virtual string FuncSymbol 
@@ -131,7 +131,7 @@ namespace Simulator.Model.Logic
                 List<object> list = [];
                 for (var i = 0; i < getInputs.Length; i++)
                 {
-                    (Guid id, int pinout) = getLinkSources[i];
+                    (Guid id, int pinout, bool external) = getLinkSources[i];
                     if (id != Guid.Empty)
                     {
                         ValueItem? value = varManager?.ReadValue(id, pinout, ValueSide.Output, ValueKind.Digital);
@@ -154,13 +154,13 @@ namespace Simulator.Model.Logic
         }
 
         [Browsable(false)]
-        public (Guid, int)[] InputLinkSources => getLinkSources;
+        public (Guid, int, bool)[] InputLinkSources => getLinkSources;
 
-        public void UpdateInputLinkSources((Guid, int) seek, Guid newId)
+        public void UpdateInputLinkSources((Guid, int, bool) seek, Guid newId)
         {
             for (var i = 0; i < getLinkSources.Length; i++)
             {
-                (Guid id, int input) = getLinkSources[i];
+                (Guid id, int input, bool external) = getLinkSources[i];
                 if (id == seek.Item1 && input == seek.Item2)
                 {
                     getLinkSources[i].Item1 = newId;
@@ -179,7 +179,7 @@ namespace Simulator.Model.Logic
                 List<bool> list = [];
                 for (var i = 0; i < getInputs.Length; i++)
                 {
-                    (Guid id, _) = getLinkSources[i];
+                    (Guid id, _, _) = getLinkSources[i];
                     list.Add(id != Guid.Empty);
                 }
                 return [.. list];
@@ -214,7 +214,7 @@ namespace Simulator.Model.Logic
 
         protected bool GetInputValue(int pin)
         {
-            (Guid id, int pinout) = getLinkSources[pin];
+            (Guid id, int pinout, bool external) = getLinkSources[pin];
             if (id != Guid.Empty)
                 return (bool)(varManager?.ReadValue(id, pinout, ValueSide.Output, ValueKind.Digital)?.Value ?? false);
             return (bool)(varManager?.ReadValue(itemId, pin, ValueSide.Input, ValueKind.Digital)?.Value ?? false);
@@ -231,18 +231,18 @@ namespace Simulator.Model.Logic
         /// </summary>
         /// <param name="inputIndex">номер входа</param>
         /// <param name="getMethod">Ссылка на метод, записываемая в целевом элементе, для этого входа</param>
-        public void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex)
+        public void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog)
         {
             if (inputIndex < 0 || inputIndex >= getLinkSources.Length)
                 throw new ArgumentOutOfRangeException(nameof(inputIndex));
-            getLinkSources[inputIndex] = (sourceId, outputPinIndex);
+            getLinkSources[inputIndex] = (sourceId, outputPinIndex, byDialog);
         }
 
         public void ResetValueLinkToInp(int inputIndex)
         {
             if (inputIndex < 0 || inputIndex >= getLinkSources.Length)
                 throw new ArgumentOutOfRangeException(nameof(inputIndex));
-            getLinkSources[inputIndex] = (Guid.Empty, 0);
+            getLinkSources[inputIndex] = (Guid.Empty, 0, false);
         }
 
         public void SetValueToInp(int inputIndex, object? value)
@@ -260,7 +260,7 @@ namespace Simulator.Model.Logic
         {
             if (inputIndex < 0 || inputIndex >= getLinkSources.Length)
                 throw new ArgumentOutOfRangeException(nameof(inputIndex));
-            (Guid id, int pin) = getLinkSources[inputIndex];
+            (Guid id, int pin, bool external) = getLinkSources[inputIndex];
             if (id != Guid.Empty)
             { 
                 ValueItem? valtem = varManager?.ReadValue(id, pin, ValueSide.Output, ValueKind.Digital);
@@ -280,7 +280,7 @@ namespace Simulator.Model.Logic
                 XElement xinputs = new("Inputs");
                 for (var i = 0; i < Inputs.Length; i++)
                 {
-                    (Guid id, int output) = getLinkSources[i];
+                    (Guid id, int output, bool external) = getLinkSources[i];
                     XElement xinput = new("Input");
                     xinputs.Add(xinput);
                     xinput.Add(new XAttribute("Index", i));
@@ -297,6 +297,8 @@ namespace Simulator.Model.Logic
                         xsource.Add(new XAttribute("Id", id));
                         if (output > 0)
                             xsource.Add(new XAttribute("PinIndex", output));
+                        if (external)
+                            xsource.Add(new XAttribute("External", external));
                         xinput.Add(xsource);
                     }
                 }
@@ -340,10 +342,13 @@ namespace Simulator.Model.Logic
                         {
                             if (Guid.TryParse(xsource.Attribute("Id")?.Value, out Guid guid) && guid != Guid.Empty)
                             {
+                                var external = false;
+                                if (bool.TryParse(xsource.Attribute("External")?.Value, out bool bval))
+                                    external = bval;
                                 if (int.TryParse(xsource.Attribute("PinIndex")?.Value, out int outputIndex))
-                                    getLinkSources[index] = (guid, outputIndex);
+                                    getLinkSources[index] = (guid, outputIndex, external);
                                 else
-                                    getLinkSources[index] = (guid, 0);
+                                    getLinkSources[index] = (guid, 0, external);
                             }
                         }
                         if (bool.TryParse(item.Attribute("Value")?.Value, out bool value))
@@ -418,14 +423,16 @@ namespace Simulator.Model.Logic
                     var ms = graphics.MeasureString(InputNames[i], font);
                     graphics.DrawString(InputNames[i], font, fontbrush, new PointF(x + step, y - ms.Height / 2));
                 }
-                // значение входа - отображаются только не связанные (свободные) входы
+                // значение входа
+                bool isLinked = this is ILinkSupport link && link.LinkedInputs[i];
+                bool isExternal = this is ILinkSupport link1 && link1.InputLinkSources[i].Item3;
                 if (VisibleValues)
                 {
                     var text = $"{GetInputValue(i)}"[..1].ToUpper();
                     var ms = graphics.MeasureString(text, font);
                     using var iformat = new StringFormat();
                     iformat.Alignment = StringAlignment.Near;
-                    using var br = new SolidBrush(this is ILinkSupport link && !link.LinkedInputs[i] ? foreColor : Color.Gray);
+                    using var br = new SolidBrush(isLinked ? Color.Gray : foreColor);
                     graphics.DrawString(text, font, br, new PointF(x - ms.Width + step, y - ms.Height), iformat);
                 }
                 y += step * 2;

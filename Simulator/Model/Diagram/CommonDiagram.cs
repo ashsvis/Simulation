@@ -8,8 +8,7 @@ namespace Simulator.Model.Diagram
     {
         private readonly object[] getInputs;
         private readonly object[] getOutputs;
-        //private readonly GetLinkValueMethod?[] getLinkInputs;
-        private readonly (Guid, int)[] getLinkSources;
+        private readonly (Guid, int, bool)[] getLinkSources;
 
         private Guid itemId;
 
@@ -18,7 +17,7 @@ namespace Simulator.Model.Diagram
             itemId = id;
         }
 
-        private IVariable varManager;
+        private IVariable? varManager;
         public void SetVarManager(IVariable varManager)
         {
             this.varManager = varManager;
@@ -27,7 +26,7 @@ namespace Simulator.Model.Diagram
         [Category(" Общие"), DisplayName("Идентификатор")]
         public Guid ItemId => itemId;
 
-        public IVariable VarManager => varManager;
+        public IVariable VarManager => varManager ??= new ProjectProxy();
 
         public CommonDiagram() : this(DiagramFunction.None)
         {
@@ -37,7 +36,6 @@ namespace Simulator.Model.Diagram
         {
             getInputs = [];
             getOutputs = [];
-            //getLinkInputs = [];
             getLinkSources = [];
             Out = new object();
             var inputCount = 1;
@@ -48,8 +46,7 @@ namespace Simulator.Model.Diagram
                 inputCount = 0;
             getInputs = new object[inputCount];
             getOutputs = new object[outputCount];
-            //getLinkInputs = new GetLinkValueMethod?[inputCount];
-            getLinkSources = new (Guid, int)[inputCount];
+            getLinkSources = new (Guid, int, bool)[inputCount];
         }
 
         [Browsable(false)]
@@ -60,7 +57,7 @@ namespace Simulator.Model.Diagram
                 List<bool> list = [];
                 for (var i = 0; i < getInputs.Length; i++)
                 {
-                    (Guid id, int _) = getLinkSources[i];
+                    (Guid id, int _, bool _) = getLinkSources[i];
                     list.Add(id != Guid.Empty);
                 }
                 return [.. list];
@@ -71,13 +68,13 @@ namespace Simulator.Model.Diagram
         public object[] LinkedOutputs => getOutputs;
 
         [Browsable(false)]
-        public (Guid, int)[] InputLinkSources => getLinkSources;
+        public (Guid, int, bool)[] InputLinkSources => getLinkSources;
 
-        public void UpdateInputLinkSources((Guid, int) seek, Guid newId)
+        public void UpdateInputLinkSources((Guid, int, bool) seek, Guid newId)
         {
             for (var i = 0; i < getLinkSources.Length; i++)
             {
-                (Guid id, int input) = getLinkSources[i];
+                (Guid id, int input, bool external) = getLinkSources[i];
                 if (id == seek.Item1 && input == seek.Item2)
                 {
                     getLinkSources[i].Item1 = newId;
@@ -97,13 +94,13 @@ namespace Simulator.Model.Diagram
         public void ResetValueLinkToInp(int inputIndex)
         {
             if (inputIndex >= 0 && inputIndex < getLinkSources.Length)
-                getLinkSources[inputIndex] = (Guid.Empty, 0);
+                getLinkSources[inputIndex] = (Guid.Empty, 0, false);
         }
 
-        public void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex)
+        public void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog)
         {
             if (inputIndex >= 0 && inputIndex < getLinkSources.Length)
-                getLinkSources[inputIndex] = (sourceId, outputPinIndex);
+                getLinkSources[inputIndex] = (sourceId, outputPinIndex, byDialog);
         }
 
         public void Load(XElement? xtance)
@@ -115,12 +112,19 @@ namespace Simulator.Model.Diagram
                 {
                     if (int.TryParse(item.Attribute("Index")?.Value, out int index))
                     {
-                        if (Guid.TryParse(item.Element("SourceId")?.Value, out Guid guid) && guid != Guid.Empty)
+                        var xsource = item.Element("Source");
+                        if (xsource != null)
                         {
-                            if (int.TryParse(item.Element("OutputIndex")?.Value, out int outputIndex))
-                                getLinkSources[index] = (guid, outputIndex);
-                            else
-                                getLinkSources[index] = (guid, 0);
+                            if (Guid.TryParse(xsource.Attribute("Id")?.Value, out Guid guid) && guid != Guid.Empty)
+                            {
+                                var external = false;
+                                if (bool.TryParse(xsource.Attribute("External")?.Value, out bool bval))
+                                    external = bval;
+                                if (int.TryParse(xsource.Attribute("PinIndex")?.Value, out int outputIndex))
+                                    getLinkSources[index] = (guid, outputIndex, external);
+                                else
+                                    getLinkSources[index] = (guid, 0, external);
+                            }
                         }
                     }
                 }
@@ -146,7 +150,7 @@ namespace Simulator.Model.Diagram
             bool customInputs = false;
             for (var i = 0; i < getInputs.Length; i++)
             {
-                (Guid id, int output) = getLinkSources[i];
+                (Guid id, int output, bool external) = getLinkSources[i];
                 customInputs = true;
                 XElement xinput = new("Input");
                 xinputs.Add(xinput);
