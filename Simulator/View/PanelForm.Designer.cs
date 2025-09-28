@@ -66,6 +66,8 @@
             tcTools = new TabControl();
             tpModiles = new TabPage();
             tvModules = new TreeView();
+            cmModules = new ContextMenuStrip(components);
+            tsmiMakeDublicate = new ToolStripMenuItem();
             tsToolModules = new ToolStrip();
             tsbOpenProject = new ToolStripButton();
             toolStripSeparator5 = new ToolStripSeparator();
@@ -107,6 +109,7 @@
             splitContainer1.SuspendLayout();
             tcTools.SuspendLayout();
             tpModiles.SuspendLayout();
+            cmModules.SuspendLayout();
             tsToolModules.SuspendLayout();
             tabControl1.SuspendLayout();
             tpProps.SuspendLayout();
@@ -397,6 +400,7 @@
             // tvModules
             // 
             tvModules.BackColor = Color.FromArgb(64, 64, 64);
+            tvModules.ContextMenuStrip = cmModules;
             tvModules.Dock = DockStyle.Fill;
             tvModules.ForeColor = SystemColors.Window;
             tvModules.FullRowSelect = true;
@@ -409,6 +413,20 @@
             tvModules.TabIndex = 2;
             tvModules.AfterSelect += tvModules_AfterSelect;
             tvModules.MouseDown += tvModules_MouseDown;
+            // 
+            // cmModules
+            // 
+            cmModules.Items.AddRange(new ToolStripItem[] { tsmiMakeDublicate });
+            cmModules.Name = "cmModules";
+            cmModules.Size = new Size(181, 48);
+            cmModules.Opening += cmModules_Opening;
+            // 
+            // tsmiMakeDublicate
+            // 
+            tsmiMakeDublicate.Name = "tsmiMakeDublicate";
+            tsmiMakeDublicate.Size = new Size(180, 22);
+            tsmiMakeDublicate.Text = "Дублировать";
+            tsmiMakeDublicate.Click += tsmiMakeDublicate_Click;
             // 
             // tsToolModules
             // 
@@ -786,6 +804,7 @@
             tcTools.ResumeLayout(false);
             tpModiles.ResumeLayout(false);
             tpModiles.PerformLayout();
+            cmModules.ResumeLayout(false);
             tsToolModules.ResumeLayout(false);
             tsToolModules.PerformLayout();
             tabControl1.ResumeLayout(false);
@@ -872,5 +891,7 @@
         private ToolStripButton tsbAddBock;
         private ToolStripButton tsbShowBlockForm;
         private ToolStripButton tsbDeleteBlock;
+        private ContextMenuStrip cmModules;
+        private ToolStripMenuItem tsmiMakeDublicate;
     }
 }

@@ -313,9 +313,9 @@ namespace Simulator.Model
             OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.Clear));
         }
 
-        public static Module AddModuleToProject()
+        public static Module AddModuleToProject(Module? newModule = null)
         {
-            var module = new Module();
+            var module = newModule ?? new Module();
             Modules.Add(module);
             OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.AddModule));
             return module;

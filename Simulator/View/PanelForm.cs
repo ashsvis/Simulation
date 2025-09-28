@@ -92,9 +92,9 @@ namespace Simulator
             AddModuleToProject();
         }
 
-        public void AddModuleToProject()
+        public void AddModuleToProject(Module? newModule = null)
         {
-            var module = Project.AddModuleToProject();
+            var module = Project.AddModuleToProject(newModule);
 
             tvModules.Nodes.Clear();
             tvModules.Nodes.AddRange(Project.GetModulesTree());
@@ -348,15 +348,20 @@ namespace Simulator
         private void tvModules_MouseDown(object sender, MouseEventArgs e)
         {
             var node = tvModules.GetNodeAt(e.X, e.Y);
-            if (node != null && e.Button == MouseButtons.Left)
+            if (node != null)
             {
-                tvModules.SelectedNode = null;
-                tvModules.SelectedNode = node;
-                if (node.Tag is ProjectProxy project)
-                    pgProps.SelectedObject = project;
-                if (e.Clicks > 1 && node.Tag is Model.Module treeModule)
-                    EnsureShowModuleChildForm(treeModule);
+                if (e.Button == MouseButtons.Left)
+                {
+                    tvModules.SelectedNode = null;
+                    tvModules.SelectedNode = node;
+                    if (node.Tag is ProjectProxy project)
+                        pgProps.SelectedObject = project;
+                    if (e.Clicks > 1 && node.Tag is Model.Module treeModule)
+                        EnsureShowModuleChildForm(treeModule);
+                    return;
+                }
             }
+            tvModules.SelectedNode = node;
         }
 
         private void tsbMinimize_Click(object sender, EventArgs e)
@@ -584,6 +589,23 @@ namespace Simulator
                 }
             }
 
+        }
+
+        private void cmModules_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var isLinkToModule = tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module;
+            tsmiMakeDublicate.Visible = isLinkToModule;
+            e.Cancel = !isLinkToModule;
+        }
+
+        private void tsmiMakeDublicate_Click(object sender, EventArgs e)
+        {
+            if (tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module module)
+            {
+                var dublicate = Module.MakeDuplicate(module);
+                dublicate.Name = module.Name + "_1";
+                AddModuleToProject(dublicate);
+            }
         }
     }
 }
