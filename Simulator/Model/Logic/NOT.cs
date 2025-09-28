@@ -22,15 +22,11 @@ namespace Simulator.Model.Logic
 
         public override void Calculate()
         {
-            //InverseInputs[0] = false;
-            //InverseOutputs[0] = true;
-            //bool input = (bool)InputValues[0];
-            ValueItem? val = varManager?.ReadValue(ItemId, 0, ValueSide.Input, ValueKind.Digital);
-            bool input = (bool)(val?.Value ?? false);
+            bool input = GetInputValue(0);
             var changed = Out != !input;
             Out = !input;
             //if (changed)
-            varManager?.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
+                Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
         }
 
     }

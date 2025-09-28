@@ -80,7 +80,7 @@ namespace Simulator
             zoomPad.MaxZoom = 20F;
             zoomPad.MinZoom = 0.1F;
             zoomPad.Name = "zoomPad";
-            zoomPad.Size = new Size(794, 415);
+            zoomPad.Size = new Size(794, 390);
             zoomPad.TabIndex = 0;
             zoomPad.ZoomScale = 1D;
             zoomPad.ZoomSensitivity = 0.2F;
@@ -203,7 +203,7 @@ namespace Simulator
             splitContainer1.Panel2.Controls.Add(lvVariables);
             splitContainer1.Panel2MinSize = 0;
             splitContainer1.Size = new Size(794, 419);
-            splitContainer1.SplitterDistance = 415;
+            splitContainer1.SplitterDistance = 390;
             splitContainer1.TabIndex = 2;
             // 
             // lvVariables
@@ -214,7 +214,7 @@ namespace Simulator
             lvVariables.GridLines = true;
             lvVariables.Location = new Point(0, 0);
             lvVariables.Name = "lvVariables";
-            lvVariables.Size = new Size(794, 0);
+            lvVariables.Size = new Size(794, 25);
             lvVariables.TabIndex = 11;
             lvVariables.UseCompatibleStateImageBehavior = false;
             lvVariables.View = System.Windows.Forms.View.Details;

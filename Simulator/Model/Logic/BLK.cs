@@ -43,7 +43,7 @@ namespace Simulator.Model.Logic
                         {
                             bool value = (bool)InputValues[index];
                             di.SetValueToOut(0, value);
-                            varManager?.WriteValue(item.Id, 0, ValueSide.Input, ValueKind.Digital, value);
+                            Project.WriteValue(item.Id, 0, ValueSide.Input, ValueKind.Digital, value);
                         }
                     }
                 }
@@ -58,7 +58,7 @@ namespace Simulator.Model.Logic
                         {
                             bool value = ((bool?)@do.GetValueFromInp(0)) ?? false;
                             OutputValues[index] = value;
-                            varManager?.WriteValue(item.Id, 0, ValueSide.Output, ValueKind.Digital, value);
+                            Project.WriteValue(item.Id, 0, ValueSide.Output, ValueKind.Digital, value);
                         }
                     }
                 }
@@ -81,8 +81,6 @@ namespace Simulator.Model.Logic
             }
         }
 
-        private readonly ProjectProxy projectProxy = new();
-
         public void ConnectToLibrary()
         {
             var lib = Project.Blocks.FirstOrDefault(x => x.Id == LibraryId);
@@ -93,11 +91,6 @@ namespace Simulator.Model.Logic
                 LibraryDescription = lib.Description;
                 foreach (var item in Internal.Elements)
                 {
-                    if (item.Instance is ILinkSupport link)
-                    {
-                        link.SetVarManager(projectProxy);
-                    }
-
                     if (item.Instance is Model.Inputs.DI di)
                     {
                         if (di.Order < InputNames.Length)

@@ -33,14 +33,18 @@ namespace Simulator.Model.Timer
         public override void Calculate()
         {
             bool input = (bool)InputValues[0];
+            bool @out;
             if (!input && !Out)
             {
                 time = DateTime.Now + TimeSpan.FromSeconds(WaitTime);
-                Out = false;
+                @out = false;
             }
             else
-                Out = time > DateTime.Now;
-            varManager?.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
+                @out = time > DateTime.Now;
+            var changed = @out != Out;
+            Out = @out;
+            //if (changed)
+                Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
         }
 
         public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush, int index)

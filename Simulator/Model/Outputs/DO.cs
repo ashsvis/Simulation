@@ -23,7 +23,7 @@ namespace Simulator.Model.Outputs
         public override void Calculate()
         {
             bool input = GetInputValue(0);
-            varManager?.WriteValue(ItemId, 0, ValueSide.Input, ValueKind.Digital, input);
+            Project.WriteValue(ItemId, 0, ValueSide.Input, ValueKind.Digital, input);
         }
 
         public override void CalculateTargets(PointF location, ref SizeF size,

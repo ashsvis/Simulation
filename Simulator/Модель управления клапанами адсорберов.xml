@@ -11781,4 +11781,2632 @@
       </Links>
     </Module>
   </Modules>
+  <Equipment>
+    <Unit Name="V207">
+      <Id>eb86e2ed-d016-4239-aefe-df164ffbf436</Id>
+      <Elements>
+        <Element Id="6464f24a-1f4f-43ff-a5ba-4121f567429a" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="994d7b12-19f8-4d13-8ecd-acf7efbcdd66" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="6464f24a-1f4f-43ff-a5ba-4121f567429a" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="849184c7-8b33-4675-affc-5f3d185e4d14" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="6464f24a-1f4f-43ff-a5ba-4121f567429a" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="4286d9fe-00af-4947-abf5-27f03a7650a2" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="994d7b12-19f8-4d13-8ecd-acf7efbcdd66" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="71dc08f1-83ca-4522-b398-40b322bdeb04" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="849184c7-8b33-4675-affc-5f3d185e4d14" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="14b8412c-edd7-47b1-9d7c-12e55166dfe3" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="4286d9fe-00af-4947-abf5-27f03a7650a2" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="d8554fe8-5bec-4a31-956e-cc7d96f8b74f">
+          <Source Id="6464f24a-1f4f-43ff-a5ba-4121f567429a" PinIndex="0" />
+          <Destination Id="849184c7-8b33-4675-affc-5f3d185e4d14" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="31fa7acc-37c5-40cf-8693-156ec5e8013b">
+          <Source Id="849184c7-8b33-4675-affc-5f3d185e4d14" PinIndex="0" />
+          <Destination Id="71dc08f1-83ca-4522-b398-40b322bdeb04" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="a8f9c9bf-bf81-4168-b159-f7e98fdab949">
+          <Source Id="6464f24a-1f4f-43ff-a5ba-4121f567429a" PinIndex="0" />
+          <Destination Id="994d7b12-19f8-4d13-8ecd-acf7efbcdd66" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="6b6482e0-70e2-4baf-9756-e7f5c35870ef">
+          <Source Id="994d7b12-19f8-4d13-8ecd-acf7efbcdd66" PinIndex="0" />
+          <Destination Id="4286d9fe-00af-4947-abf5-27f03a7650a2" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="d3f6e416-7f05-48a1-9f2d-b3dc6115c754">
+          <Source Id="4286d9fe-00af-4947-abf5-27f03a7650a2" PinIndex="0" />
+          <Destination Id="14b8412c-edd7-47b1-9d7c-12e55166dfe3" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V207_1">
+      <Id>7f335529-ba91-4706-8cf8-281671d6662e</Id>
+      <Elements>
+        <Element Id="c3c398ce-3332-40d6-bc7b-ad1a2952b482" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="ca0f906e-4d02-4d53-8e97-fb1d6c661aaf" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="c3c398ce-3332-40d6-bc7b-ad1a2952b482" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="8a3868e5-7282-4513-ba68-d3b4434ccdbe" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="c3c398ce-3332-40d6-bc7b-ad1a2952b482" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="250adb07-7802-4fa3-a41e-8cbc396f6c5d" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="ca0f906e-4d02-4d53-8e97-fb1d6c661aaf" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="581802cf-19ad-49e6-a898-176603194650" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="8a3868e5-7282-4513-ba68-d3b4434ccdbe" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="8be9f45f-a96c-4f46-954f-526f5cfe54c9" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="250adb07-7802-4fa3-a41e-8cbc396f6c5d" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="5c8be24d-788d-4917-81fa-8f84d3a88e05">
+          <Source Id="c3c398ce-3332-40d6-bc7b-ad1a2952b482" PinIndex="0" />
+          <Destination Id="8a3868e5-7282-4513-ba68-d3b4434ccdbe" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="213b9926-0b41-4cc9-be15-5867a93fcd4b">
+          <Source Id="8a3868e5-7282-4513-ba68-d3b4434ccdbe" PinIndex="0" />
+          <Destination Id="581802cf-19ad-49e6-a898-176603194650" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="81a79810-1370-4818-b2be-82f215472f6e">
+          <Source Id="c3c398ce-3332-40d6-bc7b-ad1a2952b482" PinIndex="0" />
+          <Destination Id="ca0f906e-4d02-4d53-8e97-fb1d6c661aaf" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="68d49d83-2255-4572-b77f-ac00e4036991">
+          <Source Id="ca0f906e-4d02-4d53-8e97-fb1d6c661aaf" PinIndex="0" />
+          <Destination Id="250adb07-7802-4fa3-a41e-8cbc396f6c5d" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="e05835ab-6df5-4779-b4fb-698b9e0da5be">
+          <Source Id="250adb07-7802-4fa3-a41e-8cbc396f6c5d" PinIndex="0" />
+          <Destination Id="8be9f45f-a96c-4f46-954f-526f5cfe54c9" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V208">
+      <Id>2136d86a-bd07-4d3e-a356-f957ab65c946</Id>
+      <Elements>
+        <Element Id="12c13282-c0a5-4688-8a86-e3c8948dc8d5" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="b2e1fbc7-1497-4bf0-a66f-177c89276404" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="12c13282-c0a5-4688-8a86-e3c8948dc8d5" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="1fd6760e-166b-4239-99a4-e8268f4fa496" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="12c13282-c0a5-4688-8a86-e3c8948dc8d5" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="b606fb26-e600-4a63-8613-27a629787eee" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="b2e1fbc7-1497-4bf0-a66f-177c89276404" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="60933c84-affc-4013-a424-0ed602fa300a" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="1fd6760e-166b-4239-99a4-e8268f4fa496" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="8d2ca6c2-e80f-4e50-bb59-f96be4afb0df" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="b606fb26-e600-4a63-8613-27a629787eee" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="d584250b-1a8e-42c4-bedf-f124e826741a">
+          <Source Id="12c13282-c0a5-4688-8a86-e3c8948dc8d5" PinIndex="0" />
+          <Destination Id="1fd6760e-166b-4239-99a4-e8268f4fa496" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="d2162973-1ffc-4cbb-baf7-f42fe4572d44">
+          <Source Id="1fd6760e-166b-4239-99a4-e8268f4fa496" PinIndex="0" />
+          <Destination Id="60933c84-affc-4013-a424-0ed602fa300a" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="cd8fec32-a4cb-45db-9e28-ecc8e682ccfc">
+          <Source Id="12c13282-c0a5-4688-8a86-e3c8948dc8d5" PinIndex="0" />
+          <Destination Id="b2e1fbc7-1497-4bf0-a66f-177c89276404" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="9b233bf8-f4d6-4eff-9776-76ba351f4178">
+          <Source Id="b2e1fbc7-1497-4bf0-a66f-177c89276404" PinIndex="0" />
+          <Destination Id="b606fb26-e600-4a63-8613-27a629787eee" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="a60670b1-033d-47b1-b21f-844763f366f7">
+          <Source Id="b606fb26-e600-4a63-8613-27a629787eee" PinIndex="0" />
+          <Destination Id="8d2ca6c2-e80f-4e50-bb59-f96be4afb0df" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V209">
+      <Id>b18adb22-8a8a-4001-80ab-1a0df1e7ad7c</Id>
+      <Elements>
+        <Element Id="25b1c2f1-35be-4f83-92b2-b18f83096861" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="4411a4dd-15bc-4682-9207-c04c4bb77b75" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="25b1c2f1-35be-4f83-92b2-b18f83096861" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="69e41831-955a-4a04-8446-ad1b82ba1089" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="25b1c2f1-35be-4f83-92b2-b18f83096861" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="87695620-1ff4-46d5-8e58-9215ea398678" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="4411a4dd-15bc-4682-9207-c04c4bb77b75" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="50d97a7f-6afa-4a16-a15d-099176e448b4" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="69e41831-955a-4a04-8446-ad1b82ba1089" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="831f8f35-4bef-4f4d-bb2d-6ffea4baa810" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="87695620-1ff4-46d5-8e58-9215ea398678" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="a8ea7c93-57bd-469a-aeca-61cc6350fb16">
+          <Source Id="25b1c2f1-35be-4f83-92b2-b18f83096861" PinIndex="0" />
+          <Destination Id="69e41831-955a-4a04-8446-ad1b82ba1089" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="f889f439-b750-4c9c-ab9a-657472c9b285">
+          <Source Id="69e41831-955a-4a04-8446-ad1b82ba1089" PinIndex="0" />
+          <Destination Id="50d97a7f-6afa-4a16-a15d-099176e448b4" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="5a1d3007-52ed-42db-b5b0-2245650f5ebb">
+          <Source Id="25b1c2f1-35be-4f83-92b2-b18f83096861" PinIndex="0" />
+          <Destination Id="4411a4dd-15bc-4682-9207-c04c4bb77b75" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="c132b63b-5c7a-46d9-952c-56dd8487b5d2">
+          <Source Id="4411a4dd-15bc-4682-9207-c04c4bb77b75" PinIndex="0" />
+          <Destination Id="87695620-1ff4-46d5-8e58-9215ea398678" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="fea105e1-e246-4377-921b-8cc614f18546">
+          <Source Id="87695620-1ff4-46d5-8e58-9215ea398678" PinIndex="0" />
+          <Destination Id="831f8f35-4bef-4f4d-bb2d-6ffea4baa810" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V209_1">
+      <Id>1ed554c3-9e1d-4165-bcc8-150f9959a694</Id>
+      <Elements>
+        <Element Id="6302fdc7-4997-4a48-b3a2-668246f01470" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="f1a30b3b-0e7c-4064-92ec-1ac6c96ca49a" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="6302fdc7-4997-4a48-b3a2-668246f01470" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="b7ef9fd0-0083-4b37-83df-6b0074903c96" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="6302fdc7-4997-4a48-b3a2-668246f01470" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="eb728394-93a3-43fd-8be8-7b5bd97e309e" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="f1a30b3b-0e7c-4064-92ec-1ac6c96ca49a" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="46ac3718-14bb-4cd0-8b97-7825ec7fb538" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="b7ef9fd0-0083-4b37-83df-6b0074903c96" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="3244d254-43b2-4362-b74f-06afdfdb9cfc" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="eb728394-93a3-43fd-8be8-7b5bd97e309e" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="fe40e0b0-25ae-4257-ad51-fb9113edba65">
+          <Source Id="6302fdc7-4997-4a48-b3a2-668246f01470" PinIndex="0" />
+          <Destination Id="b7ef9fd0-0083-4b37-83df-6b0074903c96" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="0477a6e8-5f3c-47ff-a0b9-19a8fdf3a288">
+          <Source Id="b7ef9fd0-0083-4b37-83df-6b0074903c96" PinIndex="0" />
+          <Destination Id="46ac3718-14bb-4cd0-8b97-7825ec7fb538" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="61bd0351-4e59-4bd1-a18d-63dec1da77ac">
+          <Source Id="6302fdc7-4997-4a48-b3a2-668246f01470" PinIndex="0" />
+          <Destination Id="f1a30b3b-0e7c-4064-92ec-1ac6c96ca49a" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="55784d5c-8468-4543-9d1e-00ef3883c692">
+          <Source Id="f1a30b3b-0e7c-4064-92ec-1ac6c96ca49a" PinIndex="0" />
+          <Destination Id="eb728394-93a3-43fd-8be8-7b5bd97e309e" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="19c42854-8f38-46eb-bed2-36eaf330ec16">
+          <Source Id="eb728394-93a3-43fd-8be8-7b5bd97e309e" PinIndex="0" />
+          <Destination Id="3244d254-43b2-4362-b74f-06afdfdb9cfc" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V210">
+      <Id>674d0b5f-cb18-4c88-ad94-ef893119eeaf</Id>
+      <Elements>
+        <Element Id="b959b66e-73e9-45ce-bf0a-7c51c512dfd7" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="63364af9-b032-4f0f-9463-8ec5444cc5a9" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="b959b66e-73e9-45ce-bf0a-7c51c512dfd7" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="ae151f0e-98f7-4b2b-a5ef-423991cbca21" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="b959b66e-73e9-45ce-bf0a-7c51c512dfd7" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="36d6d2b0-eaf9-418a-86d0-f16c67ce3568" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="63364af9-b032-4f0f-9463-8ec5444cc5a9" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="b7ab0002-51a7-4e20-8010-07476004e968" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="ae151f0e-98f7-4b2b-a5ef-423991cbca21" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="d868b49e-2b71-4568-a387-df17122aed57" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="36d6d2b0-eaf9-418a-86d0-f16c67ce3568" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="79de7c6e-e40a-4f6f-bfbf-bcd8d9bf8006">
+          <Source Id="b959b66e-73e9-45ce-bf0a-7c51c512dfd7" PinIndex="0" />
+          <Destination Id="ae151f0e-98f7-4b2b-a5ef-423991cbca21" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="7c31ccfb-69ba-4f34-9929-89648e58f6e3">
+          <Source Id="ae151f0e-98f7-4b2b-a5ef-423991cbca21" PinIndex="0" />
+          <Destination Id="b7ab0002-51a7-4e20-8010-07476004e968" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="78e67f0c-77e5-47d5-b834-d7c72af83bd6">
+          <Source Id="b959b66e-73e9-45ce-bf0a-7c51c512dfd7" PinIndex="0" />
+          <Destination Id="63364af9-b032-4f0f-9463-8ec5444cc5a9" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="be79cf96-58c1-4491-a3ff-c4b4c5a3cb9b">
+          <Source Id="63364af9-b032-4f0f-9463-8ec5444cc5a9" PinIndex="0" />
+          <Destination Id="36d6d2b0-eaf9-418a-86d0-f16c67ce3568" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="d7a6a2c2-ded2-461c-9324-72a624e387d3">
+          <Source Id="36d6d2b0-eaf9-418a-86d0-f16c67ce3568" PinIndex="0" />
+          <Destination Id="d868b49e-2b71-4568-a387-df17122aed57" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V210_1">
+      <Id>6d971e22-a476-4579-a943-54be0c9f5fe8</Id>
+      <Elements>
+        <Element Id="465d6628-eec0-4695-bee8-436c32c57b8a" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="c8a92e0f-80c9-4696-b9bd-b6d7ae324d29" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="465d6628-eec0-4695-bee8-436c32c57b8a" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="364f0cb4-0915-485d-b464-1d39f2176b40" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="465d6628-eec0-4695-bee8-436c32c57b8a" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="647401f6-79b3-4203-9a03-11c5ad5a282c" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="c8a92e0f-80c9-4696-b9bd-b6d7ae324d29" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="93b25ff9-f589-4dcc-bbdb-e7caa681fe81" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="364f0cb4-0915-485d-b464-1d39f2176b40" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="b38b4f96-7b64-4363-beb2-25ae9c0eaec1" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="647401f6-79b3-4203-9a03-11c5ad5a282c" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="ba7ea279-ab24-4858-bb48-f77b79798626">
+          <Source Id="465d6628-eec0-4695-bee8-436c32c57b8a" PinIndex="0" />
+          <Destination Id="364f0cb4-0915-485d-b464-1d39f2176b40" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="7cd04d58-9d00-4749-aa18-2afa96cf074a">
+          <Source Id="364f0cb4-0915-485d-b464-1d39f2176b40" PinIndex="0" />
+          <Destination Id="93b25ff9-f589-4dcc-bbdb-e7caa681fe81" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="7f6f459b-f759-49ed-8ed7-91c23ce7e9b4">
+          <Source Id="465d6628-eec0-4695-bee8-436c32c57b8a" PinIndex="0" />
+          <Destination Id="c8a92e0f-80c9-4696-b9bd-b6d7ae324d29" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="42c9fabf-caf5-4212-899f-ada4bc31f002">
+          <Source Id="c8a92e0f-80c9-4696-b9bd-b6d7ae324d29" PinIndex="0" />
+          <Destination Id="647401f6-79b3-4203-9a03-11c5ad5a282c" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="6bb5591b-bf1b-4f98-a240-9bb37145210c">
+          <Source Id="647401f6-79b3-4203-9a03-11c5ad5a282c" PinIndex="0" />
+          <Destination Id="b38b4f96-7b64-4363-beb2-25ae9c0eaec1" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V211">
+      <Id>0735115b-4880-4495-8459-d8aec0411f28</Id>
+      <Elements>
+        <Element Id="92950c62-57b8-4a4c-baf9-e4430b79fe19" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="434273e8-3c71-48bf-94ef-1108f9d360a1" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="92950c62-57b8-4a4c-baf9-e4430b79fe19" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="6ab3dced-b572-4ea8-8733-e425a2764334" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="92950c62-57b8-4a4c-baf9-e4430b79fe19" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="bb3755e7-61e0-490d-ae64-69fb3a1aaeea" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="434273e8-3c71-48bf-94ef-1108f9d360a1" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="fd40f83b-81e2-4a6c-8d38-bf59f6083004" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="6ab3dced-b572-4ea8-8733-e425a2764334" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="fc2df6e9-add4-4e3e-a713-65386e5e96fd" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="bb3755e7-61e0-490d-ae64-69fb3a1aaeea" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="8782ac5a-c84c-470e-89a2-23d813b50e7d">
+          <Source Id="92950c62-57b8-4a4c-baf9-e4430b79fe19" PinIndex="0" />
+          <Destination Id="6ab3dced-b572-4ea8-8733-e425a2764334" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="922b538d-f9d2-4ca6-8268-72cad5bd9a94">
+          <Source Id="6ab3dced-b572-4ea8-8733-e425a2764334" PinIndex="0" />
+          <Destination Id="fd40f83b-81e2-4a6c-8d38-bf59f6083004" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="e8f1917b-e0d7-4e07-8722-150a4fca09d7">
+          <Source Id="92950c62-57b8-4a4c-baf9-e4430b79fe19" PinIndex="0" />
+          <Destination Id="434273e8-3c71-48bf-94ef-1108f9d360a1" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="8c168c5b-5818-4457-956c-53dc47eb8305">
+          <Source Id="434273e8-3c71-48bf-94ef-1108f9d360a1" PinIndex="0" />
+          <Destination Id="bb3755e7-61e0-490d-ae64-69fb3a1aaeea" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="88d599a6-f7ea-4fbc-8c46-989351d767f0">
+          <Source Id="bb3755e7-61e0-490d-ae64-69fb3a1aaeea" PinIndex="0" />
+          <Destination Id="fc2df6e9-add4-4e3e-a713-65386e5e96fd" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V212">
+      <Id>8773f467-adbc-44b0-af89-aa7c589fe947</Id>
+      <Elements>
+        <Element Id="98b4e727-ac94-4476-ae6f-bc1534da0c4f" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="54dac39c-24e1-415c-9cc1-e0a89a829a44" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="98b4e727-ac94-4476-ae6f-bc1534da0c4f" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="3190a993-2bfa-4219-9dd4-950c25cba6e8" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="98b4e727-ac94-4476-ae6f-bc1534da0c4f" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="60a948fb-6551-4880-86b7-e1b0e5a78c06" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="54dac39c-24e1-415c-9cc1-e0a89a829a44" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="edd77fad-971e-492d-b40c-bbb5620190e5" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="3190a993-2bfa-4219-9dd4-950c25cba6e8" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="939ff7f2-4cf1-416c-bed8-147a1d3fd3e1" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="60a948fb-6551-4880-86b7-e1b0e5a78c06" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="5c1ac206-bb7e-4218-a45b-7fba8871da30">
+          <Source Id="98b4e727-ac94-4476-ae6f-bc1534da0c4f" PinIndex="0" />
+          <Destination Id="3190a993-2bfa-4219-9dd4-950c25cba6e8" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="1b0bbaae-d28f-4b1b-ae81-b4c1fd332e10">
+          <Source Id="3190a993-2bfa-4219-9dd4-950c25cba6e8" PinIndex="0" />
+          <Destination Id="edd77fad-971e-492d-b40c-bbb5620190e5" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="816110da-c3ef-46f7-8156-09481c9dcdaf">
+          <Source Id="98b4e727-ac94-4476-ae6f-bc1534da0c4f" PinIndex="0" />
+          <Destination Id="54dac39c-24e1-415c-9cc1-e0a89a829a44" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="98ec729f-6796-4e10-b490-ca9fcde6c7e0">
+          <Source Id="54dac39c-24e1-415c-9cc1-e0a89a829a44" PinIndex="0" />
+          <Destination Id="60a948fb-6551-4880-86b7-e1b0e5a78c06" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="356a4908-acbe-4568-b690-1fbbde9062a0">
+          <Source Id="60a948fb-6551-4880-86b7-e1b0e5a78c06" PinIndex="0" />
+          <Destination Id="939ff7f2-4cf1-416c-bed8-147a1d3fd3e1" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V212_1">
+      <Id>620b376d-9538-4c5f-8d01-1647f14aa806</Id>
+      <Elements>
+        <Element Id="e242c1cb-d4ad-4f04-b773-ef71630901c3" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="1e45dd62-c43c-427d-8514-506998dceef8" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="e242c1cb-d4ad-4f04-b773-ef71630901c3" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="18c1b593-a9e0-4a10-b54d-bb8fa136b15b" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="e242c1cb-d4ad-4f04-b773-ef71630901c3" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="4e0ebbcb-61f6-48a4-bf36-82ed65492051" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="1e45dd62-c43c-427d-8514-506998dceef8" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="1c46d8a5-d3b1-4054-a815-e3231471bf53" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="18c1b593-a9e0-4a10-b54d-bb8fa136b15b" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="cc81a52a-1fba-4e5a-9e1f-fcaf620e41f7" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="4e0ebbcb-61f6-48a4-bf36-82ed65492051" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="e8376395-92a9-4c6c-8f9c-d00377015d55">
+          <Source Id="e242c1cb-d4ad-4f04-b773-ef71630901c3" PinIndex="0" />
+          <Destination Id="18c1b593-a9e0-4a10-b54d-bb8fa136b15b" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="54b0f1a9-41b3-4d01-8585-ce0e981245e5">
+          <Source Id="18c1b593-a9e0-4a10-b54d-bb8fa136b15b" PinIndex="0" />
+          <Destination Id="1c46d8a5-d3b1-4054-a815-e3231471bf53" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="aaca16cb-93d4-4395-b30c-ac3efc93ec0d">
+          <Source Id="e242c1cb-d4ad-4f04-b773-ef71630901c3" PinIndex="0" />
+          <Destination Id="1e45dd62-c43c-427d-8514-506998dceef8" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="19f3914a-8e74-446e-b908-785cc1d3701f">
+          <Source Id="1e45dd62-c43c-427d-8514-506998dceef8" PinIndex="0" />
+          <Destination Id="4e0ebbcb-61f6-48a4-bf36-82ed65492051" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="da22e5d6-a3fe-45fc-a801-3339fcb30412">
+          <Source Id="4e0ebbcb-61f6-48a4-bf36-82ed65492051" PinIndex="0" />
+          <Destination Id="cc81a52a-1fba-4e5a-9e1f-fcaf620e41f7" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V213">
+      <Id>ab486fb8-a725-4e9a-9c39-85f635be796b</Id>
+      <Elements>
+        <Element Id="3a59b924-ed60-43f9-bfd6-911f5e4062d4" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="5d4be62b-ebe0-440d-8d91-7ba56e9daef8" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="3a59b924-ed60-43f9-bfd6-911f5e4062d4" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="2bf293bc-2912-4dc2-b0a0-2082e939ca7e" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="3a59b924-ed60-43f9-bfd6-911f5e4062d4" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="32312f0a-1cc8-4e4f-a1e0-5fb16a274fd7" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="5d4be62b-ebe0-440d-8d91-7ba56e9daef8" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="8867c7e8-4a9f-4f21-82a3-1ac1ca7adc46" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="2bf293bc-2912-4dc2-b0a0-2082e939ca7e" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="83190364-c79f-49e1-bfce-199f739cf19c" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="32312f0a-1cc8-4e4f-a1e0-5fb16a274fd7" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="8a444df7-dbc5-47a8-aeea-8fbe1fef759f">
+          <Source Id="3a59b924-ed60-43f9-bfd6-911f5e4062d4" PinIndex="0" />
+          <Destination Id="2bf293bc-2912-4dc2-b0a0-2082e939ca7e" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="ca29b0eb-dbd3-4594-aafc-c31952b92fe4">
+          <Source Id="2bf293bc-2912-4dc2-b0a0-2082e939ca7e" PinIndex="0" />
+          <Destination Id="8867c7e8-4a9f-4f21-82a3-1ac1ca7adc46" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="8c30a116-8cb8-4733-93d5-43328a33d3cc">
+          <Source Id="3a59b924-ed60-43f9-bfd6-911f5e4062d4" PinIndex="0" />
+          <Destination Id="5d4be62b-ebe0-440d-8d91-7ba56e9daef8" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="e366dbc7-604f-42ce-bda4-42380848deaf">
+          <Source Id="5d4be62b-ebe0-440d-8d91-7ba56e9daef8" PinIndex="0" />
+          <Destination Id="32312f0a-1cc8-4e4f-a1e0-5fb16a274fd7" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="051394e4-eac8-4992-a037-ca91c4e489a2">
+          <Source Id="32312f0a-1cc8-4e4f-a1e0-5fb16a274fd7" PinIndex="0" />
+          <Destination Id="83190364-c79f-49e1-bfce-199f739cf19c" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V213_1">
+      <Id>7872fbb1-15d6-4560-acab-8763003c89bf</Id>
+      <Elements>
+        <Element Id="d3039e08-a65c-49bb-9e1a-6be10a4c5ff0" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="1a9e8991-86ff-4fc5-a720-716eabc5c512" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="d3039e08-a65c-49bb-9e1a-6be10a4c5ff0" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="3324061c-89cc-47c4-9453-d74b2310d14e" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="d3039e08-a65c-49bb-9e1a-6be10a4c5ff0" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="c795e19a-a0ff-4a18-89a9-67a9b8a4eb86" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="1a9e8991-86ff-4fc5-a720-716eabc5c512" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="f564d03f-41cf-4d93-8559-12eaa9d69ae8" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="3324061c-89cc-47c4-9453-d74b2310d14e" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="e03d949e-3d24-4cc8-902c-dfaf0cb3ed6f" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="c795e19a-a0ff-4a18-89a9-67a9b8a4eb86" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="5b07b084-e75a-43a4-b1c0-8324c4ca0383">
+          <Source Id="d3039e08-a65c-49bb-9e1a-6be10a4c5ff0" PinIndex="0" />
+          <Destination Id="3324061c-89cc-47c4-9453-d74b2310d14e" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="ddc62e17-4499-483e-b120-a4c0df88bc3a">
+          <Source Id="3324061c-89cc-47c4-9453-d74b2310d14e" PinIndex="0" />
+          <Destination Id="f564d03f-41cf-4d93-8559-12eaa9d69ae8" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="3a12e6e4-173a-449d-abff-7728bc343553">
+          <Source Id="d3039e08-a65c-49bb-9e1a-6be10a4c5ff0" PinIndex="0" />
+          <Destination Id="1a9e8991-86ff-4fc5-a720-716eabc5c512" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="4afe78c2-0537-4d55-b11b-b2a6a6d43bd4">
+          <Source Id="1a9e8991-86ff-4fc5-a720-716eabc5c512" PinIndex="0" />
+          <Destination Id="c795e19a-a0ff-4a18-89a9-67a9b8a4eb86" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="ed4e5537-c77a-4064-9cf5-bbec6054e312">
+          <Source Id="c795e19a-a0ff-4a18-89a9-67a9b8a4eb86" PinIndex="0" />
+          <Destination Id="e03d949e-3d24-4cc8-902c-dfaf0cb3ed6f" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V214">
+      <Id>e95fa0ea-f1fb-4500-a69d-7a905abb8bbd</Id>
+      <Elements>
+        <Element Id="0f0b3c53-0946-489d-868d-ffba9f16cd2f" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="71adfa39-6314-4690-b7d7-9ba750063ef0" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="0f0b3c53-0946-489d-868d-ffba9f16cd2f" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="e518a97e-ed0a-4fd5-83cf-b737abf93380" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="0f0b3c53-0946-489d-868d-ffba9f16cd2f" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="d169bdf5-9394-4208-9bd0-8bb2026f078b" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="71adfa39-6314-4690-b7d7-9ba750063ef0" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="5fb006ff-524e-4834-a85d-0d55942e0c62" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="e518a97e-ed0a-4fd5-83cf-b737abf93380" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="a7b02c43-171d-4a5b-b476-68b0a96b2806" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="d169bdf5-9394-4208-9bd0-8bb2026f078b" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="82af33f8-98c7-4af4-8f27-789cdb80dacb">
+          <Source Id="0f0b3c53-0946-489d-868d-ffba9f16cd2f" PinIndex="0" />
+          <Destination Id="e518a97e-ed0a-4fd5-83cf-b737abf93380" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="2b72a48a-ee85-498a-9131-183ded23ff71">
+          <Source Id="e518a97e-ed0a-4fd5-83cf-b737abf93380" PinIndex="0" />
+          <Destination Id="5fb006ff-524e-4834-a85d-0d55942e0c62" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="3483d6f6-03e6-4467-98c2-3cee4e8e79d5">
+          <Source Id="0f0b3c53-0946-489d-868d-ffba9f16cd2f" PinIndex="0" />
+          <Destination Id="71adfa39-6314-4690-b7d7-9ba750063ef0" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="ca12f175-d360-4393-8c78-d727371fe61d">
+          <Source Id="71adfa39-6314-4690-b7d7-9ba750063ef0" PinIndex="0" />
+          <Destination Id="d169bdf5-9394-4208-9bd0-8bb2026f078b" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="1ebb0ec5-06ad-41ce-b426-5be7916b60b0">
+          <Source Id="d169bdf5-9394-4208-9bd0-8bb2026f078b" PinIndex="0" />
+          <Destination Id="a7b02c43-171d-4a5b-b476-68b0a96b2806" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V215">
+      <Id>b06a4329-8dd0-455a-82bb-53e4b8ba6d7e</Id>
+      <Elements>
+        <Element Id="2308337f-d6bf-484b-9da3-791b199aaf67" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="993f5800-8c28-4026-9acc-9ba2be32d151" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="2308337f-d6bf-484b-9da3-791b199aaf67" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="807027e9-a69f-46fa-9dc7-9d629096d373" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="2308337f-d6bf-484b-9da3-791b199aaf67" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="3061f2cc-3da6-4345-96b0-642f4ab421e4" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="993f5800-8c28-4026-9acc-9ba2be32d151" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="b9b192c8-04b6-47fa-a142-019a42831a61" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="807027e9-a69f-46fa-9dc7-9d629096d373" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="33c18fad-1b26-4b46-88a8-45107651fb73" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="3061f2cc-3da6-4345-96b0-642f4ab421e4" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="68e6a34d-e5d9-42fa-8250-75149c87838e">
+          <Source Id="2308337f-d6bf-484b-9da3-791b199aaf67" PinIndex="0" />
+          <Destination Id="807027e9-a69f-46fa-9dc7-9d629096d373" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="3e0eecdd-b0ee-4fc4-8640-29eb24b6c5ef">
+          <Source Id="807027e9-a69f-46fa-9dc7-9d629096d373" PinIndex="0" />
+          <Destination Id="b9b192c8-04b6-47fa-a142-019a42831a61" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="aba38c5a-1537-4973-9001-edbdcccb26bc">
+          <Source Id="2308337f-d6bf-484b-9da3-791b199aaf67" PinIndex="0" />
+          <Destination Id="993f5800-8c28-4026-9acc-9ba2be32d151" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="0102d806-5604-424d-a155-22908fe55e15">
+          <Source Id="993f5800-8c28-4026-9acc-9ba2be32d151" PinIndex="0" />
+          <Destination Id="3061f2cc-3da6-4345-96b0-642f4ab421e4" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="4312b37e-d1de-4757-a4c1-a578e1640996">
+          <Source Id="3061f2cc-3da6-4345-96b0-642f4ab421e4" PinIndex="0" />
+          <Destination Id="33c18fad-1b26-4b46-88a8-45107651fb73" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V215_1">
+      <Id>1c36b723-9c8f-4862-b93b-e74dc8d02796</Id>
+      <Elements>
+        <Element Id="35a45869-3cf5-45c6-a2f8-0c4aafea415d" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="376519ca-43a5-4902-8fb2-a8986b534037" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="35a45869-3cf5-45c6-a2f8-0c4aafea415d" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="5c24350a-7ec6-42c1-a390-437fd1756d40" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="35a45869-3cf5-45c6-a2f8-0c4aafea415d" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="9e84a433-e740-4c62-a2f0-57fa2bd8a084" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="376519ca-43a5-4902-8fb2-a8986b534037" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="b994f121-e8eb-4f13-863a-6d240363680a" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="5c24350a-7ec6-42c1-a390-437fd1756d40" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="7947bb3b-c62c-426f-9620-f66568a89705" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="9e84a433-e740-4c62-a2f0-57fa2bd8a084" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="27ee0cb2-8567-4985-a122-bd9019a4d079">
+          <Source Id="35a45869-3cf5-45c6-a2f8-0c4aafea415d" PinIndex="0" />
+          <Destination Id="5c24350a-7ec6-42c1-a390-437fd1756d40" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="66f1cea1-db0c-45ed-9728-2d011e2a267d">
+          <Source Id="5c24350a-7ec6-42c1-a390-437fd1756d40" PinIndex="0" />
+          <Destination Id="b994f121-e8eb-4f13-863a-6d240363680a" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="4b75abe7-8e93-44a9-82cf-4e2643b29eb1">
+          <Source Id="35a45869-3cf5-45c6-a2f8-0c4aafea415d" PinIndex="0" />
+          <Destination Id="376519ca-43a5-4902-8fb2-a8986b534037" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="17b5e7ba-2c38-4746-a458-39c309441efc">
+          <Source Id="376519ca-43a5-4902-8fb2-a8986b534037" PinIndex="0" />
+          <Destination Id="9e84a433-e740-4c62-a2f0-57fa2bd8a084" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="64eb937d-8730-41cc-9511-188e0d74f5e7">
+          <Source Id="9e84a433-e740-4c62-a2f0-57fa2bd8a084" PinIndex="0" />
+          <Destination Id="7947bb3b-c62c-426f-9620-f66568a89705" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V216">
+      <Id>5740b1d2-ee1a-4298-a995-d7e391921a3b</Id>
+      <Elements>
+        <Element Id="d3ff6c18-dd57-44e9-a5ae-3dc0cb00e479" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="5abd9236-d7ac-4d06-b3db-3074ca679810" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="d3ff6c18-dd57-44e9-a5ae-3dc0cb00e479" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="be8fffa3-82e3-44b6-955d-791617850e82" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="d3ff6c18-dd57-44e9-a5ae-3dc0cb00e479" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="a5a6cc26-5842-463a-9b78-4dfb98142d17" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="5abd9236-d7ac-4d06-b3db-3074ca679810" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="335e43bf-319c-4473-ae01-16251ab29f3d" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="be8fffa3-82e3-44b6-955d-791617850e82" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="d6a77dcc-e743-452b-96ef-8758d8eaff0f" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="a5a6cc26-5842-463a-9b78-4dfb98142d17" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="1775efae-d33c-4b4f-83d9-f15fe97fa531">
+          <Source Id="d3ff6c18-dd57-44e9-a5ae-3dc0cb00e479" PinIndex="0" />
+          <Destination Id="be8fffa3-82e3-44b6-955d-791617850e82" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="12af44d0-674a-4c49-bfe2-5c4894187232">
+          <Source Id="be8fffa3-82e3-44b6-955d-791617850e82" PinIndex="0" />
+          <Destination Id="335e43bf-319c-4473-ae01-16251ab29f3d" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="d808ef8e-2dd2-4c1f-a9c5-5e408af2e11b">
+          <Source Id="d3ff6c18-dd57-44e9-a5ae-3dc0cb00e479" PinIndex="0" />
+          <Destination Id="5abd9236-d7ac-4d06-b3db-3074ca679810" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="1de9f227-a15a-4c2e-867c-ed5337d54d19">
+          <Source Id="5abd9236-d7ac-4d06-b3db-3074ca679810" PinIndex="0" />
+          <Destination Id="a5a6cc26-5842-463a-9b78-4dfb98142d17" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="7df7914f-1388-412c-86e5-73ef23fbe3d3">
+          <Source Id="a5a6cc26-5842-463a-9b78-4dfb98142d17" PinIndex="0" />
+          <Destination Id="d6a77dcc-e743-452b-96ef-8758d8eaff0f" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V217">
+      <Id>812963dc-6064-4ed4-b17a-68eb51347375</Id>
+      <Elements>
+        <Element Id="174a7d4f-b136-4af9-9fe1-504ae4149636" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="37bda6a1-beab-46b8-85ea-7218f92429b5" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="174a7d4f-b136-4af9-9fe1-504ae4149636" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="a33a46a6-2525-48bb-b579-96672da1d0d8" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="174a7d4f-b136-4af9-9fe1-504ae4149636" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="19d44df5-36a7-443c-af1b-1623a5553573" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="37bda6a1-beab-46b8-85ea-7218f92429b5" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="f0fc1af6-7330-419f-8900-135c76500f06" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="a33a46a6-2525-48bb-b579-96672da1d0d8" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="05824941-3dcd-4ba3-8590-a972b7e9b840" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="19d44df5-36a7-443c-af1b-1623a5553573" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="061a2c88-a50c-4a3d-9169-6b4a3056fb8f">
+          <Source Id="174a7d4f-b136-4af9-9fe1-504ae4149636" PinIndex="0" />
+          <Destination Id="a33a46a6-2525-48bb-b579-96672da1d0d8" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="5237d144-f56e-458b-bd96-af27d3694c80">
+          <Source Id="a33a46a6-2525-48bb-b579-96672da1d0d8" PinIndex="0" />
+          <Destination Id="f0fc1af6-7330-419f-8900-135c76500f06" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="44468915-4eea-402a-98f8-138be0b5d666">
+          <Source Id="174a7d4f-b136-4af9-9fe1-504ae4149636" PinIndex="0" />
+          <Destination Id="37bda6a1-beab-46b8-85ea-7218f92429b5" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="d03eff1c-1f1c-4558-8eea-4c484ee0167f">
+          <Source Id="37bda6a1-beab-46b8-85ea-7218f92429b5" PinIndex="0" />
+          <Destination Id="19d44df5-36a7-443c-af1b-1623a5553573" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="2bfea9b4-bc5d-4fed-a166-467812134565">
+          <Source Id="19d44df5-36a7-443c-af1b-1623a5553573" PinIndex="0" />
+          <Destination Id="05824941-3dcd-4ba3-8590-a972b7e9b840" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V218">
+      <Id>acbdd2c0-0b71-4f6b-80c6-e767b9687114</Id>
+      <Elements>
+        <Element Id="7da04477-a0b6-4104-8999-4800195ce57d" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="ba4bbb26-90a8-44b3-9185-02d74b2bdcd1" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="7da04477-a0b6-4104-8999-4800195ce57d" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="4fdedf8c-9b1b-44aa-8446-4b85aa4ee5f3" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="7da04477-a0b6-4104-8999-4800195ce57d" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="4b01ca9c-058c-4f77-ab4c-2970117215de" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="ba4bbb26-90a8-44b3-9185-02d74b2bdcd1" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="b17adad3-5b6c-4119-aa66-58d138d8a389" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="4fdedf8c-9b1b-44aa-8446-4b85aa4ee5f3" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="a4129f3b-207c-4525-a10c-1b806bd458d5" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="4b01ca9c-058c-4f77-ab4c-2970117215de" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="b779dcb9-48b7-4479-8cee-df6aff5fdc2b">
+          <Source Id="7da04477-a0b6-4104-8999-4800195ce57d" PinIndex="0" />
+          <Destination Id="4fdedf8c-9b1b-44aa-8446-4b85aa4ee5f3" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="d0aa2696-67fe-48ad-8cf8-066bb2f1d09b">
+          <Source Id="4fdedf8c-9b1b-44aa-8446-4b85aa4ee5f3" PinIndex="0" />
+          <Destination Id="b17adad3-5b6c-4119-aa66-58d138d8a389" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="aa2076ac-ac25-4e31-906f-3e1cf4f22aed">
+          <Source Id="7da04477-a0b6-4104-8999-4800195ce57d" PinIndex="0" />
+          <Destination Id="ba4bbb26-90a8-44b3-9185-02d74b2bdcd1" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="ab1ae4a8-e3c5-4fcf-bbc6-48f9b2aa2d73">
+          <Source Id="ba4bbb26-90a8-44b3-9185-02d74b2bdcd1" PinIndex="0" />
+          <Destination Id="4b01ca9c-058c-4f77-ab4c-2970117215de" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="f0eddfa5-b174-43b2-b974-cb7bc4c3e52b">
+          <Source Id="4b01ca9c-058c-4f77-ab4c-2970117215de" PinIndex="0" />
+          <Destination Id="a4129f3b-207c-4525-a10c-1b806bd458d5" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V219">
+      <Id>a6a9f037-a6d8-4ff8-9ed8-cb6de78be02a</Id>
+      <Elements>
+        <Element Id="1405eb31-3ee7-4ca4-8680-6716599b47ab" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="2b067606-8f25-4edc-ab4d-292773362868" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="1405eb31-3ee7-4ca4-8680-6716599b47ab" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="ee37deaf-87c9-4c3e-950e-5d6b983f5df6" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="1405eb31-3ee7-4ca4-8680-6716599b47ab" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="9efcb520-f3ce-4a97-a183-63edae1622b1" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="2b067606-8f25-4edc-ab4d-292773362868" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="3c63efb6-4615-416b-b5de-01bc8853003a" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="ee37deaf-87c9-4c3e-950e-5d6b983f5df6" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="95c4ab1e-538f-4057-9f70-6cdec4ffa718" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="9efcb520-f3ce-4a97-a183-63edae1622b1" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="5ab3c2f4-e292-492e-91d5-7f5bb85332d8">
+          <Source Id="1405eb31-3ee7-4ca4-8680-6716599b47ab" PinIndex="0" />
+          <Destination Id="ee37deaf-87c9-4c3e-950e-5d6b983f5df6" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="62642d05-3045-4ede-a3f9-f2e6536ff36f">
+          <Source Id="ee37deaf-87c9-4c3e-950e-5d6b983f5df6" PinIndex="0" />
+          <Destination Id="3c63efb6-4615-416b-b5de-01bc8853003a" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="7c4b681e-ba7b-45ee-b494-db19f718a588">
+          <Source Id="1405eb31-3ee7-4ca4-8680-6716599b47ab" PinIndex="0" />
+          <Destination Id="2b067606-8f25-4edc-ab4d-292773362868" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="09d8210e-0492-4211-bfc2-92f9e4f1081d">
+          <Source Id="2b067606-8f25-4edc-ab4d-292773362868" PinIndex="0" />
+          <Destination Id="9efcb520-f3ce-4a97-a183-63edae1622b1" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="84e7e6f4-ead1-4000-9273-7536a794cebf">
+          <Source Id="9efcb520-f3ce-4a97-a183-63edae1622b1" PinIndex="0" />
+          <Destination Id="95c4ab1e-538f-4057-9f70-6cdec4ffa718" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V220">
+      <Id>16340300-7064-4985-83a0-9e1f74696d6a</Id>
+      <Elements>
+        <Element Id="5b609fb3-096f-4617-96d0-baaa96704a16" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="73b14ab9-3b1f-43ba-b6b4-d929d102747c" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="5b609fb3-096f-4617-96d0-baaa96704a16" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="5ac3db1f-08bb-4b4a-9191-e058686cb82e" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="5b609fb3-096f-4617-96d0-baaa96704a16" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="e7f9ab65-ca7a-4b46-ae81-2237e49fb7df" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="73b14ab9-3b1f-43ba-b6b4-d929d102747c" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="ceb8cfc5-748c-4947-93f4-e769ce6e6d77" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="5ac3db1f-08bb-4b4a-9191-e058686cb82e" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="ba10cb12-d00d-400c-a209-809ee04399d6" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="e7f9ab65-ca7a-4b46-ae81-2237e49fb7df" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="f87aa1df-09de-4250-9a05-7824310454f9">
+          <Source Id="5b609fb3-096f-4617-96d0-baaa96704a16" PinIndex="0" />
+          <Destination Id="5ac3db1f-08bb-4b4a-9191-e058686cb82e" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="aba7f6d5-4754-4adb-8015-716b079b3c4d">
+          <Source Id="5ac3db1f-08bb-4b4a-9191-e058686cb82e" PinIndex="0" />
+          <Destination Id="ceb8cfc5-748c-4947-93f4-e769ce6e6d77" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="b8a8f9c8-06f4-4643-a81b-542769eae98d">
+          <Source Id="5b609fb3-096f-4617-96d0-baaa96704a16" PinIndex="0" />
+          <Destination Id="73b14ab9-3b1f-43ba-b6b4-d929d102747c" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="6fee7198-9b28-4388-9fd4-bab015f5756d">
+          <Source Id="73b14ab9-3b1f-43ba-b6b4-d929d102747c" PinIndex="0" />
+          <Destination Id="e7f9ab65-ca7a-4b46-ae81-2237e49fb7df" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="5082e989-4d81-400a-ba25-76d719dc344e">
+          <Source Id="e7f9ab65-ca7a-4b46-ae81-2237e49fb7df" PinIndex="0" />
+          <Destination Id="ba10cb12-d00d-400c-a209-809ee04399d6" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V221">
+      <Id>eb088f53-3f4e-4897-84a2-c4fd93789bb3</Id>
+      <Elements>
+        <Element Id="ba9db6a7-d3db-4790-9228-65b5ddb03945" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="f2229206-8607-4f85-add0-fb21a404ad85" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="ba9db6a7-d3db-4790-9228-65b5ddb03945" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="ab0e10d5-8552-485c-903b-b16cb6840e11" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="ba9db6a7-d3db-4790-9228-65b5ddb03945" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="d1e7c71f-805c-45bc-acc5-837098d62f43" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="f2229206-8607-4f85-add0-fb21a404ad85" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="704dbf2c-bd0b-4597-8dcd-526b7bd2477d" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="ab0e10d5-8552-485c-903b-b16cb6840e11" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="8943eebe-7703-4688-8ed8-a9b4f468f9f8" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="d1e7c71f-805c-45bc-acc5-837098d62f43" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="157b2005-20bb-4143-b46e-53d2db7e88df">
+          <Source Id="ba9db6a7-d3db-4790-9228-65b5ddb03945" PinIndex="0" />
+          <Destination Id="ab0e10d5-8552-485c-903b-b16cb6840e11" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="b26e8cb7-a82b-4647-a86c-6ed8f188c44a">
+          <Source Id="ab0e10d5-8552-485c-903b-b16cb6840e11" PinIndex="0" />
+          <Destination Id="704dbf2c-bd0b-4597-8dcd-526b7bd2477d" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="7b837f17-0ae0-4605-953c-164fb32a4b75">
+          <Source Id="ba9db6a7-d3db-4790-9228-65b5ddb03945" PinIndex="0" />
+          <Destination Id="f2229206-8607-4f85-add0-fb21a404ad85" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="890b435a-fdf5-4ffd-8a5f-c04766c92501">
+          <Source Id="f2229206-8607-4f85-add0-fb21a404ad85" PinIndex="0" />
+          <Destination Id="d1e7c71f-805c-45bc-acc5-837098d62f43" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="992d43ca-de1d-4860-b8ab-e4b284da6f4a">
+          <Source Id="d1e7c71f-805c-45bc-acc5-837098d62f43" PinIndex="0" />
+          <Destination Id="8943eebe-7703-4688-8ed8-a9b4f468f9f8" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V222">
+      <Id>3e3499ad-4c9f-4dc0-81e2-1808d85f9db8</Id>
+      <Elements>
+        <Element Id="14098ee7-40af-4d33-b5ca-e9d17f9310c6" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="6337831e-3873-42c8-919e-a8bfe37a2c31" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="14098ee7-40af-4d33-b5ca-e9d17f9310c6" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="f245796c-206c-4e0f-b447-ffa90319e7b9" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="14098ee7-40af-4d33-b5ca-e9d17f9310c6" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="96dc2d24-e933-4fc1-a707-6af65a39f4ec" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="6337831e-3873-42c8-919e-a8bfe37a2c31" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="01db0ffc-fd93-42bf-9454-33f42b854617" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="f245796c-206c-4e0f-b447-ffa90319e7b9" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="df0c3f12-36e1-48e9-a061-fb7feb7e3c71" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="96dc2d24-e933-4fc1-a707-6af65a39f4ec" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="9bca79cb-9015-4ad2-b32f-c22d3d52dcf0">
+          <Source Id="14098ee7-40af-4d33-b5ca-e9d17f9310c6" PinIndex="0" />
+          <Destination Id="f245796c-206c-4e0f-b447-ffa90319e7b9" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="7e920dcf-d06e-4870-81e7-17b354c19339">
+          <Source Id="f245796c-206c-4e0f-b447-ffa90319e7b9" PinIndex="0" />
+          <Destination Id="01db0ffc-fd93-42bf-9454-33f42b854617" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="dc4ee302-8d0b-4dc7-bc97-4527d31f5a61">
+          <Source Id="14098ee7-40af-4d33-b5ca-e9d17f9310c6" PinIndex="0" />
+          <Destination Id="6337831e-3873-42c8-919e-a8bfe37a2c31" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="950a2e06-e471-42b9-9019-09f2b60c9668">
+          <Source Id="6337831e-3873-42c8-919e-a8bfe37a2c31" PinIndex="0" />
+          <Destination Id="96dc2d24-e933-4fc1-a707-6af65a39f4ec" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="471628d3-7473-458f-8ad4-daf98f3bd315">
+          <Source Id="96dc2d24-e933-4fc1-a707-6af65a39f4ec" PinIndex="0" />
+          <Destination Id="df0c3f12-36e1-48e9-a061-fb7feb7e3c71" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V223">
+      <Id>4d4aeca3-c83c-46b4-9dc3-c0539427da6e</Id>
+      <Elements>
+        <Element Id="590b64f6-4cf6-4a94-882f-e2e5006a6e3f" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="f3c558ce-5e90-46af-be06-230da8637d5e" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="590b64f6-4cf6-4a94-882f-e2e5006a6e3f" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="884ee9d9-2519-4ba9-89a6-d1b1aa431e9a" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="590b64f6-4cf6-4a94-882f-e2e5006a6e3f" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="c6d0ba77-0707-4d0f-90ee-a3d1add7ca52" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="f3c558ce-5e90-46af-be06-230da8637d5e" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="17338400-551d-4313-b073-cb112b87edaa" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="884ee9d9-2519-4ba9-89a6-d1b1aa431e9a" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="6265981f-e3bb-46cf-ae10-48f92acd5ade" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="c6d0ba77-0707-4d0f-90ee-a3d1add7ca52" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="b5a09093-20c2-41b4-a2da-4c957dd64a42">
+          <Source Id="590b64f6-4cf6-4a94-882f-e2e5006a6e3f" PinIndex="0" />
+          <Destination Id="884ee9d9-2519-4ba9-89a6-d1b1aa431e9a" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="49578a4d-ef4a-4bda-adca-87af4d2a0316">
+          <Source Id="884ee9d9-2519-4ba9-89a6-d1b1aa431e9a" PinIndex="0" />
+          <Destination Id="17338400-551d-4313-b073-cb112b87edaa" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="8213e5e1-964d-43b9-bb25-b851faf6ab91">
+          <Source Id="590b64f6-4cf6-4a94-882f-e2e5006a6e3f" PinIndex="0" />
+          <Destination Id="f3c558ce-5e90-46af-be06-230da8637d5e" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="f6a9bec8-f791-456a-a3dd-a2d8e6663be1">
+          <Source Id="f3c558ce-5e90-46af-be06-230da8637d5e" PinIndex="0" />
+          <Destination Id="c6d0ba77-0707-4d0f-90ee-a3d1add7ca52" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="afdd786c-2473-4661-a17a-a0f5093c686b">
+          <Source Id="c6d0ba77-0707-4d0f-90ee-a3d1add7ca52" PinIndex="0" />
+          <Destination Id="6265981f-e3bb-46cf-ae10-48f92acd5ade" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V224">
+      <Id>7be04c03-0128-4948-a27e-1cec3f2258ca</Id>
+      <Elements>
+        <Element Id="346c0c83-073a-4f42-9916-92f80740d2d2" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="cf8dfc86-c899-4bd3-acac-be1cc328050d" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="346c0c83-073a-4f42-9916-92f80740d2d2" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="af6c523e-d345-42f4-aa0f-a480987b472f" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="346c0c83-073a-4f42-9916-92f80740d2d2" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="f1c51d6c-3f13-4a6f-a119-01a44f6933df" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="cf8dfc86-c899-4bd3-acac-be1cc328050d" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="9bb15472-173a-4ca0-8a0c-beecc61e3f1b" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="af6c523e-d345-42f4-aa0f-a480987b472f" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="b5d02342-c42a-43aa-9a9c-5f5092b2f7f8" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="f1c51d6c-3f13-4a6f-a119-01a44f6933df" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="820b984e-45cb-4ee5-9eec-299d64f3e0cb">
+          <Source Id="346c0c83-073a-4f42-9916-92f80740d2d2" PinIndex="0" />
+          <Destination Id="af6c523e-d345-42f4-aa0f-a480987b472f" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="342f8263-98f3-4315-955e-f5c1c5970a67">
+          <Source Id="af6c523e-d345-42f4-aa0f-a480987b472f" PinIndex="0" />
+          <Destination Id="9bb15472-173a-4ca0-8a0c-beecc61e3f1b" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="323c2d35-d06a-414f-8b37-2d212ff92ecb">
+          <Source Id="346c0c83-073a-4f42-9916-92f80740d2d2" PinIndex="0" />
+          <Destination Id="cf8dfc86-c899-4bd3-acac-be1cc328050d" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="a0a04e3b-25f3-49ac-ab04-4b6643e8145a">
+          <Source Id="cf8dfc86-c899-4bd3-acac-be1cc328050d" PinIndex="0" />
+          <Destination Id="f1c51d6c-3f13-4a6f-a119-01a44f6933df" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="0de1a221-95fb-40ef-b76a-4849d5bd84b9">
+          <Source Id="f1c51d6c-3f13-4a6f-a119-01a44f6933df" PinIndex="0" />
+          <Destination Id="b5d02342-c42a-43aa-9a9c-5f5092b2f7f8" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V225">
+      <Id>6ea401e2-a40f-4b5d-9ed5-62a419b25b97</Id>
+      <Elements>
+        <Element Id="90b4216c-9803-491c-932a-be77e90c91f6" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="51cdce39-fb12-4622-8ee7-56e7fa6088d8" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="90b4216c-9803-491c-932a-be77e90c91f6" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="883db933-d43f-442b-9e51-d4bc3cb531b6" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="90b4216c-9803-491c-932a-be77e90c91f6" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="7d12e787-23b1-4945-9bb1-41d10c6bf932" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="51cdce39-fb12-4622-8ee7-56e7fa6088d8" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="d44854af-5cbc-4b66-ba75-c80216781326" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="883db933-d43f-442b-9e51-d4bc3cb531b6" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="ab53a97d-888e-4b08-a9a3-84f532425734" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="7d12e787-23b1-4945-9bb1-41d10c6bf932" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="cdfc3871-df42-4348-b999-29cbdab3f4ea">
+          <Source Id="90b4216c-9803-491c-932a-be77e90c91f6" PinIndex="0" />
+          <Destination Id="883db933-d43f-442b-9e51-d4bc3cb531b6" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="c5e714d1-bc96-4a32-b893-b7e941cc4949">
+          <Source Id="883db933-d43f-442b-9e51-d4bc3cb531b6" PinIndex="0" />
+          <Destination Id="d44854af-5cbc-4b66-ba75-c80216781326" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="d957750f-f71c-4536-b788-b19c872e4783">
+          <Source Id="90b4216c-9803-491c-932a-be77e90c91f6" PinIndex="0" />
+          <Destination Id="51cdce39-fb12-4622-8ee7-56e7fa6088d8" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="5ee4be16-72c9-44ad-b471-fa99e22cc615">
+          <Source Id="51cdce39-fb12-4622-8ee7-56e7fa6088d8" PinIndex="0" />
+          <Destination Id="7d12e787-23b1-4945-9bb1-41d10c6bf932" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="b8c57749-7221-47c2-bb7a-39d3ab77825f">
+          <Source Id="7d12e787-23b1-4945-9bb1-41d10c6bf932" PinIndex="0" />
+          <Destination Id="ab53a97d-888e-4b08-a9a3-84f532425734" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+    <Unit Name="V228">
+      <Id>af2ef3e5-4be4-44ac-85e6-d1ff690179a2</Id>
+      <Elements>
+        <Element Id="f8471021-0a3c-4e3c-a473-47400ce39995" X="32" Y="32">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Открыть/закрыть клапан</Description>
+          </Instance>
+        </Element>
+        <Element Id="c135ff61-4be1-4a9c-8eab-05491b933669" X="280" Y="96">
+          <Instance Type="Simulator.Model.Logic.NOT">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="f8471021-0a3c-4e3c-a473-47400ce39995" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="a57e69c8-88a0-4ef9-84a9-29644408f1ee" X="376" Y="32">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="f8471021-0a3c-4e3c-a473-47400ce39995" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="5a3ab305-f2ca-4fdf-81d9-e5e3fa29a844" X="376" Y="96">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="c135ff61-4be1-4a9c-8eab-05491b933669" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>2</WaitTime>
+          </Instance>
+        </Element>
+        <Element Id="62ce596d-e49a-43d3-a427-df8e027c48ba" X="472" Y="32">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="a57e69c8-88a0-4ef9-84a9-29644408f1ee" />
+              </Input>
+            </Inputs>
+            <Order>0</Order>
+            <Description>Клапан открыт</Description>
+          </Instance>
+        </Element>
+        <Element Id="61f1fc03-1cb6-432b-9536-3afb1ca214d4" X="472" Y="96">
+          <Instance Type="Simulator.Model.Outputs.DO">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="5a3ab305-f2ca-4fdf-81d9-e5e3fa29a844" />
+              </Input>
+            </Inputs>
+            <Order>1</Order>
+            <Description>Клапан закрыт</Description>
+          </Instance>
+        </Element>
+      </Elements>
+      <Links>
+        <Link Id="61fa9321-7d4c-4071-a5d2-c7cd6914d722">
+          <Source Id="f8471021-0a3c-4e3c-a473-47400ce39995" PinIndex="0" />
+          <Destination Id="a57e69c8-88a0-4ef9-84a9-29644408f1ee" PinIndex="0" />
+          <Points Array="232,56 232,56 368,56 368,56" />
+        </Link>
+        <Link Id="9e80bae9-4b34-44da-aead-5f7222d700d8">
+          <Source Id="a57e69c8-88a0-4ef9-84a9-29644408f1ee" PinIndex="0" />
+          <Destination Id="62ce596d-e49a-43d3-a427-df8e027c48ba" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="7882f874-05e8-4af1-a3da-c2e704a400f9">
+          <Source Id="f8471021-0a3c-4e3c-a473-47400ce39995" PinIndex="0" />
+          <Destination Id="c135ff61-4be1-4a9c-8eab-05491b933669" PinIndex="0" />
+          <Points Array="232,56 232,56 248,56 248,120 272,120 272,120" />
+        </Link>
+        <Link Id="f03c65d8-dfcb-4206-b4e5-fd8d2af14e4e">
+          <Source Id="c135ff61-4be1-4a9c-8eab-05491b933669" PinIndex="0" />
+          <Destination Id="5a3ab305-f2ca-4fdf-81d9-e5e3fa29a844" PinIndex="0" />
+          <Points Array="336,120 336,120 368,120 368,120" />
+        </Link>
+        <Link Id="8b6b4cd7-56a7-4ee0-8a74-c9f9380893f7">
+          <Source Id="5a3ab305-f2ca-4fdf-81d9-e5e3fa29a844" PinIndex="0" />
+          <Destination Id="61f1fc03-1cb6-432b-9536-3afb1ca214d4" PinIndex="0" />
+          <Points Array="432,120 432,120 464,120 464,120" />
+        </Link>
+      </Links>
+    </Unit>
+  </Equipment>
 </Project>

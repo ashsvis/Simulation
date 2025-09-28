@@ -149,6 +149,7 @@ namespace Simulator
             try
             {
                 Project.Modules.ForEach(module => module.Calculate());
+                Project.Equipment.ForEach(unit => unit.Calculate());
                 SimulationTick?.Invoke(this, EventArgs.Empty);
             }
             catch { }

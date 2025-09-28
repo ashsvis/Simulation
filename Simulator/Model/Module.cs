@@ -53,7 +53,7 @@ namespace Simulator.Model
 
         public override string ToString()
         {
-            return string.IsNullOrWhiteSpace(Name) ? $"Задача {Index}" : Name;
+            return string.IsNullOrWhiteSpace(Name) ? $"(без имени {Index})" : Name;
         }
 
         public void Save(XElement xmodule)

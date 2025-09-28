@@ -20,14 +20,18 @@ namespace Simulator.Model.Logic
         public override void Calculate()
         {
             bool input = (bool)InputValues[0];
+            bool @out;
             if (!input && !Out)
             {
                 time = DateTime.Now + TimeSpan.FromSeconds(waitTime);
-                Out = false;
+                @out = false;
             }
             else
-                Out = time > DateTime.Now;
-            varManager?.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
+                @out = time > DateTime.Now;
+            var changed = @out != Out;
+            Out = @out;
+            //if (changed)
+                Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
         }
 
         public void Reset()

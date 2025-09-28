@@ -62,13 +62,6 @@
             timerInterface = new System.Windows.Forms.Timer(components);
             panLeft = new Panel();
             tlpTools = new TableLayoutPanel();
-            splitContainer1 = new SplitContainer();
-            tcTools = new TabControl();
-            tpModiles = new TabPage();
-            tvModules = new TreeView();
-            cmModules = new ContextMenuStrip(components);
-            tsmiRenameModule = new ToolStripMenuItem();
-            tsmiMakeDublicate = new ToolStripMenuItem();
             tsToolModules = new ToolStrip();
             tsbOpenProject = new ToolStripButton();
             tsbSave = new ToolStripButton();
@@ -80,6 +73,18 @@
             toolStripSeparator4 = new ToolStripSeparator();
             tsbCascadeLayout = new ToolStripButton();
             tsbHorizontalLayout = new ToolStripButton();
+            splitContainer1 = new SplitContainer();
+            tcTools = new TabControl();
+            tpModules = new TabPage();
+            tvModules = new TreeView();
+            cmModules = new ContextMenuStrip(components);
+            tsmiRenameModule = new ToolStripMenuItem();
+            tsmiModuleDublicate = new ToolStripMenuItem();
+            tpEquipment = new TabPage();
+            tvEquipment = new TreeView();
+            cmEquipment = new ContextMenuStrip(components);
+            tsmiRenameUnit = new ToolStripMenuItem();
+            tsmiUnitDublicate = new ToolStripMenuItem();
             tabControl1 = new TabControl();
             tpProps = new TabPage();
             pgProps = new PropertyGrid();
@@ -104,14 +109,16 @@
             menuMainStrip.SuspendLayout();
             panLeft.SuspendLayout();
             tlpTools.SuspendLayout();
+            tsToolModules.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
             tcTools.SuspendLayout();
-            tpModiles.SuspendLayout();
+            tpModules.SuspendLayout();
             cmModules.SuspendLayout();
-            tsToolModules.SuspendLayout();
+            tpEquipment.SuspendLayout();
+            cmEquipment.SuspendLayout();
             tabControl1.SuspendLayout();
             tpProps.SuspendLayout();
             panRight.SuspendLayout();
@@ -346,104 +353,26 @@
             tlpTools.ColumnCount = 2;
             tlpTools.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tlpTools.ColumnStyles.Add(new ColumnStyle());
-            tlpTools.Controls.Add(splitContainer1, 0, 0);
-            tlpTools.Controls.Add(pnLeftSize, 1, 0);
+            tlpTools.Controls.Add(tsToolModules, 0, 0);
+            tlpTools.Controls.Add(splitContainer1, 0, 1);
+            tlpTools.Controls.Add(pnLeftSize, 1, 1);
             tlpTools.Dock = DockStyle.Fill;
             tlpTools.Location = new Point(0, 0);
             tlpTools.Name = "tlpTools";
-            tlpTools.RowCount = 1;
+            tlpTools.RowCount = 2;
+            tlpTools.RowStyles.Add(new RowStyle());
             tlpTools.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tlpTools.Size = new Size(207, 456);
             tlpTools.TabIndex = 3;
-            // 
-            // splitContainer1
-            // 
-            splitContainer1.Dock = DockStyle.Fill;
-            splitContainer1.Location = new Point(3, 3);
-            splitContainer1.Margin = new Padding(3, 3, 0, 3);
-            splitContainer1.Name = "splitContainer1";
-            splitContainer1.Orientation = Orientation.Horizontal;
-            // 
-            // splitContainer1.Panel1
-            // 
-            splitContainer1.Panel1.Controls.Add(tcTools);
-            // 
-            // splitContainer1.Panel2
-            // 
-            splitContainer1.Panel2.Controls.Add(tabControl1);
-            splitContainer1.Size = new Size(200, 450);
-            splitContainer1.SplitterDistance = 221;
-            splitContainer1.TabIndex = 2;
-            // 
-            // tcTools
-            // 
-            tcTools.Controls.Add(tpModiles);
-            tcTools.Dock = DockStyle.Fill;
-            tcTools.Location = new Point(0, 0);
-            tcTools.Margin = new Padding(3, 3, 0, 3);
-            tcTools.Name = "tcTools";
-            tcTools.SelectedIndex = 0;
-            tcTools.Size = new Size(200, 221);
-            tcTools.TabIndex = 2;
-            // 
-            // tpModiles
-            // 
-            tpModiles.Controls.Add(tvModules);
-            tpModiles.Controls.Add(tsToolModules);
-            tpModiles.Location = new Point(4, 24);
-            tpModiles.Name = "tpModiles";
-            tpModiles.Padding = new Padding(3);
-            tpModiles.Size = new Size(192, 193);
-            tpModiles.TabIndex = 1;
-            tpModiles.Text = "Проект";
-            tpModiles.UseVisualStyleBackColor = true;
-            // 
-            // tvModules
-            // 
-            tvModules.BackColor = Color.FromArgb(64, 64, 64);
-            tvModules.ContextMenuStrip = cmModules;
-            tvModules.Dock = DockStyle.Fill;
-            tvModules.ForeColor = SystemColors.Window;
-            tvModules.FullRowSelect = true;
-            tvModules.HideSelection = false;
-            tvModules.LineColor = Color.WhiteSmoke;
-            tvModules.Location = new Point(3, 28);
-            tvModules.Margin = new Padding(3, 3, 0, 3);
-            tvModules.Name = "tvModules";
-            tvModules.Size = new Size(186, 162);
-            tvModules.TabIndex = 2;
-            tvModules.AfterSelect += tvModules_AfterSelect;
-            tvModules.MouseDown += tvModules_MouseDown;
-            // 
-            // cmModules
-            // 
-            cmModules.Items.AddRange(new ToolStripItem[] { tsmiRenameModule, tsmiMakeDublicate });
-            cmModules.Name = "cmModules";
-            cmModules.Size = new Size(171, 48);
-            cmModules.Opening += cmModules_Opening;
-            // 
-            // tsmiRenameModule
-            // 
-            tsmiRenameModule.Name = "tsmiRenameModule";
-            tsmiRenameModule.Size = new Size(170, 22);
-            tsmiRenameModule.Text = "Переименовать...";
-            tsmiRenameModule.Click += tsmiRenameModule_Click;
-            // 
-            // tsmiMakeDublicate
-            // 
-            tsmiMakeDublicate.Name = "tsmiMakeDublicate";
-            tsmiMakeDublicate.Size = new Size(170, 22);
-            tsmiMakeDublicate.Text = "Дублировать";
-            tsmiMakeDublicate.Click += tsmiMakeDublicate_Click;
             // 
             // tsToolModules
             // 
             tsToolModules.GripStyle = ToolStripGripStyle.Hidden;
             tsToolModules.Items.AddRange(new ToolStripItem[] { tsbOpenProject, tsbSave, toolStripSeparator5, tsbAddModule, tsbShowModuleForm, tsbDeleteModule, toolStripSeparator3, toolStripSeparator4, tsbCascadeLayout, tsbHorizontalLayout });
-            tsToolModules.Location = new Point(3, 3);
+            tsToolModules.Location = new Point(0, 0);
             tsToolModules.Name = "tsToolModules";
-            tsToolModules.Size = new Size(186, 25);
-            tsToolModules.TabIndex = 3;
+            tsToolModules.Size = new Size(203, 25);
+            tsToolModules.TabIndex = 6;
             tsToolModules.Text = "toolStrip1";
             // 
             // tsbOpenProject
@@ -523,7 +452,7 @@
             tsbCascadeLayout.Name = "tsbCascadeLayout";
             tsbCascadeLayout.Size = new Size(23, 22);
             tsbCascadeLayout.Text = "Расположить окна каскадом";
-            tsbCascadeLayout.Click += tsbCascadeLayout_Click;
+            tsbCascadeLayout.Click += каскадомToolStripMenuItem_Click;
             // 
             // tsbHorizontalLayout
             // 
@@ -534,7 +463,134 @@
             tsbHorizontalLayout.Name = "tsbHorizontalLayout";
             tsbHorizontalLayout.Size = new Size(23, 22);
             tsbHorizontalLayout.Text = "Расположить окна по горизонтали";
-            tsbHorizontalLayout.Click += tsbHorizontalLayout_Click;
+            tsbHorizontalLayout.Click += поГоризонталиToolStripMenuItem_Click;
+            // 
+            // splitContainer1
+            // 
+            splitContainer1.Dock = DockStyle.Fill;
+            splitContainer1.Location = new Point(3, 28);
+            splitContainer1.Margin = new Padding(3, 3, 0, 3);
+            splitContainer1.Name = "splitContainer1";
+            splitContainer1.Orientation = Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            splitContainer1.Panel1.Controls.Add(tcTools);
+            // 
+            // splitContainer1.Panel2
+            // 
+            splitContainer1.Panel2.Controls.Add(tabControl1);
+            splitContainer1.Size = new Size(200, 425);
+            splitContainer1.SplitterDistance = 208;
+            splitContainer1.TabIndex = 2;
+            // 
+            // tcTools
+            // 
+            tcTools.Controls.Add(tpModules);
+            tcTools.Controls.Add(tpEquipment);
+            tcTools.Dock = DockStyle.Fill;
+            tcTools.Location = new Point(0, 0);
+            tcTools.Margin = new Padding(3, 3, 0, 3);
+            tcTools.Name = "tcTools";
+            tcTools.SelectedIndex = 0;
+            tcTools.Size = new Size(200, 208);
+            tcTools.TabIndex = 2;
+            // 
+            // tpModules
+            // 
+            tpModules.Controls.Add(tvModules);
+            tpModules.Location = new Point(4, 24);
+            tpModules.Name = "tpModules";
+            tpModules.Padding = new Padding(3);
+            tpModules.Size = new Size(192, 180);
+            tpModules.TabIndex = 1;
+            tpModules.Text = "Задачи";
+            tpModules.UseVisualStyleBackColor = true;
+            // 
+            // tvModules
+            // 
+            tvModules.BackColor = Color.FromArgb(64, 64, 64);
+            tvModules.ContextMenuStrip = cmModules;
+            tvModules.Dock = DockStyle.Fill;
+            tvModules.ForeColor = SystemColors.Window;
+            tvModules.FullRowSelect = true;
+            tvModules.HideSelection = false;
+            tvModules.LineColor = Color.WhiteSmoke;
+            tvModules.Location = new Point(3, 3);
+            tvModules.Margin = new Padding(3, 3, 0, 3);
+            tvModules.Name = "tvModules";
+            tvModules.Size = new Size(186, 174);
+            tvModules.TabIndex = 2;
+            tvModules.MouseDown += tvModules_MouseDown;
+            // 
+            // cmModules
+            // 
+            cmModules.Items.AddRange(new ToolStripItem[] { tsmiRenameModule, tsmiModuleDublicate });
+            cmModules.Name = "cmModules";
+            cmModules.Size = new Size(171, 48);
+            cmModules.Opening += cmModules_Opening;
+            // 
+            // tsmiRenameModule
+            // 
+            tsmiRenameModule.Name = "tsmiRenameModule";
+            tsmiRenameModule.Size = new Size(170, 22);
+            tsmiRenameModule.Text = "Переименовать...";
+            tsmiRenameModule.Click += tsmiRenameModule_Click;
+            // 
+            // tsmiModuleDublicate
+            // 
+            tsmiModuleDublicate.Name = "tsmiModuleDublicate";
+            tsmiModuleDublicate.Size = new Size(170, 22);
+            tsmiModuleDublicate.Text = "Дублировать";
+            tsmiModuleDublicate.Click += tsmiModuleDublicate_Click;
+            // 
+            // tpEquipment
+            // 
+            tpEquipment.Controls.Add(tvEquipment);
+            tpEquipment.Location = new Point(4, 24);
+            tpEquipment.Name = "tpEquipment";
+            tpEquipment.Padding = new Padding(3);
+            tpEquipment.Size = new Size(192, 180);
+            tpEquipment.TabIndex = 2;
+            tpEquipment.Text = "Оборудование";
+            tpEquipment.UseVisualStyleBackColor = true;
+            // 
+            // tvEquipment
+            // 
+            tvEquipment.BackColor = Color.FromArgb(64, 64, 64);
+            tvEquipment.ContextMenuStrip = cmEquipment;
+            tvEquipment.Dock = DockStyle.Fill;
+            tvEquipment.ForeColor = SystemColors.Window;
+            tvEquipment.FullRowSelect = true;
+            tvEquipment.HideSelection = false;
+            tvEquipment.LineColor = Color.WhiteSmoke;
+            tvEquipment.Location = new Point(3, 3);
+            tvEquipment.Margin = new Padding(3, 3, 0, 3);
+            tvEquipment.Name = "tvEquipment";
+            tvEquipment.Size = new Size(186, 174);
+            tvEquipment.TabIndex = 3;
+            tvEquipment.MouseDown += tvEquipment_MouseDown;
+            // 
+            // cmEquipment
+            // 
+            cmEquipment.Items.AddRange(new ToolStripItem[] { tsmiRenameUnit, tsmiUnitDublicate });
+            cmEquipment.Name = "cmModules";
+            cmEquipment.Size = new Size(171, 48);
+            cmEquipment.Opening += cmEquipment_Opening;
+            // 
+            // tsmiRenameUnit
+            // 
+            tsmiRenameUnit.Name = "tsmiRenameUnit";
+            tsmiRenameUnit.Size = new Size(170, 22);
+            tsmiRenameUnit.Text = "Переименовать...";
+            tsmiRenameUnit.Click += tsmiRenameUnit_Click;
+            // 
+            // tsmiUnitDublicate
+            // 
+            tsmiUnitDublicate.Name = "tsmiUnitDublicate";
+            tsmiUnitDublicate.Size = new Size(170, 22);
+            tsmiUnitDublicate.Text = "Дублировать";
+            tsmiUnitDublicate.Click += tsmiUnitDublicate_Click;
             // 
             // tabControl1
             // 
@@ -544,7 +600,7 @@
             tabControl1.Margin = new Padding(3, 3, 0, 3);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(200, 225);
+            tabControl1.Size = new Size(200, 213);
             tabControl1.TabIndex = 1;
             // 
             // tpProps
@@ -553,7 +609,7 @@
             tpProps.Location = new Point(4, 24);
             tpProps.Name = "tpProps";
             tpProps.Padding = new Padding(3);
-            tpProps.Size = new Size(192, 197);
+            tpProps.Size = new Size(192, 185);
             tpProps.TabIndex = 1;
             tpProps.Text = "Свойства";
             tpProps.UseVisualStyleBackColor = true;
@@ -564,7 +620,7 @@
             pgProps.Location = new Point(3, 3);
             pgProps.Margin = new Padding(3, 3, 0, 3);
             pgProps.Name = "pgProps";
-            pgProps.Size = new Size(186, 191);
+            pgProps.Size = new Size(186, 179);
             pgProps.TabIndex = 0;
             pgProps.PropertyValueChanged += pgProps_PropertyValueChanged;
             // 
@@ -572,10 +628,10 @@
             // 
             pnLeftSize.Cursor = Cursors.VSplit;
             pnLeftSize.Dock = DockStyle.Right;
-            pnLeftSize.Location = new Point(203, 0);
+            pnLeftSize.Location = new Point(203, 25);
             pnLeftSize.Margin = new Padding(0);
             pnLeftSize.Name = "pnLeftSize";
-            pnLeftSize.Size = new Size(4, 456);
+            pnLeftSize.Size = new Size(4, 431);
             pnLeftSize.TabIndex = 5;
             pnLeftSize.Paint += pnLeftSize_Paint;
             pnLeftSize.MouseDown += pnLeftSize_MouseDown;
@@ -806,16 +862,18 @@
             menuMainStrip.PerformLayout();
             panLeft.ResumeLayout(false);
             tlpTools.ResumeLayout(false);
+            tlpTools.PerformLayout();
+            tsToolModules.ResumeLayout(false);
+            tsToolModules.PerformLayout();
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
             tcTools.ResumeLayout(false);
-            tpModiles.ResumeLayout(false);
-            tpModiles.PerformLayout();
+            tpModules.ResumeLayout(false);
             cmModules.ResumeLayout(false);
-            tsToolModules.ResumeLayout(false);
-            tsToolModules.PerformLayout();
+            tpEquipment.ResumeLayout(false);
+            cmEquipment.ResumeLayout(false);
             tabControl1.ResumeLayout(false);
             tpProps.ResumeLayout(false);
             panRight.ResumeLayout(false);
@@ -872,7 +930,7 @@
         private TabControl tabControl1;
         private TabPage tpProps;
         private TabControl tcTools;
-        private TabPage tpModiles;
+        private TabPage tpModules;
         private TreeView tvModules;
         private ToolStripButton tsbMinimize;
         private ToolStripButton tsbScreenToRight;
@@ -885,23 +943,28 @@
         private TabControl tabControl3;
         private TabPage tabPage2;
         private Panel panRightSize;
-        private ToolStrip tsToolModules;
-        private ToolStripButton tsbAddModule;
-        private ToolStripButton tsbDeleteModule;
-        private ToolStripSeparator toolStripSeparator3;
-        private ToolStripButton tsbShowModuleForm;
-        private ToolStripSeparator toolStripSeparator4;
-        private ToolStripButton tsbCascadeLayout;
-        private ToolStripButton tsbHorizontalLayout;
-        private ToolStripButton tsbOpenProject;
-        private ToolStripSeparator toolStripSeparator5;
-        private ToolStripButton tsbSave;
         private ToolStrip tsToolLibrary;
         private ToolStripButton tsbAddBock;
         private ToolStripButton tsbShowBlockForm;
         private ToolStripButton tsbDeleteBlock;
         private ContextMenuStrip cmModules;
-        private ToolStripMenuItem tsmiMakeDublicate;
+        private ToolStripMenuItem tsmiModuleDublicate;
         private ToolStripMenuItem tsmiRenameModule;
+        private TabPage tpEquipment;
+        private ToolStrip tsToolModules;
+        private ToolStripButton tsbOpenProject;
+        private ToolStripButton tsbSave;
+        private ToolStripSeparator toolStripSeparator5;
+        private ToolStripButton tsbAddModule;
+        private ToolStripButton tsbShowModuleForm;
+        private ToolStripButton tsbDeleteModule;
+        private ToolStripSeparator toolStripSeparator3;
+        private ToolStripSeparator toolStripSeparator4;
+        private ToolStripButton tsbCascadeLayout;
+        private ToolStripButton tsbHorizontalLayout;
+        private TreeView tvEquipment;
+        private ContextMenuStrip cmEquipment;
+        private ToolStripMenuItem tsmiRenameUnit;
+        private ToolStripMenuItem tsmiUnitDublicate;
     }
 }

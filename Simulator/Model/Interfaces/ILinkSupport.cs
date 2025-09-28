@@ -16,8 +16,5 @@
 
         Guid ItemId { get; }
         void SetItemId(Guid itemId);
-
-        IVariable VarManager { get; }
-        void SetVarManager(IVariable varManager);
     }
 }

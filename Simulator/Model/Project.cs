@@ -105,6 +105,9 @@ namespace Simulator.Model
         public static List<Module> Modules { get; set; } = [];
 
         [Browsable(false)]
+        public static List<Module> Equipment { get; set; } = [];
+
+        [Browsable(false)]
         public static List<Module> Blocks { get; set; } = [];
 
         private static string file = string.Empty;
@@ -146,6 +149,14 @@ namespace Simulator.Model
                 xmodules.Add(xmodule);
                 module.Save(xmodule);
             }
+            XElement xquipment = new("Equipment");
+            root.Add(xquipment);
+            foreach (var unit in Equipment)
+            {
+                XElement xunit = new("Unit");
+                xquipment.Add(xunit);
+                unit.Save(xunit);
+            }
             try
             {
                 doc.Save(filename);
@@ -161,6 +172,7 @@ namespace Simulator.Model
             Name = string.Empty;
             Description = string.Empty;
             Modules.Clear();
+            Equipment.Clear();
             vals.Clear();
             Blocks.Clear();
             file = filename;
@@ -208,6 +220,22 @@ namespace Simulator.Model
                                 module.Name = "Task" + Modules.Count;
                         }
                     }
+                    var xqupment = xproject?.Element("Equipment");
+                    if (xqupment != null)
+                    {
+                        foreach (XElement xunit in xqupment.Elements("Unit"))
+                        {
+                            var unit = new Module();
+                            if (Guid.TryParse(xunit.Element("Id")?.Value, out Guid id))
+                                unit.Id = id;
+                            if (unit.Id == Guid.Empty)
+                                unit.Id = Guid.NewGuid();
+                            unit.Load(xunit);
+                            Equipment.Add(unit);
+                            if (string.IsNullOrEmpty(unit.Name))
+                                unit.Name = "Unit" + Modules.Count;
+                        }
+                    }
                 }
                 Modules.ForEach(module => module.Changed = false);
                 Blocks.ForEach(block => block.Changed = false);
@@ -215,6 +243,22 @@ namespace Simulator.Model
                 OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.Load));
             }
             catch { }
+        }
+
+        public static TreeNode[] GetEquipmentTree()
+        {
+            List<TreeNode> collection = [];
+            var rootNode = new TreeNode("Оборудование") { Tag = new ProjectProxy() };
+            collection.Add(rootNode);
+            int nmodule = 1;
+            foreach (var module in Equipment.OrderBy(x => x.Name))
+            {
+                module.Index = nmodule++;
+                var moduleNode = new TreeNode(module.ToString()) { Tag = module };
+                rootNode.Nodes.Add(moduleNode);
+            }
+            rootNode.ExpandAll();
+            return [.. collection];
         }
 
         public static TreeNode[] GetModulesTree()
@@ -307,6 +351,7 @@ namespace Simulator.Model
             Description = string.Empty;
             file = string.Empty;
             Modules.Clear();
+            Equipment.Clear();
             Blocks.Clear();
             Changed = false;
             OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.Clear));
@@ -316,7 +361,17 @@ namespace Simulator.Model
         {
             var module = newModule ?? new Module();
             Modules.Add(module);
+            Changed = true;
             OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.AddModule));
+            return module;
+        }
+
+        public static Module AddUnitToProject(Module? newModule = null)
+        {
+            var module = newModule ?? new Module();
+            Equipment.Add(module);
+            Changed = true;
+            OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.AddUnit));
             return module;
         }
 
@@ -325,6 +380,13 @@ namespace Simulator.Model
             Modules.Remove(module);
             Changed = true;
             OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.RemoveModule));
+        }
+
+        public static void RemoveUnitFromProject(Module unit)
+        {
+            Equipment.Remove(unit);
+            Changed = true;
+            OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.RemoveUnit));
         }
 
         public static Module AddBlockToProject()
@@ -402,6 +464,8 @@ namespace Simulator.Model
         Load,
         AddModule,
         RemoveModule,
+        AddUnit,
+        RemoveUnit,
         AddBlock,
         RemoveBlock,
     }

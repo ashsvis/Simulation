@@ -33,9 +33,12 @@ namespace Simulator.Model.Timer
             }
             else
                 state = time > DateTime.Now;
-            Out = input || state && !input;
-            varManager?.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
-        }
+            var @out = input || state && !input;
+            var changed = @out != Out;
+            Out = @out;
+            //if (changed)
+                Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
+       }
 
         public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush, int index)
         {
