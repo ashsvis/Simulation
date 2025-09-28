@@ -16,7 +16,7 @@ namespace Simulator.View
         private void SelectLinkSourceForm_Load(object sender, EventArgs e)
         {
             tvSources.Nodes.Clear();
-            foreach (var module in Project.Modules)
+            foreach (var module in Project.Modules.OrderBy(x => x.Name))
             {
                 var moduleNode = new TreeNode(string.IsNullOrWhiteSpace(module.Name) ? $"Задача {module.Index}" : module.Name);
                 tvSources.Nodes.Add(moduleNode);

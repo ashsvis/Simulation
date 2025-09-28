@@ -146,8 +146,12 @@ namespace Simulator
         /// <param name="e"></param>
         private void timerSimulation_Tick(object sender, EventArgs e)
         {
-            Project.Modules.ForEach(module => module.Calculate());
-            SimulationTick?.Invoke(this, EventArgs.Empty);
+            try
+            {
+                Project.Modules.ForEach(module => module.Calculate());
+                SimulationTick?.Invoke(this, EventArgs.Empty);
+            }
+            catch { }
         }
 
         public void RemoveModuleChildWindowFromPanels(Model.Module module)

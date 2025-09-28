@@ -99,7 +99,7 @@ namespace Simulator
             links.ForEach(item => item.SetSelect(false));
             ElementSelected?.Invoke(Module, EventArgs.Empty);
             timerInterface.Enabled = true;
-
+            splitContainer1.SplitterDistance = splitContainer1.ClientSize.Height;
             lvVariables.VirtualListSize = BuildTableElements();
             lvVariables.Invalidate();
         }
@@ -326,121 +326,125 @@ namespace Simulator
             //    }
             //}
 #endif
+            try
+            {
 
-            // прорисовка связей
-            using var linkpen = new Pen(zoomPad.ForeColor);
-            foreach (var link in links.Where(x => !x.Selected))
-            {
-                Element? source = items.FirstOrDefault(x => x.Id == link.SourceId);
-                if (source?.Instance is ILinkSupport lsup && lsup != null && link.SourcePinIndex < lsup.OutputValues.Length)
+                // прорисовка связей
+                using var linkpen = new Pen(zoomPad.ForeColor);
+                foreach (var link in links.Where(x => !x.Selected))
                 {
-                    var pin = link.SourcePinIndex;
-                    ValueItem? val = Project.ReadValue(lsup.ItemId, pin, ValueSide.Output, ValueKind.Digital);
-                    if (val != null && val.Value != null)
-                        link.SetValue(val.Value);
-                }
-                link.Draw(graphics, zoomPad.ForeColor);
-            }
-            // прорисовка узлов на связях
-            foreach (var group in links.GroupBy(x => x.SourceId))
-            {
-                if (group.Count() > 1)
-                {
-                    List<(PointF, Guid)> list = [];
-                    List<(RectangleF, Guid)> rects = [];
-                    foreach (var link in group)
+                    Element? source = items.FirstOrDefault(x => x.Id == link.SourceId);
+                    if (source?.Instance is ILinkSupport lsup && lsup != null && link.SourcePinIndex < lsup.OutputValues.Length)
                     {
-                        foreach (var point in link.Points.Distinct().Skip(1))
-                            list.Add((point, link.Id));
-                        for (var i = 1; i < link.Points.Count; i++)
+                        var pin = link.SourcePinIndex;
+                        ValueItem? val = Project.ReadValue(lsup.ItemId, pin, ValueSide.Output, ValueKind.Digital);
+                        if (val != null && val.Value != null)
+                            link.SetValue(val.Value);
+                    }
+                    link.Draw(graphics, zoomPad.ForeColor);
+                }
+                // прорисовка узлов на связях
+                foreach (var group in links.GroupBy(x => x.SourceId))
+                {
+                    if (group.Count() > 1)
+                    {
+                        List<(PointF, Guid)> list = [];
+                        List<(RectangleF, Guid)> rects = [];
+                        foreach (var link in group)
                         {
-                            var pt1 = link.Points[i - 1];
-                            var pt2 = link.Points[i];
-                            if (pt1.X != pt2.X || pt1.Y != pt2.Y)
+                            foreach (var point in link.Points.Distinct().Skip(1))
+                                list.Add((point, link.Id));
+                            for (var i = 1; i < link.Points.Count; i++)
                             {
-                                if (pt1.X != pt2.X || pt1.Y == pt2.Y)
-                                    rects.Add((new RectangleF(Math.Min(pt1.X, pt2.X) + 3f, pt1.Y - 1f, Math.Abs(pt1.X - pt2.X) - 6f, 3f), link.Id));
-                                if (pt1.X == pt2.X || pt1.Y != pt2.Y)
-                                    rects.Add((new RectangleF(pt1.X - 1f, Math.Min(pt1.Y, pt2.Y) + 3f, 3f, Math.Abs(pt1.Y - pt2.Y) - 6f), link.Id));
+                                var pt1 = link.Points[i - 1];
+                                var pt2 = link.Points[i];
+                                if (pt1.X != pt2.X || pt1.Y != pt2.Y)
+                                {
+                                    if (pt1.X != pt2.X || pt1.Y == pt2.Y)
+                                        rects.Add((new RectangleF(Math.Min(pt1.X, pt2.X) + 3f, pt1.Y - 1f, Math.Abs(pt1.X - pt2.X) - 6f, 3f), link.Id));
+                                    if (pt1.X == pt2.X || pt1.Y != pt2.Y)
+                                        rects.Add((new RectangleF(pt1.X - 1f, Math.Min(pt1.Y, pt2.Y) + 3f, 3f, Math.Abs(pt1.Y - pt2.Y) - 6f), link.Id));
+                                }
                             }
                         }
-                    }
 
-                    List<(PointF, Guid)> results = [];
-                    foreach ((var point, var id1) in list)
-                    {
-                        foreach ((var rect, var id2) in rects)
+                        List<(PointF, Guid)> results = [];
+                        foreach ((var point, var id1) in list)
                         {
-                            if (id1 != id2 && rect.Contains(point) && !results.Contains((point, id1)))
-                                results.Add((point, id1));
+                            foreach ((var rect, var id2) in rects)
+                            {
+                                if (id1 != id2 && rect.Contains(point) && !results.Contains((point, id1)))
+                                    results.Add((point, id1));
+                            }
+                        }
+                        foreach ((var pt, var id) in results)
+                        {
+                            var link = links.First(x => x.Id == id);
+                            using var br = new SolidBrush(link.Selected ? Color.Magenta : zoomPad.ForeColor);
+                            graphics.FillEllipse(br, new RectangleF(
+                                PointF.Subtract(pt, new SizeF(2.5f, 2.5f)), new SizeF(5f, 5f)));
                         }
                     }
-                    foreach ((var pt, var id) in results)
-                    {
-                        var link = links.First(x => x.Id == id);
-                        using var br = new SolidBrush(link.Selected ? Color.Magenta : zoomPad.ForeColor);
-                        graphics.FillEllipse(br, new RectangleF(
-                            PointF.Subtract(pt, new SizeF(2.5f, 2.5f)), new SizeF(5f, 5f)));
-                    }
                 }
-            }
 
-            using var exlinkpen = new Pen(Color.Gray);
-            using var exlinkbrush = new SolidBrush(Color.Gray);
-            using var font = new Font("Consolas", Element.Step + 2f);
-            // прорисовка внешних связей
-            foreach (var item in items)
-            {
-                if (item.Instance is ILinkSupport sup)
+                using var exlinkpen = new Pen(Color.Gray);
+                using var exlinkbrush = new SolidBrush(Color.Gray);
+                using var font = new Font("Consolas", Element.Step + 2f);
+                // прорисовка внешних связей
+                foreach (var item in items)
                 {
-                    for (var i = 0; i < sup.InputLinkSources.Length; i++)
+                    if (item.Instance is ILinkSupport sup)
                     {
-                        var (id, pinout, external) = sup.InputLinkSources[i];
-                        if (!external) continue;
-                        var pt = item.InputPins[i];
-                        graphics.DrawLine(exlinkpen, PointF.Subtract(pt, new SizeF(Element.Step * 3, 0)), pt);
-                        var (moduleName, elementName) = Project.GetAddressById(id);
-                        var text = $"{moduleName}.{elementName}.{pinout}";
-                        var ms = graphics.MeasureString(text, font);
-                        var rect = new RectangleF(pt.X - Element.Step * 3 - ms.Width, pt.Y, ms.Width, ms.Height);
-                        graphics.DrawRectangles(exlinkpen, [rect]);
-                        graphics.DrawString(text, font, exlinkbrush, rect.Location);
+                        for (var i = 0; i < sup.InputLinkSources.Length; i++)
+                        {
+                            var (id, pinout, external) = sup.InputLinkSources[i];
+                            if (!external) continue;
+                            var pt = item.InputPins[i];
+                            graphics.DrawLine(exlinkpen, PointF.Subtract(pt, new SizeF(Element.Step * 3, 0)), pt);
+                            var (moduleName, elementName) = Project.GetAddressById(id);
+                            var text = $"{moduleName}.{elementName}.{pinout}";
+                            var ms = graphics.MeasureString(text, font);
+                            var rect = new RectangleF(pt.X - Element.Step * 3 - ms.Width, pt.Y, ms.Width, ms.Height);
+                            graphics.DrawRectangles(exlinkpen, [rect]);
+                            graphics.DrawString(text, font, exlinkbrush, rect.Location);
+                        }
                     }
                 }
-            }    
 
-            // прорисовка элементов
-            var np = 1;
-            foreach (var item in items)
-            {
-                item.Index = np++;
-                if (item.Instance is ICustomDraw inst)
-                    item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor, inst.CustomDraw);
-                else
-                    item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor);
-            }
+                // прорисовка элементов
+                var np = 1;
+                foreach (var item in items)
+                {
+                    item.Index = np++;
+                    if (item.Instance is ICustomDraw inst)
+                        item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor, inst.CustomDraw);
+                    else
+                        item.Draw(graphics, zoomPad.ForeColor, zoomPad.BackColor);
+                }
 
-            // прорисовка выбранных связей 
-            foreach (var link in links.Where(x => x.Selected))
-            {
-                link.Draw(graphics, zoomPad.ForeColor);
-            }
+                // прорисовка выбранных связей 
+                foreach (var link in links.Where(x => x.Selected))
+                {
+                    link.Draw(graphics, zoomPad.ForeColor);
+                }
 
-            // прорисовка "резиновой" линии
-            if (linkFirstPoint != null)
-            {
-                var mp = PrepareMousePosition(mousePosition);
-                using var pen = new Pen(Color.Silver, 0);
-                pen.DashStyle = DashStyle.Dash;
-                graphics.DrawLine(pen, (PointF)linkFirstPoint, mp);
+                // прорисовка "резиновой" линии
+                if (linkFirstPoint != null)
+                {
+                    var mp = PrepareMousePosition(mousePosition);
+                    using var pen = new Pen(Color.Silver, 0);
+                    pen.DashStyle = DashStyle.Dash;
+                    graphics.DrawLine(pen, (PointF)linkFirstPoint, mp);
+                }
+                // прорисовка "резиновой" рамки 
+                if (ribbon != null && linkFirstPoint == null && !dragging && !segmentmoving)
+                {
+                    using var pen = new Pen(Color.FromArgb(200, partSelection ? Color.LimeGreen : Color.Aqua), 0);
+                    pen.DashStyle = DashStyle.Dash;
+                    graphics.DrawRectangle(pen, PrepareRect((Rectangle)ribbon));
+                }
             }
-            // прорисовка "резиновой" рамки 
-            if (ribbon != null && linkFirstPoint == null && !dragging && !segmentmoving)
-            {
-                using var pen = new Pen(Color.FromArgb(200, partSelection ? Color.LimeGreen : Color.Aqua), 0);
-                pen.DashStyle = DashStyle.Dash;
-                graphics.DrawRectangle(pen, PrepareRect((Rectangle)ribbon));
-            }
+            catch { }
         }
 
         private Rectangle PrepareRect(Rectangle rectangle)
@@ -1436,11 +1440,15 @@ namespace Simulator
 
         private void lvVariables_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
-            ValueItem[] data = elements[e.ItemIndex];
-            var item = new ListViewItem($"L{e.ItemIndex + 1}");
-            e.Item = item;
-            foreach (var a in data)
-                item.SubItems.Add($"{a}");
+            try
+            {
+                ValueItem[] data = elements[e.ItemIndex];
+                var item = new ListViewItem($"L{e.ItemIndex + 1}");
+                e.Item = item;
+                foreach (var a in data)
+                    item.SubItems.Add($"{a}");
+            }
+            catch { }
         }
     }
 }
