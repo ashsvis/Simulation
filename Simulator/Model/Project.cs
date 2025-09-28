@@ -224,7 +224,7 @@ namespace Simulator.Model
             var rootNode = new TreeNode("Проект") { Tag = new ProjectProxy() };
             collection.Add(rootNode);
             int nmodule = 1;
-            foreach (var module in Modules)
+            foreach (var module in Modules.OrderBy(x => x.Name))
             {
                 module.Index = nmodule++;
                 var moduleNode = new TreeNode(module.ToString()) { Tag = module };

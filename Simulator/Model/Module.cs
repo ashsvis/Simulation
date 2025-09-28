@@ -356,7 +356,7 @@ namespace Simulator.Model
         public static Module MakeDuplicate(Module module)
         {
             var root = new XElement("Duplicate");
-            XDocument doc = new(new XComment("Дубликат"), root);
+            //XDocument doc = new(new XComment("Дубликат"), root);
             XElement xitems = new("Elements");
             root.Add(xitems);
             foreach (var item in module.Elements)
@@ -380,9 +380,9 @@ namespace Simulator.Model
             List<Element> elements = [];
             List<Link> elementlinks = [];
             Dictionary<Guid, Guid> guids = [];
-            XDocument doc1 = XDocument.Load(xmlStream);
+            XDocument doc = XDocument.Load(xmlStream);
             var dublicate = new Model.Module();
-            dublicate.LoadElements(doc1.Root, elements);
+            dublicate.LoadElements(doc.Root, elements);
             // замена Id на новый, сохранение уникальности Id для копии элемента
             // составление словаря замен
             foreach (Element element in elements)
@@ -403,7 +403,7 @@ namespace Simulator.Model
             }
             // установление связей
             dublicate.ConnectLinks(elements);
-            LoadVisualLinks(doc1.Root, elementlinks);
+            LoadVisualLinks(doc.Root, elementlinks);
 
             foreach (Element element in elements)
                 dublicate.Elements.Add(element);

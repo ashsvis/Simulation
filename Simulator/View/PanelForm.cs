@@ -1,4 +1,5 @@
 using Simulator.Model;
+using Simulator.Model.Interfaces;
 using Simulator.View;
 
 namespace Simulator
@@ -152,7 +153,7 @@ namespace Simulator
         /// <param name="e"></param>
         private void timerInterface_Tick(object sender, EventArgs e)
         {
-            tsmiSave.Enabled = Project.Changed || Project.Modules.Any(x => x.Changed);
+            tsbSave.Enabled = tsmiSave.Enabled = Project.Changed || Project.Modules.Any(x => x.Changed);
             окноToolStripMenuItem.Visible = MdiChildren.Length > 0;
             tsbCascadeLayout.Enabled = MdiChildren.Length > 0;
             tsbHorizontalLayout.Enabled = MdiChildren.Length > 0;
@@ -457,7 +458,7 @@ namespace Simulator
 
         private void tvModules_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            tsbCompile.Enabled =
+            tsbSave.Enabled =
                 tsbShowModuleForm.Enabled =
                 tsbDeleteModule.Enabled =
                 tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module _;
@@ -595,6 +596,7 @@ namespace Simulator
         {
             var isLinkToModule = tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module;
             tsmiMakeDublicate.Visible = isLinkToModule;
+            tsmiRenameModule.Visible = isLinkToModule;
             e.Cancel = !isLinkToModule;
         }
 
@@ -602,9 +604,38 @@ namespace Simulator
         {
             if (tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module module)
             {
-                var dublicate = Module.MakeDuplicate(module);
-                dublicate.Name = module.Name + "_1";
-                AddModuleToProject(dublicate);
+                var dlg = new ChangeNameDialog(module.Name);
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    if (!string.IsNullOrWhiteSpace(dlg.EnteredValue) && !Project.Modules.Any(x => x.Name.Equals(dlg.EnteredValue)))
+                    {
+                        var dublicate = Module.MakeDuplicate(module);
+                        dublicate.Name = dlg.EnteredValue;
+                        AddModuleToProject(dublicate);
+                        dublicate.Changed = true;
+                    }
+                    else
+                        MessageBox.Show("Уже есть такое имя задачи!", "Переименование задачи", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void tsmiRenameModule_Click(object sender, EventArgs e)
+        {
+            if (tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module module)
+            {
+                var dlg = new ChangeNameDialog(module.Name);
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    if (!string.IsNullOrWhiteSpace(dlg.EnteredValue) && !Project.Modules.Any(x => x.Name.Equals(dlg.EnteredValue)))
+                    {
+                        tvModules.SelectedNode.Text = dlg.EnteredValue;
+                        module.Name = dlg.EnteredValue;
+                        Project.Changed = true;
+                    }
+                    else
+                        MessageBox.Show("Уже есть такое имя задачи!", "Переименование задачи", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }

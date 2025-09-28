@@ -67,15 +67,16 @@
             tpModiles = new TabPage();
             tvModules = new TreeView();
             cmModules = new ContextMenuStrip(components);
+            tsmiRenameModule = new ToolStripMenuItem();
             tsmiMakeDublicate = new ToolStripMenuItem();
             tsToolModules = new ToolStrip();
             tsbOpenProject = new ToolStripButton();
+            tsbSave = new ToolStripButton();
             toolStripSeparator5 = new ToolStripSeparator();
             tsbAddModule = new ToolStripButton();
             tsbShowModuleForm = new ToolStripButton();
             tsbDeleteModule = new ToolStripButton();
             toolStripSeparator3 = new ToolStripSeparator();
-            tsbCompile = new ToolStripButton();
             toolStripSeparator4 = new ToolStripSeparator();
             tsbCascadeLayout = new ToolStripButton();
             tsbHorizontalLayout = new ToolStripButton();
@@ -416,22 +417,29 @@
             // 
             // cmModules
             // 
-            cmModules.Items.AddRange(new ToolStripItem[] { tsmiMakeDublicate });
+            cmModules.Items.AddRange(new ToolStripItem[] { tsmiRenameModule, tsmiMakeDublicate });
             cmModules.Name = "cmModules";
-            cmModules.Size = new Size(181, 48);
+            cmModules.Size = new Size(171, 48);
             cmModules.Opening += cmModules_Opening;
+            // 
+            // tsmiRenameModule
+            // 
+            tsmiRenameModule.Name = "tsmiRenameModule";
+            tsmiRenameModule.Size = new Size(170, 22);
+            tsmiRenameModule.Text = "Переименовать...";
+            tsmiRenameModule.Click += tsmiRenameModule_Click;
             // 
             // tsmiMakeDublicate
             // 
             tsmiMakeDublicate.Name = "tsmiMakeDublicate";
-            tsmiMakeDublicate.Size = new Size(180, 22);
+            tsmiMakeDublicate.Size = new Size(170, 22);
             tsmiMakeDublicate.Text = "Дублировать";
             tsmiMakeDublicate.Click += tsmiMakeDublicate_Click;
             // 
             // tsToolModules
             // 
             tsToolModules.GripStyle = ToolStripGripStyle.Hidden;
-            tsToolModules.Items.AddRange(new ToolStripItem[] { tsbOpenProject, toolStripSeparator5, tsbAddModule, tsbShowModuleForm, tsbDeleteModule, toolStripSeparator3, tsbCompile, toolStripSeparator4, tsbCascadeLayout, tsbHorizontalLayout });
+            tsToolModules.Items.AddRange(new ToolStripItem[] { tsbOpenProject, tsbSave, toolStripSeparator5, tsbAddModule, tsbShowModuleForm, tsbDeleteModule, toolStripSeparator3, toolStripSeparator4, tsbCascadeLayout, tsbHorizontalLayout });
             tsToolModules.Location = new Point(3, 3);
             tsToolModules.Name = "tsToolModules";
             tsToolModules.Size = new Size(186, 25);
@@ -447,6 +455,17 @@
             tsbOpenProject.Size = new Size(23, 22);
             tsbOpenProject.Text = "Открыть проект";
             tsbOpenProject.Click += tsmiOpen_Click;
+            // 
+            // tsbSave
+            // 
+            tsbSave.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbSave.Enabled = false;
+            tsbSave.Image = Properties.Resources.save;
+            tsbSave.ImageTransparentColor = Color.Magenta;
+            tsbSave.Name = "tsbSave";
+            tsbSave.Size = new Size(23, 22);
+            tsbSave.Text = "Сохранить проект";
+            tsbSave.Click += tsmiSave_Click;
             // 
             // toolStripSeparator5
             // 
@@ -489,16 +508,6 @@
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
             toolStripSeparator3.Size = new Size(6, 25);
-            // 
-            // tsbCompile
-            // 
-            tsbCompile.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            tsbCompile.Enabled = false;
-            tsbCompile.Image = Properties.Resources.compile;
-            tsbCompile.ImageTransparentColor = Color.Magenta;
-            tsbCompile.Name = "tsbCompile";
-            tsbCompile.Size = new Size(23, 22);
-            tsbCompile.Text = "Компиляция модуля";
             // 
             // toolStripSeparator4
             // 
@@ -886,12 +895,13 @@
         private ToolStripButton tsbHorizontalLayout;
         private ToolStripButton tsbOpenProject;
         private ToolStripSeparator toolStripSeparator5;
-        private ToolStripButton tsbCompile;
+        private ToolStripButton tsbSave;
         private ToolStrip tsToolLibrary;
         private ToolStripButton tsbAddBock;
         private ToolStripButton tsbShowBlockForm;
         private ToolStripButton tsbDeleteBlock;
         private ContextMenuStrip cmModules;
         private ToolStripMenuItem tsmiMakeDublicate;
+        private ToolStripMenuItem tsmiRenameModule;
     }
 }
