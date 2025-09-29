@@ -446,7 +446,7 @@
             tsbRun.ImageTransparentColor = Color.Magenta;
             tsbRun.Name = "tsbRun";
             tsbRun.Size = new Size(23, 22);
-            tsbRun.Text = "toolStripButton1";
+            tsbRun.Text = "Симуляция";
             tsbRun.Click += tsbRun_Click;
             // 
             // toolStripSeparator4
@@ -472,7 +472,7 @@
             tsbHorizontalLayout.Image = Properties.Resources.horizontallayout;
             tsbHorizontalLayout.ImageTransparentColor = Color.Magenta;
             tsbHorizontalLayout.Name = "tsbHorizontalLayout";
-            tsbHorizontalLayout.Size = new Size(23, 22);
+            tsbHorizontalLayout.Size = new Size(23, 20);
             tsbHorizontalLayout.Text = "Расположить окна по горизонтали";
             tsbHorizontalLayout.Click += поГоризонталиToolStripMenuItem_Click;
             // 
