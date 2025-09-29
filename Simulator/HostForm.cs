@@ -91,12 +91,14 @@ namespace Simulator
         private void RootForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             // финализация
-            backWorkerCalc.CancelAsync();
+            if (backWorkerCalc.IsBusy)
+                backWorkerCalc.CancelAsync();
         }
 
         private void RootForm_Load(object sender, EventArgs e)
         {
-            backWorkerCalc.RunWorkerAsync();
+            //backWorkerCalc.RunWorkerAsync();
+            timerCalculate.Enabled = true;
         }
 
         public void SwapPanels(int prev, int current)
@@ -170,12 +172,24 @@ namespace Simulator
 
         private void backWorkerCalc_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            
+
         }
 
         private void backWorkerCalc_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
             SimulationTick?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void timerCalculate_Tick(object sender, EventArgs e)
+        {
+            timerCalculate.Enabled = false;
+            if (Project.Modules.Count != 0)
+                Project.Modules.ToList().ForEach(module => module.Calculate());
+            Thread.Sleep(50);
+            if (Project.Equipment.Count != 0)
+                Project.Equipment.ToList().ForEach(unit => unit.Calculate());
+            SimulationTick?.Invoke(this, EventArgs.Empty);
+            timerCalculate.Enabled = true;
         }
     }
 }

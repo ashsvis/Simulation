@@ -28,7 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             backWorkerCalc = new System.ComponentModel.BackgroundWorker();
+            timerCalculate = new System.Windows.Forms.Timer(components);
             SuspendLayout();
             // 
             // backWorkerCalc
@@ -39,11 +41,15 @@
             backWorkerCalc.ProgressChanged += backWorkerCalc_ProgressChanged;
             backWorkerCalc.RunWorkerCompleted += backWorkerCalc_RunWorkerCompleted;
             // 
+            // timerCalculate
+            // 
+            timerCalculate.Tick += timerCalculate_Tick;
+            // 
             // HostForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(185, 29);
+            ClientSize = new Size(181, 25);
             ControlBox = false;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
@@ -62,5 +68,6 @@
 
         #endregion
         private System.ComponentModel.BackgroundWorker backWorkerCalc;
+        private System.Windows.Forms.Timer timerCalculate;
     }
 }

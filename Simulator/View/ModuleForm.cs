@@ -914,58 +914,7 @@ namespace Simulator
                 ToolStripMenuItem item;
                 if (element?.Instance is ILinkSupport func)
                 {
-                    if (output == null)
-                    {
-                        if (func is Model.Inputs.DI || func is Model.Outputs.DO)
-                        {
-                            item = new ToolStripMenuItem() { Text = "Настроить связь с оборудованием...", Tag = element };
-                            item.Click += (s, e) =>
-                            {
-                                var menuItem = (ToolStripMenuItem?)s;
-                                if (menuItem?.Tag is Element element)
-                                {
-                                    if (func is Model.Inputs.DI di)
-                                    {
-                                        var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentOutputs, di.LinkSource);
-                                        if (dlg.ShowDialog() == DialogResult.OK)
-                                        {
-                                            (Guid idSource, int pinOut) = dlg.Result;
-                                            if (idSource != Guid.Empty)
-                                            {
-                                                di.SetExternalLinkToInp(0, idSource, pinOut, true);
-                                                Module.Changed = true;
-                                            }
-                                            else if (idSource == Guid.Empty)
-                                            {
-                                                di.ResetExternalLinkToInp(0);
-                                                Module.Changed = true;
-                                            }
-                                        }
-                                    }
-                                    else if (func is Model.Outputs.DO @do)
-                                    {
-                                        var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentInputs, @do.LinkSource);
-                                        if (dlg.ShowDialog() == DialogResult.OK)
-                                        {
-                                            (Guid idSource, int pinInp) = dlg.Result;
-                                            if (idSource != Guid.Empty)
-                                            {
-                                                @do.SetExternalLinkToInp(0, idSource, pinInp, true);
-                                                Module.Changed = true;
-                                            }
-                                            else if (idSource == Guid.Empty)
-                                            {
-                                                @do.ResetExternalLinkToInp(0);
-                                                Module.Changed = true;
-                                            }
-                                        }
-                                    }
-                                }
-                            };
-                            cmZoomPad.Items.Add(item);
-                        }
-                    }
-                    else if (output == false && pin != null)
+                    if (output == false && pin != null)
                     {
                         if (func.LinkedInputs[(int)pin])
                         {
@@ -1043,6 +992,54 @@ namespace Simulator
                             }
                         };
                         cmZoomPad.Items.Add(item);
+                        if (func is Model.Inputs.DI || func is Model.Outputs.DO)
+                        {
+                            item = new ToolStripMenuItem() { Text = "Настроить связь с оборудованием...", Tag = element };
+                            item.Click += (s, e) =>
+                            {
+                                var menuItem = (ToolStripMenuItem?)s;
+                                if (menuItem?.Tag is Element element)
+                                {
+                                    if (func is Model.Inputs.DI di)
+                                    {
+                                        var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentOutputs, di.LinkSource);
+                                        if (dlg.ShowDialog() == DialogResult.OK)
+                                        {
+                                            (Guid idSource, int pinOut) = dlg.Result;
+                                            if (idSource != Guid.Empty)
+                                            {
+                                                di.SetExternalLinkToInp(0, idSource, pinOut, true);
+                                                Module.Changed = true;
+                                            }
+                                            else if (idSource == Guid.Empty)
+                                            {
+                                                di.ResetExternalLinkToInp(0);
+                                                Module.Changed = true;
+                                            }
+                                        }
+                                    }
+                                    else if (func is Model.Outputs.DO @do)
+                                    {
+                                        var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentInputs, @do.LinkSource);
+                                        if (dlg.ShowDialog() == DialogResult.OK)
+                                        {
+                                            (Guid idSource, int pinInp) = dlg.Result;
+                                            if (idSource != Guid.Empty)
+                                            {
+                                                @do.SetExternalLinkToInp(0, idSource, pinInp, true);
+                                                Module.Changed = true;
+                                            }
+                                            else if (idSource == Guid.Empty)
+                                            {
+                                                @do.ResetExternalLinkToInp(0);
+                                                Module.Changed = true;
+                                            }
+                                        }
+                                    }
+                                }
+                            };
+                            cmZoomPad.Items.Add(item);
+                        }
                     }
                 }
             }
