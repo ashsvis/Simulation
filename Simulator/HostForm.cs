@@ -91,13 +91,10 @@ namespace Simulator
         private void RootForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             // финализация
-            if (backWorkerCalc.IsBusy)
-                backWorkerCalc.CancelAsync();
         }
 
         private void RootForm_Load(object sender, EventArgs e)
         {
-            //backWorkerCalc.RunWorkerAsync();
             timerCalculate.Enabled = true;
         }
 
@@ -146,38 +143,6 @@ namespace Simulator
             {
                 frm.RemoveModuleChildFormFromPanel(module);
             });
-        }
-
-        private void backWorkerCalc_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
-        {
-            var worker = (BackgroundWorker)sender;
-            while (!worker.CancellationPending)
-            {
-                Thread.Sleep(50);
-                try
-                {
-                    if (Project.Modules.Count != 0)
-                        Project.Modules.ToList().ForEach(module => module.Calculate());
-                    Thread.Sleep(50);
-                    if (Project.Equipment.Count != 0)
-                        Project.Equipment.ToList().ForEach(unit => unit.Calculate());
-                    worker.ReportProgress(0);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.ToString());
-                }
-            }
-        }
-
-        private void backWorkerCalc_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
-        {
-
-        }
-
-        private void backWorkerCalc_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
-        {
-            SimulationTick?.Invoke(this, EventArgs.Empty);
         }
 
         private void timerCalculate_Tick(object sender, EventArgs e)
