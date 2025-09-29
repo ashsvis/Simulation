@@ -57,8 +57,7 @@ namespace Simulator.Model.Timer
             {
                 var kf = (time - DateTime.Now).TotalMilliseconds / (WaitTime * 1000);
                 var r = rect;
-                r.Width = (float)(rect.Width * kf);
-                r.X += rect.Width - r.Width;
+                r.Width = rect.Width - (float)(rect.Width * kf);
                 using var br = new SolidBrush(Color.FromArgb(100, Color.Lime));
                 graphics.FillRectangle(br, r);
             }

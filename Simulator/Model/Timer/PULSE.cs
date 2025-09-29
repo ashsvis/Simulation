@@ -3,6 +3,7 @@ using Simulator.Model.Logic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Xml.Linq;
+using static System.Windows.Forms.AxHost;
 
 namespace Simulator.Model.Timer
 {
@@ -41,10 +42,8 @@ namespace Simulator.Model.Timer
             }
             else
                 @out = time > DateTime.Now;
-            var changed = @out != Out;
             Out = @out;
-            //if (changed)
-                Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
+            Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
         }
 
         public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush, int index)
@@ -62,6 +61,15 @@ namespace Simulator.Model.Timer
             }
             rect.Inflate(-1, -1);
             graphics.FillRectangle(brush, rect);
+            if (Out)
+            {
+                var kf = (time - DateTime.Now).TotalMilliseconds / (WaitTime * 1000);
+                var r = rect;
+                r.Width = (float)(rect.Width * kf);
+                r.X += rect.Width - r.Width;
+                using var br = new SolidBrush(Color.FromArgb(100, Color.Lime));
+                graphics.FillRectangle(br, r);
+            }
             var sym = new RectangleF(rect.Location, new SizeF(rect.Width, rect.Height / 3));
             sym.Inflate(-6, -3);
             var w = sym.Width / 4;
