@@ -54,8 +54,16 @@ namespace Simulator.Model.Timer
                 graphics.DrawString(Name, font, fontbrush, new PointF(rect.X + rect.Height / 2, rect.Y - msn.Height), format);
             }
             rect.Inflate(-1, -1);
-
             graphics.FillRectangle(brush, rect);
+            if (state)
+            {
+                var kf = (time - DateTime.Now).TotalMilliseconds / (WaitTime * 1000);
+                var r = rect;
+                r.Width = (float)(rect.Width * kf);
+                r.X += rect.Width - r.Width;
+                using var br = new SolidBrush(Color.FromArgb(100, Color.Lime));
+                graphics.FillRectangle(br, r);
+            }
             var sym = new RectangleF(rect.Location, new SizeF(rect.Width, rect.Height / 3));
             sym.Inflate(-6, -6);
             sym.Offset(0, sym.Height);

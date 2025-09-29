@@ -34,10 +34,8 @@ namespace Simulator.Model.Timer
             else
                 state = time > DateTime.Now;
             var @out = !state && input;
-            var changed = @out != Out;
             Out = @out;
-            //if (changed)
-                Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
+            Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
         }
 
         public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush, int index)
@@ -53,9 +51,17 @@ namespace Simulator.Model.Timer
                 var msn = graphics.MeasureString(Name, font);
                 graphics.DrawString(Name, font, fontbrush, new PointF(rect.X + rect.Height / 2, rect.Y - msn.Height), format);
             }
-            rect.Inflate(-1, -1);
-            
+            rect.Inflate(-1, -1); 
             graphics.FillRectangle(brush, rect);
+            if (state)
+            {
+                var kf = (time - DateTime.Now).TotalMilliseconds / (WaitTime * 1000);
+                var r = rect;
+                r.Width = (float)(rect.Width * kf);
+                r.X += rect.Width - r.Width;
+                using var br = new SolidBrush(Color.FromArgb(100, Color.Lime));
+                graphics.FillRectangle(br, r);
+            }
             var sym = new RectangleF(rect.Location, new SizeF(rect.Width, rect.Height / 3));
             sym.Inflate(-6, -6);
             sym.Offset(0, sym.Height);
