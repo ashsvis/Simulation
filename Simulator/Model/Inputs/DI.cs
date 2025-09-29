@@ -24,6 +24,18 @@ namespace Simulator.Model.Inputs
         [Category("Настройки"), DisplayName("Номер"), Description("Индекс входа")]
         public int Order { get; set; }
 
+        public override void Calculate()
+        {
+            if (linkSource.Item1 != Guid.Empty)
+            {
+                ValueItem? item = Project.ReadValue(linkSource.Item1, 0, ValueSide.Input, ValueKind.Digital);
+                if (item != null)
+                {
+                    OutputValues[0] = item.Value ?? false;
+                    Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, item.Value);
+                }
+            }
+        }
 
         /// <summary>
         /// Для создания связи записывается ссылка на метод,
@@ -67,6 +79,11 @@ namespace Simulator.Model.Inputs
         {
             graphics.FillRectangle(brush, rect);
             graphics.DrawRectangles(pen, [rect]);
+            //if (linkSource.Item1 != Guid.Empty)
+            //{
+            //    rect.Inflate(-2, -2);
+            //    graphics.DrawRectangles(pen, [rect]);
+            //}
             using var format = new StringFormat();
             format.Alignment = StringAlignment.Center;
             // обозначение функции, текст по-центру, в верхней части рамки элемента
@@ -113,8 +130,18 @@ namespace Simulator.Model.Inputs
             var descrect = new RectangleF(rect.X, rect.Y, rect.Height * 3, rect.Height);
             graphics.FillRectangle(brush, descrect);
             graphics.DrawRectangles(pen, [descrect]);
+            //if (linkSource.Item1 != Guid.Empty)
+            //{
+            //    descrect.Inflate(-2, -2);
+            //    graphics.DrawRectangles(pen, [descrect]);
+            //}
             using var textFont = new Font("Arial Narrow", font.Size);
             graphics.DrawString(Description, textFont, fontbrush, descrect, format);
+            if (linkSource.Item1 != Guid.Empty)
+            {
+                rect.Inflate(2, 2);
+                graphics.DrawRectangles(pen, [rect]);
+            }
         }
 
         public override void Save(XElement xtance)

@@ -11788,7 +11788,7 @@
       <Id>eb86e2ed-d016-4239-aefe-df164ffbf436</Id>
       <Elements>
         <Element Id="6464f24a-1f4f-43ff-a5ba-4121f567429a" X="32" Y="32">
-          <Instance Type="Simulator.Model.Inputs.DI" Name="Открыть">
+          <Instance Type="Simulator.Model.Inputs.DI">
             <Outputs>
               <Output Index="0" />
             </Outputs>
@@ -11835,9 +11835,9 @@
           </Instance>
         </Element>
         <Element Id="71dc08f1-83ca-4522-b398-40b322bdeb04" X="472" Y="32">
-          <Instance Type="Simulator.Model.Outputs.DO" Name="Открыт">
+          <Instance Type="Simulator.Model.Outputs.DO">
             <Inputs>
-              <Input Index="0">
+              <Input Index="0" Value="true">
                 <Source Id="849184c7-8b33-4675-affc-5f3d185e4d14" />
               </Input>
             </Inputs>
@@ -11846,9 +11846,9 @@
           </Instance>
         </Element>
         <Element Id="14b8412c-edd7-47b1-9d7c-12e55166dfe3" X="472" Y="96">
-          <Instance Type="Simulator.Model.Outputs.DO" Name="Закрыт">
+          <Instance Type="Simulator.Model.Outputs.DO">
             <Inputs>
-              <Input Index="0" Value="true">
+              <Input Index="0">
                 <Source Id="4286d9fe-00af-4947-abf5-27f03a7650a2" />
               </Input>
             </Inputs>
@@ -11863,11 +11863,6 @@
           <Destination Id="849184c7-8b33-4675-affc-5f3d185e4d14" PinIndex="0" />
           <Points Array="232,56 232,56 368,56 368,56" />
         </Link>
-        <Link Id="31fa7acc-37c5-40cf-8693-156ec5e8013b">
-          <Source Id="849184c7-8b33-4675-affc-5f3d185e4d14" PinIndex="0" />
-          <Destination Id="71dc08f1-83ca-4522-b398-40b322bdeb04" PinIndex="0" />
-          <Points Array="432,56 432,56 464,56 464,56" />
-        </Link>
         <Link Id="a8f9c9bf-bf81-4168-b159-f7e98fdab949">
           <Source Id="6464f24a-1f4f-43ff-a5ba-4121f567429a" PinIndex="0" />
           <Destination Id="994d7b12-19f8-4d13-8ecd-acf7efbcdd66" PinIndex="0" />
@@ -11878,7 +11873,12 @@
           <Destination Id="4286d9fe-00af-4947-abf5-27f03a7650a2" PinIndex="0" />
           <Points Array="336,120 336,120 368,120 368,120" />
         </Link>
-        <Link Id="d3f6e416-7f05-48a1-9f2d-b3dc6115c754">
+        <Link Id="8ea38ca2-be57-471e-8c42-d974787df6bc">
+          <Source Id="849184c7-8b33-4675-affc-5f3d185e4d14" PinIndex="0" />
+          <Destination Id="71dc08f1-83ca-4522-b398-40b322bdeb04" PinIndex="0" />
+          <Points Array="432,56 432,56 464,56 464,56" />
+        </Link>
+        <Link Id="1a05ebfb-0971-4cfc-9352-894d207cb022">
           <Source Id="4286d9fe-00af-4947-abf5-27f03a7650a2" PinIndex="0" />
           <Destination Id="14b8412c-edd7-47b1-9d7c-12e55166dfe3" PinIndex="0" />
           <Points Array="432,120 432,120 464,120 464,120" />
