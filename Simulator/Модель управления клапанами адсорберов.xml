@@ -11786,7 +11786,7 @@
       <Id>eb86e2ed-d016-4239-aefe-df164ffbf436</Id>
       <Elements>
         <Element Id="6464f24a-1f4f-43ff-a5ba-4121f567429a" X="32" Y="32">
-          <Instance Type="Simulator.Model.Inputs.DI">
+          <Instance Type="Simulator.Model.Inputs.DI" Name="Открыть">
             <Outputs>
               <Output Index="0" />
             </Outputs>
@@ -11833,7 +11833,7 @@
           </Instance>
         </Element>
         <Element Id="71dc08f1-83ca-4522-b398-40b322bdeb04" X="472" Y="32">
-          <Instance Type="Simulator.Model.Outputs.DO">
+          <Instance Type="Simulator.Model.Outputs.DO" Name="Открыт">
             <Inputs>
               <Input Index="0">
                 <Source Id="849184c7-8b33-4675-affc-5f3d185e4d14" />
@@ -11844,7 +11844,7 @@
           </Instance>
         </Element>
         <Element Id="14b8412c-edd7-47b1-9d7c-12e55166dfe3" X="472" Y="96">
-          <Instance Type="Simulator.Model.Outputs.DO">
+          <Instance Type="Simulator.Model.Outputs.DO" Name="Закрыт">
             <Inputs>
               <Input Index="0" Value="true">
                 <Source Id="4286d9fe-00af-4947-abf5-27f03a7650a2" />

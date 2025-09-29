@@ -33,8 +33,8 @@ namespace Simulator
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModuleForm));
             zoomPad = new ZoomControl();
-            cmsContextMenu = new ContextMenuStrip(components);
-            toolStripModule = new ToolStrip();
+            cmZoomPad = new ContextMenuStrip(components);
+            tsModule = new ToolStrip();
             tsbSave = new ToolStripButton();
             печатьToolStripButton = new ToolStripButton();
             toolStripSeparator = new ToolStripSeparator();
@@ -61,7 +61,7 @@ namespace Simulator
             chOutput4 = new ColumnHeader();
             chOutput5 = new ColumnHeader();
             tableLayoutPanel1 = new TableLayoutPanel();
-            toolStripModule.SuspendLayout();
+            tsModule.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -73,7 +73,7 @@ namespace Simulator
             // 
             zoomPad.AllowDrop = true;
             zoomPad.BackColor = Color.FromArgb(64, 64, 64);
-            zoomPad.ContextMenuStrip = cmsContextMenu;
+            zoomPad.ContextMenuStrip = cmZoomPad;
             zoomPad.Dock = DockStyle.Fill;
             zoomPad.ForeColor = SystemColors.Window;
             zoomPad.Location = new Point(0, 0);
@@ -92,21 +92,21 @@ namespace Simulator
             zoomPad.MouseMove += zoomPad_MouseMove;
             zoomPad.MouseUp += zoomPad_MouseUp;
             // 
-            // cmsContextMenu
+            // cmZoomPad
             // 
-            cmsContextMenu.Name = "contextMenuStrip1";
-            cmsContextMenu.Size = new Size(61, 4);
+            cmZoomPad.Name = "contextMenuStrip1";
+            cmZoomPad.Size = new Size(181, 26);
             // 
-            // toolStripModule
+            // tsModule
             // 
-            toolStripModule.GripStyle = ToolStripGripStyle.Hidden;
-            toolStripModule.Items.AddRange(new ToolStripItem[] { tsbSave, печатьToolStripButton, toolStripSeparator, tsbCut, tsbCopy, tsbPaste, справкаToolStripButton });
-            toolStripModule.Location = new Point(0, 0);
-            toolStripModule.Name = "toolStripModule";
-            toolStripModule.RenderMode = ToolStripRenderMode.System;
-            toolStripModule.Size = new Size(800, 25);
-            toolStripModule.TabIndex = 1;
-            toolStripModule.Text = "toolStrip1";
+            tsModule.GripStyle = ToolStripGripStyle.Hidden;
+            tsModule.Items.AddRange(new ToolStripItem[] { tsbSave, печатьToolStripButton, toolStripSeparator, tsbCut, tsbCopy, tsbPaste, справкаToolStripButton });
+            tsModule.Location = new Point(0, 0);
+            tsModule.Name = "tsModule";
+            tsModule.RenderMode = ToolStripRenderMode.System;
+            tsModule.Size = new Size(800, 25);
+            tsModule.TabIndex = 1;
+            tsModule.Text = "toolStrip1";
             // 
             // tsbSave
             // 
@@ -236,43 +236,43 @@ namespace Simulator
             // 
             chInput2.Text = "Вход 2";
             chInput2.TextAlign = HorizontalAlignment.Center;
-            chInput2.Width = 56;
+            chInput2.Width = 0;
             // 
             // chInput3
             // 
             chInput3.Text = "Вход 3";
             chInput3.TextAlign = HorizontalAlignment.Center;
-            chInput3.Width = 56;
+            chInput3.Width = 0;
             // 
             // chInput4
             // 
             chInput4.Text = "Вход 4";
             chInput4.TextAlign = HorizontalAlignment.Center;
-            chInput4.Width = 56;
+            chInput4.Width = 0;
             // 
             // chInput5
             // 
             chInput5.Text = "Вход 5";
             chInput5.TextAlign = HorizontalAlignment.Center;
-            chInput5.Width = 56;
+            chInput5.Width = 0;
             // 
             // chInput6
             // 
             chInput6.Text = "Вход 6";
             chInput6.TextAlign = HorizontalAlignment.Center;
-            chInput6.Width = 56;
+            chInput6.Width = 0;
             // 
             // chInput7
             // 
             chInput7.Text = "Вход 7";
             chInput7.TextAlign = HorizontalAlignment.Center;
-            chInput7.Width = 56;
+            chInput7.Width = 0;
             // 
             // chInput8
             // 
             chInput8.Text = "Вход 8";
             chInput8.TextAlign = HorizontalAlignment.Center;
-            chInput8.Width = 56;
+            chInput8.Width = 0;
             // 
             // chOutput1
             // 
@@ -284,31 +284,31 @@ namespace Simulator
             // 
             chOutput2.Text = "Выход 2";
             chOutput2.TextAlign = HorizontalAlignment.Center;
-            chOutput2.Width = 56;
+            chOutput2.Width = 0;
             // 
             // chOutput3
             // 
             chOutput3.Text = "Выход 3";
             chOutput3.TextAlign = HorizontalAlignment.Center;
-            chOutput3.Width = 56;
+            chOutput3.Width = 0;
             // 
             // chOutput4
             // 
             chOutput4.Text = "Выход 4";
             chOutput4.TextAlign = HorizontalAlignment.Center;
-            chOutput4.Width = 56;
+            chOutput4.Width = 0;
             // 
             // chOutput5
             // 
             chOutput5.Text = "Выход 5";
             chOutput5.TextAlign = HorizontalAlignment.Center;
-            chOutput5.Width = 56;
+            chOutput5.Width = 0;
             // 
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Controls.Add(toolStripModule, 0, 0);
+            tableLayoutPanel1.Controls.Add(tsModule, 0, 0);
             tableLayoutPanel1.Controls.Add(splitContainer1, 0, 1);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
@@ -332,8 +332,8 @@ namespace Simulator
             FormClosing += ModuleForm_FormClosing;
             Load += ModuleForm_Load;
             KeyDown += ModuleForm_KeyDown;
-            toolStripModule.ResumeLayout(false);
-            toolStripModule.PerformLayout();
+            tsModule.ResumeLayout(false);
+            tsModule.PerformLayout();
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
@@ -346,8 +346,8 @@ namespace Simulator
         #endregion
 
         private View.ZoomControl zoomPad;
-        private ContextMenuStrip cmsContextMenu;
-        private ToolStrip toolStripModule;
+        private ContextMenuStrip cmZoomPad;
+        private ToolStrip tsModule;
         private ToolStripButton tsbSave;
         private ToolStripButton печатьToolStripButton;
         private ToolStripSeparator toolStripSeparator;

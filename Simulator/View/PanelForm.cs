@@ -123,22 +123,22 @@ namespace Simulator
             CreateNewModuleForm(module);
         }
 
-        public void AddUnitToProject(Module? newModule = null)
+        public void AddUnitToProject(Unit? newUnit = null)
         {
-            var module = Project.AddUnitToProject(newModule);
+            var unit = Project.AddUnitToProject(newUnit);
 
             tvEquipment.Nodes.Clear();
             tvEquipment.Nodes.AddRange(Project.GetEquipmentTree());
 
-            var node = tvEquipment.Nodes[0].Nodes.Cast<TreeNode>().FirstOrDefault(x => x.Tag == module);
+            var node = tvEquipment.Nodes[0].Nodes.Cast<TreeNode>().FirstOrDefault(x => x.Tag == unit);
             if (node != null)
             {
                 tvEquipment.SelectedNode = node;
                 node.EnsureVisible();
-                pgProps.SelectedObject = module;
+                pgProps.SelectedObject = unit;
             }
 
-            CreateNewModuleForm(module);
+            CreateNewModuleForm(unit);
         }
 
         private void tsmiAddModule_Click(object sender, EventArgs e)
@@ -200,12 +200,12 @@ namespace Simulator
                 case 0:
                     tsbShowModuleForm.Enabled =
                     tsbDeleteModule.Enabled =
-                    tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module _;
+                    tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Unit _;
                     break;
                 case 1:
                     tsbShowModuleForm.Enabled =
                     tsbDeleteModule.Enabled =
-                    tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Module _;
+                    tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Unit _;
                     break;
             }
         }
@@ -258,7 +258,7 @@ namespace Simulator
                         MessageBox.Show(ex.Message, "Вставка элемента", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-                else if (node.Tag is Model.Module block)
+                else if (node.Tag is Model.Unit block)
                 {
                     try
                     {
@@ -397,10 +397,12 @@ namespace Simulator
                 {
                     tvModules.SelectedNode = null;
                     tvModules.SelectedNode = node;
-                    if (node.Tag is ProjectProxy project)
-                        pgProps.SelectedObject = project;
-                    if (e.Clicks > 1 && node.Tag is Model.Module treeModule)
-                        EnsureShowModuleChildForm(treeModule);
+                    if (node.Tag is Model.Module module)
+                    {
+                        pgProps.SelectedObject = module;
+                        if (e.Clicks > 1)
+                            EnsureShowModuleChildForm(module);
+                    }
                     return;
                 }
             }
@@ -503,7 +505,7 @@ namespace Simulator
             switch (tcTools.SelectedIndex)
             {
                 case 0:
-                    if (tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module module)
+                    if (tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Unit module)
                     {
                         if (MessageBox.Show("Эта задача будет удалена безвозвратно! Удалить?",
                             "Удаление текущей задачи", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
@@ -514,7 +516,7 @@ namespace Simulator
                     }
                     break;
                 case 1:
-                    if (tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Module unit)
+                    if (tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Unit unit)
                     {
                         if (MessageBox.Show("Это оборудование будет удалено безвозвратно! Удалить?",
                             "Удаление текущего оборудования", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
@@ -533,12 +535,12 @@ namespace Simulator
             {
                 case 0:
                     if (tvModules.SelectedNode is not TreeNode node) return;
-                    if (node.Tag is not Model.Module treeModule) return;
+                    if (node.Tag is not Model.Unit treeModule) return;
                     EnsureShowModuleChildForm(treeModule);
                     break;
                 case 1:
                     if (tvEquipment.SelectedNode is not TreeNode node1) return;
-                    if (node1.Tag is not Model.Module treeModule1) return;
+                    if (node1.Tag is not Model.Unit treeModule1) return;
                     EnsureShowModuleChildForm(treeModule1);
                     break;
             }
@@ -570,7 +572,7 @@ namespace Simulator
 
         private void tvLibrary_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (tvLibrary.SelectedNode != null && tvLibrary.SelectedNode.Tag is Model.Module block)
+            if (tvLibrary.SelectedNode != null && tvLibrary.SelectedNode.Tag is Model.Unit block)
             {
                 tsbShowBlockForm.Enabled = true;
                 tsbDeleteBlock.Enabled = true;
@@ -616,7 +618,7 @@ namespace Simulator
             if (module == null)
             {
                 if (tvLibrary.SelectedNode is not TreeNode node) return;
-                if (node.Tag is not Model.Module treeModule) return;
+                if (node.Tag is not Model.Unit treeModule) return;
                 module = treeModule;
             }
             pgProps.SelectedObject = module;
@@ -633,7 +635,7 @@ namespace Simulator
 
         private void tsbDeleteBlock_Click(object sender, EventArgs e)
         {
-            if (tvLibrary.SelectedNode != null && tvLibrary.SelectedNode.Tag is Model.Module module)
+            if (tvLibrary.SelectedNode != null && tvLibrary.SelectedNode.Tag is Model.Unit module)
             {
                 if (MessageBox.Show("Этот блок будет удалён безвозвратно! Удалить?",
                     "Удаление текущего блока", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
@@ -648,7 +650,7 @@ namespace Simulator
 
         private void cmModules_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            var isLinkToModule = tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module;
+            var isLinkToModule = tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Unit;
             tsmiModuleDublicate.Visible = isLinkToModule;
             tsmiRenameModule.Visible = isLinkToModule;
             e.Cancel = !isLinkToModule;
@@ -656,7 +658,7 @@ namespace Simulator
 
         private void tsmiModuleDublicate_Click(object sender, EventArgs e)
         {
-            if (tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module module)
+            if (tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Unit module)
             {
                 var dlg = new ChangeNameDialog(module.Name);
                 if (dlg.ShowDialog() == DialogResult.OK)
@@ -676,7 +678,7 @@ namespace Simulator
 
         private void tsmiRenameModule_Click(object sender, EventArgs e)
         {
-            if (tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module module)
+            if (tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Unit module)
             {
                 var dlg = new ChangeNameDialog(module.Name);
                 if (dlg.ShowDialog() == DialogResult.OK)
@@ -695,7 +697,7 @@ namespace Simulator
 
         private void tsmiRenameUnit_Click(object sender, EventArgs e)
         {
-            if (tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Module module)
+            if (tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Unit module)
             {
                 var dlg = new ChangeNameDialog(module.Name);
                 if (dlg.ShowDialog() == DialogResult.OK)
@@ -714,14 +716,14 @@ namespace Simulator
 
         private void tsmiUnitDublicate_Click(object sender, EventArgs e)
         {
-            if (tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Module module)
+            if (tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Unit unit)
             {
-                var dlg = new ChangeNameDialog(module.Name);
+                var dlg = new ChangeNameDialog(unit.Name);
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
                     if (!string.IsNullOrWhiteSpace(dlg.EnteredValue) && !Project.Equipment.Any(x => x.Name.Equals(dlg.EnteredValue)))
                     {
-                        var dublicate = Module.MakeDuplicate(module);
+                        var dublicate = Unit.MakeDuplicate(unit);
                         dublicate.Name = dlg.EnteredValue;
                         AddUnitToProject(dublicate);
                         dublicate.Changed = true;
@@ -734,7 +736,7 @@ namespace Simulator
 
         private void cmEquipment_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            var isLinkToUnit = tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Module;
+            var isLinkToUnit = tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Unit;
             tsmiUnitDublicate.Visible = isLinkToUnit;
             tsmiRenameUnit.Visible = isLinkToUnit;
             e.Cancel = !isLinkToUnit;
@@ -749,10 +751,12 @@ namespace Simulator
                 {
                     tvEquipment.SelectedNode = null;
                     tvEquipment.SelectedNode = node;
-                    if (node.Tag is ProjectProxy project)
-                        pgProps.SelectedObject = project;
-                    if (e.Clicks > 1 && node.Tag is Model.Module treeModule)
-                        EnsureShowModuleChildForm(treeModule);
+                    if (node.Tag is Model.Unit unit)
+                    {
+                        pgProps.SelectedObject = unit;
+                        if (e.Clicks > 1)
+                            EnsureShowModuleChildForm(unit);
+                    }
                     return;
                 }
             }

@@ -909,11 +909,42 @@ namespace Simulator
             if (e.Button == MouseButtons.Right)
             {
                 linkFirstPoint = null;
-                cmsContextMenu.Items.Clear();
+                cmZoomPad.Items.Clear();
                 ToolStripMenuItem item;
                 if (element?.Instance is ILinkSupport func)
                 {
-                    if (output == false && pin != null)
+                    if (output == null)
+                    {
+                        if (func is Model.Inputs.DI || func is Model.Outputs.DO)
+                        {
+                            item = new ToolStripMenuItem() { Text = "Настроить связь с оборудованием...", Tag = element };
+                            item.Click += (s, e) =>
+                            {
+                                var menuItem = (ToolStripMenuItem?)s;
+                                if (menuItem?.Tag is Element element && element.Instance is ILinkSupport fn)
+                                {
+                                    if (func is Model.Inputs.DI)
+                                    {
+                                        var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentOutputs);
+                                        if (dlg.ShowDialog() == DialogResult.OK)
+                                        {
+
+                                        }
+                                    }
+                                    else if (func is Model.Outputs.DO)
+                                    {
+                                        var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentInputs);
+                                        if (dlg.ShowDialog() == DialogResult.OK)
+                                        {
+
+                                        }
+                                    }
+                                }
+                            };
+                            cmZoomPad.Items.Add(item);
+                        }
+                    }
+                    else if (output == false && pin != null)
                     {
                         if (func.LinkedInputs[(int)pin])
                         {
@@ -928,7 +959,7 @@ namespace Simulator
                                     Module.Changed = true;
                                 }
                             };
-                            cmsContextMenu.Items.Add(item);
+                            cmZoomPad.Items.Add(item);
                         }
                         else
                         {
@@ -938,7 +969,7 @@ namespace Simulator
                                 var menuItem = (ToolStripMenuItem?)s;
                                 if (menuItem?.Tag is Element element && element.Instance is ILinkSupport fn)
                                 {
-                                    var dlg = new SelectLinkSourceForm();
+                                    var dlg = new SelectLinkSourceForm(KindLinkSource.LogicOutputs);
                                     if (dlg.ShowDialog() == DialogResult.OK)
                                     {
                                         (Guid idSource, int pinOut) = dlg.Result;
@@ -950,7 +981,7 @@ namespace Simulator
                                     }
                                 }
                             };
-                            cmsContextMenu.Items.Add(item);
+                            cmZoomPad.Items.Add(item);
                         }
                     }
                     else if (output == null)
@@ -975,7 +1006,7 @@ namespace Simulator
                                 }
                             }
                         };
-                        cmsContextMenu.Items.Add(item);
+                        cmZoomPad.Items.Add(item);
                         item = new ToolStripMenuItem() { Text = "Удалить элемент", Tag = element };
                         item.Click += (s, e) =>
                         {
@@ -990,7 +1021,7 @@ namespace Simulator
                                 }
                             }
                         };
-                        cmsContextMenu.Items.Add(item);
+                        cmZoomPad.Items.Add(item);
                     }
                 }
             }

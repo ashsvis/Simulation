@@ -105,7 +105,7 @@ namespace Simulator.Model
         public static List<Module> Modules { get; set; } = [];
 
         [Browsable(false)]
-        public static List<Module> Equipment { get; set; } = [];
+        public static List<Unit> Equipment { get; set; } = [];
 
         [Browsable(false)]
         public static List<Module> Blocks { get; set; } = [];
@@ -225,7 +225,7 @@ namespace Simulator.Model
                     {
                         foreach (XElement xunit in xqupment.Elements("Unit"))
                         {
-                            var unit = new Module();
+                            var unit = new Unit();
                             if (Guid.TryParse(xunit.Element("Id")?.Value, out Guid id))
                                 unit.Id = id;
                             if (unit.Id == Guid.Empty)
@@ -248,14 +248,14 @@ namespace Simulator.Model
         public static TreeNode[] GetEquipmentTree()
         {
             List<TreeNode> collection = [];
-            var rootNode = new TreeNode("Оборудование") { Tag = new ProjectProxy() };
+            var rootNode = new TreeNode("Оборудование");
             collection.Add(rootNode);
-            int nmodule = 1;
-            foreach (var module in Equipment.OrderBy(x => x.Name))
+            int nunit = 1;
+            foreach (var unit in Equipment.OrderBy(x => x.Name))
             {
-                module.Index = nmodule++;
-                var moduleNode = new TreeNode(module.ToString()) { Tag = module };
-                rootNode.Nodes.Add(moduleNode);
+                unit.Index = nunit++;
+                var unitNode = new TreeNode(unit.ToString()) { Tag = unit };
+                rootNode.Nodes.Add(unitNode);
             }
             rootNode.ExpandAll();
             return [.. collection];
@@ -264,7 +264,7 @@ namespace Simulator.Model
         public static TreeNode[] GetModulesTree()
         {
             List<TreeNode> collection = [];
-            var rootNode = new TreeNode("Проект") { Tag = new ProjectProxy() };
+            var rootNode = new TreeNode("Проект");
             collection.Add(rootNode);
             int nmodule = 1;
             foreach (var module in Modules.OrderBy(x => x.Name))
@@ -366,9 +366,9 @@ namespace Simulator.Model
             return module;
         }
 
-        public static Module AddUnitToProject(Module? newModule = null)
+        public static Module AddUnitToProject(Unit? newModule = null)
         {
-            var module = newModule ?? new Module();
+            var module = newModule ?? new Unit();
             Equipment.Add(module);
             Changed = true;
             OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.AddUnit));
@@ -382,7 +382,7 @@ namespace Simulator.Model
             OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.RemoveModule));
         }
 
-        public static void RemoveUnitFromProject(Module unit)
+        public static void RemoveUnitFromProject(Unit unit)
         {
             Equipment.Remove(unit);
             Changed = true;
