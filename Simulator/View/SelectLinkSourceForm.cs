@@ -8,11 +8,14 @@ namespace Simulator.View
     public partial class SelectLinkSourceForm : Form
     {
         private readonly KindLinkSource kind;
+        private readonly (Guid, int, bool)? linkSource;
 
-        public SelectLinkSourceForm(KindLinkSource kind)
+        public SelectLinkSourceForm(KindLinkSource kind, (Guid, int, bool)? linkSource = null)
         {
             InitializeComponent();
             this.kind = kind;
+            this.linkSource = linkSource;
+            btnClear.Visible = kind != KindLinkSource.LogicOutputs;
         }
 
         public (Guid, int) Result { get; private set; }
@@ -84,6 +87,8 @@ namespace Simulator.View
                                 var elementName = string.IsNullOrWhiteSpace(@do.Name) ? $"DO{@do.Order}" : @do.Name;
                                 var elementNode = new TreeNode(elementName) { Tag = new Tuple<Guid, int>(item.Id, @do.Order) };
                                 unitNode.Nodes.Add(elementNode);
+                                if (linkSource != null && linkSource.Value.Item1 == item.Id)
+                                    tvSources.SelectedNode = elementNode;
                             }
                         }
                     }
@@ -108,6 +113,12 @@ namespace Simulator.View
                     n++;
                 }
             }
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            Result = (Guid.Empty, 0);
+            DialogResult = DialogResult.OK;
         }
     }
 }

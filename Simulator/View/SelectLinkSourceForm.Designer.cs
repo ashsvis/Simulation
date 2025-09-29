@@ -31,6 +31,7 @@
             tvSources = new TreeView();
             btnAccept = new Button();
             btnCancel = new Button();
+            btnClear = new Button();
             SuspendLayout();
             // 
             // tvSources
@@ -38,7 +39,7 @@
             tvSources.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tvSources.Location = new Point(12, 12);
             tvSources.Name = "tvSources";
-            tvSources.Size = new Size(200, 241);
+            tvSources.Size = new Size(235, 241);
             tvSources.TabIndex = 0;
             tvSources.AfterSelect += tvSources_AfterSelect;
             // 
@@ -46,7 +47,7 @@
             // 
             btnAccept.DialogResult = DialogResult.OK;
             btnAccept.Enabled = false;
-            btnAccept.Location = new Point(56, 259);
+            btnAccept.Location = new Point(91, 259);
             btnAccept.Name = "btnAccept";
             btnAccept.Size = new Size(75, 23);
             btnAccept.TabIndex = 1;
@@ -56,12 +57,23 @@
             // btnCancel
             // 
             btnCancel.DialogResult = DialogResult.Cancel;
-            btnCancel.Location = new Point(137, 259);
+            btnCancel.Location = new Point(172, 259);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(75, 23);
             btnCancel.TabIndex = 1;
             btnCancel.Text = "Отменить";
             btnCancel.UseVisualStyleBackColor = true;
+            // 
+            // btnClear
+            // 
+            btnClear.DialogResult = DialogResult.OK;
+            btnClear.Location = new Point(12, 259);
+            btnClear.Name = "btnClear";
+            btnClear.Size = new Size(73, 23);
+            btnClear.TabIndex = 2;
+            btnClear.Text = "Очистить";
+            btnClear.UseVisualStyleBackColor = true;
+            btnClear.Click += btnClear_Click;
             // 
             // SelectLinkSourceForm
             // 
@@ -69,7 +81,8 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             CancelButton = btnCancel;
-            ClientSize = new Size(224, 294);
+            ClientSize = new Size(259, 294);
+            Controls.Add(btnClear);
             Controls.Add(btnCancel);
             Controls.Add(btnAccept);
             Controls.Add(tvSources);
@@ -88,5 +101,6 @@
         private TreeView tvSources;
         private Button btnAccept;
         private Button btnCancel;
+        private Button btnClear;
     }
 }

@@ -8,6 +8,10 @@ namespace Simulator.Model.Inputs
 {
     public class DI : CommonLogic, ICustomDraw, IChangeOrderDI, IManualCommand
     {
+        private (Guid, int, bool) linkSource = (Guid.Empty, 0, false);
+
+        public (Guid, int, bool) LinkSource => linkSource;
+
         public DI() : base(LogicFunction.DigInp, 0, 1)
         {
             OutputValues[0] = false;
@@ -19,9 +23,21 @@ namespace Simulator.Model.Inputs
         [Category("Настройки"), DisplayName("Номер"), Description("Индекс входа")]
         public int Order { get; set; }
 
-        public override void Calculate()
+
+        /// <summary>
+        /// Для создания связи записывается ссылка на метод,
+        /// который потом вызывается для получения актуального значения
+        /// </summary>
+        /// <param name="inputIndex">номер входа</param>
+        /// <param name="getMethod">Ссылка на метод, записываемая в целевом элементе, для этого входа</param>
+        public override void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog)
         {
-        //    //bool output = (bool)(Project.ReadValue(ItemId, 0, ValueSide.Input, ValueKind.Digital)?.Value ?? false);
+            linkSource = (sourceId, outputPinIndex, byDialog);
+        }
+
+        public override void ResetValueLinkToInp(int inputIndex)
+        {
+            linkSource = (Guid.Empty, 0, false);
         }
 
         public override void CalculateTargets(PointF location, ref SizeF size,

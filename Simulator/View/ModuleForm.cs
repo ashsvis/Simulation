@@ -923,12 +923,22 @@ namespace Simulator
                                 var menuItem = (ToolStripMenuItem?)s;
                                 if (menuItem?.Tag is Element element && element.Instance is ILinkSupport fn)
                                 {
-                                    if (func is Model.Inputs.DI)
+                                    if (func is Model.Inputs.DI di)
                                     {
-                                        var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentOutputs);
+                                        var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentOutputs, di.LinkSource);
                                         if (dlg.ShowDialog() == DialogResult.OK)
                                         {
-
+                                            (Guid idSource, int pinOut) = dlg.Result;
+                                            if (idSource != Guid.Empty)
+                                            {
+                                                fn.SetValueLinkToInp(0, idSource, pinOut, true);
+                                                Module.Changed = true;
+                                            }
+                                            else if (idSource == Guid.Empty)
+                                            {
+                                                fn.ResetValueLinkToInp(0);
+                                                Module.Changed = true;
+                                            }
                                         }
                                     }
                                     else if (func is Model.Outputs.DO)
@@ -936,7 +946,8 @@ namespace Simulator
                                         var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentInputs);
                                         if (dlg.ShowDialog() == DialogResult.OK)
                                         {
-
+                                            (Guid idSource, int pin) = dlg.Result;
+                                            //TODO
                                         }
                                     }
                                 }
@@ -973,7 +984,7 @@ namespace Simulator
                                     if (dlg.ShowDialog() == DialogResult.OK)
                                     {
                                         (Guid idSource, int pinOut) = dlg.Result;
-                                        if (!fn.LinkedInputs[(int)pin])
+                                        if (idSource != Guid.Empty && !fn.LinkedInputs[(int)pin])
                                         {
                                             fn.SetValueLinkToInp((int)pin, idSource, pinOut, true);
                                             Module.Changed = true;

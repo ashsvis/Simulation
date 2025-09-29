@@ -8,7 +8,7 @@ namespace Simulator.Model.Logic
     {
         private readonly bool[] getInputs;
         private readonly bool[] getInverseInputs;
-        private readonly (Guid, int, bool)[] getLinkSources;
+        protected readonly (Guid, int, bool)[] getLinkSources;
         private readonly string[] getInputNames;
         private readonly object[] getOutputs;
         private readonly bool[] getInverseOutputs;
@@ -223,14 +223,14 @@ namespace Simulator.Model.Logic
         /// </summary>
         /// <param name="inputIndex">номер входа</param>
         /// <param name="getMethod">Ссылка на метод, записываемая в целевом элементе, для этого входа</param>
-        public void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog)
+        public virtual void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog)
         {
             if (inputIndex < 0 || inputIndex >= getLinkSources.Length)
                 throw new ArgumentOutOfRangeException(nameof(inputIndex));
             getLinkSources[inputIndex] = (sourceId, outputPinIndex, byDialog);
         }
 
-        public void ResetValueLinkToInp(int inputIndex)
+        public virtual void ResetValueLinkToInp(int inputIndex)
         {
             if (inputIndex < 0 || inputIndex >= getLinkSources.Length)
                 throw new ArgumentOutOfRangeException(nameof(inputIndex));
@@ -480,12 +480,9 @@ namespace Simulator.Model.Logic
              Dictionary<int, RectangleF> otargets, Dictionary<int, PointF> opins)
         {
             var step = Element.Step;
-            var max = 1;
-            var height = step + max * step * 4 + step;
             var width = step + 1 * step * 4 + step;
-            size = new SizeF(width, height);
-            max = Math.Max(LinkedInputs.Length, LinkedOutputs.Length);
-            height = step + max * step * 4 + step;
+            var max = Math.Max(LinkedInputs.Length, LinkedOutputs.Length);
+            var height = step + max * step * 4 + step;
             size = new SizeF(width, height);
             // входы
             var y = step + location.Y;
