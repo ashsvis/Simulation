@@ -55,7 +55,7 @@ namespace Simulator.Model.Timer
             }
             rect.Inflate(-1, -1);
             graphics.FillRectangle(brush, rect);
-            if (state)
+            if (Project.Running && state)
             {
                 var kf = (time - DateTime.Now).TotalMilliseconds / (WaitTime * 1000);
                 var r = rect;

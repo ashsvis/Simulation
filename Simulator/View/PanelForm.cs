@@ -763,5 +763,20 @@ namespace Simulator
             tvEquipment.SelectedNode = node;
 
         }
+
+        private void tsbRun_Click(object sender, EventArgs e)
+        {
+            if (tsbRun.Checked)
+            {
+                tsbRun.Checked = false;
+                Project.Stop();
+                MdiChildren.OfType<ModuleForm>().ToList().ForEach(x => x.Refresh());
+            }
+            else
+            {
+                tsbRun.Checked = true;
+                Project.Start();
+            }
+        }
     }
 }

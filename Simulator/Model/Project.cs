@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.ComponentModel;
+using System.Timers;
 using System.Xml.Linq;
 
 namespace Simulator.Model
@@ -390,6 +391,19 @@ namespace Simulator.Model
         }
 
         public static event ProjectEventHandler? OnChanged;
+
+        public static bool Running { get; private set; }
+
+        public static void Start()
+        {
+            Running = true;
+        }
+
+        public static void Stop()
+        {
+            Running = false;
+            vals.Clear();
+        }
     }
 
     public enum ValueKind

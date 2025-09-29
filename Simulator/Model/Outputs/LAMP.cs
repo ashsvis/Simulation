@@ -7,8 +7,6 @@ namespace Simulator.Model.Outputs
 {
     public class LAMP : CommonLogic, ICustomDraw
     {
-        //private bool @out;
-
         public LAMP() : base(LogicFunction.Lamp, 1, 0) 
         {
         }
@@ -71,16 +69,21 @@ namespace Simulator.Model.Outputs
             var lamprect = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height);
             lamprect.Inflate(-rect.Height / 3, -rect.Height / 3);
             lamprect.Offset(0, -2);
-            if (GetInputValue(0))
+            if (Project.Running)
             {
-                using var fill = new SolidBrush(Color);
-                graphics.FillEllipse(fill, lamprect);
+                if (GetInputValue(0))
+                {
+                    using var fill = new SolidBrush(Color);
+                    graphics.FillEllipse(fill, lamprect);
+                }
+                else
+                {
+                    using var stroke = new Pen(Color);
+                    graphics.DrawEllipse(stroke, lamprect);
+                }
             }
-            else 
-            {
-                using var stroke = new Pen(Color);
-                graphics.DrawEllipse(stroke, lamprect);
-            }
+            else
+                graphics.DrawEllipse(pen, lamprect);
             var descrect = new RectangleF(rect.X + rect.Height, rect.Y, rect.Height * 3, rect.Height);
             graphics.DrawRectangles(pen, [descrect]);
             format.LineAlignment = StringAlignment.Center;

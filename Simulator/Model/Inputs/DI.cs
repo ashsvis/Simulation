@@ -94,7 +94,7 @@ namespace Simulator.Model.Inputs
                 graphics.DrawLine(pen, new PointF(rect.Right, rect.Y + rect.Height / 2),
                     new PointF(rect.Right + Element.Step, rect.Y + rect.Height / 2));
                 // значение выхода
-                if (VisibleValues)
+                if (Project.Running && VisibleValues)
                 {
                     var textval = $"{Project.ReadValue(ItemId, 0, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
                     var ms = graphics.MeasureString(textval, font);
@@ -117,12 +117,14 @@ namespace Simulator.Model.Inputs
                     graphics.DrawString(text, font, fontbrush, labelrect, format);
                 }
 
-                var staterect = new RectangleF(rect.X + rect.Height * 3, rect.Y, rect.Height, rect.Height / 3);
-                staterect.Offset(0, rect.Height / 3);
-                var value = (bool)(Project.ReadValue(ItemId, 0, ValueSide.Output, ValueKind.Digital)?.Value ?? false);
-                using var statebrush = new SolidBrush(value ? Color.Lime : Color.Red);
-                graphics.DrawString(value ? "\"1\"" : "\"0\"", font, statebrush, staterect, format);
-
+                if (Project.Running)
+                {
+                    var staterect = new RectangleF(rect.X + rect.Height * 3, rect.Y, rect.Height, rect.Height / 3);
+                    staterect.Offset(0, rect.Height / 3);
+                    var value = (bool)(Project.ReadValue(ItemId, 0, ValueSide.Output, ValueKind.Digital)?.Value ?? false);
+                    using var statebrush = new SolidBrush(value ? Color.Lime : Color.Red);
+                    graphics.DrawString(value ? "\"1\"" : "\"0\"", font, statebrush, staterect, format);
+                }
                 var descrect = new RectangleF(rect.X, rect.Y, rect.Height * 3, rect.Height);
                 graphics.FillRectangle(brush, descrect);
                 graphics.DrawRectangles(pen, [descrect]);

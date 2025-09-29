@@ -186,7 +186,7 @@ namespace Simulator.Model
             {
                 using var pen = new Pen(selected[0] 
                     ? Color.Magenta 
-                    : (value[0] is bool v) ? (v == true) ? Color.Lime : Color.Red : foreColor);
+                    : (Project.Running && value[0] is bool v) ? (v == true) ? Color.Lime : Color.Red : foreColor);
                 graphics.DrawLines(pen, [SourcePoint, points[0]]);
                 graphics.DrawLines(pen, [.. points]);
                 graphics.DrawLines(pen, [points[^1], TargetPoint]);

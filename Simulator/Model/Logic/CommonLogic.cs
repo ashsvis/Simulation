@@ -421,7 +421,7 @@ namespace Simulator.Model.Logic
                     // значение входа
                     bool isLinked = this is ILinkSupport link && link.LinkedInputs[i];
                     bool isExternal = this is ILinkSupport link1 && link1.InputLinkSources[i].Item3;
-                    if (VisibleValues)
+                    if (Project.Running && VisibleValues)
                     {
                         var text = $"{GetInputValue(i)}"[..1].ToUpper();
                         var ms = graphics.MeasureString(text, font);
@@ -460,7 +460,7 @@ namespace Simulator.Model.Logic
                         graphics.DrawString(OutputNames[i], font, fontbrush, new PointF(x - ms.Width, y - ms.Height / 2));
                     }
                     // значение выхода
-                    if (OutputNames.Length > 0 && VisibleValues && this is ILinkSupport link)
+                    if (Project.Running && OutputNames.Length > 0 && VisibleValues && this is ILinkSupport link)
                     {
                         var text = $"{Project.ReadValue(itemId, i, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
                         var ms = graphics.MeasureString(text, font);

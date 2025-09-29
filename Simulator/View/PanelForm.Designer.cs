@@ -70,6 +70,7 @@
             tsbShowModuleForm = new ToolStripButton();
             tsbDeleteModule = new ToolStripButton();
             toolStripSeparator3 = new ToolStripSeparator();
+            tsbRun = new ToolStripButton();
             toolStripSeparator4 = new ToolStripSeparator();
             tsbCascadeLayout = new ToolStripButton();
             tsbHorizontalLayout = new ToolStripButton();
@@ -345,7 +346,7 @@
             panLeft.Dock = DockStyle.Left;
             panLeft.Location = new Point(0, 49);
             panLeft.Name = "panLeft";
-            panLeft.Size = new Size(207, 456);
+            panLeft.Size = new Size(210, 456);
             panLeft.TabIndex = 4;
             // 
             // tlpTools
@@ -362,16 +363,16 @@
             tlpTools.RowCount = 2;
             tlpTools.RowStyles.Add(new RowStyle());
             tlpTools.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tlpTools.Size = new Size(207, 456);
+            tlpTools.Size = new Size(210, 456);
             tlpTools.TabIndex = 3;
             // 
             // tsToolModules
             // 
             tsToolModules.GripStyle = ToolStripGripStyle.Hidden;
-            tsToolModules.Items.AddRange(new ToolStripItem[] { tsbOpenProject, tsbSave, toolStripSeparator5, tsbAddModule, tsbShowModuleForm, tsbDeleteModule, toolStripSeparator3, toolStripSeparator4, tsbCascadeLayout, tsbHorizontalLayout });
+            tsToolModules.Items.AddRange(new ToolStripItem[] { tsbOpenProject, tsbSave, toolStripSeparator5, tsbAddModule, tsbShowModuleForm, tsbDeleteModule, toolStripSeparator3, tsbRun, toolStripSeparator4, tsbCascadeLayout, tsbHorizontalLayout });
             tsToolModules.Location = new Point(0, 0);
             tsToolModules.Name = "tsToolModules";
-            tsToolModules.Size = new Size(203, 25);
+            tsToolModules.Size = new Size(206, 25);
             tsToolModules.TabIndex = 6;
             tsToolModules.Text = "toolStrip1";
             // 
@@ -438,6 +439,16 @@
             toolStripSeparator3.Name = "toolStripSeparator3";
             toolStripSeparator3.Size = new Size(6, 25);
             // 
+            // tsbRun
+            // 
+            tsbRun.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            tsbRun.Image = Properties.Resources.compile;
+            tsbRun.ImageTransparentColor = Color.Magenta;
+            tsbRun.Name = "tsbRun";
+            tsbRun.Size = new Size(23, 22);
+            tsbRun.Text = "toolStripButton1";
+            tsbRun.Click += tsbRun_Click;
+            // 
             // toolStripSeparator4
             // 
             toolStripSeparator4.Name = "toolStripSeparator4";
@@ -480,7 +491,7 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(tabControl1);
-            splitContainer1.Size = new Size(200, 425);
+            splitContainer1.Size = new Size(203, 425);
             splitContainer1.SplitterDistance = 208;
             splitContainer1.TabIndex = 2;
             // 
@@ -493,7 +504,7 @@
             tcTools.Margin = new Padding(3, 3, 0, 3);
             tcTools.Name = "tcTools";
             tcTools.SelectedIndex = 0;
-            tcTools.Size = new Size(200, 208);
+            tcTools.Size = new Size(203, 208);
             tcTools.TabIndex = 2;
             // 
             // tpModules
@@ -502,7 +513,7 @@
             tpModules.Location = new Point(4, 24);
             tpModules.Name = "tpModules";
             tpModules.Padding = new Padding(3);
-            tpModules.Size = new Size(192, 180);
+            tpModules.Size = new Size(195, 180);
             tpModules.TabIndex = 1;
             tpModules.Text = "Задачи";
             tpModules.UseVisualStyleBackColor = true;
@@ -519,7 +530,7 @@
             tvModules.Location = new Point(3, 3);
             tvModules.Margin = new Padding(3, 3, 0, 3);
             tvModules.Name = "tvModules";
-            tvModules.Size = new Size(186, 174);
+            tvModules.Size = new Size(189, 174);
             tvModules.TabIndex = 2;
             tvModules.MouseDown += tvModules_MouseDown;
             // 
@@ -550,7 +561,7 @@
             tpEquipment.Location = new Point(4, 24);
             tpEquipment.Name = "tpEquipment";
             tpEquipment.Padding = new Padding(3);
-            tpEquipment.Size = new Size(192, 180);
+            tpEquipment.Size = new Size(195, 180);
             tpEquipment.TabIndex = 2;
             tpEquipment.Text = "Оборудование";
             tpEquipment.UseVisualStyleBackColor = true;
@@ -567,7 +578,7 @@
             tvEquipment.Location = new Point(3, 3);
             tvEquipment.Margin = new Padding(3, 3, 0, 3);
             tvEquipment.Name = "tvEquipment";
-            tvEquipment.Size = new Size(186, 174);
+            tvEquipment.Size = new Size(189, 174);
             tvEquipment.TabIndex = 3;
             tvEquipment.MouseDown += tvEquipment_MouseDown;
             // 
@@ -600,7 +611,7 @@
             tabControl1.Margin = new Padding(3, 3, 0, 3);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(200, 213);
+            tabControl1.Size = new Size(203, 213);
             tabControl1.TabIndex = 1;
             // 
             // tpProps
@@ -609,7 +620,7 @@
             tpProps.Location = new Point(4, 24);
             tpProps.Name = "tpProps";
             tpProps.Padding = new Padding(3);
-            tpProps.Size = new Size(192, 185);
+            tpProps.Size = new Size(195, 185);
             tpProps.TabIndex = 1;
             tpProps.Text = "Свойства";
             tpProps.UseVisualStyleBackColor = true;
@@ -620,7 +631,7 @@
             pgProps.Location = new Point(3, 3);
             pgProps.Margin = new Padding(3, 3, 0, 3);
             pgProps.Name = "pgProps";
-            pgProps.Size = new Size(186, 179);
+            pgProps.Size = new Size(189, 179);
             pgProps.TabIndex = 0;
             pgProps.PropertyValueChanged += pgProps_PropertyValueChanged;
             // 
@@ -628,7 +639,7 @@
             // 
             pnLeftSize.Cursor = Cursors.VSplit;
             pnLeftSize.Dock = DockStyle.Right;
-            pnLeftSize.Location = new Point(203, 25);
+            pnLeftSize.Location = new Point(206, 25);
             pnLeftSize.Margin = new Padding(0);
             pnLeftSize.Name = "pnLeftSize";
             pnLeftSize.Size = new Size(4, 431);
@@ -966,5 +977,6 @@
         private ContextMenuStrip cmEquipment;
         private ToolStripMenuItem tsmiRenameUnit;
         private ToolStripMenuItem tsmiUnitDublicate;
+        private ToolStripButton tsbRun;
     }
 }

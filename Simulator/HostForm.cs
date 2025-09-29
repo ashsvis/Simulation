@@ -148,12 +148,14 @@ namespace Simulator
         private void timerCalculate_Tick(object sender, EventArgs e)
         {
             timerCalculate.Enabled = false;
-            if (Project.Modules.Count != 0)
-                Project.Modules.ToList().ForEach(module => module.Calculate());
-            Thread.Sleep(50);
-            if (Project.Equipment.Count != 0)
-                Project.Equipment.ToList().ForEach(unit => unit.Calculate());
-            SimulationTick?.Invoke(this, EventArgs.Empty);
+            if (Project.Running)
+            {
+                if (Project.Modules.Count != 0)
+                    Project.Modules.ToList().ForEach(module => module.Calculate());
+                if (Project.Equipment.Count != 0)
+                    Project.Equipment.ToList().ForEach(unit => unit.Calculate());
+                SimulationTick?.Invoke(this, EventArgs.Empty);
+            }
             timerCalculate.Enabled = true;
         }
     }

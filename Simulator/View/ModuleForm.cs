@@ -2,6 +2,7 @@
 using Simulator.Model.Interfaces;
 using Simulator.View;
 using System.Diagnostics;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Reflection;
 using System.Text;
@@ -74,7 +75,7 @@ namespace Simulator
         {
             InitializeComponent();
             this.panelForm = panelForm;
-            Module = module; //module.DeepCopy();
+            Module = module;
             Module.Changed = false;
             items = Module.Elements;
             items.Where(x => x.Instance is IChangeOrderDI).ToList().ForEach(dis.Add);
@@ -848,7 +849,7 @@ namespace Simulator
                     items.ForEach(item => item.Selected = false);
                 if (e.Button == MouseButtons.Left)
                 {
-                    segmentmoving = ((Link)link).Selected;
+                    segmentmoving = !Project.Running && ((Link)link).Selected;
                 }
                 ElementSelected?.Invoke(link, EventArgs.Empty);
             }
@@ -886,14 +887,7 @@ namespace Simulator
                 }
                 if (e.Button == MouseButtons.Left)
                 {
-                    //if (e.Clicks >= 2 && element.Instance is IBlock block)
-                    //{
-                    //    block.Internal ??= new Model.Module() { Name = "InternalModule" };
-                    //    block.Internal.Changed = false;
-                    //    panelForm.EnsureShowModuleChildForm(block.Internal);
-                    //}
-                    //else
-                    dragging = output == null && element.Selected;
+                    dragging = !Project.Running && output == null && element.Selected;
                 }
 
                 ElementSelected?.Invoke(items.Any(x => x.Selected) ?
@@ -907,138 +901,141 @@ namespace Simulator
                 links.ForEach(item => item.SetSelect(false));
                 ElementSelected?.Invoke(Module, EventArgs.Empty);
             }
-            if (e.Button == MouseButtons.Right)
+            if (!Project.Running)
             {
-                linkFirstPoint = null;
-                cmZoomPad.Items.Clear();
-                ToolStripMenuItem item;
-                if (element?.Instance is ILinkSupport func)
+                if (e.Button == MouseButtons.Right)
                 {
-                    if (output == false && pin != null)
+                    linkFirstPoint = null;
+                    cmZoomPad.Items.Clear();
+                    ToolStripMenuItem item;
+                    if (element?.Instance is ILinkSupport func)
                     {
-                        if (func.LinkedInputs[(int)pin])
+                        if (output == false && pin != null)
                         {
-                            item = new ToolStripMenuItem() { Text = "Удалить связь по входу", Tag = element };
-                            item.Click += (s, e) =>
+                            if (func.LinkedInputs[(int)pin])
                             {
-                                var menuItem = (ToolStripMenuItem?)s;
-                                if (menuItem?.Tag is Element element && element.Instance is ILinkSupport fn)
+                                item = new ToolStripMenuItem() { Text = "Удалить связь по входу", Tag = element };
+                                item.Click += (s, e) =>
                                 {
-                                    fn.ResetValueLinkToInp((int)pin);
-                                    links.RemoveAll(link => link.DestinationId == element.Id && link.DestinationPinIndex == (int)pin);
-                                    Module.Changed = true;
-                                }
-                            };
-                            cmZoomPad.Items.Add(item);
+                                    var menuItem = (ToolStripMenuItem?)s;
+                                    if (menuItem?.Tag is Element element && element.Instance is ILinkSupport fn)
+                                    {
+                                        fn.ResetValueLinkToInp((int)pin);
+                                        links.RemoveAll(link => link.DestinationId == element.Id && link.DestinationPinIndex == (int)pin);
+                                        Module.Changed = true;
+                                    }
+                                };
+                                cmZoomPad.Items.Add(item);
+                            }
+                            else
+                            {
+                                item = new ToolStripMenuItem() { Text = "Настроить связь по входу...", Tag = element };
+                                item.Click += (s, e) =>
+                                {
+                                    var menuItem = (ToolStripMenuItem?)s;
+                                    if (menuItem?.Tag is Element element && element.Instance is ILinkSupport fn)
+                                    {
+                                        var dlg = new SelectLinkSourceForm(KindLinkSource.LogicOutputs);
+                                        if (dlg.ShowDialog() == DialogResult.OK)
+                                        {
+                                            (Guid idSource, int pinOut) = dlg.Result;
+                                            if (idSource != Guid.Empty && !fn.LinkedInputs[(int)pin])
+                                            {
+                                                fn.SetValueLinkToInp((int)pin, idSource, pinOut, true);
+                                                Module.Changed = true;
+                                            }
+                                        }
+                                    }
+                                };
+                                cmZoomPad.Items.Add(item);
+                            }
                         }
-                        else
+                        else if (output == null)
                         {
-                            item = new ToolStripMenuItem() { Text = "Настроить связь по входу...", Tag = element };
+                            item = new ToolStripMenuItem() { Text = "Изменить номер...", Tag = element };
                             item.Click += (s, e) =>
                             {
                                 var menuItem = (ToolStripMenuItem?)s;
-                                if (menuItem?.Tag is Element element && element.Instance is ILinkSupport fn)
+                                if (menuItem?.Tag is Element element && element is IChangeIndex changer)
                                 {
-                                    var dlg = new SelectLinkSourceForm(KindLinkSource.LogicOutputs);
+                                    var dlg = new ChangeNumberDialog(changer.Index);
                                     if (dlg.ShowDialog() == DialogResult.OK)
                                     {
-                                        (Guid idSource, int pinOut) = dlg.Result;
-                                        if (idSource != Guid.Empty && !fn.LinkedInputs[(int)pin])
+                                        if (dlg.EnteredValue > 0 && dlg.EnteredValue <= items.Count)
                                         {
-                                            fn.SetValueLinkToInp((int)pin, idSource, pinOut, true);
+                                            var tmp = items[changer.Index - 1];
+                                            items.Remove(tmp);
+                                            items.Insert(dlg.EnteredValue - 1, tmp);
                                             Module.Changed = true;
+                                            zoomPad.Invalidate();
                                         }
                                     }
                                 }
                             };
                             cmZoomPad.Items.Add(item);
-                        }
-                    }
-                    else if (output == null)
-                    {
-                        item = new ToolStripMenuItem() { Text = "Изменить номер...", Tag = element };
-                        item.Click += (s, e) =>
-                        {
-                            var menuItem = (ToolStripMenuItem?)s;
-                            if (menuItem?.Tag is Element element && element is IChangeIndex changer)
-                            {
-                                var dlg = new ChangeNumberDialog(changer.Index);
-                                if (dlg.ShowDialog() == DialogResult.OK)
-                                {
-                                    if (dlg.EnteredValue > 0 && dlg.EnteredValue <= items.Count)
-                                    {
-                                        var tmp = items[changer.Index - 1];
-                                        items.Remove(tmp);
-                                        items.Insert(dlg.EnteredValue - 1, tmp);
-                                        Module.Changed = true;
-                                        zoomPad.Invalidate();
-                                    }
-                                }
-                            }
-                        };
-                        cmZoomPad.Items.Add(item);
-                        item = new ToolStripMenuItem() { Text = "Удалить элемент", Tag = element };
-                        item.Click += (s, e) =>
-                        {
-                            var menuItem = (ToolStripMenuItem?)s;
-                            if (menuItem?.Tag is Element element)
-                            {
-                                if (MessageBox.Show("Не, реально удалить?", "Удаление элемента",
-                                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                                {
-                                    DeleteOneElement(element);
-                                    zoomPad.Invalidate();
-                                }
-                            }
-                        };
-                        cmZoomPad.Items.Add(item);
-                        if (func is Model.Inputs.DI || func is Model.Outputs.DO)
-                        {
-                            item = new ToolStripMenuItem() { Text = "Настроить связь с оборудованием...", Tag = element };
+                            item = new ToolStripMenuItem() { Text = "Удалить элемент", Tag = element };
                             item.Click += (s, e) =>
                             {
                                 var menuItem = (ToolStripMenuItem?)s;
                                 if (menuItem?.Tag is Element element)
                                 {
-                                    if (func is Model.Inputs.DI di)
+                                    if (MessageBox.Show("Не, реально удалить?", "Удаление элемента",
+                                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                                     {
-                                        var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentOutputs, di.LinkSource);
-                                        if (dlg.ShowDialog() == DialogResult.OK)
-                                        {
-                                            (Guid idSource, int pinOut) = dlg.Result;
-                                            if (idSource != Guid.Empty)
-                                            {
-                                                di.SetExternalLinkToInp(0, idSource, pinOut, true);
-                                                Module.Changed = true;
-                                            }
-                                            else if (idSource == Guid.Empty)
-                                            {
-                                                di.ResetExternalLinkToInp(0);
-                                                Module.Changed = true;
-                                            }
-                                        }
-                                    }
-                                    else if (func is Model.Outputs.DO @do)
-                                    {
-                                        var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentInputs, @do.LinkSource);
-                                        if (dlg.ShowDialog() == DialogResult.OK)
-                                        {
-                                            (Guid idSource, int pinInp) = dlg.Result;
-                                            if (idSource != Guid.Empty)
-                                            {
-                                                @do.SetExternalLinkToInp(0, idSource, pinInp, true);
-                                                Module.Changed = true;
-                                            }
-                                            else if (idSource == Guid.Empty)
-                                            {
-                                                @do.ResetExternalLinkToInp(0);
-                                                Module.Changed = true;
-                                            }
-                                        }
+                                        DeleteOneElement(element);
+                                        zoomPad.Invalidate();
                                     }
                                 }
                             };
                             cmZoomPad.Items.Add(item);
+                            if (func is Model.Inputs.DI || func is Model.Outputs.DO)
+                            {
+                                item = new ToolStripMenuItem() { Text = "Настроить связь с оборудованием...", Tag = element };
+                                item.Click += (s, e) =>
+                                {
+                                    var menuItem = (ToolStripMenuItem?)s;
+                                    if (menuItem?.Tag is Element element)
+                                    {
+                                        if (func is Model.Inputs.DI di)
+                                        {
+                                            var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentOutputs, di.LinkSource);
+                                            if (dlg.ShowDialog() == DialogResult.OK)
+                                            {
+                                                (Guid idSource, int pinOut) = dlg.Result;
+                                                if (idSource != Guid.Empty)
+                                                {
+                                                    di.SetExternalLinkToInp(0, idSource, pinOut, true);
+                                                    Module.Changed = true;
+                                                }
+                                                else if (idSource == Guid.Empty)
+                                                {
+                                                    di.ResetExternalLinkToInp(0);
+                                                    Module.Changed = true;
+                                                }
+                                            }
+                                        }
+                                        else if (func is Model.Outputs.DO @do)
+                                        {
+                                            var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentInputs, @do.LinkSource);
+                                            if (dlg.ShowDialog() == DialogResult.OK)
+                                            {
+                                                (Guid idSource, int pinInp) = dlg.Result;
+                                                if (idSource != Guid.Empty)
+                                                {
+                                                    @do.SetExternalLinkToInp(0, idSource, pinInp, true);
+                                                    Module.Changed = true;
+                                                }
+                                                else if (idSource == Guid.Empty)
+                                                {
+                                                    @do.ResetExternalLinkToInp(0);
+                                                    Module.Changed = true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                };
+                                cmZoomPad.Items.Add(item);
+                            }
                         }
                     }
                 }
@@ -1075,16 +1072,19 @@ namespace Simulator
 
         private void zoomPad_MouseMove(object sender, MouseEventArgs e)
         {
-            if (ribbon != null)
-                Cursor = Cursors.Cross;
-            else if (TryGetLinkSegment(e.Location, out _, out _, out bool? vertical))
-                Cursor = vertical == true ? Cursors.VSplit : Cursors.HSplit;
-            else if (TryGetModule(e.Location, out _))
-                Cursor = Cursors.SizeAll;
-            else if (TryGetFreeInputPin(e.Location, out Element? element, out _, out _, out _) && element?.Instance is IManualChange _)
-                Cursor = Cursors.Hand;
-            else
-                Cursor = Cursors.Default;
+            if (!Project.Running)
+            {
+                if (ribbon != null)
+                    Cursor = Cursors.Cross;
+                else if (TryGetLinkSegment(e.Location, out _, out _, out bool? vertical))
+                    Cursor = vertical == true ? Cursors.VSplit : Cursors.HSplit;
+                else if (TryGetModule(e.Location, out _))
+                    Cursor = Cursors.SizeAll;
+                else if (TryGetFreeInputPin(e.Location, out Element? element, out _, out _, out _) && element?.Instance is IManualChange _)
+                    Cursor = Cursors.Hand;
+                else
+                    Cursor = Cursors.Default;
+            }
             if (e.Button == MouseButtons.Left)
             {
                 var mp = PrepareMousePosition(mousePosition);
@@ -1108,7 +1108,7 @@ namespace Simulator
                         link?.OffsetSegment((int)segmentIndex, (bool)segmentVertical, delta);
                         Module.Changed = true;
                     }
-                    if (!dragging)
+                    if (!Project.Running && !dragging)
                     {
                         ribbon = new Rectangle(Math.Min(firstMouseDown.X, mousePosition.X), Math.Min(firstMouseDown.Y, mousePosition.Y),
                             Math.Abs(firstMouseDown.X - mousePosition.X), Math.Abs(firstMouseDown.Y - mousePosition.Y));
@@ -1123,7 +1123,7 @@ namespace Simulator
         {
             if (e.Button == MouseButtons.Left)
             {
-                if (ribbon != null) // выбор рамкой
+                if (!Project.Running && ribbon != null) // выбор рамкой
                 {
                     var rect = PrepareRect((Rectangle)ribbon);
                     if ((ModifierKeys & Keys.Control) != Keys.Control)
