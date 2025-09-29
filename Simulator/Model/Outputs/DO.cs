@@ -8,7 +8,9 @@ namespace Simulator.Model.Outputs
 {
     public class DO : CommonLogic, ICustomDraw, IChangeOrderDO
     {
-        //private bool @out;
+        private (Guid, int, bool) linkSource = (Guid.Empty, 0, false);
+
+        public (Guid, int, bool) LinkSource => linkSource;
 
         public DO() : base(LogicFunction.DigOut, 1, 0)
         {
@@ -24,6 +26,26 @@ namespace Simulator.Model.Outputs
         {
             bool input = GetInputValue(0);
             Project.WriteValue(ItemId, 0, ValueSide.Input, ValueKind.Digital, input);
+            if (linkSource.Item1 != Guid.Empty)
+            {
+                Project.WriteValue(linkSource.Item1, 0, ValueSide.Output, ValueKind.Digital, input);
+            }
+        }
+
+        /// <summary>
+        /// Для создания связи записывается ссылка на метод,
+        /// который потом вызывается для получения актуального значения
+        /// </summary>
+        /// <param name="inputIndex">номер входа</param>
+        /// <param name="getMethod">Ссылка на метод, записываемая в целевом элементе, для этого входа</param>
+        public void SetExternalLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog)
+        {
+            linkSource = (sourceId, outputPinIndex, byDialog);
+        }
+
+        public void ResetExternalLinkToInp(int inputIndex)
+        {
+            linkSource = (Guid.Empty, 0, false);
         }
 
         public override void CalculateTargets(PointF location, ref SizeF size,
@@ -87,6 +109,11 @@ namespace Simulator.Model.Outputs
             graphics.DrawRectangles(pen, [descrect]);
             using var textFont = new Font("Arial Narrow", font.Size);
             graphics.DrawString(Description, textFont, fontbrush, descrect, format);
+            if (linkSource.Item1 != Guid.Empty)
+            {
+                rect.Inflate(2, 2);
+                graphics.DrawRectangles(pen, [rect]);
+            }
         }
 
         public override void Save(XElement xtance)
@@ -94,6 +121,14 @@ namespace Simulator.Model.Outputs
             base.Save(xtance);
             xtance.Add(new XElement("Order", Order));
             xtance.Add(new XElement("Description", Description));
+            if (linkSource.Item1 != Guid.Empty)
+            {
+                XElement xsource = new("External");
+                xsource.Add(new XAttribute("Id", linkSource.Item1));
+                if (linkSource.Item2 > 0)
+                    xsource.Add(new XAttribute("PinIndex", linkSource.Item2));
+                xtance.Add(xsource);
+            }
         }
 
         public override void Load(XElement? xtance)
@@ -102,6 +137,17 @@ namespace Simulator.Model.Outputs
             if (int.TryParse(xtance?.Element("Order")?.Value, out int order))
                 Order = order;
             Description = $"{xtance?.Element("Description")?.Value}";
+            var xsource = xtance?.Element("External");
+            if (xsource != null)
+            {
+                if (Guid.TryParse(xsource.Attribute("Id")?.Value, out Guid guid) && guid != Guid.Empty)
+                {
+                    if (int.TryParse(xsource.Attribute("PinIndex")?.Value, out int outputIndex))
+                        linkSource = (guid, outputIndex, true);
+                    else
+                        linkSource = (guid, 0, true);
+                }
+            }
         }
     }
 }

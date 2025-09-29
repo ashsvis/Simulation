@@ -1,8 +1,6 @@
 ﻿using Simulator.Model.Interfaces;
 using Simulator.Model.Logic;
-using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Xml.Linq;
 
 namespace Simulator.Model.Inputs
@@ -43,12 +41,12 @@ namespace Simulator.Model.Inputs
         /// </summary>
         /// <param name="inputIndex">номер входа</param>
         /// <param name="getMethod">Ссылка на метод, записываемая в целевом элементе, для этого входа</param>
-        public override void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog)
+        public void SetExternalLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog)
         {
             linkSource = (sourceId, outputPinIndex, byDialog);
         }
 
-        public override void ResetValueLinkToInp(int inputIndex)
+        public void ResetExternalLinkToInp(int inputIndex)
         {
             linkSource = (Guid.Empty, 0, false);
         }
@@ -79,11 +77,6 @@ namespace Simulator.Model.Inputs
         {
             graphics.FillRectangle(brush, rect);
             graphics.DrawRectangles(pen, [rect]);
-            //if (linkSource.Item1 != Guid.Empty)
-            //{
-            //    rect.Inflate(-2, -2);
-            //    graphics.DrawRectangles(pen, [rect]);
-            //}
             using var format = new StringFormat();
             format.Alignment = StringAlignment.Center;
             // обозначение функции, текст по-центру, в верхней части рамки элемента
@@ -130,11 +123,6 @@ namespace Simulator.Model.Inputs
             var descrect = new RectangleF(rect.X, rect.Y, rect.Height * 3, rect.Height);
             graphics.FillRectangle(brush, descrect);
             graphics.DrawRectangles(pen, [descrect]);
-            //if (linkSource.Item1 != Guid.Empty)
-            //{
-            //    descrect.Inflate(-2, -2);
-            //    graphics.DrawRectangles(pen, [descrect]);
-            //}
             using var textFont = new Font("Arial Narrow", font.Size);
             graphics.DrawString(Description, textFont, fontbrush, descrect, format);
             if (linkSource.Item1 != Guid.Empty)
@@ -151,12 +139,10 @@ namespace Simulator.Model.Inputs
             xtance.Add(new XElement("Description", Description));
             if (linkSource.Item1 != Guid.Empty)
             {
-                XElement xsource = new("Source");
+                XElement xsource = new("External");
                 xsource.Add(new XAttribute("Id", linkSource.Item1));
                 if (linkSource.Item2 > 0)
                     xsource.Add(new XAttribute("PinIndex", linkSource.Item2));
-                if (linkSource.Item3)
-                    xsource.Add(new XAttribute("External", true));
                 xtance.Add(xsource);
             }
         }
@@ -167,21 +153,17 @@ namespace Simulator.Model.Inputs
             if (int.TryParse(xtance?.Element("Order")?.Value, out int order))
                 Order = order;
             Description = $"{xtance?.Element("Description")?.Value}";
-            var xsource = xtance?.Element("Source");
+            var xsource = xtance?.Element("External");
             if (xsource != null)
             {
                 if (Guid.TryParse(xsource.Attribute("Id")?.Value, out Guid guid) && guid != Guid.Empty)
                 {
-                    var external = false;
-                    if (bool.TryParse(xsource.Attribute("External")?.Value, out bool bval))
-                        external = bval;
                     if (int.TryParse(xsource.Attribute("PinIndex")?.Value, out int outputIndex))
-                        linkSource = (guid, outputIndex, external);
+                        linkSource = (guid, outputIndex, true);
                     else
-                        linkSource = (guid, 0, external);
+                        linkSource = (guid, 0, true);
                 }
             }
-
         }
 
         public void SetValueToOut(int outputIndex, object? value)

@@ -8,7 +8,6 @@ namespace Simulator
         private readonly List<PanelForm> panels = [];
         private bool multiScreensMode;
         private int oneScreenIndex;
-        private bool finished;
 
         public bool MultiScreensMode
         {
@@ -161,7 +160,7 @@ namespace Simulator
 
         private void backWorkerCalc_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            finished = true;
+            
         }
 
         private void backWorkerCalc_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)

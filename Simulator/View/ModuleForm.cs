@@ -931,23 +931,32 @@ namespace Simulator
                                             (Guid idSource, int pinOut) = dlg.Result;
                                             if (idSource != Guid.Empty)
                                             {
-                                                di.SetValueLinkToInp(0, idSource, pinOut, true);
+                                                di.SetExternalLinkToInp(0, idSource, pinOut, true);
                                                 Module.Changed = true;
                                             }
                                             else if (idSource == Guid.Empty)
                                             {
-                                                di.ResetValueLinkToInp(0);
+                                                di.ResetExternalLinkToInp(0);
                                                 Module.Changed = true;
                                             }
                                         }
                                     }
-                                    else if (func is Model.Outputs.DO)
+                                    else if (func is Model.Outputs.DO @do)
                                     {
-                                        var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentInputs);
+                                        var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentInputs, @do.LinkSource);
                                         if (dlg.ShowDialog() == DialogResult.OK)
                                         {
-                                            (Guid idSource, int pin) = dlg.Result;
-                                            //TODO
+                                            (Guid idSource, int pinInp) = dlg.Result;
+                                            if (idSource != Guid.Empty)
+                                            {
+                                                @do.SetExternalLinkToInp(0, idSource, pinInp, true);
+                                                Module.Changed = true;
+                                            }
+                                            else if (idSource == Guid.Empty)
+                                            {
+                                                @do.ResetExternalLinkToInp(0);
+                                                Module.Changed = true;
+                                            }
                                         }
                                     }
                                 }
