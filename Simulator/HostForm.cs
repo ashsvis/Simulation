@@ -1,4 +1,5 @@
 ﻿using Simulator.Model;
+using System.ComponentModel;
 
 namespace Simulator
 {
@@ -7,6 +8,7 @@ namespace Simulator
         private readonly List<PanelForm> panels = [];
         private bool multiScreensMode;
         private int oneScreenIndex;
+        private bool finished;
 
         public bool MultiScreensMode
         {
@@ -89,15 +91,12 @@ namespace Simulator
         private void RootForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             // финализация
+            backWorkerCalc.CancelAsync();
         }
 
         private void RootForm_Load(object sender, EventArgs e)
         {
-            #region Защита от повторного запуска
-            //var process = RunningInstance();
-            //if (process != null) { Application.Exit(); return; }
-            #endregion
-            timerSimulation.Enabled = true;
+            backWorkerCalc.RunWorkerAsync();
         }
 
         public void SwapPanels(int prev, int current)
@@ -139,28 +138,35 @@ namespace Simulator
 
         public event EventHandler? SimulationTick;
 
-        /// <summary>
-        /// Таймер моделирования (100 мс)
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void timerSimulation_Tick(object sender, EventArgs e)
-        {
-            try
-            {
-                Project.Modules.ForEach(module => module.Calculate());
-                Project.Equipment.ForEach(unit => unit.Calculate());
-                SimulationTick?.Invoke(this, EventArgs.Empty);
-            }
-            catch { }
-        }
-
         public void RemoveModuleChildWindowFromPanels(Model.Module module)
         {
-            panels.ForEach(frm => 
+            panels.ForEach(frm =>
             {
                 frm.RemoveModuleChildFormFromPanel(module);
             });
+        }
+
+        private void backWorkerCalc_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            var worker = (BackgroundWorker)sender;
+            while (!worker.CancellationPending)
+            {
+                Thread.Sleep(50);
+                Project.Modules.ToList().ForEach(module => module.Calculate());
+                Thread.Sleep(50);
+                Project.Equipment.ToList().ForEach(unit => unit.Calculate());
+                worker.ReportProgress(0);
+            }
+        }
+
+        private void backWorkerCalc_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            finished = true;
+        }
+
+        private void backWorkerCalc_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        {
+            SimulationTick?.Invoke(this, EventArgs.Empty);
         }
     }
 }

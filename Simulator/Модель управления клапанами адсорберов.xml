@@ -138,6 +138,7 @@
             </Outputs>
             <Order>2</Order>
             <Description>Концевой ОТКРЫТ</Description>
+            <Source Id="71dc08f1-83ca-4522-b398-40b322bdeb04" External="true" />
           </Instance>
         </Element>
         <Element Id="93c97fb8-3342-4ae8-8bb6-5c69059cff40" X="800" Y="96">
@@ -162,6 +163,7 @@
             </Outputs>
             <Order>3</Order>
             <Description>Концевой ЗАКРЫТ</Description>
+            <Source Id="14b8412c-edd7-47b1-9d7c-12e55166dfe3" PinIndex="1" External="true" />
           </Instance>
         </Element>
         <Element Id="b35c01c8-005e-4c35-ae56-f798d0f9e262" X="800" Y="232">

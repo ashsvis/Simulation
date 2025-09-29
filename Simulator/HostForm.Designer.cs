@@ -28,19 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            timerSimulation = new System.Windows.Forms.Timer(components);
+            backWorkerCalc = new System.ComponentModel.BackgroundWorker();
             SuspendLayout();
             // 
-            // timerSimulation
+            // backWorkerCalc
             // 
-            timerSimulation.Tick += timerSimulation_Tick;
+            backWorkerCalc.WorkerReportsProgress = true;
+            backWorkerCalc.WorkerSupportsCancellation = true;
+            backWorkerCalc.DoWork += backWorkerCalc_DoWork;
+            backWorkerCalc.ProgressChanged += backWorkerCalc_ProgressChanged;
+            backWorkerCalc.RunWorkerCompleted += backWorkerCalc_RunWorkerCompleted;
             // 
             // HostForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(193, 37);
+            ClientSize = new Size(185, 29);
             ControlBox = false;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
@@ -58,7 +61,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Timer timerSimulation;
+        private System.ComponentModel.BackgroundWorker backWorkerCalc;
     }
 }
