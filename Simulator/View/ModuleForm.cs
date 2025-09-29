@@ -1,6 +1,7 @@
 ﻿using Simulator.Model;
 using Simulator.Model.Interfaces;
 using Simulator.View;
+using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Reflection;
 using System.Text;
@@ -295,8 +296,6 @@ namespace Simulator
             if (graphics == null) return;
             //graphics.SmoothingMode = SmoothingMode.HighQuality;
             //graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-#if DEBUG
-
             // прорисовка узлов сетки
             //using var brush = new SolidBrush(Color.Gray);
             //using var font = new Font("Consolas", 3f);
@@ -325,7 +324,6 @@ namespace Simulator
             //        }
             //    }
             //}
-#endif
             try
             {
 
@@ -444,7 +442,10 @@ namespace Simulator
                     graphics.DrawRectangle(pen, PrepareRect((Rectangle)ribbon));
                 }
             }
-            catch { }
+            catch (Exception ex) 
+            { 
+                Debug.WriteLine(ex.ToString()); 
+            }
         }
 
         private Rectangle PrepareRect(Rectangle rectangle)

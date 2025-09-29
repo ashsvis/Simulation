@@ -117,7 +117,10 @@ namespace Simulator.Model.Outputs
                     graphics.DrawRectangles(pen, [rect]);
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
         }
 
         public override void Save(XElement xtance)

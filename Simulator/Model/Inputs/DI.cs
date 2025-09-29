@@ -1,6 +1,7 @@
 ﻿using Simulator.Model.Interfaces;
 using Simulator.Model.Logic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Xml.Linq;
 
 namespace Simulator.Model.Inputs
@@ -133,7 +134,10 @@ namespace Simulator.Model.Inputs
                     graphics.DrawRectangles(pen, [rect]);
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
         }
 
         public override void Save(XElement xtance)

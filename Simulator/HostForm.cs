@@ -1,5 +1,6 @@
 ﻿using Simulator.Model;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Simulator
 {
@@ -160,7 +161,10 @@ namespace Simulator
                         Project.Equipment.ToList().ForEach(unit => unit.Calculate());
                     worker.ReportProgress(0);
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                }
             }
         }
 

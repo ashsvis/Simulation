@@ -200,7 +200,7 @@ namespace Simulator
                 case 0:
                     tsbShowModuleForm.Enabled =
                     tsbDeleteModule.Enabled =
-                    tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Unit _;
+                    tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module _;
                     break;
                 case 1:
                     tsbShowModuleForm.Enabled =
@@ -505,7 +505,7 @@ namespace Simulator
             switch (tcTools.SelectedIndex)
             {
                 case 0:
-                    if (tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Unit module)
+                    if (tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module module)
                     {
                         if (MessageBox.Show("Эта задача будет удалена безвозвратно! Удалить?",
                             "Удаление текущей задачи", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
@@ -535,7 +535,7 @@ namespace Simulator
             {
                 case 0:
                     if (tvModules.SelectedNode is not TreeNode node) return;
-                    if (node.Tag is not Model.Unit treeModule) return;
+                    if (node.Tag is not Model.Module treeModule) return;
                     EnsureShowModuleChildForm(treeModule);
                     break;
                 case 1:

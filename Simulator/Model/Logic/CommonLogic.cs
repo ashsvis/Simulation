@@ -1,5 +1,6 @@
 ﻿using Simulator.Model.Interfaces;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Xml.Linq;
 
 namespace Simulator.Model.Logic
@@ -476,7 +477,10 @@ namespace Simulator.Model.Logic
                     graphics.DrawString(text, font, fontbrush, new PointF(location.X + width / 2, location.Y + height - ms.Height), format);
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
         }
 
         public virtual void CalculateTargets(PointF location, ref SizeF size,
