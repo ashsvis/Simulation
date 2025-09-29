@@ -1,6 +1,7 @@
 ﻿using Simulator.Model.Interfaces;
 using System.Collections.Concurrent;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Xml.Linq;
@@ -187,30 +188,36 @@ namespace Simulator.Model
 
         public void Calculate()
         {
-            Elements.ForEach(item =>
+            try
             {
-                try
+                Elements.ForEach(item =>
                 {
-                    if (item.Instance is ICalculate instance)
-                        instance.Calculate();
-                }
-                catch
-                {
-
-                }
-            });
-            Elements.ForEach(item =>
+                    try
+                    {
+                        if (item.Instance is ICalculate instance)
+                            instance.Calculate();
+                    }
+                    catch (Exception ex) 
+                    {
+                        Debug.WriteLine(ex.Message);
+                    }
+                });
+            }
+            finally
             {
-                try
+                Elements.ForEach(item =>
                 {
-                    if (item.Instance is Model.Logic.FE frontEdgeDetector)
-                        frontEdgeDetector.Reset();
-                }
-                catch
-                {
-
-                }
-            });
+                    try
+                    {
+                        if (item.Instance is Model.Logic.FE frontEdgeDetector)
+                            frontEdgeDetector.Reset();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
+                    }
+                });
+            }
         }
 
         public Action GetCalculationMethod()
