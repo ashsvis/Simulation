@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+﻿using System.Collections;
 using System.ComponentModel;
 using System.Xml.Linq;
 
@@ -6,17 +6,7 @@ namespace Simulator.Model
 {
     public static class Project
     {
-        private static readonly ConcurrentDictionary<string, ValueItem> vals = [];
-
-        internal static int CountVariables(Guid moduleId) => vals.Where(x => GetModuleIdById(x.Value.ElementId) == moduleId).Count();
-
-        internal static ValueItem? GetVariableByIndex(Guid moduleId, int itemIndex)
-        {
-            var keys = vals.Where(x => GetModuleIdById(x.Value.ElementId) == moduleId).OrderBy(x => $"{GetElementById(x.Value.ElementId)}{x.Value.Side}{x.Value.Pin}").Select(x => x.Key).ToList();
-            if (vals.TryGetValue(keys[itemIndex], out ValueItem? a))
-                return a;
-            return null;
-        }
+        private static readonly Hashtable vals = [];
 
         internal static (string, string) GetAddressById(Guid id)
         {
@@ -81,20 +71,14 @@ namespace Simulator.Model
         internal static void WriteValue(Guid elementId, int pin, ValueSide side, ValueKind kind, object? value)
         {
             var key = $"{elementId}\t{pin}\t{side}\t{kind}";
-            if (vals.TryGetValue(key, out ValueItem? a) && a.Equals(value)) return; // одинаковые значения игнорируем   
-            a = new ValueItem() { ElementId = elementId, Side = side, Pin = pin, Kind = kind, Value = value };
-            vals.AddOrUpdate(key, a,
-                (akey, existingVal) =>
-                {
-                    existingVal.Value = value;
-                    return existingVal;
-                });
+            vals[key] = new ValueItem() { ElementId = elementId, Side = side, Pin = pin, Kind = kind, Value = value };
         }
 
         internal static ValueItem? ReadValue(Guid elementId, int pin, ValueSide side, ValueKind kind)
         {
             var key = $"{elementId}\t{pin}\t{side}\t{kind}";
-            if (vals.TryGetValue(key, out ValueItem? a)) return a;
+            if (vals.ContainsKey(key))
+                return (ValueItem?)vals[key];
             return null;
         }
 
@@ -403,24 +387,6 @@ namespace Simulator.Model
             Blocks.Remove(module);
             Changed = true;
             OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.RemoveBlock));
-        }
-
-        internal static ValueItem[] GetElementVariablesByIndex(Guid elementId)
-        {
-            List<ValueItem> result = [];
-            var inputkeys = vals.Where(x => x.Value.ElementId == elementId && x.Value.Side == ValueSide.Input).OrderBy(x => x.Value.Pin).Select(x => x.Key).ToList();
-            foreach (var key in inputkeys)
-            {
-                if (vals.TryGetValue(key, out ValueItem? a))
-                    result.Add(a);
-            }
-            var outputkeys = vals.Where(x => x.Value.ElementId == elementId && x.Value.Side == ValueSide.Output).OrderBy(x => x.Value.Pin).Select(x => x.Key).ToList();
-            foreach (var key in outputkeys)
-            {
-                if (vals.TryGetValue(key, out ValueItem? a))
-                    result.Add(a);
-            }
-            return [.. result];
         }
 
         public static event ProjectEventHandler? OnChanged;
