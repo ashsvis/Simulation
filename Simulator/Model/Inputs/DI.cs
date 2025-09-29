@@ -1,5 +1,6 @@
 ﻿using Simulator.Model.Interfaces;
 using Simulator.Model.Logic;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Xml.Linq;
@@ -121,6 +122,16 @@ namespace Simulator.Model.Inputs
             base.Save(xtance);
             xtance.Add(new XElement("Order", Order));
             xtance.Add(new XElement("Description", Description));
+            if (linkSource.Item1 != Guid.Empty)
+            {
+                XElement xsource = new("Source");
+                xsource.Add(new XAttribute("Id", linkSource.Item1));
+                if (linkSource.Item2 > 0)
+                    xsource.Add(new XAttribute("PinIndex", linkSource.Item2));
+                if (linkSource.Item3)
+                    xsource.Add(new XAttribute("External", true));
+                xtance.Add(xsource);
+            }
         }
 
         public override void Load(XElement? xtance)
@@ -129,6 +140,21 @@ namespace Simulator.Model.Inputs
             if (int.TryParse(xtance?.Element("Order")?.Value, out int order))
                 Order = order;
             Description = $"{xtance?.Element("Description")?.Value}";
+            var xsource = xtance?.Element("Source");
+            if (xsource != null)
+            {
+                if (Guid.TryParse(xsource.Attribute("Id")?.Value, out Guid guid) && guid != Guid.Empty)
+                {
+                    var external = false;
+                    if (bool.TryParse(xsource.Attribute("External")?.Value, out bool bval))
+                        external = bval;
+                    if (int.TryParse(xsource.Attribute("PinIndex")?.Value, out int outputIndex))
+                        linkSource = (guid, outputIndex, external);
+                    else
+                        linkSource = (guid, 0, external);
+                }
+            }
+
         }
 
         public void SetValueToOut(int outputIndex, object? value)

@@ -375,7 +375,7 @@
         <Link Id="56565c44-95f5-47bd-9725-1f0c603f5127">
           <Source Id="3629394c-3e68-426f-89c0-16a557352a1e" PinIndex="0" />
           <Destination Id="f795f5bd-3848-4205-bc8f-9b4e3ff0e5bc" PinIndex="1" />
-          <Points Array="232,104 232,104 240,104 240,80 256,80 256,80" />
+          <Points Array="232,104 232,104 248,104 248,80 256,80 256,80" />
         </Link>
         <Link Id="c0179fe6-1cf4-4ddb-9427-e61848aca9ee">
           <Source Id="72148cfa-e251-4ebc-8ec8-d87cbf5a6675" PinIndex="0" />

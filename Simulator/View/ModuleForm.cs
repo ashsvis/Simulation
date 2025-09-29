@@ -921,7 +921,7 @@ namespace Simulator
                             item.Click += (s, e) =>
                             {
                                 var menuItem = (ToolStripMenuItem?)s;
-                                if (menuItem?.Tag is Element element && element.Instance is ILinkSupport fn)
+                                if (menuItem?.Tag is Element element)
                                 {
                                     if (func is Model.Inputs.DI di)
                                     {
@@ -931,12 +931,12 @@ namespace Simulator
                                             (Guid idSource, int pinOut) = dlg.Result;
                                             if (idSource != Guid.Empty)
                                             {
-                                                fn.SetValueLinkToInp(0, idSource, pinOut, true);
+                                                di.SetValueLinkToInp(0, idSource, pinOut, true);
                                                 Module.Changed = true;
                                             }
                                             else if (idSource == Guid.Empty)
                                             {
-                                                fn.ResetValueLinkToInp(0);
+                                                di.ResetValueLinkToInp(0);
                                                 Module.Changed = true;
                                             }
                                         }
