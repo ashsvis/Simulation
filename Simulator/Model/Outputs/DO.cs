@@ -73,47 +73,51 @@ namespace Simulator.Model.Outputs
         {
             graphics.FillRectangle(brush, rect);
             graphics.DrawRectangles(pen, [rect]);
-            using var format = new StringFormat();
-            format.Alignment = StringAlignment.Center;
-            // обозначение функции, текст по-центру, в верхней части рамки элемента
-            var named = !string.IsNullOrEmpty(Name);
-            if (named)
+            try
             {
-                var msn = graphics.MeasureString(Name, font);
-                graphics.DrawString(Name, font, fontbrush, new PointF(rect.X + rect.Height / 2, rect.Y - msn.Height), format);
-            }
-
-            var funcrect = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height / 3);
-            var text = $"DO{Order}";
-            format.LineAlignment = StringAlignment.Center;
-            using var lampFont = new Font(font.FontFamily, font.Size);
-            graphics.DrawString(text, lampFont, fontbrush, funcrect, format);
-
-            // индекс элемента в списке
-            if (index != 0)
-            {
-                var labelrect = new RectangleF(rect.X, rect.Bottom - rect.Height / 3, rect.Height, rect.Height / 3);
-                text = $"L{index}";
-                var ms = graphics.MeasureString(text, font);
+                using var format = new StringFormat();
                 format.Alignment = StringAlignment.Center;
-                graphics.DrawString(text, font, fontbrush, labelrect, format);
-            }
+                // обозначение функции, текст по-центру, в верхней части рамки элемента
+                var named = !string.IsNullOrEmpty(Name);
+                if (named)
+                {
+                    var msn = graphics.MeasureString(Name, font);
+                    graphics.DrawString(Name, font, fontbrush, new PointF(rect.X + rect.Height / 2, rect.Y - msn.Height), format);
+                }
 
-            var staterect = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height / 3);
-            staterect.Offset(0, rect.Height / 3);
-            bool value = GetInputValue(0);
-            using var statebrush = new SolidBrush(value ? Color.Lime : Color.Red);
-            graphics.DrawString(value ? "\"1\"" : "\"0\"", font, statebrush, staterect, format);
+                var funcrect = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height / 3);
+                var text = $"DO{Order}";
+                format.LineAlignment = StringAlignment.Center;
+                using var lampFont = new Font(font.FontFamily, font.Size);
+                graphics.DrawString(text, lampFont, fontbrush, funcrect, format);
 
-            var descrect = new RectangleF(rect.X + rect.Height, rect.Y, rect.Height * 3, rect.Height);
-            graphics.DrawRectangles(pen, [descrect]);
-            using var textFont = new Font("Arial Narrow", font.Size);
-            graphics.DrawString(Description, textFont, fontbrush, descrect, format);
-            if (linkSource.Item1 != Guid.Empty)
-            {
-                rect.Inflate(2, 2);
-                graphics.DrawRectangles(pen, [rect]);
+                // индекс элемента в списке
+                if (index != 0)
+                {
+                    var labelrect = new RectangleF(rect.X, rect.Bottom - rect.Height / 3, rect.Height, rect.Height / 3);
+                    text = $"L{index}";
+                    var ms = graphics.MeasureString(text, font);
+                    format.Alignment = StringAlignment.Center;
+                    graphics.DrawString(text, font, fontbrush, labelrect, format);
+                }
+
+                var staterect = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height / 3);
+                staterect.Offset(0, rect.Height / 3);
+                bool value = GetInputValue(0);
+                using var statebrush = new SolidBrush(value ? Color.Lime : Color.Red);
+                graphics.DrawString(value ? "\"1\"" : "\"0\"", font, statebrush, staterect, format);
+
+                var descrect = new RectangleF(rect.X + rect.Height, rect.Y, rect.Height * 3, rect.Height);
+                graphics.DrawRectangles(pen, [descrect]);
+                using var textFont = new Font("Arial Narrow", font.Size);
+                graphics.DrawString(Description, textFont, fontbrush, descrect, format);
+                if (linkSource.Item1 != Guid.Empty)
+                {
+                    rect.Inflate(2, 2);
+                    graphics.DrawRectangles(pen, [rect]);
+                }
             }
+            catch { }
         }
 
         public override void Save(XElement xtance)

@@ -77,59 +77,63 @@ namespace Simulator.Model.Inputs
         {
             graphics.FillRectangle(brush, rect);
             graphics.DrawRectangles(pen, [rect]);
-            using var format = new StringFormat();
-            format.Alignment = StringAlignment.Center;
-            // обозначение функции, текст по-центру, в верхней части рамки элемента
-            var named = !string.IsNullOrEmpty(Name);
-            if (named)
+            try
             {
-                var msn = graphics.MeasureString(Name, font);
-                graphics.DrawString(Name, font, fontbrush, new PointF(rect.X + rect.Width - rect.Height / 2, rect.Y - msn.Height), format);
-            }
-
-            // горизонтальная риска справа, напротив выхода
-            graphics.DrawLine(pen, new PointF(rect.Right, rect.Y + rect.Height / 2),
-                new PointF(rect.Right + Element.Step, rect.Y + rect.Height / 2));
-            // значение выхода
-            if (VisibleValues)
-            {
-                var textval = $"{Project.ReadValue(ItemId, 0, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
-                var ms = graphics.MeasureString(textval, font);
-                graphics.DrawString(textval, font, fontbrush, new PointF(rect.Right, rect.Y + rect.Height / 2 - ms.Height));
-            }
-
-            var funcrect = new RectangleF(rect.X + rect.Height * 3, rect.Y, rect.Height, rect.Height / 3);
-            var text = $"DI{Order}";
-            format.LineAlignment = StringAlignment.Center;
-            using var lampFont = new Font(font.FontFamily, font.Size);
-            graphics.DrawString(text, lampFont, fontbrush, funcrect, format);
-
-            // индекс элемента в списке
-            if (index != 0)
-            {
-                var labelrect = new RectangleF(rect.X + rect.Height * 3, rect.Bottom - rect.Height / 3, rect.Height, rect.Height / 3);
-                text = $"L{index}";
-                var ms = graphics.MeasureString(text, font);
+                using var format = new StringFormat();
                 format.Alignment = StringAlignment.Center;
-                graphics.DrawString(text, font, fontbrush, labelrect, format);
-            }
+                // обозначение функции, текст по-центру, в верхней части рамки элемента
+                var named = !string.IsNullOrEmpty(Name);
+                if (named)
+                {
+                    var msn = graphics.MeasureString(Name, font);
+                    graphics.DrawString(Name, font, fontbrush, new PointF(rect.X + rect.Width - rect.Height / 2, rect.Y - msn.Height), format);
+                }
 
-            var staterect = new RectangleF(rect.X + rect.Height * 3, rect.Y, rect.Height, rect.Height / 3);
-            staterect.Offset(0, rect.Height / 3);
-            var value = (bool)(Project.ReadValue(ItemId, 0, ValueSide.Output, ValueKind.Digital)?.Value ?? false);
-            using var statebrush = new SolidBrush(value ? Color.Lime : Color.Red);
-            graphics.DrawString(value ? "\"1\"" : "\"0\"", font, statebrush, staterect, format);
+                // горизонтальная риска справа, напротив выхода
+                graphics.DrawLine(pen, new PointF(rect.Right, rect.Y + rect.Height / 2),
+                    new PointF(rect.Right + Element.Step, rect.Y + rect.Height / 2));
+                // значение выхода
+                if (VisibleValues)
+                {
+                    var textval = $"{Project.ReadValue(ItemId, 0, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
+                    var ms = graphics.MeasureString(textval, font);
+                    graphics.DrawString(textval, font, fontbrush, new PointF(rect.Right, rect.Y + rect.Height / 2 - ms.Height));
+                }
 
-            var descrect = new RectangleF(rect.X, rect.Y, rect.Height * 3, rect.Height);
-            graphics.FillRectangle(brush, descrect);
-            graphics.DrawRectangles(pen, [descrect]);
-            using var textFont = new Font("Arial Narrow", font.Size);
-            graphics.DrawString(Description, textFont, fontbrush, descrect, format);
-            if (linkSource.Item1 != Guid.Empty)
-            {
-                rect.Inflate(2, 2);
-                graphics.DrawRectangles(pen, [rect]);
+                var funcrect = new RectangleF(rect.X + rect.Height * 3, rect.Y, rect.Height, rect.Height / 3);
+                var text = $"DI{Order}";
+                format.LineAlignment = StringAlignment.Center;
+                using var lampFont = new Font(font.FontFamily, font.Size);
+                graphics.DrawString(text, lampFont, fontbrush, funcrect, format);
+
+                // индекс элемента в списке
+                if (index != 0)
+                {
+                    var labelrect = new RectangleF(rect.X + rect.Height * 3, rect.Bottom - rect.Height / 3, rect.Height, rect.Height / 3);
+                    text = $"L{index}";
+                    var ms = graphics.MeasureString(text, font);
+                    format.Alignment = StringAlignment.Center;
+                    graphics.DrawString(text, font, fontbrush, labelrect, format);
+                }
+
+                var staterect = new RectangleF(rect.X + rect.Height * 3, rect.Y, rect.Height, rect.Height / 3);
+                staterect.Offset(0, rect.Height / 3);
+                var value = (bool)(Project.ReadValue(ItemId, 0, ValueSide.Output, ValueKind.Digital)?.Value ?? false);
+                using var statebrush = new SolidBrush(value ? Color.Lime : Color.Red);
+                graphics.DrawString(value ? "\"1\"" : "\"0\"", font, statebrush, staterect, format);
+
+                var descrect = new RectangleF(rect.X, rect.Y, rect.Height * 3, rect.Height);
+                graphics.FillRectangle(brush, descrect);
+                graphics.DrawRectangles(pen, [descrect]);
+                using var textFont = new Font("Arial Narrow", font.Size);
+                graphics.DrawString(Description, textFont, fontbrush, descrect, format);
+                if (linkSource.Item1 != Guid.Empty)
+                {
+                    rect.Inflate(2, 2);
+                    graphics.DrawRectangles(pen, [rect]);
+                }
             }
+            catch { }
         }
 
         public override void Save(XElement xtance)

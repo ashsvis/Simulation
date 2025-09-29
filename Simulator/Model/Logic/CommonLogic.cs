@@ -370,109 +370,113 @@ namespace Simulator.Model.Logic
         public void Draw(Graphics graphics, Color foreColor, Color backColor, PointF location, SizeF size, 
             int index, bool selected, CustomDraw? customDraw = null)
         {
-            using var brush = new SolidBrush(Color.FromArgb(255, backColor));
-            using var pen = new Pen(selected ? Color.Magenta : foreColor, 1f);
-            using var font = new Font("Consolas", Element.Step + 2f);
-            using var fontbrush = new SolidBrush(selected ? Color.Magenta : foreColor);
-            using var format = new StringFormat();
-            format.Alignment = StringAlignment.Center;
-            var max = Math.Max(InverseInputs.Length, InverseOutputs.Length);
-            var step = Element.Step;
-            var height = step + max * step * 4 + step;
-            var width = step + 1 * step * 4 + step;
-            var rect = new RectangleF(location, size);
-            if (customDraw == null)
+            try
             {
-                graphics.FillRectangle(brush, rect);
-                graphics.DrawRectangles(pen, [rect]);
-                // обозначение функции, текст по-центру, в верхней части рамки элемента
-                var named = !string.IsNullOrEmpty(Name);
-                if (named)
+                using var brush = new SolidBrush(Color.FromArgb(255, backColor));
+                using var pen = new Pen(selected ? Color.Magenta : foreColor, 1f);
+                using var font = new Font("Consolas", Element.Step + 2f);
+                using var fontbrush = new SolidBrush(selected ? Color.Magenta : foreColor);
+                using var format = new StringFormat();
+                format.Alignment = StringAlignment.Center;
+                var max = Math.Max(InverseInputs.Length, InverseOutputs.Length);
+                var step = Element.Step;
+                var height = step + max * step * 4 + step;
+                var width = step + 1 * step * 4 + step;
+                var rect = new RectangleF(location, size);
+                if (customDraw == null)
                 {
-                    var msn = graphics.MeasureString(Name, font);
-                    graphics.DrawString(Name, font, fontbrush, new PointF(location.X + width / 2, location.Y - msn.Height), format);
+                    graphics.FillRectangle(brush, rect);
+                    graphics.DrawRectangles(pen, [rect]);
+                    // обозначение функции, текст по-центру, в верхней части рамки элемента
+                    var named = !string.IsNullOrEmpty(Name);
+                    if (named)
+                    {
+                        var msn = graphics.MeasureString(Name, font);
+                        graphics.DrawString(Name, font, fontbrush, new PointF(location.X + width / 2, location.Y - msn.Height), format);
+                    }
                 }
-            }
-            graphics.DrawString(FuncSymbol, font, fontbrush, new PointF(location.X + width / 2, location.Y), format);
-            // входы
-            var y = step + location.Y;
-            var x = -step + location.X;
-            for (var i = 0; i < InverseInputs.Length; i++)
-            {
-                y += step * 2;
-                // горизонтальная риска слева, напротив входа
-                graphics.DrawLine(pen, new PointF(x, y), new PointF(x + step, y));
-                if (InverseInputs[i])
+                graphics.DrawString(FuncSymbol, font, fontbrush, new PointF(location.X + width / 2, location.Y), format);
+                // входы
+                var y = step + location.Y;
+                var x = -step + location.X;
+                for (var i = 0; i < InverseInputs.Length; i++)
                 {
-                    var r = new RectangleF(x + step / 2, y - step / 2, step, step);
-                    // рисуем кружок инверсии
-                    graphics.FillEllipse(brush, r);
-                    graphics.DrawEllipse(pen, r);
-                }
-                // наименование входа
-                if (!string.IsNullOrEmpty(InputNames[i]))
-                {
-                    var ms = graphics.MeasureString(InputNames[i], font);
-                    graphics.DrawString(InputNames[i], font, fontbrush, new PointF(x + step, y - ms.Height / 2));
-                }
-                // значение входа
-                bool isLinked = this is ILinkSupport link && link.LinkedInputs[i];
-                bool isExternal = this is ILinkSupport link1 && link1.InputLinkSources[i].Item3;
-                if (VisibleValues)
-                {
-                    var text = $"{GetInputValue(i)}"[..1].ToUpper();
-                    var ms = graphics.MeasureString(text, font);
-                    using var iformat = new StringFormat();
-                    iformat.Alignment = StringAlignment.Near;
-                    using var br = new SolidBrush(isLinked ? Color.Gray : foreColor);
-                    graphics.DrawString(text, font, br, new PointF(x - ms.Width + step, y - ms.Height), iformat);
-                }
-                y += step * 2;
-            }
-            // выходы
-            y = step + location.Y;
-            x = width + location.X;
-            for (var i = 0; i < InverseOutputs.Length; i++)
-            {
-                if (InverseOutputs.Length == 1)
-                    y = height / 2 + location.Y;
-                else
                     y += step * 2;
-                if (OutputNames.Length > 0)
-                {
-                    // горизонтальная риска справа, напротив выхода
+                    // горизонтальная риска слева, напротив входа
                     graphics.DrawLine(pen, new PointF(x, y), new PointF(x + step, y));
+                    if (InverseInputs[i])
+                    {
+                        var r = new RectangleF(x + step / 2, y - step / 2, step, step);
+                        // рисуем кружок инверсии
+                        graphics.FillEllipse(brush, r);
+                        graphics.DrawEllipse(pen, r);
+                    }
+                    // наименование входа
+                    if (!string.IsNullOrEmpty(InputNames[i]))
+                    {
+                        var ms = graphics.MeasureString(InputNames[i], font);
+                        graphics.DrawString(InputNames[i], font, fontbrush, new PointF(x + step, y - ms.Height / 2));
+                    }
+                    // значение входа
+                    bool isLinked = this is ILinkSupport link && link.LinkedInputs[i];
+                    bool isExternal = this is ILinkSupport link1 && link1.InputLinkSources[i].Item3;
+                    if (VisibleValues)
+                    {
+                        var text = $"{GetInputValue(i)}"[..1].ToUpper();
+                        var ms = graphics.MeasureString(text, font);
+                        using var iformat = new StringFormat();
+                        iformat.Alignment = StringAlignment.Near;
+                        using var br = new SolidBrush(isLinked ? Color.Gray : foreColor);
+                        graphics.DrawString(text, font, br, new PointF(x - ms.Width + step, y - ms.Height), iformat);
+                    }
+                    y += step * 2;
                 }
-                if (InverseOutputs[i] && customDraw == null)
+                // выходы
+                y = step + location.Y;
+                x = width + location.X;
+                for (var i = 0; i < InverseOutputs.Length; i++)
                 {
-                    var r = new RectangleF(x - step / 2, y - step / 2, step, step);
-                    // рисуем кружок инверсии
-                    graphics.FillEllipse(brush, r);
-                    graphics.DrawEllipse(pen, r);
+                    if (InverseOutputs.Length == 1)
+                        y = height / 2 + location.Y;
+                    else
+                        y += step * 2;
+                    if (OutputNames.Length > 0)
+                    {
+                        // горизонтальная риска справа, напротив выхода
+                        graphics.DrawLine(pen, new PointF(x, y), new PointF(x + step, y));
+                    }
+                    if (InverseOutputs[i] && customDraw == null)
+                    {
+                        var r = new RectangleF(x - step / 2, y - step / 2, step, step);
+                        // рисуем кружок инверсии
+                        graphics.FillEllipse(brush, r);
+                        graphics.DrawEllipse(pen, r);
+                    }
+                    // наименование выхода
+                    if (OutputNames.Length > 0 && !string.IsNullOrEmpty(OutputNames[i]))
+                    {
+                        var ms = graphics.MeasureString(OutputNames[i], font);
+                        graphics.DrawString(OutputNames[i], font, fontbrush, new PointF(x - ms.Width, y - ms.Height / 2));
+                    }
+                    // значение выхода
+                    if (OutputNames.Length > 0 && VisibleValues && this is ILinkSupport link)
+                    {
+                        var text = $"{Project.ReadValue(itemId, i, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
+                        var ms = graphics.MeasureString(text, font);
+                        graphics.DrawString(text, font, fontbrush, new PointF(x, y - ms.Height));
+                    }
+                    y += step * 2;
                 }
-                // наименование выхода
-                if (OutputNames.Length > 0 && !string.IsNullOrEmpty(OutputNames[i]))
+                customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush, index);
+                // индекс элемента в списке
+                if (customDraw == null && index != 0)
                 {
-                    var ms = graphics.MeasureString(OutputNames[i], font);
-                    graphics.DrawString(OutputNames[i], font, fontbrush, new PointF(x - ms.Width, y - ms.Height / 2));
-                }
-                // значение выхода
-                if (OutputNames.Length > 0 && VisibleValues && this is ILinkSupport link)
-                {
-                    var text = $"{Project.ReadValue(itemId, i, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
+                    var text = $"L{index}";
                     var ms = graphics.MeasureString(text, font);
-                    graphics.DrawString(text, font, fontbrush, new PointF(x, y - ms.Height));
+                    graphics.DrawString(text, font, fontbrush, new PointF(location.X + width / 2, location.Y + height - ms.Height), format);
                 }
-                y += step * 2;
             }
-            customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush, index);
-            // индекс элемента в списке
-            if (customDraw == null && index != 0)
-            {
-                var text = $"L{index}";
-                var ms = graphics.MeasureString(text, font);
-                graphics.DrawString(text, font, fontbrush, new PointF(location.X + width / 2, location.Y + height - ms.Height), format);
-            }
+            catch { }
         }
 
         public virtual void CalculateTargets(PointF location, ref SizeF size,

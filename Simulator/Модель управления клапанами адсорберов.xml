@@ -1397,7 +1397,7 @@
             </Outputs>
           </Instance>
         </Element>
-        <Element Id="6b13e78a-9c58-4fa4-b1c2-e7a026c86c5f" X="352" Y="104">
+        <Element Id="6b13e78a-9c58-4fa4-b1c2-e7a026c86c5f" X="352" Y="136">
           <Instance Type="Simulator.Model.Logic.FE">
             <Inputs>
               <Input Index="0">
@@ -1469,6 +1469,7 @@
             </Outputs>
             <Order>2</Order>
             <Description>Концевой ОТКРЫТ</Description>
+            <External Id="60933c84-affc-4013-a424-0ed602fa300a" />
           </Instance>
         </Element>
         <Element Id="5d8cd18e-8cbf-4a51-ac99-6a5d39782631" X="800" Y="96">
@@ -1493,6 +1494,7 @@
             </Outputs>
             <Order>3</Order>
             <Description>Концевой ЗАКРЫТ</Description>
+            <External Id="8d2ca6c2-e80f-4e50-bb59-f96be4afb0df" PinIndex="1" />
           </Instance>
         </Element>
         <Element Id="4d4735ea-6d31-4327-b3cc-fa94ba2404cd" X="800" Y="232">
@@ -1534,6 +1536,7 @@
             </Inputs>
             <Order>0</Order>
             <Description>Управление клапаном</Description>
+            <External Id="12c13282-c0a5-4688-8a86-e3c8948dc8d5" />
           </Instance>
         </Element>
         <Element Id="2a1fc895-7fc4-4ed1-90dd-5eb3c579a8b7" X="912" Y="112">
@@ -1616,7 +1619,7 @@
         <Link Id="d09e8ef0-8f69-4ace-8077-75930665818d">
           <Source Id="6b13e78a-9c58-4fa4-b1c2-e7a026c86c5f" PinIndex="0" />
           <Destination Id="639af97e-7e53-47c2-b940-aa4422e4e952" PinIndex="1" />
-          <Points Array="408,128 408,128 432,128 432,96 456,96 456,96" />
+          <Points Array="408,160 408,160 432,160 432,96 456,96 456,96" />
         </Link>
         <Link Id="5b4e3530-70fe-44e2-b9be-01700ec305e9">
           <Source Id="639af97e-7e53-47c2-b940-aa4422e4e952" PinIndex="0" />
@@ -1701,17 +1704,17 @@
         <Link Id="85c9b1cf-73d1-4cfe-80b2-47145ebf04e8">
           <Source Id="8e1188f7-30d1-4c50-a523-c657fce2f559" PinIndex="0" />
           <Destination Id="6b13e78a-9c58-4fa4-b1c2-e7a026c86c5f" PinIndex="0" />
-          <Points Array="320,160 320,160 336,160 336,128 344,128 344,128" />
+          <Points Array="320,160 320,160 344,160 344,160" />
         </Link>
         <Link Id="6e312f28-39ab-4559-ad4b-e407d37c3839">
           <Source Id="edd4bd7c-98e2-40ce-b7f6-aa4735548a8a" PinIndex="0" />
           <Destination Id="063f7079-dc97-4031-96b0-0e66f4b1da7c" PinIndex="1" />
-          <Points Array="232,104 232,104 240,104 240,80 256,80 256,80" />
+          <Points Array="232,104 232,104 248,104 248,80 256,80 256,80" />
         </Link>
         <Link Id="0369b8f4-a403-47a7-a9a9-4f8e086f06ce">
           <Source Id="36bb93fc-07fd-4c85-aad1-b141e497eff8" PinIndex="0" />
           <Destination Id="8e1188f7-30d1-4c50-a523-c657fce2f559" PinIndex="1" />
-          <Points Array="232,200 232,200 240,200 240,176 256,176 256,176" />
+          <Points Array="232,200 232,200 248,200 248,176 256,176 256,176" />
         </Link>
         <Link Id="19134d54-da00-4cb7-b8cf-97155d23c92f">
           <Source Id="639af97e-7e53-47c2-b940-aa4422e4e952" PinIndex="0" />
@@ -1788,7 +1791,7 @@
             </Outputs>
           </Instance>
         </Element>
-        <Element Id="d1b5999c-6dc9-4b0f-9c8d-2252da29a99e" X="352" Y="104">
+        <Element Id="d1b5999c-6dc9-4b0f-9c8d-2252da29a99e" X="352" Y="136">
           <Instance Type="Simulator.Model.Logic.FE">
             <Inputs>
               <Input Index="0">
@@ -1860,6 +1863,7 @@
             </Outputs>
             <Order>2</Order>
             <Description>Концевой ОТКРЫТ</Description>
+            <External Id="50d97a7f-6afa-4a16-a15d-099176e448b4" />
           </Instance>
         </Element>
         <Element Id="67f6e323-9316-41b1-a283-3ef978b326e0" X="800" Y="96">
@@ -1884,6 +1888,7 @@
             </Outputs>
             <Order>3</Order>
             <Description>Концевой ЗАКРЫТ</Description>
+            <External Id="831f8f35-4bef-4f4d-bb2d-6ffea4baa810" PinIndex="1" />
           </Instance>
         </Element>
         <Element Id="5c84809b-5569-419d-b2f8-390dff1c5acc" X="800" Y="232">
@@ -1925,6 +1930,7 @@
             </Inputs>
             <Order>0</Order>
             <Description>Управление клапаном</Description>
+            <External Id="25b1c2f1-35be-4f83-92b2-b18f83096861" />
           </Instance>
         </Element>
         <Element Id="c2d92ddc-392f-45b6-b6a7-ed394b626a2e" X="912" Y="112">
@@ -2007,7 +2013,7 @@
         <Link Id="baf9beae-cd26-456d-86ae-cf7219701237">
           <Source Id="d1b5999c-6dc9-4b0f-9c8d-2252da29a99e" PinIndex="0" />
           <Destination Id="4c5a077f-2266-4937-9bb6-d1bf2b1d9b26" PinIndex="1" />
-          <Points Array="408,128 408,128 432,128 432,96 456,96 456,96" />
+          <Points Array="408,160 408,160 432,160 432,96 456,96 456,96" />
         </Link>
         <Link Id="34509e9b-39b9-421f-8fd8-6d0fe37db01a">
           <Source Id="4c5a077f-2266-4937-9bb6-d1bf2b1d9b26" PinIndex="0" />
@@ -2092,17 +2098,17 @@
         <Link Id="6db203b3-ac96-4a17-97c7-06d472797a2d">
           <Source Id="3fb00a37-76bd-4e7f-8504-1c20475c0427" PinIndex="0" />
           <Destination Id="d1b5999c-6dc9-4b0f-9c8d-2252da29a99e" PinIndex="0" />
-          <Points Array="320,160 320,160 336,160 336,128 344,128 344,128" />
+          <Points Array="320,160 320,160 344,160 344,160" />
         </Link>
         <Link Id="02559bfe-1efe-499e-8c07-c7d48049231c">
           <Source Id="1c000ab9-d646-4f13-8076-7c67aaac5c8b" PinIndex="0" />
           <Destination Id="db9ca9b9-09dd-42c1-b5c7-2c438582f77c" PinIndex="1" />
-          <Points Array="232,104 232,104 240,104 240,80 256,80 256,80" />
+          <Points Array="232,104 232,104 248,104 248,80 256,80 256,80" />
         </Link>
         <Link Id="63fa89b7-3f2d-402e-ad08-cd713cf36724">
           <Source Id="34ef9f54-5437-4f7e-b689-912ccdab292b" PinIndex="0" />
           <Destination Id="3fb00a37-76bd-4e7f-8504-1c20475c0427" PinIndex="1" />
-          <Points Array="232,200 232,200 240,200 240,176 256,176 256,176" />
+          <Points Array="232,200 232,200 248,200 248,176 256,176 256,176" />
         </Link>
         <Link Id="6fe1495f-debd-49cb-b708-8db1dd0e3e37">
           <Source Id="4c5a077f-2266-4937-9bb6-d1bf2b1d9b26" PinIndex="0" />
@@ -2179,7 +2185,7 @@
             </Outputs>
           </Instance>
         </Element>
-        <Element Id="8645866c-927d-465a-8e27-27c1f9ba41cf" X="352" Y="104">
+        <Element Id="8645866c-927d-465a-8e27-27c1f9ba41cf" X="352" Y="136">
           <Instance Type="Simulator.Model.Logic.FE">
             <Inputs>
               <Input Index="0">
@@ -2251,6 +2257,7 @@
             </Outputs>
             <Order>2</Order>
             <Description>Концевой ОТКРЫТ</Description>
+            <External Id="46ac3718-14bb-4cd0-8b97-7825ec7fb538" />
           </Instance>
         </Element>
         <Element Id="e1006107-a076-41df-9803-8c40b2724d80" X="800" Y="96">
@@ -2275,6 +2282,7 @@
             </Outputs>
             <Order>3</Order>
             <Description>Концевой ЗАКРЫТ</Description>
+            <External Id="3244d254-43b2-4362-b74f-06afdfdb9cfc" PinIndex="1" />
           </Instance>
         </Element>
         <Element Id="b52a8494-cd55-4c03-b67e-3eef2629e54d" X="800" Y="232">
@@ -2316,6 +2324,7 @@
             </Inputs>
             <Order>0</Order>
             <Description>Управление клапаном</Description>
+            <External Id="6302fdc7-4997-4a48-b3a2-668246f01470" />
           </Instance>
         </Element>
         <Element Id="6e4f5a60-6fc8-4592-bd44-7d2ca75cd4fb" X="912" Y="112">
@@ -2398,7 +2407,7 @@
         <Link Id="cb155b0e-b933-49d4-898d-6f7bf751c354">
           <Source Id="8645866c-927d-465a-8e27-27c1f9ba41cf" PinIndex="0" />
           <Destination Id="6c3caf93-5fee-4fec-80cf-d77aa6957b60" PinIndex="1" />
-          <Points Array="408,128 408,128 432,128 432,96 456,96 456,96" />
+          <Points Array="408,160 408,160 432,160 432,96 456,96 456,96" />
         </Link>
         <Link Id="79db946a-13c1-4328-bb4d-f3542d0f0d26">
           <Source Id="6c3caf93-5fee-4fec-80cf-d77aa6957b60" PinIndex="0" />
@@ -2483,17 +2492,17 @@
         <Link Id="2acf26b5-0450-4619-a888-d1d4620bfee1">
           <Source Id="22407408-fa15-4f59-b0af-6ca7eca0130a" PinIndex="0" />
           <Destination Id="8645866c-927d-465a-8e27-27c1f9ba41cf" PinIndex="0" />
-          <Points Array="320,160 320,160 336,160 336,128 344,128 344,128" />
+          <Points Array="320,160 320,160 344,160 344,160" />
         </Link>
         <Link Id="dfc7cdc9-82fc-489a-a1e1-f962dd4225d2">
           <Source Id="2300ac29-c2d2-4c19-ab27-4c2a55f3af62" PinIndex="0" />
           <Destination Id="c40d6d31-97a1-40f7-8b07-d32604d13238" PinIndex="1" />
-          <Points Array="232,104 232,104 240,104 240,80 256,80 256,80" />
+          <Points Array="232,104 232,104 248,104 248,80 256,80 256,80" />
         </Link>
         <Link Id="35465df5-8a13-4a57-9cf6-aacda50df6b6">
           <Source Id="e78a7eb0-822e-495b-bede-fb417c230542" PinIndex="0" />
           <Destination Id="22407408-fa15-4f59-b0af-6ca7eca0130a" PinIndex="1" />
-          <Points Array="232,200 232,200 240,200 240,176 256,176 256,176" />
+          <Points Array="232,200 232,200 248,200 248,176 256,176 256,176" />
         </Link>
         <Link Id="0ea05371-50d4-4499-9517-e98299b2add2">
           <Source Id="6c3caf93-5fee-4fec-80cf-d77aa6957b60" PinIndex="0" />
@@ -2570,7 +2579,7 @@
             </Outputs>
           </Instance>
         </Element>
-        <Element Id="20b9aa42-ee13-440f-a0c6-43ad72458a5f" X="352" Y="104">
+        <Element Id="20b9aa42-ee13-440f-a0c6-43ad72458a5f" X="352" Y="136">
           <Instance Type="Simulator.Model.Logic.FE">
             <Inputs>
               <Input Index="0">
@@ -2642,6 +2651,7 @@
             </Outputs>
             <Order>2</Order>
             <Description>Концевой ОТКРЫТ</Description>
+            <External Id="b7ab0002-51a7-4e20-8010-07476004e968" />
           </Instance>
         </Element>
         <Element Id="33405b7f-6eb5-4ea6-a6dc-d4e034c5adfd" X="800" Y="96">
@@ -2666,6 +2676,7 @@
             </Outputs>
             <Order>3</Order>
             <Description>Концевой ЗАКРЫТ</Description>
+            <External Id="d868b49e-2b71-4568-a387-df17122aed57" PinIndex="1" />
           </Instance>
         </Element>
         <Element Id="b3f6c71e-3786-4ee2-804d-fa0fb83e7fc8" X="800" Y="232">
@@ -2707,6 +2718,7 @@
             </Inputs>
             <Order>0</Order>
             <Description>Управление клапаном</Description>
+            <External Id="b959b66e-73e9-45ce-bf0a-7c51c512dfd7" />
           </Instance>
         </Element>
         <Element Id="219bb217-2265-4597-bb8d-cc24a70db17f" X="912" Y="112">
@@ -2789,7 +2801,7 @@
         <Link Id="7daacc3d-1a4d-4e59-bc48-77511e2d44db">
           <Source Id="20b9aa42-ee13-440f-a0c6-43ad72458a5f" PinIndex="0" />
           <Destination Id="00826eb8-1e36-4e78-a39a-3908a4aa2f5d" PinIndex="1" />
-          <Points Array="408,128 408,128 432,128 432,96 456,96 456,96" />
+          <Points Array="408,160 408,160 432,160 432,96 456,96 456,96" />
         </Link>
         <Link Id="ba9a8e46-85ca-47e3-acce-6a86fceba9ef">
           <Source Id="00826eb8-1e36-4e78-a39a-3908a4aa2f5d" PinIndex="0" />
@@ -2874,17 +2886,17 @@
         <Link Id="8cc6d326-88d9-44e8-8e92-35cb7f294bcb">
           <Source Id="e07937d6-62ad-4e76-a92a-6d6f9f740d77" PinIndex="0" />
           <Destination Id="20b9aa42-ee13-440f-a0c6-43ad72458a5f" PinIndex="0" />
-          <Points Array="320,160 320,160 336,160 336,128 344,128 344,128" />
+          <Points Array="320,160 320,160 344,160 344,160" />
         </Link>
         <Link Id="55703c87-ec8b-46d2-b6df-d12500417e6d">
           <Source Id="f8a2f5e6-bd04-4f62-a12f-6f91ea94cf7e" PinIndex="0" />
           <Destination Id="fccb6f99-59b2-484d-9fb4-5dab2cca70dc" PinIndex="1" />
-          <Points Array="232,104 232,104 240,104 240,80 256,80 256,80" />
+          <Points Array="232,104 232,104 248,104 248,80 256,80 256,80" />
         </Link>
         <Link Id="d9be1004-5cb1-4612-8f16-05728f8c44c6">
           <Source Id="98d8b1d4-8201-451a-8433-361158479c98" PinIndex="0" />
           <Destination Id="e07937d6-62ad-4e76-a92a-6d6f9f740d77" PinIndex="1" />
-          <Points Array="232,200 232,200 240,200 240,176 256,176 256,176" />
+          <Points Array="232,200 232,200 248,200 248,176 256,176 256,176" />
         </Link>
         <Link Id="a57a0ad4-d0e3-4fe7-80e3-f9fb1a59a0e8">
           <Source Id="00826eb8-1e36-4e78-a39a-3908a4aa2f5d" PinIndex="0" />

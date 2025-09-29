@@ -151,10 +151,16 @@ namespace Simulator
             while (!worker.CancellationPending)
             {
                 Thread.Sleep(50);
-                Project.Modules.ToList().ForEach(module => module.Calculate());
-                Thread.Sleep(50);
-                Project.Equipment.ToList().ForEach(unit => unit.Calculate());
-                worker.ReportProgress(0);
+                try
+                {
+                    if (Project.Modules.Count != 0)
+                        Project.Modules.ToList().ForEach(module => module.Calculate());
+                    Thread.Sleep(50);
+                    if (Project.Equipment.Count != 0)
+                        Project.Equipment.ToList().ForEach(unit => unit.Calculate());
+                    worker.ReportProgress(0);
+                }
+                catch { }
             }
         }
 
