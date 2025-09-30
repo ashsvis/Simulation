@@ -328,6 +328,34 @@ namespace Simulator
             try
             {
 
+                using var font = new Font("Consolas", Element.Step + 2f);
+                // прорисовка внешних связей
+                foreach (var item in items)
+                {
+                    if (item.Instance is ILinkSupport sup)
+                    {
+                        for (var i = 0; i < sup.InputLinkSources.Length; i++)
+                        {
+                            var (id, pinout, external) = sup.InputLinkSources[i];
+                            if (!external) continue;
+
+                            ValueItem? val = Project.ReadValue(id, pinout, ValueSide.Output, ValueKind.Digital);
+                            Color color = val != null && val.Value != null ? (bool)val.Value == true ? Color.Lime : Color.Red : Color.Silver;
+                            using var exlinkpen = new Pen(Color.FromArgb(150, color));
+                            using var exlinkbrush = new SolidBrush(Color.FromArgb(150, color));
+
+                            var pt = item.InputPins[i];
+                            graphics.DrawLine(exlinkpen, PointF.Subtract(pt, new SizeF(Element.Step * 3, 0)), pt);
+                            var (moduleName, elementName) = Project.GetAddressById(id);
+                            var text = $"{moduleName}.{elementName}"; //.{pinout}
+                            var ms = graphics.MeasureString(text, font);
+                            var rect = new RectangleF(pt.X - Element.Step * 3 - ms.Width, pt.Y, ms.Width, ms.Height);
+                            graphics.DrawRectangles(exlinkpen, [rect]);
+                            graphics.DrawString(text, font, exlinkbrush, rect.Location);
+                        }
+                    }
+                }
+
                 // прорисовка связей
                 using var linkpen = new Pen(zoomPad.ForeColor);
                 foreach (var link in links.Where(x => !x.Selected))
@@ -382,30 +410,6 @@ namespace Simulator
                             using var br = new SolidBrush(link.Selected ? Color.Magenta : zoomPad.ForeColor);
                             graphics.FillEllipse(br, new RectangleF(
                                 PointF.Subtract(pt, new SizeF(2.5f, 2.5f)), new SizeF(5f, 5f)));
-                        }
-                    }
-                }
-
-                using var exlinkpen = new Pen(Color.Gray);
-                using var exlinkbrush = new SolidBrush(Color.Gray);
-                using var font = new Font("Consolas", Element.Step + 2f);
-                // прорисовка внешних связей
-                foreach (var item in items)
-                {
-                    if (item.Instance is ILinkSupport sup)
-                    {
-                        for (var i = 0; i < sup.InputLinkSources.Length; i++)
-                        {
-                            var (id, pinout, external) = sup.InputLinkSources[i];
-                            if (!external) continue;
-                            var pt = item.InputPins[i];
-                            graphics.DrawLine(exlinkpen, PointF.Subtract(pt, new SizeF(Element.Step * 3, 0)), pt);
-                            var (moduleName, elementName) = Project.GetAddressById(id);
-                            var text = $"{moduleName}.{elementName}.{pinout}";
-                            var ms = graphics.MeasureString(text, font);
-                            var rect = new RectangleF(pt.X - Element.Step * 3 - ms.Width, pt.Y, ms.Width, ms.Height);
-                            graphics.DrawRectangles(exlinkpen, [rect]);
-                            graphics.DrawString(text, font, exlinkbrush, rect.Location);
                         }
                     }
                 }

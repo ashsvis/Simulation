@@ -769,12 +769,14 @@ namespace Simulator
             if (tsbRun.Checked)
             {
                 tsbRun.Checked = false;
+                tsmiRun.Checked = false;
                 Project.Stop();
                 MdiChildren.OfType<ModuleForm>().ToList().ForEach(x => x.Refresh());
             }
             else
             {
                 tsbRun.Checked = true;
+                tsmiRun.Checked = true;
                 Project.Start();
             }
         }
