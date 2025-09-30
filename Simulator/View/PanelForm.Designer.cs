@@ -49,6 +49,8 @@
             tsmiScreens = new ToolStripMenuItem();
             tsmiMultiScreensMode = new ToolStripMenuItem();
             tsmiOneScreenMode = new ToolStripMenuItem();
+            tsmiLeftPanelVisible = new ToolStripMenuItem();
+            tsmiRightPanelVisible = new ToolStripMenuItem();
             параметрыToolStripMenuItem = new ToolStripMenuItem();
             справкаToolStripMenuItem = new ToolStripMenuItem();
             опрограммеToolStripMenuItem = new ToolStripMenuItem();
@@ -72,8 +74,6 @@
             toolStripSeparator3 = new ToolStripSeparator();
             tsbRun = new ToolStripButton();
             toolStripSeparator4 = new ToolStripSeparator();
-            tsbCascadeLayout = new ToolStripButton();
-            tsbHorizontalLayout = new ToolStripButton();
             splitContainer1 = new SplitContainer();
             tcTools = new TabControl();
             tpModules = new TabPage();
@@ -240,16 +240,16 @@
             // 
             // настройкиToolStripMenuItem
             // 
-            настройкиToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tsmiScreens });
+            настройкиToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tsmiScreens, tsmiLeftPanelVisible, tsmiRightPanelVisible });
             настройкиToolStripMenuItem.Name = "настройкиToolStripMenuItem";
-            настройкиToolStripMenuItem.Size = new Size(138, 22);
+            настройкиToolStripMenuItem.Size = new Size(180, 22);
             настройкиToolStripMenuItem.Text = "&Настройки";
             // 
             // tsmiScreens
             // 
             tsmiScreens.DropDownItems.AddRange(new ToolStripItem[] { tsmiMultiScreensMode, tsmiOneScreenMode });
             tsmiScreens.Name = "tsmiScreens";
-            tsmiScreens.Size = new Size(116, 22);
+            tsmiScreens.Size = new Size(180, 22);
             tsmiScreens.Text = "Экраны";
             // 
             // tsmiMultiScreensMode
@@ -268,10 +268,28 @@
             tsmiOneScreenMode.Text = "В одноэкранный режим";
             tsmiOneScreenMode.Click += tsmiOneScreenMode_Click;
             // 
+            // tsmiLeftPanelVisible
+            // 
+            tsmiLeftPanelVisible.Checked = true;
+            tsmiLeftPanelVisible.CheckState = CheckState.Checked;
+            tsmiLeftPanelVisible.Name = "tsmiLeftPanelVisible";
+            tsmiLeftPanelVisible.Size = new Size(180, 22);
+            tsmiLeftPanelVisible.Text = " Левая панель";
+            tsmiLeftPanelVisible.Click += tsmiLeftPanelVisible_Click;
+            // 
+            // tsmiRightPanelVisible
+            // 
+            tsmiRightPanelVisible.Checked = true;
+            tsmiRightPanelVisible.CheckState = CheckState.Checked;
+            tsmiRightPanelVisible.Name = "tsmiRightPanelVisible";
+            tsmiRightPanelVisible.Size = new Size(180, 22);
+            tsmiRightPanelVisible.Text = "Правая панель";
+            tsmiRightPanelVisible.Click += tsmiRightPanelVisible_Click;
+            // 
             // параметрыToolStripMenuItem
             // 
             параметрыToolStripMenuItem.Name = "параметрыToolStripMenuItem";
-            параметрыToolStripMenuItem.Size = new Size(138, 22);
+            параметрыToolStripMenuItem.Size = new Size(180, 22);
             параметрыToolStripMenuItem.Text = "&Параметры";
             // 
             // справкаToolStripMenuItem
@@ -369,7 +387,7 @@
             // tsToolModules
             // 
             tsToolModules.GripStyle = ToolStripGripStyle.Hidden;
-            tsToolModules.Items.AddRange(new ToolStripItem[] { tsbOpenProject, tsbSave, toolStripSeparator5, tsbAddModule, tsbShowModuleForm, tsbDeleteModule, toolStripSeparator3, tsbRun, toolStripSeparator4, tsbCascadeLayout, tsbHorizontalLayout });
+            tsToolModules.Items.AddRange(new ToolStripItem[] { tsbOpenProject, tsbSave, toolStripSeparator5, tsbAddModule, tsbShowModuleForm, tsbDeleteModule, toolStripSeparator3, tsbRun, toolStripSeparator4 });
             tsToolModules.Location = new Point(0, 0);
             tsToolModules.Name = "tsToolModules";
             tsToolModules.Size = new Size(206, 25);
@@ -453,28 +471,6 @@
             // 
             toolStripSeparator4.Name = "toolStripSeparator4";
             toolStripSeparator4.Size = new Size(6, 25);
-            // 
-            // tsbCascadeLayout
-            // 
-            tsbCascadeLayout.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            tsbCascadeLayout.Enabled = false;
-            tsbCascadeLayout.Image = Properties.Resources.cascadelayout;
-            tsbCascadeLayout.ImageTransparentColor = Color.Magenta;
-            tsbCascadeLayout.Name = "tsbCascadeLayout";
-            tsbCascadeLayout.Size = new Size(23, 22);
-            tsbCascadeLayout.Text = "Расположить окна каскадом";
-            tsbCascadeLayout.Click += каскадомToolStripMenuItem_Click;
-            // 
-            // tsbHorizontalLayout
-            // 
-            tsbHorizontalLayout.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            tsbHorizontalLayout.Enabled = false;
-            tsbHorizontalLayout.Image = Properties.Resources.horizontallayout;
-            tsbHorizontalLayout.ImageTransparentColor = Color.Magenta;
-            tsbHorizontalLayout.Name = "tsbHorizontalLayout";
-            tsbHorizontalLayout.Size = new Size(23, 20);
-            tsbHorizontalLayout.Text = "Расположить окна по горизонтали";
-            tsbHorizontalLayout.Click += поГоризонталиToolStripMenuItem_Click;
             // 
             // splitContainer1
             // 
@@ -971,12 +967,12 @@
         private ToolStripButton tsbDeleteModule;
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripSeparator toolStripSeparator4;
-        private ToolStripButton tsbCascadeLayout;
-        private ToolStripButton tsbHorizontalLayout;
         private TreeView tvEquipment;
         private ContextMenuStrip cmEquipment;
         private ToolStripMenuItem tsmiRenameUnit;
         private ToolStripMenuItem tsmiUnitDublicate;
         private ToolStripButton tsbRun;
+        private ToolStripMenuItem tsmiLeftPanelVisible;
+        private ToolStripMenuItem tsmiRightPanelVisible;
     }
 }

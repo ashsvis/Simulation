@@ -55,8 +55,8 @@ namespace Simulator
 
         private void PanelForm_Load(object sender, EventArgs e)
         {
-            panLeft.Width = Properties.Settings.Default.LeftToolsPanelWidth;
-            panRight.Width = Properties.Settings.Default.RightToolsPanelWidth;
+            panLeft.Width = Properties.Settings.Default.LeftToolsPanelVisible ? Properties.Settings.Default.LeftToolsPanelWidth : 0;
+            panRight.Width = Properties.Settings.Default.RightToolsPanelVisible ? Properties.Settings.Default.RightToolsPanelWidth : 0;
 
             tvLibrary.Nodes.Clear();
             tvLibrary.Nodes.AddRange(Project.GetLibraryTree());
@@ -193,8 +193,6 @@ namespace Simulator
         {
             tsbSave.Enabled = tsmiSave.Enabled = Project.Changed || Project.Modules.Any(x => x.Changed);
             ÓÍÌÓToolStripMenuItem.Visible = MdiChildren.Length > 0;
-            tsbCascadeLayout.Enabled = MdiChildren.Length > 0;
-            tsbHorizontalLayout.Enabled = MdiChildren.Length > 0;
             switch (tcTools.SelectedIndex)
             {
                 case 0:
@@ -208,6 +206,8 @@ namespace Simulator
                     tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Unit _;
                     break;
             }
+            tsmiLeftPanelVisible.Checked = panLeft.Width > 0;
+            tsmiRightPanelVisible.Checked = panRight.Width > 0;
         }
 
         private void ÔÓ√ÓËÁÓÌÚ‡ÎËToolStripMenuItem_Click(object sender, EventArgs e)
@@ -777,6 +777,22 @@ namespace Simulator
                 tsbRun.Checked = true;
                 Project.Start();
             }
+        }
+
+        private void tsmiLeftPanelVisible_Click(object sender, EventArgs e)
+        {
+            tsmiLeftPanelVisible.Checked = !tsmiLeftPanelVisible.Checked;
+            Properties.Settings.Default.LeftToolsPanelVisible = tsmiLeftPanelVisible.Checked;
+            Properties.Settings.Default.Save();
+            panLeft.Width = Properties.Settings.Default.LeftToolsPanelVisible ? Properties.Settings.Default.LeftToolsPanelWidth : 0;
+        }
+
+        private void tsmiRightPanelVisible_Click(object sender, EventArgs e)
+        {
+            tsmiRightPanelVisible.Checked = !tsmiRightPanelVisible.Checked;
+            Properties.Settings.Default.RightToolsPanelVisible = tsmiRightPanelVisible.Checked;
+            Properties.Settings.Default.Save();
+            panRight.Width = Properties.Settings.Default.RightToolsPanelVisible ? Properties.Settings.Default.RightToolsPanelWidth : 0;
         }
     }
 }

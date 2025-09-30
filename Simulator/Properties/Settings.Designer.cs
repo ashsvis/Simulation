@@ -106,5 +106,29 @@ namespace Simulator.Properties {
                 this["RightToolsPanelWidth"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool LeftToolsPanelVisible {
+            get {
+                return ((bool)(this["LeftToolsPanelVisible"]));
+            }
+            set {
+                this["LeftToolsPanelVisible"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool RightToolsPanelVisible {
+            get {
+                return ((bool)(this["RightToolsPanelVisible"]));
+            }
+            set {
+                this["RightToolsPanelVisible"] = value;
+            }
+        }
     }
 }
