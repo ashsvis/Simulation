@@ -1,5 +1,6 @@
 ﻿using Simulator.Model;
 using Simulator.Model.Interfaces;
+using Simulator.Model.Outputs;
 using Simulator.View;
 using System.Diagnostics;
 using System.Drawing;
@@ -65,7 +66,7 @@ namespace Simulator
                         ValueItem? item = manager.ReadValue(element.Id, i, ValueSide.Output, ValueKind.Digital);
                         items.Add(item ?? new ValueItem());
                     }
-                    elements.Add([..items]);
+                    elements.Add([.. items]);
                 }
             }
             return elements.Count;
@@ -471,9 +472,9 @@ namespace Simulator
                     graphics.DrawRectangle(pen, PrepareRect((Rectangle)ribbon));
                 }
             }
-            catch (Exception ex) 
-            { 
-                Debug.WriteLine(ex.ToString()); 
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
             }
         }
 
@@ -938,7 +939,7 @@ namespace Simulator
                     ToolStripMenuItem item;
                     if (element?.Instance is ILinkSupport func)
                     {
-                        if (output == false && pin != null)
+                        if (TryGetPin(e.Location, out element, out pin, out _, out output) && output == false && pin != null)
                         {
                             if (func.LinkedInputs[(int)pin])
                             {
@@ -951,6 +952,7 @@ namespace Simulator
                                         fn.ResetValueLinkToInp((int)pin);
                                         links.RemoveAll(link => link.DestinationId == element.Id && link.DestinationPinIndex == (int)pin);
                                         Module.Changed = true;
+                                        zoomPad.Invalidate();
                                     }
                                 };
                                 cmZoomPad.Items.Add(item);
@@ -971,6 +973,7 @@ namespace Simulator
                                             {
                                                 fn.SetValueLinkToInp((int)pin, idSource, pinOut, true);
                                                 Module.Changed = true;
+                                                zoomPad.Invalidate();
                                             }
                                         }
                                     }
@@ -978,7 +981,11 @@ namespace Simulator
                                 cmZoomPad.Items.Add(item);
                             }
                         }
-                        else if (output == null)
+                        else if (TryGetPin(e.Location, out element, out pin, out _, out output) && element != null && output == true && pin != null)
+                        {
+                            // выбор выхода по правой кнопке
+                        }
+                        else if (TryGetModule(e.Location, out element) && output == null)
                         {
                             item = new ToolStripMenuItem() { Text = "Изменить номер...", Tag = element };
                             item.Click += (s, e) =>
@@ -1018,7 +1025,7 @@ namespace Simulator
                             cmZoomPad.Items.Add(item);
                             if (func is Model.Inputs.DI || func is Model.Outputs.DO)
                             {
-                                item = new ToolStripMenuItem() { Text = "Настроить связь с оборудованием...", Tag = element };
+                                item = new ToolStripMenuItem() { Text = "Связь с оборудованием...", Tag = element };
                                 item.Click += (s, e) =>
                                 {
                                     var menuItem = (ToolStripMenuItem?)s;
@@ -1034,11 +1041,13 @@ namespace Simulator
                                                 {
                                                     di.SetExternalLinkToInp(0, idSource, pinOut, true);
                                                     Module.Changed = true;
+                                                    zoomPad.Invalidate();
                                                 }
                                                 else if (idSource == Guid.Empty)
                                                 {
                                                     di.ResetExternalLinkToInp(0);
                                                     Module.Changed = true;
+                                                    zoomPad.Invalidate();
                                                 }
                                             }
                                         }
@@ -1052,14 +1061,103 @@ namespace Simulator
                                                 {
                                                     @do.SetExternalLinkToInp(0, idSource, pinInp, true);
                                                     Module.Changed = true;
+                                                    zoomPad.Invalidate();
                                                 }
                                                 else if (idSource == Guid.Empty)
                                                 {
                                                     @do.ResetExternalLinkToInp(0);
                                                     Module.Changed = true;
+                                                    zoomPad.Invalidate();
                                                 }
                                             }
                                         }
+                                        else if (func is Model.Fields.VALVE valve)
+                                        {
+
+                                        }
+                                    }
+                                };
+                                cmZoomPad.Items.Add(item);
+                            }
+                            else if (func is Model.Fields.VALVE valve)
+                            {
+                                cmZoomPad.Items.Add(new ToolStripSeparator());
+                                item = new ToolStripMenuItem() { Text = "Связь для состояния ОТКРЫТО...", Tag = element };
+                                item.Click += (s, e) =>
+                                {
+                                    var menuItem = (ToolStripMenuItem?)s;
+                                    if (menuItem?.Tag is Element element)
+                                    {
+                                        var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentOutputs, valve.OpenedLinkSource);
+                                        if (dlg.ShowDialog() == DialogResult.OK)
+                                        {
+                                            (Guid idSource, int pinOut) = dlg.Result;
+                                            if (idSource != Guid.Empty)
+                                            {
+                                                valve.SetOpenedLinkToInp(0, idSource, pinOut, true);
+                                                Module.Changed = true;
+                                                zoomPad.Invalidate();
+                                            }
+                                            else if (idSource == Guid.Empty)
+                                            {
+                                                valve.ResetOpenedLinkToInp(0);
+                                                Module.Changed = true;
+                                                zoomPad.Invalidate();
+                                            }
+                                        }
+                                    }
+                                };
+                                cmZoomPad.Items.Add(item);
+                                item = new ToolStripMenuItem() { Text = "Связь для состояния ЗАКРЫТО...", Tag = element };
+                                item.Click += (s, e) =>
+                                {
+                                    var menuItem = (ToolStripMenuItem?)s;
+                                    if (menuItem?.Tag is Element element)
+                                    {
+                                        var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentOutputs, valve.ClosedLinkSource);
+                                        if (dlg.ShowDialog() == DialogResult.OK)
+                                        {
+                                            (Guid idSource, int pinOut) = dlg.Result;
+                                            if (idSource != Guid.Empty)
+                                            {
+                                                valve.SetClosedLinkToInp(0, idSource, pinOut, true);
+                                                Module.Changed = true;
+                                                zoomPad.Invalidate();
+                                            }
+                                            else if (idSource == Guid.Empty)
+                                            {
+                                                valve.ResetClosedLinkToInp(0);
+                                                Module.Changed = true;
+                                                zoomPad.Invalidate();
+                                            }
+                                        }
+                                    }
+                                };
+                                cmZoomPad.Items.Add(item);
+                                item = new ToolStripMenuItem() { Text = "Связь для управления...", Tag = element };
+                                item.Click += (s, e) =>
+                                {
+                                    var menuItem = (ToolStripMenuItem?)s;
+                                    if (menuItem?.Tag is Element element)
+                                    {
+                                        var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentInputs, valve.CommandLinkSource);
+                                        if (dlg.ShowDialog() == DialogResult.OK)
+                                        {
+                                            (Guid idSource, int pinInp) = dlg.Result;
+                                            if (idSource != Guid.Empty)
+                                            {
+                                                valve.SetCommandLinkToInp(0, idSource, pinInp, true);
+                                                Module.Changed = true;
+                                                zoomPad.Invalidate();
+                                            }
+                                            else if (idSource == Guid.Empty)
+                                            {
+                                                valve.ResetCommandLinkToInp(0);
+                                                Module.Changed = true;
+                                                zoomPad.Invalidate();
+                                            }
+                                        }
+                                        //}
                                     }
                                 };
                                 cmZoomPad.Items.Add(item);
@@ -1526,6 +1624,11 @@ namespace Simulator
                     item.SubItems.Add($"{a}");
             }
             catch { }
+        }
+
+        private void cmZoomPad_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = Project.Running || cmZoomPad.Items.Count == 0;
         }
     }
 }

@@ -96,6 +96,7 @@ namespace Simulator
             // 
             cmZoomPad.Name = "contextMenuStrip1";
             cmZoomPad.Size = new Size(181, 26);
+            cmZoomPad.Opening += cmZoomPad_Opening;
             // 
             // tsModule
             // 

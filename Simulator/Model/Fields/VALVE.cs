@@ -1,10 +1,19 @@
 ﻿using Simulator.Model.Interfaces;
 using System.Drawing.Drawing2D;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Simulator.Model.Fields
 {
     public class VALVE : CommonFields, ICustomDraw
     {
+        private (Guid, int, bool) openedLinkSource = (Guid.Empty, 0, false);
+        private (Guid, int, bool) closedLinkSource = (Guid.Empty, 0, false);
+        private (Guid, int, bool) commandLinkSource = (Guid.Empty, 0, false);
+
+        public (Guid, int, bool) OpenedLinkSource => openedLinkSource;
+        public (Guid, int, bool) ClosedLinkSource => closedLinkSource;
+        public (Guid, int, bool) CommandLinkSource => commandLinkSource;
+
         public VALVE() : base(FieldFunction.Valve) { }
 
         public override void CalculateTargets(PointF location, ref SizeF size,
@@ -21,7 +30,7 @@ namespace Simulator.Model.Fields
             var y = location.Y + height / 2;
             // значение входа
             var ms = new SizeF(step * 2, step * 2);
-            itargets.Add(0, new RectangleF(new PointF(x + step, y - step * 2), ms));
+            itargets.Add(0, RectangleF.Empty); //new RectangleF(new PointF(x + step, y - step * 2), ms)
             ipins.Add(0, new PointF(x, y + step));
             // выход
             x = location.X + width;
@@ -30,7 +39,7 @@ namespace Simulator.Model.Fields
             opins.Clear();
             // значение выхода
             ms = new SizeF(step * 4, step * 2);
-            otargets.Add(0, new RectangleF(new PointF(x- ms.Width, y), ms));
+            otargets.Add(0, RectangleF.Empty); //new RectangleF(new PointF(x- ms.Width, y), ms)
             opins.Add(0, new PointF(x, y + step));
         }
 
@@ -64,6 +73,36 @@ namespace Simulator.Model.Fields
                     new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
                     new PointF(valve.Left + valve.Width / 2, control.Bottom),
                 ]);
+        }
+
+        public void SetOpenedLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog)
+        {
+            openedLinkSource = (sourceId, outputPinIndex, byDialog);
+        }
+
+        public void ResetOpenedLinkToInp(int inputIndex)
+        {
+            openedLinkSource = (Guid.Empty, 0, false);
+        }
+
+        public void SetClosedLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog)
+        {
+            closedLinkSource = (sourceId, outputPinIndex, byDialog);
+        }
+
+        public void ResetClosedLinkToInp(int inputIndex)
+        {
+            closedLinkSource = (Guid.Empty, 0, false);
+        }
+
+        public void SetCommandLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog)
+        {
+            commandLinkSource = (sourceId, outputPinIndex, byDialog);
+        }
+
+        public void ResetCommandLinkToInp(int inputIndex)
+        {
+            commandLinkSource = (Guid.Empty, 0, false);
         }
     }
 }
