@@ -91,83 +91,83 @@ namespace Simulator.Model.Fields
                 getLinkSources[inputIndex] = (sourceId, outputPinIndex, byDialog);
         }
 
-        public void Load(XElement? xtance)
+        public virtual void Load(XElement? xtance)
         {
-            var xinputs = xtance?.Element("Inputs");
-            if (xinputs != null)
-            {
-                foreach (XElement item in xinputs.Elements("Input"))
-                {
-                    if (int.TryParse(item.Attribute("Index")?.Value, out int index))
-                    {
-                        var xsource = item.Element("Source");
-                        if (xsource != null)
-                        {
-                            if (Guid.TryParse(xsource.Attribute("Id")?.Value, out Guid guid) && guid != Guid.Empty)
-                            {
-                                var external = false;
-                                if (bool.TryParse(xsource.Attribute("External")?.Value, out bool bval))
-                                    external = bval;
-                                if (int.TryParse(xsource.Attribute("PinIndex")?.Value, out int outputIndex))
-                                    getLinkSources[index] = (guid, outputIndex, external);
-                                else
-                                    getLinkSources[index] = (guid, 0, external);
-                            }
-                        }
-                    }
-                }
-            }
-            var xoutputs = xtance?.Element("Outputs");
-            if (xoutputs != null)
-            {
-                foreach (XElement item in xoutputs.Elements("Output"))
-                {
-                    if (int.TryParse(item.Attribute("Index")?.Value, out int index))
-                    {
+            //var xinputs = xtance?.Element("Inputs");
+            //if (xinputs != null)
+            //{
+            //    foreach (XElement item in xinputs.Elements("Input"))
+            //    {
+            //        if (int.TryParse(item.Attribute("Index")?.Value, out int index))
+            //        {
+            //            var xsource = item.Element("Source");
+            //            if (xsource != null)
+            //            {
+            //                if (Guid.TryParse(xsource.Attribute("Id")?.Value, out Guid guid) && guid != Guid.Empty)
+            //                {
+            //                    var external = false;
+            //                    if (bool.TryParse(xsource.Attribute("External")?.Value, out bool bval))
+            //                        external = bval;
+            //                    if (int.TryParse(xsource.Attribute("PinIndex")?.Value, out int outputIndex))
+            //                        getLinkSources[index] = (guid, outputIndex, external);
+            //                    else
+            //                        getLinkSources[index] = (guid, 0, external);
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+            //var xoutputs = xtance?.Element("Outputs");
+            //if (xoutputs != null)
+            //{
+            //    foreach (XElement item in xoutputs.Elements("Output"))
+            //    {
+            //        if (int.TryParse(item.Attribute("Index")?.Value, out int index))
+            //        {
 
-                    }
-                }
-            }
+            //        }
+            //    }
+            //}
         }
 
-        public void Save(XElement xtem)
+        public virtual void Save(XElement xtem)
         {
-            var xtance = new XElement("Instance");
+            //var xtance = new XElement("Instance");
 
-            XElement xinputs = new("Inputs");
-            bool customInputs = false;
-            for (var i = 0; i < getInputs.Length; i++)
-            {
-                (Guid id, int output, bool external) = getLinkSources[i];
-                customInputs = true;
-                XElement xinput = new("Input");
-                xinputs.Add(xinput);
-                xinput.Add(new XAttribute("Index", i));
+            //XElement xinputs = new("Inputs");
+            //bool customInputs = false;
+            //for (var i = 0; i < getInputs.Length; i++)
+            //{
+            //    (Guid id, int output, bool external) = getLinkSources[i];
+            //    customInputs = true;
+            //    XElement xinput = new("Input");
+            //    xinputs.Add(xinput);
+            //    xinput.Add(new XAttribute("Index", i));
 
-                if (id != Guid.Empty)
-                {
-                    xinput.Add(new XElement("SourceId", id));
-                    if (output > 0)
-                        xinput.Add(new XElement("OutputIndex", output));
-                }
-            }
-            if (customInputs)
-                xtance.Add(xinputs);
+            //    if (id != Guid.Empty)
+            //    {
+            //        xinput.Add(new XElement("SourceId", id));
+            //        if (output > 0)
+            //            xinput.Add(new XElement("OutputIndex", output));
+            //    }
+            //}
+            //if (customInputs)
+            //    xtance.Add(xinputs);
 
-            XElement xoutputs = new("Outputs");
-            bool customOutputs = false;
-            for (var i = 0; i < 1; i++)
-            {
-                customOutputs = true;
-                XElement xoutput = new("Output");
-                xoutputs.Add(xoutput);
-                xoutput.Add(new XAttribute("Index", i));
-            }
-            if (customOutputs)
-                xtance.Add(xoutputs);
+            //XElement xoutputs = new("Outputs");
+            //bool customOutputs = false;
+            //for (var i = 0; i < 1; i++)
+            //{
+            //    customOutputs = true;
+            //    XElement xoutput = new("Output");
+            //    xoutputs.Add(xoutput);
+            //    xoutput.Add(new XAttribute("Index", i));
+            //}
+            //if (customOutputs)
+            //    xtance.Add(xoutputs);
 
-            if (customInputs || customOutputs)
-                xtem.Add(xtance);
+            //if (customInputs || customOutputs)
+            //    xtem.Add(xtance);
         }
 
         public void Draw(Graphics graphics, Color foreColor, Color backColor, PointF location, SizeF size, int index, bool selected, CustomDraw? customDraw = null)

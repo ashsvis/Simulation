@@ -1,6 +1,6 @@
 ﻿using Simulator.Model.Interfaces;
 using System.Drawing.Drawing2D;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using System.Xml.Linq;
 
 namespace Simulator.Model.Fields
 {
@@ -103,6 +103,73 @@ namespace Simulator.Model.Fields
         public void ResetCommandLinkToInp(int inputIndex)
         {
             commandLinkSource = (Guid.Empty, 0, false);
+        }
+
+        public override void Save(XElement xtance)
+        {
+            base.Save(xtance);
+            if (openedLinkSource.Item1 != Guid.Empty)
+            {
+                XElement xsource = new("OpenedState");
+                xsource.Add(new XAttribute("Id", openedLinkSource.Item1));
+                if (openedLinkSource.Item2 > 0)
+                    xsource.Add(new XAttribute("PinIndex", openedLinkSource.Item2));
+                xtance.Add(xsource);
+            }
+            if (closedLinkSource.Item1 != Guid.Empty)
+            {
+                XElement xsource = new("ClosedState");
+                xsource.Add(new XAttribute("Id", closedLinkSource.Item1));
+                if (closedLinkSource.Item2 > 0)
+                    xsource.Add(new XAttribute("PinIndex", closedLinkSource.Item2));
+                xtance.Add(xsource);
+            }
+            if (commandLinkSource.Item1 != Guid.Empty)
+            {
+                XElement xsource = new("CommandState");
+                xsource.Add(new XAttribute("Id", commandLinkSource.Item1));
+                if (commandLinkSource.Item2 > 0)
+                    xsource.Add(new XAttribute("PinIndex", commandLinkSource.Item2));
+                xtance.Add(xsource);
+            }
+        }
+
+        public override void Load(XElement? xtance)
+        {
+            base.Load(xtance);
+            var xsource = xtance?.Element("OpenedState");
+            if (xsource != null)
+            {
+                if (Guid.TryParse(xsource.Attribute("Id")?.Value, out Guid guid) && guid != Guid.Empty)
+                {
+                    if (int.TryParse(xsource.Attribute("PinIndex")?.Value, out int outputIndex))
+                        openedLinkSource = (guid, outputIndex, true);
+                    else
+                        openedLinkSource = (guid, 0, true);
+                }
+            }
+            xsource = xtance?.Element("ClosedState");
+            if (xsource != null)
+            {
+                if (Guid.TryParse(xsource.Attribute("Id")?.Value, out Guid guid) && guid != Guid.Empty)
+                {
+                    if (int.TryParse(xsource.Attribute("PinIndex")?.Value, out int outputIndex))
+                        closedLinkSource = (guid, outputIndex, true);
+                    else
+                        closedLinkSource = (guid, 0, true);
+                }
+            }
+            xsource = xtance?.Element("CommandState");
+            if (xsource != null)
+            {
+                if (Guid.TryParse(xsource.Attribute("Id")?.Value, out Guid guid) && guid != Guid.Empty)
+                {
+                    if (int.TryParse(xsource.Attribute("PinIndex")?.Value, out int outputIndex))
+                        commandLinkSource = (guid, outputIndex, true);
+                    else
+                        commandLinkSource = (guid, 0, true);
+                }
+            }
         }
     }
 }
