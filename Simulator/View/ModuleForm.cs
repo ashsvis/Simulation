@@ -1523,6 +1523,7 @@ namespace Simulator
                         links.Add(link);
                     }
                     Module.Changed = true;
+                    UpdateView();
                 }
             }
         }
