@@ -125,7 +125,7 @@ namespace Simulator
 
         private void zoomPad_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data != null)
+            if (!Project.Running && e.Data != null)
             {
                 if (e.Data.GetDataPresent(typeof(Element)))
                     e.Effect = DragDropEffects.Copy;
@@ -137,6 +137,7 @@ namespace Simulator
         private void zoomPad_DragOver(object sender, DragEventArgs e)
         {
             if (e.Data == null) return;
+            if (Project.Running) return;
             if (e.Data.GetData(typeof(Element)) is Element item && item.Type != null)
             {
                 zoomPad.Invalidate();
@@ -154,6 +155,7 @@ namespace Simulator
         private void zoomPad_DragDrop(object sender, DragEventArgs e)
         {
             if (e.Data == null) return;
+            if (Project.Running) return;
             if (e.Effect == DragDropEffects.Copy)
             {
                 if (e.Data.GetData(typeof(Element)) is Element item && item.Type != null)
@@ -327,9 +329,8 @@ namespace Simulator
             //}
             try
             {
-
                 using var font = new Font("Consolas", Element.Step + 2f);
-                // прорисовка внешних связей
+                // прорисовка внешних связей для входов
                 foreach (var item in items)
                 {
                     if (item.Instance is ILinkSupport sup)
@@ -347,7 +348,7 @@ namespace Simulator
                             var pt = item.InputPins[i];
                             graphics.DrawLine(exlinkpen, PointF.Subtract(pt, new SizeF(Element.Step * 3, 0)), pt);
                             var (moduleName, elementName) = Project.GetAddressById(id);
-                            var text = $"{moduleName}.{elementName}"; //.{pinout}
+                            var text = $"{moduleName}.{elementName}.{pinout + 1}";
                             var ms = graphics.MeasureString(text, font);
                             var rect = new RectangleF(pt.X - Element.Step * 3 - ms.Width, pt.Y, ms.Width, ms.Height);
                             graphics.DrawRectangles(exlinkpen, [rect]);
@@ -356,7 +357,57 @@ namespace Simulator
                     }
                 }
 
-                // прорисовка связей
+                // подсчёт внешних ссылок в модулях проекта
+                Dictionary<string, List<(Element, int)>> dict = [];
+                foreach (var module in Project.Modules)
+                {
+                    foreach (var item in module.Elements)
+                    {
+                        if (item.Instance is ILinkSupport sup)
+                        {
+                            for (var i = 0; i < sup.InputLinkSources.Length; i++)
+                            {
+                                var (id, pinout, external) = sup.InputLinkSources[i];
+                                if (!external) continue;
+
+                                var key = $"{id}.{pinout}";
+                                if (!dict.ContainsKey(key)) dict.Add(key, []);
+                                dict[key].Add((item, i));
+                            }
+                        }
+                    }
+                }
+
+                if (dict.Count > 0)
+                {
+                    // прорисовка внешних связей для выходов
+                    foreach (var item in items)
+                    {
+                        for (var pinout = 0; pinout < item.OutputPins.Count; pinout++)
+                        {
+                            var key = $"{item.Id}.{pinout}";
+                            if (!dict.ContainsKey(key)) continue;
+                            var pt = item.OutputPins[pinout];
+                            StringBuilder sb = new();
+                            foreach (var (element, pininp) in dict[key])
+                            {
+                                var (moduleName, elementName) = Project.GetAddressById(element.Id);
+                                sb.AppendLine($"{moduleName}.{elementName}.{pininp + 1}");
+                            }
+                            var text = sb.ToString();
+                            var ms = graphics.MeasureString(text, font);
+                            var rect = new RectangleF(pt.X, item.Bounds.Bottom + Element.Step, ms.Width, ms.Height);
+                            ValueItem? val = Project.ReadValue(item.Id, pinout, ValueSide.Output, ValueKind.Digital);
+                            Color color = val != null && val.Value != null ? (bool)val.Value == true ? Color.Lime : Color.Red : Color.Silver;
+                            using var exlinkpen = new Pen(Color.FromArgb(150, color));
+                            using var exlinkbrush = new SolidBrush(Color.FromArgb(150, color));
+                            graphics.DrawLine(exlinkpen, pt, new PointF(pt.X, item.Bounds.Bottom + Element.Step));
+                            graphics.DrawRectangles(exlinkpen, [rect]);
+                            graphics.DrawString(text, font, exlinkbrush, rect.Location);
+                        }
+                    }
+                }
+                // прорисовка локальных линий связей
                 using var linkpen = new Pen(zoomPad.ForeColor);
                 foreach (var link in links.Where(x => !x.Selected))
                 {
@@ -841,44 +892,33 @@ namespace Simulator
             output = null;
             dragging = false;
             segmentmoving = false;
-            if (TryGetLinkSegment(e.Location, out link, out segmentIndex, out segmentVertical) &&
-                link != null && segmentIndex != null && segmentVertical != null)
+            if (!Project.Running)
             {
-                if (!((Link)link).Selected)
-                    ((Link)link).SetSelect(true);
-                else if ((ModifierKeys & Keys.Control) == Keys.Control)
-                    ((Link)link).SetSelect(false);
-                links.Where(item => item.Id != ((Link)link).Id).ToList().ForEach(item => item.SetSelect(false));
-                if ((ModifierKeys & Keys.Control) != Keys.Control)
-                    items.ForEach(item => item.Selected = false);
-                if (e.Button == MouseButtons.Left)
+                if (TryGetLinkSegment(e.Location, out link, out segmentIndex, out segmentVertical) &&
+                    link != null && segmentIndex != null && segmentVertical != null)
                 {
-                    segmentmoving = !Project.Running && ((Link)link).Selected;
-                }
-                ElementSelected?.Invoke(link, EventArgs.Empty);
-            }
-            else if (TryGetModule(e.Location, out element) &&
-                element != null && element.Instance != null ||
-                TryGetPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
-                element != null && element.Instance != null && output == true)
-            {
-                if (!element.Selected && (ModifierKeys & Keys.Control) != Keys.Control)
-                {
-                    items.Where(item => item != element).ToList().ForEach(item => item.Selected = false);
-                    links.ForEach(item => item.SetSelect(false));
-                    // выделение выходных связей элемента
-                    foreach (var item in items.Where(x => x.Selected))
+                    if (!((Link)link).Selected)
+                        ((Link)link).SetSelect(true);
+                    else if ((ModifierKeys & Keys.Control) == Keys.Control)
+                        ((Link)link).SetSelect(false);
+                    links.Where(item => item.Id != ((Link)link).Id).ToList().ForEach(item => item.SetSelect(false));
+                    if ((ModifierKeys & Keys.Control) != Keys.Control)
+                        items.ForEach(item => item.Selected = false);
+                    if (e.Button == MouseButtons.Left)
                     {
-                        foreach (var link in links.Where(x => x.SourceId == item.Id))
-                            link.SetSelect(true);
+                        segmentmoving = !Project.Running && ((Link)link).Selected;
                     }
+                    ElementSelected?.Invoke(link, EventArgs.Empty);
                 }
-                // выбор собственно элемента
-                if (output == null)
+                else if (TryGetModule(e.Location, out element) &&
+                    element != null && element.Instance != null ||
+                    TryGetPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
+                    element != null && element.Instance != null && output == true)
                 {
-                    if (!element.Selected)
+                    if (!element.Selected && (ModifierKeys & Keys.Control) != Keys.Control)
                     {
-                        element.Selected = true;
+                        items.Where(item => item != element).ToList().ForEach(item => item.Selected = false);
+                        links.ForEach(item => item.SetSelect(false));
                         // выделение выходных связей элемента
                         foreach (var item in items.Where(x => x.Selected))
                         {
@@ -886,27 +926,38 @@ namespace Simulator
                                 link.SetSelect(true);
                         }
                     }
-                    else if ((ModifierKeys & Keys.Control) == Keys.Control)
-                        element.Selected = false;
-                }
-                if (e.Button == MouseButtons.Left)
-                {
-                    dragging = !Project.Running && output == null && element.Selected;
-                }
+                    // выбор собственно элемента
+                    if (output == null)
+                    {
+                        if (!element.Selected)
+                        {
+                            element.Selected = true;
+                            // выделение выходных связей элемента
+                            foreach (var item in items.Where(x => x.Selected))
+                            {
+                                foreach (var link in links.Where(x => x.SourceId == item.Id))
+                                    link.SetSelect(true);
+                            }
+                        }
+                        else if ((ModifierKeys & Keys.Control) == Keys.Control)
+                            element.Selected = false;
+                    }
+                    if (e.Button == MouseButtons.Left)
+                    {
+                        dragging = !Project.Running && output == null && element.Selected;
+                    }
 
-                ElementSelected?.Invoke(items.Any(x => x.Selected) ?
-                    items.Where(x => x.Selected).Select(x => x.Instance).ToArray() : null, EventArgs.Empty);
-            }
-            else
-            {
-                if (!(TryGetFreeInputPin(e.Location, out Element? element, out _, out _, out _) && element?.Instance is IManualChange _))
-                    linkFirstPoint = null;
-                items.ForEach(item => item.Selected = false);
-                links.ForEach(item => item.SetSelect(false));
-                ElementSelected?.Invoke(Module, EventArgs.Empty);
-            }
-            if (!Project.Running)
-            {
+                    ElementSelected?.Invoke(items.Any(x => x.Selected) ?
+                        items.Where(x => x.Selected).Select(x => x.Instance).ToArray() : null, EventArgs.Empty);
+                }
+                else
+                {
+                    if (!(TryGetFreeInputPin(e.Location, out Element? element, out _, out _, out _) && element?.Instance is IManualChange _))
+                        linkFirstPoint = null;
+                    items.ForEach(item => item.Selected = false);
+                    links.ForEach(item => item.SetSelect(false));
+                    ElementSelected?.Invoke(Module, EventArgs.Empty);
+                }
                 if (e.Button == MouseButtons.Right)
                 {
                     linkFirstPoint = null;

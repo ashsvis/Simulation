@@ -94,12 +94,12 @@ namespace Simulator.Model.Inputs
                 graphics.DrawLine(pen, new PointF(rect.Right, rect.Y + rect.Height / 2),
                     new PointF(rect.Right + Element.Step, rect.Y + rect.Height / 2));
                 // значение выхода
-                if (Project.Running && VisibleValues)
-                {
-                    var textval = $"{Project.ReadValue(ItemId, 0, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
-                    var ms = graphics.MeasureString(textval, font);
-                    graphics.DrawString(textval, font, fontbrush, new PointF(rect.Right, rect.Y + rect.Height / 2 - ms.Height));
-                }
+                //if (Project.Running && VisibleValues)
+                //{
+                //    var textval = $"{Project.ReadValue(ItemId, 0, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
+                //    var ms = graphics.MeasureString(textval, font);
+                //    graphics.DrawString(textval, font, fontbrush, new PointF(rect.Right, rect.Y + rect.Height / 2 - ms.Height));
+                //}
 
                 var funcrect = new RectangleF(rect.X + rect.Height * 3, rect.Y, rect.Height, rect.Height / 3);
                 var text = $"DI{Order}";

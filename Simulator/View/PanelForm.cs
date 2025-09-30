@@ -196,18 +196,21 @@ namespace Simulator
             switch (tcTools.SelectedIndex)
             {
                 case 0:
-                    tsbShowModuleForm.Enabled =
+                    tsbShowModuleForm.Enabled = tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module;
                     tsbDeleteModule.Enabled =
-                    tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module _;
+                        !Project.Running && tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module;
                     break;
                 case 1:
-                    tsbShowModuleForm.Enabled =
+                    tsbShowModuleForm.Enabled = tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Unit;
                     tsbDeleteModule.Enabled =
-                    tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Unit _;
+                        !Project.Running && tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Unit;
                     break;
             }
             tsmiLeftPanelVisible.Checked = panLeft.Width > 0;
             tsmiRightPanelVisible.Checked = panRight.Width > 0;
+            tsmiRun.Checked = tsbRun.Checked = Project.Running;
+            tsbAddModule.Enabled = tsbAddBock.Enabled = !Project.Running;
+            tsmiCreate.Enabled = tsmiOpen.Enabled = tsmiAddModule.Enabled = tsbOpenProject.Enabled = !Project.Running;
         }
 
         private void ÔÓ√ÓËÁÓÌÚ‡ÎËToolStripMenuItem_Click(object sender, EventArgs e)
@@ -768,16 +771,13 @@ namespace Simulator
         {
             if (tsbRun.Checked)
             {
-                tsbRun.Checked = false;
-                tsmiRun.Checked = false;
                 Project.Stop();
-                MdiChildren.OfType<ModuleForm>().ToList().ForEach(x => x.Refresh());
+                Host.RefreshPanels();
             }
             else
             {
-                tsbRun.Checked = true;
-                tsmiRun.Checked = true;
                 Project.Start();
+                Host.RefreshPanels();
             }
         }
 

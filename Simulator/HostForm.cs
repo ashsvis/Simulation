@@ -158,5 +158,10 @@ namespace Simulator
             }
             timerCalculate.Enabled = true;
         }
+
+        internal void RefreshPanels()
+        {
+            panels.ForEach(x => x.MdiChildren.OfType<ModuleForm>().ToList().ForEach(x => x.Refresh()));
+        }
     }
 }

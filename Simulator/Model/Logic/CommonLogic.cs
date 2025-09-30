@@ -199,10 +199,8 @@ namespace Simulator.Model.Logic
                 };
             }
             var @out = result ^ getInverseOutputs[0];
-            var changed = @out != Out;
             Out = @out;
-            //if (changed)
-                Project.WriteValue(itemId, 0, ValueSide.Output, ValueKind.Digital, Out);
+            Project.WriteValue(itemId, 0, ValueSide.Output, ValueKind.Digital, Out);
         }
 
         protected bool GetInputValue(int pin)
@@ -419,17 +417,17 @@ namespace Simulator.Model.Logic
                         graphics.DrawString(InputNames[i], font, fontbrush, new PointF(x + step, y - ms.Height / 2));
                     }
                     // значение входа
-                    bool isLinked = this is ILinkSupport link && link.LinkedInputs[i];
-                    bool isExternal = this is ILinkSupport link1 && link1.InputLinkSources[i].Item3;
-                    if (Project.Running && VisibleValues)
-                    {
-                        var text = $"{GetInputValue(i)}"[..1].ToUpper();
-                        var ms = graphics.MeasureString(text, font);
-                        using var iformat = new StringFormat();
-                        iformat.Alignment = StringAlignment.Near;
-                        using var br = new SolidBrush(isLinked ? Color.Gray : foreColor);
-                        graphics.DrawString(text, font, br, new PointF(x - ms.Width + step, y - ms.Height), iformat);
-                    }
+                    //bool isLinked = this is ILinkSupport link && link.LinkedInputs[i];
+                    //bool isExternal = this is ILinkSupport link1 && link1.InputLinkSources[i].Item3;
+                    //if (Project.Running && VisibleValues)
+                    //{
+                    //    var text = $"{GetInputValue(i)}"[..1].ToUpper();
+                    //    var ms = graphics.MeasureString(text, font);
+                    //    using var iformat = new StringFormat();
+                    //    iformat.Alignment = StringAlignment.Near;
+                    //    using var br = new SolidBrush(isLinked ? Color.Gray : foreColor);
+                    //    graphics.DrawString(text, font, br, new PointF(x - ms.Width + step, y - ms.Height), iformat);
+                    //}
                     y += step * 2;
                 }
                 // выходы
@@ -460,12 +458,12 @@ namespace Simulator.Model.Logic
                         graphics.DrawString(OutputNames[i], font, fontbrush, new PointF(x - ms.Width, y - ms.Height / 2));
                     }
                     // значение выхода
-                    if (Project.Running && OutputNames.Length > 0 && VisibleValues && this is ILinkSupport link)
-                    {
-                        var text = $"{Project.ReadValue(itemId, i, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
-                        var ms = graphics.MeasureString(text, font);
-                        graphics.DrawString(text, font, fontbrush, new PointF(x, y - ms.Height));
-                    }
+                    //if (Project.Running && OutputNames.Length > 0 && VisibleValues && this is ILinkSupport link)
+                    //{
+                    //    var text = $"{Project.ReadValue(itemId, i, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
+                    //    var ms = graphics.MeasureString(text, font);
+                    //    graphics.DrawString(text, font, fontbrush, new PointF(x, y - ms.Height));
+                    //}
                     y += step * 2;
                 }
                 customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush, index);

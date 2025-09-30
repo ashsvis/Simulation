@@ -396,6 +396,28 @@ namespace Simulator.Model
 
         public static void Start()
         {
+            foreach (var module in Modules) 
+            { 
+                foreach (var element in module.Elements)
+                {
+                    element.Selected = false;
+                }
+                foreach (var link in module.Links)
+                {
+                    link.SetSelect(false);
+                }
+            }
+            foreach (var unit in Equipment)
+            {
+                foreach (var element in unit.Elements)
+                {
+                    element.Selected = false;
+                }
+                foreach (var link in unit.Links)
+                {
+                    link.SetSelect(false);
+                }
+            }
             Running = true;
         }
 
