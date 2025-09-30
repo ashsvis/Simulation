@@ -801,6 +801,27 @@
             </Outputs>
           </Instance>
         </Element>
+        <Element Id="4a44122b-ebef-42a8-a6a7-3e87fbff286d" X="104" Y="8">
+          <Instance Type="Simulator.Model.Fields.VALVE">
+            <OpenedState Id="62ce596d-e49a-43d3-a427-df8e027c48ba" />
+            <ClosedState Id="61f1fc03-1cb6-432b-9536-3afb1ca214d4" PinIndex="1" />
+            <CommandState Id="f8471021-0a3c-4e3c-a473-47400ce39995" />
+          </Instance>
+        </Element>
+        <Element Id="ea609695-49bf-4706-af3e-67f385d2ac35" X="464" Y="16">
+          <Instance Type="Simulator.Model.Fields.VALVE">
+            <OpenedState Id="17338400-551d-4313-b073-cb112b87edaa" />
+            <ClosedState Id="6265981f-e3bb-46cf-ae10-48f92acd5ade" PinIndex="1" />
+            <CommandState Id="590b64f6-4cf6-4a94-882f-e2e5006a6e3f" />
+          </Instance>
+        </Element>
+        <Element Id="a43364f6-abf3-452b-b0af-ad1ba1f163d9" X="464" Y="112">
+          <Instance Type="Simulator.Model.Fields.VALVE">
+            <OpenedState Id="5fb006ff-524e-4834-a85d-0d55942e0c62" />
+            <ClosedState Id="a7b02c43-171d-4a5b-b476-68b0a96b2806" PinIndex="1" />
+            <CommandState Id="0f0b3c53-0946-489d-868d-ffba9f16cd2f" />
+          </Instance>
+        </Element>
       </Elements>
       <Links>
         <Link Id="8a13188b-ad4a-4766-808d-1c5b50c562e9">
@@ -14389,4 +14410,5 @@
       </Links>
     </Unit>
   </Equipment>
+  <Fields />
 </Project>

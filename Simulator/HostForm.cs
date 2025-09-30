@@ -154,6 +154,8 @@ namespace Simulator
                     Project.Modules.ToList().ForEach(module => module.Calculate());
                 if (Project.Equipment.Count != 0)
                     Project.Equipment.ToList().ForEach(unit => unit.Calculate());
+                if (Project.Fields.Count != 0)
+                    Project.Fields.ToList().ForEach(field => field.Calculate());
                 SimulationTick?.Invoke(this, EventArgs.Empty);
             }
             timerCalculate.Enabled = true;

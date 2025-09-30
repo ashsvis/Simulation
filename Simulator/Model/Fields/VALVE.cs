@@ -4,11 +4,15 @@ using System.Xml.Linq;
 
 namespace Simulator.Model.Fields
 {
-    public class VALVE : CommonFields, ICustomDraw
+    public class VALVE : CommonFields, ICustomDraw, ICalculate
     {
         private (Guid, int, bool) openedLinkSource = (Guid.Empty, 0, false);
         private (Guid, int, bool) closedLinkSource = (Guid.Empty, 0, false);
         private (Guid, int, bool) commandLinkSource = (Guid.Empty, 0, false);
+
+        private bool? isOpened;
+        private bool? isClosed;
+        private bool? isCommand;
 
         public (Guid, int, bool) OpenedLinkSource => openedLinkSource;
         public (Guid, int, bool) ClosedLinkSource => closedLinkSource;
@@ -48,8 +52,8 @@ namespace Simulator.Model.Fields
             var control = new RectangleF(rect.X + (rect.Height / 4), rect.Y, rect.Height / 2, rect.Height / 2);
             var valve = new RectangleF(rect.X, rect.Y + rect.Height / 2, rect.Width, rect.Height / 2);
             valve.Inflate(-0.5f, -0.5f);
-            using var controlbrush = new SolidBrush(Color.Yellow);
-            graphics.FillRectangle(controlbrush, control);
+            using var controlbrush = new SolidBrush(isCommand == true ? Color.Lime : Color.Black);
+            graphics.FillRectangle(!Project.Running ? brush : isCommand == null ? Brushes.Magenta : controlbrush, control);
             graphics.DrawRectangles(pen, [control]);
             using GraphicsPath path = new();
             path.AddLines([
@@ -61,8 +65,8 @@ namespace Simulator.Model.Fields
                     new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
                     new PointF(valve.Left + valve.Width / 2, control.Bottom),
                 ]);
-            using var valvebrush = new SolidBrush(Color.Yellow);
-            graphics.FillPath(valvebrush, path);
+            using var valvebrush = new SolidBrush(isOpened == true ? Color.Lime : isClosed == true ? Color.Black : pen.Color);
+            graphics.FillPath(!Project.Running ? brush : isOpened == null || isClosed == null || isOpened == true && isClosed == true ? Brushes.Magenta : valvebrush, path);
             graphics.DrawLines(pen,
                 [
                     new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
@@ -171,5 +175,31 @@ namespace Simulator.Model.Fields
                 }
             }
         }
+
+        public void Calculate()
+        {
+            if (openedLinkSource.Item1 != Guid.Empty)
+            {
+                ValueItem? item = Project.ReadValue(openedLinkSource.Item1, 0, ValueSide.Input, ValueKind.Digital);
+                isOpened = (bool?)item?.Value;
+            }
+            else
+                isOpened = null;
+            if (closedLinkSource.Item1 != Guid.Empty)
+            {
+                ValueItem? item = Project.ReadValue(closedLinkSource.Item1, 0, ValueSide.Input, ValueKind.Digital);
+                isClosed = (bool?)item?.Value;
+            }
+            else
+                isClosed = null;
+            if (commandLinkSource.Item1 != Guid.Empty)
+            {
+                ValueItem? item = Project.ReadValue(commandLinkSource.Item1, 0, ValueSide.Output, ValueKind.Digital);
+                isCommand = (bool?)item?.Value;
+            }
+            else
+                isCommand = null;
+        }
+
     }
 }
