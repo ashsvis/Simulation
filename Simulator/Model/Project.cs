@@ -93,6 +93,9 @@ namespace Simulator.Model
         public static List<Unit> Equipment { get; set; } = [];
 
         [Browsable(false)]
+        public static List<Unit> Fields { get; set; } = [];
+
+        [Browsable(false)]
         public static List<Module> Blocks { get; set; } = [];
 
         private static string file = string.Empty;
@@ -141,6 +144,14 @@ namespace Simulator.Model
                 XElement xunit = new("Unit");
                 xquipment.Add(xunit);
                 unit.Save(xunit);
+            }
+            XElement xfields = new("Fields");
+            root.Add(xfields);
+            foreach (var field in Fields)
+            {
+                XElement xfield = new("Field");
+                xfields.Add(xfield);
+                field.Save(xfield);
             }
             try
             {
@@ -219,6 +230,22 @@ namespace Simulator.Model
                             Equipment.Add(unit);
                             if (string.IsNullOrEmpty(unit.Name))
                                 unit.Name = "Unit" + Modules.Count;
+                        }
+                    }
+                    var xfields = xproject?.Element("Fields");
+                    if (xfields != null)
+                    {
+                        foreach (XElement xfield in xfields.Elements("Field"))
+                        {
+                            var field = new Unit();
+                            if (Guid.TryParse(xfield.Element("Id")?.Value, out Guid id))
+                                field.Id = id;
+                            if (field.Id == Guid.Empty)
+                                field.Id = Guid.NewGuid();
+                            field.Load(xfield);
+                            Fields.Add(field);
+                            if (string.IsNullOrEmpty(field.Name))
+                                field.Name = "Field" + Modules.Count;
                         }
                     }
                 }
@@ -319,10 +346,13 @@ namespace Simulator.Model
             rootNode.Nodes.Add(diagramNode);
             diagramNode.Nodes.Add(new TreeNode("Начало") { Tag = typeof(Diagram.START) });
             diagramNode.Nodes.Add(new TreeNode("Конец") { Tag = typeof(Diagram.FINISH) });
-            var blocksNode = new TreeNode("Блоки") { Tag = Blocks };
-            rootNode.Nodes.Add(blocksNode);
-            foreach (var block in Blocks)
-                blocksNode.Nodes.Add(new TreeNode(block.Name) { Tag = block });
+            //var blocksNode = new TreeNode("Блоки") { Tag = Blocks };
+            //rootNode.Nodes.Add(blocksNode);
+            //foreach (var block in Blocks)
+            //    blocksNode.Nodes.Add(new TreeNode(block.Name) { Tag = block });
+            var fieldNode = new TreeNode("Поле");
+            rootNode.Nodes.Add(fieldNode);
+            fieldNode.Nodes.Add(new TreeNode("Клапан") { Tag = typeof(Fields.VALVE) });
             rootNode.Expand();
             andNode.Collapse();
             orNode.Collapse();

@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Xml.Linq;
 
-namespace Simulator.Model.Diagram
+namespace Simulator.Model.Fields
 {
-    public class CommonDiagram : FilterablePropertyBase, ILinkSupport, ILoadSave, IDraw
+    public class CommonFields : FilterablePropertyBase, ILinkSupport, ILoadSave, IDraw
     {
         private readonly object[] getInputs;
         private readonly object[] getOutputs;
@@ -20,11 +20,11 @@ namespace Simulator.Model.Diagram
         [Category(" Общие"), DisplayName("Идентификатор")]
         public Guid ItemId => itemId;
 
-        public CommonDiagram() : this(DiagramFunction.None)
+        public CommonFields() : this(FieldFunction.None)
         {
         }
 
-        public CommonDiagram(DiagramFunction func)
+        public CommonFields(FieldFunction func)
         {
             getInputs = [];
             getOutputs = [];
@@ -32,10 +32,6 @@ namespace Simulator.Model.Diagram
             Out = new object();
             var inputCount = 1;
             var outputCount = 1;
-            if (func == DiagramFunction.Finish)
-                outputCount = 0;
-            if (func == DiagramFunction.Start)
-                inputCount = 0;
             getInputs = new object[inputCount];
             getOutputs = new object[outputCount];
             getLinkSources = new (Guid, int, bool)[inputCount];
@@ -176,7 +172,6 @@ namespace Simulator.Model.Diagram
 
         public void Draw(Graphics graphics, Color foreColor, Color backColor, PointF location, SizeF size, int index, bool selected, CustomDraw? customDraw = null)
         {
-            var step = Element.Step;
             using var brush = new SolidBrush(backColor);
             using var pen = new Pen(selected ? Color.Magenta : foreColor, 1f);
             using var font = new Font("Consolas", Element.Step + 2f);
@@ -188,21 +183,23 @@ namespace Simulator.Model.Diagram
                 graphics.DrawRectangles(pen, [rect]);
             }
             customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush, 0);
-            var y = -step + location.Y;
-            var x = location.X + size.Width / 2f;
-            if (getInputs.Length > 0)
-            {
-                // вход
-                // вертикальная риска сверху, напротив входа
-                graphics.DrawLine(pen, new PointF(x, y), new PointF(x, y + step));
-            }
-            y = location.Y + size.Height;
-            if (getOutputs.Length > 0)
-            {
-                // выход
-                // вертикальная риска снизу, напротив выхода
-                graphics.DrawLine(pen, new PointF(x, y), new PointF(x, y + step));
-            }
+            
+            //var step = Element.Step;
+            //var y = -step + location.Y;
+            //var x = location.X + size.Width / 2f;
+            //if (getInputs.Length > 0)
+            //{
+            //    // вход
+            //    // вертикальная риска сверху, напротив входа
+            //    graphics.DrawLine(pen, new PointF(x, y), new PointF(x, y + step));
+            //}
+            //y = location.Y + size.Height;
+            //if (getOutputs.Length > 0)
+            //{
+            //    // выход
+            //    // вертикальная риска снизу, напротив выхода
+            //    graphics.DrawLine(pen, new PointF(x, y), new PointF(x, y + step));
+            //}
         }
 
         public virtual void CalculateTargets(PointF location, ref SizeF size,

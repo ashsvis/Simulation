@@ -297,39 +297,12 @@ namespace Simulator
         {
             var graphics = e.Graphics;
             if (graphics == null) return;
-            //graphics.SmoothingMode = SmoothingMode.HighQuality;
-            //graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            // прорисовка узлов сетки
-            //using var brush = new SolidBrush(Color.Gray);
-            //using var font = new Font("Consolas", 3f);
-            //for (var y = 0; y < grid.GetLength(0); y++)
-            //{
-            //    for (var x = 0; x < grid.GetLength(1); x++)
-            //    {
-            //        if (grid[y, x].Kind < -1)
-            //        {
-            //            graphics.FillEllipse(Brushes.Aqua, new RectangleF(
-            //                PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
-            //        }
-            //        else if (grid[y, x].Kind == -1)
-            //        {
-            //            graphics.FillEllipse(Brushes.Red, new RectangleF(
-            //                PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
-            //        }
-            //        else if (grid[y, x].Kind == 0)
-            //        {
-            //            graphics.FillEllipse(Brushes.Gray, new RectangleF(
-            //                PointF.Subtract(grid[y, x].Point, new SizeF(0.5f, 0.5f)), new SizeF(1f, 1f)));
-            //        }
-            //        else if (grid[y, x].Kind > 0)
-            //        {
-            //            graphics.DrawString(grid[y, x].Kind.ToString(), font, brush, grid[y, x].Point);
-            //        }
-            //    }
-            //}
+
+            graphics.SmoothingMode = SmoothingMode.HighQuality;
+            graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            using var font = new Font("Consolas", Element.Step + 2f);
             try
             {
-                using var font = new Font("Consolas", Element.Step + 2f);
                 // прорисовка внешних связей для входов
                 foreach (var item in items)
                 {

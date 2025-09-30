@@ -126,33 +126,33 @@ namespace Simulator.Model
 #if DEBUG
 
             // области выбора
-            //using Pen tarpen = new(Color.FromArgb(80, Color.Magenta), 0);
-            //foreach (var key in itargets.Keys)
-            //{
-            //    var itarget = itargets[key];
-            //    graphics.DrawRectangles(tarpen, [itarget]);
-            //}
-            //foreach (var key in otargets.Keys)
-            //{
-            //    var otarget = otargets[key];
-            //    graphics.DrawRectangles(tarpen, [otarget]);
-            //}
-            //// точки привязки входов и выходов
-            //using Pen pinpen = new(Color.FromArgb(255, Color.Black), 0);
-            //foreach (var key in ipins.Keys)
-            //{
-            //    var pt = ipins[key];
-            //    var r = new RectangleF(pt.X - 3, pt.Y - 3, 6, 6);
-            //    graphics.DrawLine(pinpen, new PointF(r.X, r.Y), new PointF(r.X + r.Width, r.Y + r.Height));
-            //    graphics.DrawLine(pinpen, new PointF(r.X + r.Width, r.Y), new PointF(r.X, r.Y + r.Height));
-            //}
-            //foreach (var key in opins.Keys)
-            //{
-            //    var pt = opins[key];
-            //    var r = new RectangleF(pt.X - 3, pt.Y - 3, 6, 6);
-            //    graphics.DrawLine(pinpen, new PointF(r.X, r.Y), new PointF(r.X + r.Width, r.Y + r.Height));
-            //    graphics.DrawLine(pinpen, new PointF(r.X + r.Width, r.Y), new PointF(r.X, r.Y + r.Height));
-            //}
+            using Pen tarpen = new(Color.FromArgb(80, Color.Magenta), 0);
+            foreach (var key in itargets.Keys)
+            {
+                var itarget = itargets[key];
+                graphics.DrawRectangles(tarpen, [itarget]);
+            }
+            foreach (var key in otargets.Keys)
+            {
+                var otarget = otargets[key];
+                graphics.DrawRectangles(tarpen, [otarget]);
+            }
+            // точки привязки входов и выходов
+            using Pen pinpen = new(Color.FromArgb(255, Color.Black), 0);
+            foreach (var key in ipins.Keys)
+            {
+                var pt = ipins[key];
+                var r = new RectangleF(pt.X - 3, pt.Y - 3, 6, 6);
+                graphics.DrawLine(pinpen, new PointF(r.X, r.Y), new PointF(r.X + r.Width, r.Y + r.Height));
+                graphics.DrawLine(pinpen, new PointF(r.X + r.Width, r.Y), new PointF(r.X, r.Y + r.Height));
+            }
+            foreach (var key in opins.Keys)
+            {
+                var pt = opins[key];
+                var r = new RectangleF(pt.X - 3, pt.Y - 3, 6, 6);
+                graphics.DrawLine(pinpen, new PointF(r.X, r.Y), new PointF(r.X + r.Width, r.Y + r.Height));
+                graphics.DrawLine(pinpen, new PointF(r.X + r.Width, r.Y), new PointF(r.X, r.Y + r.Height));
+            }
 
 #endif
         }
@@ -162,8 +162,6 @@ namespace Simulator.Model
             var holder = new XElement("Element");
             Save(holder);
             return holder.ToString();
-            //var content = holder.ToString();
-            //Clipboard.SetText(content);
         }
 
         public object Paste(string source)

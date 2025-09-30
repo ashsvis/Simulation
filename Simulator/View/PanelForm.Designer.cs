@@ -52,6 +52,8 @@
             tsmiLeftPanelVisible = new ToolStripMenuItem();
             tsmiRightPanelVisible = new ToolStripMenuItem();
             параметрыToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem2 = new ToolStripSeparator();
+            tsmiRun = new ToolStripMenuItem();
             справкаToolStripMenuItem = new ToolStripMenuItem();
             опрограммеToolStripMenuItem = new ToolStripMenuItem();
             окноToolStripMenuItem = new ToolStripMenuItem();
@@ -106,8 +108,6 @@
             tsbScreenToRight = new ToolStripButton();
             tslScreenNumber = new ToolStripLabel();
             tsbScreenToLeft = new ToolStripButton();
-            toolStripMenuItem2 = new ToolStripSeparator();
-            tsmiRun = new ToolStripMenuItem();
             menuMainStrip.SuspendLayout();
             panLeft.SuspendLayout();
             tlpTools.SuspendLayout();
@@ -292,6 +292,18 @@
             параметрыToolStripMenuItem.Name = "параметрыToolStripMenuItem";
             параметрыToolStripMenuItem.Size = new Size(138, 22);
             параметрыToolStripMenuItem.Text = "&Параметры";
+            // 
+            // toolStripMenuItem2
+            // 
+            toolStripMenuItem2.Name = "toolStripMenuItem2";
+            toolStripMenuItem2.Size = new Size(135, 6);
+            // 
+            // tsmiRun
+            // 
+            tsmiRun.Name = "tsmiRun";
+            tsmiRun.Size = new Size(138, 22);
+            tsmiRun.Text = "Симуляция";
+            tsmiRun.Click += tsbRun_Click;
             // 
             // справкаToolStripMenuItem
             // 
@@ -649,12 +661,12 @@
             tvLibrary.FullRowSelect = true;
             tvLibrary.HideSelection = false;
             tvLibrary.LineColor = Color.WhiteSmoke;
-            tvLibrary.Location = new Point(3, 28);
+            tvLibrary.Location = new Point(3, 3);
             tvLibrary.Name = "tvLibrary";
             treeNode1.Name = "Узел0";
             treeNode1.Text = "Библиотека";
             tvLibrary.Nodes.AddRange(new TreeNode[] { treeNode1 });
-            tvLibrary.Size = new Size(188, 391);
+            tvLibrary.Size = new Size(188, 416);
             tvLibrary.TabIndex = 1;
             tvLibrary.AfterSelect += tvLibrary_AfterSelect;
             tvLibrary.MouseDown += tvLibrary_MouseDown;
@@ -729,6 +741,7 @@
             tsToolLibrary.Size = new Size(188, 25);
             tsToolLibrary.TabIndex = 2;
             tsToolLibrary.Text = "toolStrip1";
+            tsToolLibrary.Visible = false;
             // 
             // tsbAddBock
             // 
@@ -838,18 +851,6 @@
             tsbScreenToLeft.Text = "Переместить левее";
             tsbScreenToLeft.ToolTipText = "Переместить влево";
             tsbScreenToLeft.Click += tsmiScreenMoveLeft_Click;
-            // 
-            // toolStripMenuItem2
-            // 
-            toolStripMenuItem2.Name = "toolStripMenuItem2";
-            toolStripMenuItem2.Size = new Size(135, 6);
-            // 
-            // tsmiRun
-            // 
-            tsmiRun.Name = "tsmiRun";
-            tsmiRun.Size = new Size(138, 22);
-            tsmiRun.Text = "Симуляция";
-            tsmiRun.Click += tsbRun_Click;
             // 
             // PanelForm
             // 
