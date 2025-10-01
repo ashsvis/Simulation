@@ -37,6 +37,8 @@
             // tvSources
             // 
             tvSources.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            tvSources.FullRowSelect = true;
+            tvSources.HideSelection = false;
             tvSources.Location = new Point(12, 12);
             tvSources.Name = "tvSources";
             tvSources.Size = new Size(235, 241);

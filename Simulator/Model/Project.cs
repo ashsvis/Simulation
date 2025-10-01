@@ -156,8 +156,6 @@ namespace Simulator.Model
             try
             {
                 doc.Save(filename);
-                Modules.ForEach(module => module.Changed = false);
-                Blocks.ForEach(block => block.Changed = false);
                 Changed = false;
             }
             catch { }
@@ -249,8 +247,6 @@ namespace Simulator.Model
                         }
                     }
                 }
-                Modules.ForEach(module => module.Changed = false);
-                Blocks.ForEach(block => block.Changed = false);
                 Changed = false;
                 OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.Load));
             }

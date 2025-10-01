@@ -1,7 +1,5 @@
 ﻿using Simulator.Model;
-using Simulator.Model.Inputs;
 using Simulator.Model.Interfaces;
-using System;
 using System.Data;
 
 namespace Simulator.View
@@ -16,7 +14,6 @@ namespace Simulator.View
             InitializeComponent();
             this.kind = kind;
             this.linkSource = linkSource;
-            btnClear.Visible = kind != KindLinkSource.LogicOutputs;
         }
 
         public (Guid, int) Result { get; private set; }
@@ -43,6 +40,8 @@ namespace Simulator.View
                                     var outputName = string.IsNullOrWhiteSpace(func.OutputNames[0]) ? "Out" : func.OutputNames[0];
                                     var outputNode = new TreeNode($"{elementName}.{outputName}") { Tag = new Tuple<Guid, int>(item.Id, 0) };
                                     moduleNode.Nodes.Add(outputNode);
+                                    if (linkSource != null && linkSource.Value.Item1 == item.Id)
+                                        tvSources.SelectedNode = outputNode;
                                 }
                                 else if (func.OutputNames.Length > 1)
                                 {
@@ -53,6 +52,8 @@ namespace Simulator.View
                                         var outputName = string.IsNullOrWhiteSpace(func.OutputNames[i]) ? "Out" : func.OutputNames[i];
                                         var outputNode = new TreeNode($"{i + 1}. {outputName}") { Tag = new Tuple<Guid, int>(item.Id, i) };
                                         elementNode.Nodes.Add(outputNode);
+                                        if (linkSource != null && linkSource.Value.Item1 == item.Id)
+                                            tvSources.SelectedNode = outputNode;
                                     }
                                 }
                             }

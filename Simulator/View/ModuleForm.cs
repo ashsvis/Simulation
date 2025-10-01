@@ -1,4 +1,5 @@
 ﻿using Simulator.Model;
+using Simulator.Model.Inputs;
 using Simulator.Model.Interfaces;
 using Simulator.Model.Outputs;
 using Simulator.View;
@@ -77,7 +78,7 @@ namespace Simulator
             InitializeComponent();
             this.panelForm = panelForm;
             Module = module;
-            Module.Changed = false;
+            Project.Changed = false;
             items = Module.Elements;
             items.Where(x => x.Instance is IChangeOrderDI).ToList().ForEach(dis.Add);
             items.Where(x => x.Instance is IChangeOrderDO).ToList().ForEach(dos.Add);
@@ -175,7 +176,7 @@ namespace Simulator
                     links.ForEach(item => item.SetSelect(false));
                     item.Selected = true;
                     items.Add(item);
-                    Module.Changed = true;
+                    Project.Changed = true;
                     zoomPad.Invalidate();
                     ElementSelected?.Invoke(item.Instance, EventArgs.Empty);
                 }
@@ -941,44 +942,46 @@ namespace Simulator
                     {
                         if (TryGetPin(e.Location, out element, out pin, out _, out output) && output == false && pin != null)
                         {
-                            if (func.LinkedInputs[(int)pin])
+                            (Guid, int, bool) linkSource = func.InputLinkSources[(int)pin];
+                            if (linkSource.Item1 == Guid.Empty || linkSource.Item1 != Guid.Empty && linkSource.Item3)
                             {
-                                item = new ToolStripMenuItem() { Text = "Удалить связь по входу", Tag = element };
+                                item = new ToolStripMenuItem() { Text = "Связь по входу...", Tag = element };
                                 item.Click += (s, e) =>
                                 {
                                     var menuItem = (ToolStripMenuItem?)s;
                                     if (menuItem?.Tag is Element element && element.Instance is ILinkSupport fn)
                                     {
-                                        fn.ResetValueLinkToInp((int)pin);
-                                        links.RemoveAll(link => link.DestinationId == element.Id && link.DestinationPinIndex == (int)pin);
-                                        Module.Changed = true;
-                                        zoomPad.Invalidate();
-                                    }
-                                };
-                                cmZoomPad.Items.Add(item);
-                            }
-                            else
-                            {
-                                item = new ToolStripMenuItem() { Text = "Настроить связь по входу...", Tag = element };
-                                item.Click += (s, e) =>
-                                {
-                                    var menuItem = (ToolStripMenuItem?)s;
-                                    if (menuItem?.Tag is Element element && element.Instance is ILinkSupport fn)
-                                    {
-                                        var dlg = new SelectLinkSourceForm(KindLinkSource.LogicOutputs);
+                                        var dlg = new SelectLinkSourceForm(KindLinkSource.LogicOutputs, linkSource);
                                         if (dlg.ShowDialog() == DialogResult.OK)
                                         {
                                             (Guid idSource, int pinOut) = dlg.Result;
-                                            if (idSource != Guid.Empty && !fn.LinkedInputs[(int)pin])
-                                            {
-                                                fn.SetValueLinkToInp((int)pin, idSource, pinOut, true);
-                                                Module.Changed = true;
-                                                zoomPad.Invalidate();
-                                            }
+                                            fn.SetValueLinkToInp((int)pin, idSource, pinOut, true);
+                                            Project.Changed = true;
+                                            zoomPad.Invalidate();
+                                            panelForm.RefreshPanels();
                                         }
                                     }
                                 };
                                 cmZoomPad.Items.Add(item);
+                            }
+                            else if (func.LinkedInputs[(int)pin])
+                            {
+                                if (linkSource.Item1 != Guid.Empty && !linkSource.Item3)
+                                {
+                                    item = new ToolStripMenuItem() { Text = "Удалить связь по входу", Tag = element };
+                                    item.Click += (s, e) =>
+                                    {
+                                        var menuItem = (ToolStripMenuItem?)s;
+                                        if (menuItem?.Tag is Element element && element.Instance is ILinkSupport fn)
+                                        {
+                                            fn.ResetValueLinkToInp((int)pin);
+                                            links.RemoveAll(link => link.DestinationId == element.Id && link.DestinationPinIndex == (int)pin);
+                                            Project.Changed = true;
+                                            zoomPad.Invalidate();
+                                        }
+                                    };
+                                    cmZoomPad.Items.Add(item);
+                                }
                             }
                         }
                         else if (TryGetPin(e.Location, out element, out pin, out _, out output) && element != null && output == true && pin != null)
@@ -1001,7 +1004,7 @@ namespace Simulator
                                             var tmp = items[changer.Index - 1];
                                             items.Remove(tmp);
                                             items.Insert(dlg.EnteredValue - 1, tmp);
-                                            Module.Changed = true;
+                                            Project.Changed = true;
                                             zoomPad.Invalidate();
                                         }
                                     }
@@ -1040,13 +1043,13 @@ namespace Simulator
                                                 if (idSource != Guid.Empty)
                                                 {
                                                     di.SetExternalLinkToInp(0, idSource, pinOut, true);
-                                                    Module.Changed = true;
+                                                    Project.Changed = true;
                                                     zoomPad.Invalidate();
                                                 }
                                                 else if (idSource == Guid.Empty)
                                                 {
                                                     di.ResetExternalLinkToInp(0);
-                                                    Module.Changed = true;
+                                                    Project.Changed = true;
                                                     zoomPad.Invalidate();
                                                 }
                                             }
@@ -1060,13 +1063,13 @@ namespace Simulator
                                                 if (idSource != Guid.Empty)
                                                 {
                                                     @do.SetExternalLinkToInp(0, idSource, pinInp, true);
-                                                    Module.Changed = true;
+                                                    Project.Changed = true;
                                                     zoomPad.Invalidate();
                                                 }
                                                 else if (idSource == Guid.Empty)
                                                 {
                                                     @do.ResetExternalLinkToInp(0);
-                                                    Module.Changed = true;
+                                                    Project.Changed = true;
                                                     zoomPad.Invalidate();
                                                 }
                                             }
@@ -1095,13 +1098,13 @@ namespace Simulator
                                             if (idSource != Guid.Empty)
                                             {
                                                 valve.SetOpenedLinkToInp(0, idSource, pinOut, true);
-                                                Module.Changed = true;
+                                                Project.Changed = true;
                                                 zoomPad.Invalidate();
                                             }
                                             else if (idSource == Guid.Empty)
                                             {
                                                 valve.ResetOpenedLinkToInp(0);
-                                                Module.Changed = true;
+                                                Project.Changed = true;
                                                 zoomPad.Invalidate();
                                             }
                                         }
@@ -1121,13 +1124,13 @@ namespace Simulator
                                             if (idSource != Guid.Empty)
                                             {
                                                 valve.SetClosedLinkToInp(0, idSource, pinOut, true);
-                                                Module.Changed = true;
+                                                Project.Changed = true;
                                                 zoomPad.Invalidate();
                                             }
                                             else if (idSource == Guid.Empty)
                                             {
                                                 valve.ResetClosedLinkToInp(0);
-                                                Module.Changed = true;
+                                                Project.Changed = true;
                                                 zoomPad.Invalidate();
                                             }
                                         }
@@ -1147,17 +1150,16 @@ namespace Simulator
                                             if (idSource != Guid.Empty)
                                             {
                                                 valve.SetCommandLinkToInp(0, idSource, pinInp, true);
-                                                Module.Changed = true;
+                                                Project.Changed = true;
                                                 zoomPad.Invalidate();
                                             }
                                             else if (idSource == Guid.Empty)
                                             {
                                                 valve.ResetCommandLinkToInp(0);
-                                                Module.Changed = true;
+                                                Project.Changed = true;
                                                 zoomPad.Invalidate();
                                             }
                                         }
-                                        //}
                                     }
                                 };
                                 cmZoomPad.Items.Add(item);
@@ -1193,7 +1195,7 @@ namespace Simulator
             }
             links.RemoveAll(link => link.SourceId == element.Id || link.DestinationId == element.Id);
             items.Remove(element);
-            Module.Changed = true;
+            Project.Changed = true;
         }
 
         private void zoomPad_MouseMove(object sender, MouseEventArgs e)
@@ -1227,12 +1229,12 @@ namespace Simulator
                             foreach (var link in links.Where(x => x.Selected && x.DestinationId == item.Id))
                                 link.Offset(delta);
                         }
-                        Module.Changed = true;
+                        Project.Changed = true;
                     }
                     if (segmentmoving && link != null && segmentIndex != null && segmentVertical != null)
                     {
                         link?.OffsetSegment((int)segmentIndex, (bool)segmentVertical, delta);
-                        Module.Changed = true;
+                        Project.Changed = true;
                     }
                     if (!Project.Running && !dragging)
                     {
@@ -1351,7 +1353,7 @@ namespace Simulator
                                     ((Link)link).SetSelect(true);
                                     links.Add((Link)link);
                                     ((Link)link).UpdateSourcePoint(elementFirst.OutputPins[((Link)link).SourcePinIndex]);
-                                    Module.Changed = true;
+                                    Project.Changed = true;
                                 }
                             }
                         }
@@ -1368,7 +1370,7 @@ namespace Simulator
                                     ((Link)link).SetSelect(true);
                                     links.Add((Link)link);
                                     ((Link)link).UpdateDestinationPoint(elementFirst.InputPins[((Link)link).DestinationPinIndex]);
-                                    Module.Changed = true;
+                                    Project.Changed = true;
                                 }
                             }
                         }
@@ -1398,10 +1400,10 @@ namespace Simulator
 
         private void SaveModule()
         {
-            if (Module.Changed)
+            if (Project.Changed)
             {
                 Project.Save();
-                Module.Changed = false;
+                Project.Changed = false;
             }
         }
 
@@ -1415,7 +1417,7 @@ namespace Simulator
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     {
                         DeleteAllSelectedElements();
-                        Module.Changed = true;
+                        Project.Changed = true;
                         zoomPad.Invalidate();
                     }
                     else if (links.Any(x => x.Selected) &&
@@ -1429,7 +1431,7 @@ namespace Simulator
                                 func.ResetValueLinkToInp(link.DestinationPinIndex);
                         }
                         links.RemoveAll(link => link.Selected);
-                        Module.Changed = true;
+                        Project.Changed = true;
                         zoomPad.Invalidate();
                     }
                     break;
@@ -1522,7 +1524,7 @@ namespace Simulator
                         link.SetSelect(true);
                         links.Add(link);
                     }
-                    Module.Changed = true;
+                    Project.Changed = true;
                     UpdateView();
                 }
             }
@@ -1588,13 +1590,13 @@ namespace Simulator
                 }
             }
             items.RemoveAll(x => x.Selected);
-            Module.Changed = true;
+            Project.Changed = true;
             ElementSelected?.Invoke(null, EventArgs.Empty);
         }
 
         private void timerInterface_Tick(object sender, EventArgs e)
         {
-            tsbSave.Enabled = Module.Changed;
+            tsbSave.Enabled = Project.Changed;
             tsbCut.Enabled = tsbCopy.Enabled = items.Any(x => x.Selected);
             tsbPaste.Enabled = Clipboard.ContainsData("XML Spreadsheet");
         }

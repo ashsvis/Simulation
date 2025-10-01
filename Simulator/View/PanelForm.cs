@@ -82,8 +82,7 @@ namespace Simulator
 
         private void tsmiCreate_Click(object sender, EventArgs e)
         {
-            var notSaved = Project.Modules.Any(x => x.Changed);
-            if (notSaved)
+            if (Project.Changed)
             {
                 var result = MessageBox.Show("Текущие изменения не сохранены! Записать?",
                     "Создание нового проекта", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
@@ -191,7 +190,7 @@ namespace Simulator
         /// <param name="e"></param>
         private void timerInterface_Tick(object sender, EventArgs e)
         {
-            tsbSave.Enabled = tsmiSave.Enabled = Project.Changed || Project.Modules.Any(x => x.Changed);
+            tsbSave.Enabled = tsmiSave.Enabled = Project.Changed;
             окноToolStripMenuItem.Visible = MdiChildren.Length > 0;
             switch (tcTools.SelectedIndex)
             {
@@ -288,6 +287,7 @@ namespace Simulator
 
         private void pgProps_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
+            Project.Changed = true;
             foreach (var form in MdiChildren)
             {
                 if (form is IUpdateView view)
@@ -330,8 +330,7 @@ namespace Simulator
 
         private void tsmiOpen_Click(object sender, EventArgs e)
         {
-            var notSaved = Project.Modules.Any(x => x.Changed) || Project.Equipment.Any(x => x.Changed);
-            if (notSaved)
+            if (Project.Changed)
             {
                 var result = MessageBox.Show("Текущие изменения не сохранены! Записать?", "Загрузка проекта", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
@@ -671,7 +670,7 @@ namespace Simulator
                         var dublicate = Module.MakeDuplicate(module);
                         dublicate.Name = dlg.EnteredValue;
                         AddModuleToProject(dublicate);
-                        dublicate.Changed = true;
+                        Project.Changed = true;
                     }
                     else
                         MessageBox.Show("Уже есть такое имя задачи!", "Копия задачи", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -729,7 +728,7 @@ namespace Simulator
                         var dublicate = Unit.MakeDuplicate(unit);
                         dublicate.Name = dlg.EnteredValue;
                         AddUnitToProject(dublicate);
-                        dublicate.Changed = true;
+                        Project.Changed = true;
                     }
                     else
                         MessageBox.Show("Уже есть такое имя оборудования!", "Копия оборудования", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -795,6 +794,11 @@ namespace Simulator
             Properties.Settings.Default.RightToolsPanelVisible = tsmiRightPanelVisible.Checked;
             Properties.Settings.Default.Save();
             panRight.Width = Properties.Settings.Default.RightToolsPanelVisible ? Properties.Settings.Default.RightToolsPanelWidth : 0;
+        }
+
+        internal void RefreshPanels()
+        {
+            Host.RefreshPanels();
         }
     }
 }

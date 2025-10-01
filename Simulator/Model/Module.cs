@@ -27,7 +27,7 @@ namespace Simulator.Model
             {
                 if (name == value) return;
                 name = value;
-                Changed = true;
+                Project.Changed = true;
             }
         }
 
@@ -39,7 +39,7 @@ namespace Simulator.Model
             {
                 if (description == value) return;
                 description = value;
-                Changed = true;
+                Project.Changed = true;
             }
         }
 
@@ -49,8 +49,8 @@ namespace Simulator.Model
         [Browsable(false)]
         public List<Link> Links { get; set; } = [];
 
-        [Browsable(false)]
-        public bool Changed { get; set; }
+        //[Browsable(false)]
+        //public bool Changed { get; set; }
 
         public override string ToString()
         {
