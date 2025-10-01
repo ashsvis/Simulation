@@ -325,7 +325,7 @@ namespace Simulator
                             var (moduleName, elementName) = Project.GetAddressById(id);
                             var text = $"{moduleName}.{elementName}.{pinout + 1}";
                             var ms = graphics.MeasureString(text, font);
-                            var rect = new RectangleF(pt.X - Element.Step * 3 - ms.Width, pt.Y, ms.Width, ms.Height);
+                            var rect = new RectangleF(pt.X - Element.Step * 3 - ms.Width, pt.Y - ms.Height, ms.Width, ms.Height);
                             graphics.DrawRectangles(exlinkpen, [rect]);
                             graphics.DrawString(text, font, exlinkbrush, rect.Location);
                         }
@@ -1011,6 +1011,24 @@ namespace Simulator
                                 }
                             };
                             cmZoomPad.Items.Add(item);
+                            if (element?.Instance is Model.Logic.OR)
+                            {
+                                item = new ToolStripMenuItem() { Text = "Добавить вход", Tag = element };
+                                item.Click += (s, e) =>
+                                {
+                                    var menuItem = (ToolStripMenuItem?)s;
+                                    if (menuItem?.Tag is Element element)
+                                    {
+                                        if (element?.Instance is Model.Logic.OR or)
+                                        {
+                                            //or.AddInput();
+                                            //Project.Changed = true;
+                                            //zoomPad.Invalidate();
+                                        }
+                                    }
+                                };
+                                cmZoomPad.Items.Add(item);
+                            }
                             item = new ToolStripMenuItem() { Text = "Удалить элемент", Tag = element };
                             item.Click += (s, e) =>
                             {

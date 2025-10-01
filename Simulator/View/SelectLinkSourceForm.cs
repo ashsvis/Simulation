@@ -88,7 +88,7 @@ namespace Simulator.View
                         {
                             if (item.Instance is Model.Outputs.DO @do)
                             {
-                                var elementName = (string.IsNullOrWhiteSpace(@do.Name) ? $"DO{@do.Order}" : @do.Name) +" " + @do.Description; ;
+                                var elementName = (string.IsNullOrWhiteSpace(@do.Name) ? $"DO{@do.Order}" : @do.Name) +" " + @do.Description;
                                 var elementNode = new TreeNode(elementName) { Tag = new Tuple<Guid, int>(item.Id, @do.Order) };
                                 unitNode.Nodes.Add(elementNode);
                                 if (linkSource != null && linkSource.Value.Item1 == item.Id)

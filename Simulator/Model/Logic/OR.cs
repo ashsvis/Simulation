@@ -1,4 +1,5 @@
-﻿namespace Simulator.Model.Logic
+﻿
+namespace Simulator.Model.Logic
 {
     public class OR : CommonLogic { public OR() : base(LogicFunction.Or, 2) { } }
     public class OR3 : CommonLogic { public OR3() : base(LogicFunction.Or, 3) { } }
