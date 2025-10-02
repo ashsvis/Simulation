@@ -994,6 +994,22 @@ namespace Simulator
                             if (element is IContextMenu context)
                             {
                                 context.AddMenuItems(cmZoomPad);
+                                if (element.Instance is IAddInput inst)
+                                {
+                                    cmZoomPad.Items.Add(new ToolStripSeparator());
+                                    item = new ToolStripMenuItem() { Text = "Добавить вход", Tag = element };
+                                    item.Click += (s, e) =>
+                                    {
+                                        var menuItem = (ToolStripMenuItem?)s;
+                                        if (menuItem?.Tag is Element element)
+                                        {
+
+                                            //Project.Changed = true;
+                                            //zoomPad.Invalidate();
+                                        }
+                                    };
+                                    cmZoomPad.Items.Add(item);
+                                }
                             }
                         }
                     }

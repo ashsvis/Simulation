@@ -3,7 +3,7 @@ using System.Xml.Linq;
 
 namespace Simulator.Model
 {
-    public class Element: IChangeIndex, IContextMenu //, ICopyPaste
+    public class Element: IChangeIndex, IContextMenu
     {
         public const float Step = 8f;
 
@@ -166,23 +166,6 @@ namespace Simulator.Model
 
 #endif
         }
-
-        //public string Copy()
-        //{
-        //    var holder = new XElement("Element");
-        //    Save(holder);
-        //    return holder.ToString();
-        //}
-
-        //public object Paste(string source)
-        //{
-        //    return Clipboard.GetText();
-        //}
-
-        //public bool CanPaste()
-        //{
-        //    return Clipboard.ContainsText();
-        //}
 
         public void AddMenuItems(ContextMenuStrip contextMenu)
         {

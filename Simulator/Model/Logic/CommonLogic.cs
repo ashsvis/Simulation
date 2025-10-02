@@ -538,33 +538,4 @@ namespace Simulator.Model.Logic
             // stub
         }
     }
-
-    public class MultiInputsLogic : CommonLogic
-    {
-        public MultiInputsLogic() : this(LogicFunction.None, 1)
-        {
-        }
-
-        public MultiInputsLogic(LogicFunction func, int inputCount, int outputCount = 1) : base(func, inputCount, outputCount)
-        {
-        }
-
-        public override void AddMenuItems(ContextMenuStrip contextMenu)
-        {
-            ToolStripMenuItem item;
-            item = new ToolStripMenuItem() { Text = "Добавить вход", Tag = this };
-            item.Click += (s, e) =>
-            {
-                var menuItem = (ToolStripMenuItem?)s;
-                if (menuItem?.Tag is Element element)
-                {
-                    //or.AddInput();
-                    //Project.Changed = true;
-                    //zoomPad.Invalidate();
-                }
-            };
-            contextMenu.Items.Add(item);
-        }
-
-    }
 }
