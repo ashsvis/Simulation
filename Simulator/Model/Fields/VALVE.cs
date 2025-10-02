@@ -1,10 +1,11 @@
 ﻿using Simulator.Model.Interfaces;
+using Simulator.View;
 using System.Drawing.Drawing2D;
 using System.Xml.Linq;
 
 namespace Simulator.Model.Fields
 {
-    public class VALVE : CommonFields, ICustomDraw, ICalculate
+    public class VALVE : CommonFields, ICustomDraw, ICalculate, IContextMenu
     {
         private (Guid, int, bool) openedLinkSource = (Guid.Empty, 0, false);
         private (Guid, int, bool) closedLinkSource = (Guid.Empty, 0, false);
@@ -201,5 +202,74 @@ namespace Simulator.Model.Fields
                 isCommand = null;
         }
 
+        public void ClearContextMenu(ContextMenuStrip contextMenu)
+        {
+            contextMenu.Items.Clear();
+        }
+
+        public void AddMenuItems(ContextMenuStrip contextMenu)
+        {
+            ToolStripMenuItem item;
+            item = new ToolStripMenuItem() { Text = "Связь для состояния ОТКРЫТО...", Tag = this };
+            item.Click += (s, e) =>
+            {
+                var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentOutputs, this.OpenedLinkSource);
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    (Guid idSource, int pinOut) = dlg.Result;
+                    if (idSource != Guid.Empty)
+                    {
+                        this.SetOpenedLinkToInp(0, idSource, pinOut, true);
+                        Project.Changed = true;
+                    }
+                    else if (idSource == Guid.Empty)
+                    {
+                        this.ResetOpenedLinkToInp(0);
+                        Project.Changed = true;
+                    }
+                }
+            };
+            contextMenu.Items.Add(item);
+            item = new ToolStripMenuItem() { Text = "Связь для состояния ЗАКРЫТО...", Tag = this };
+            item.Click += (s, e) =>
+            {
+                var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentOutputs, this.ClosedLinkSource);
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    (Guid idSource, int pinOut) = dlg.Result;
+                    if (idSource != Guid.Empty)
+                    {
+                        this.SetClosedLinkToInp(0, idSource, pinOut, true);
+                        Project.Changed = true;
+                    }
+                    else if (idSource == Guid.Empty)
+                    {
+                        this.ResetClosedLinkToInp(0);
+                        Project.Changed = true;
+                    }
+                }
+            };
+            contextMenu.Items.Add(item);
+            item = new ToolStripMenuItem() { Text = "Связь для управления...", Tag = this };
+            item.Click += (s, e) =>
+            {
+                var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentInputs, this.CommandLinkSource);
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    (Guid idSource, int pinInp) = dlg.Result;
+                    if (idSource != Guid.Empty)
+                    {
+                        this.SetCommandLinkToInp(0, idSource, pinInp, true);
+                        Project.Changed = true;
+                    }
+                    else if (idSource == Guid.Empty)
+                    {
+                        this.ResetCommandLinkToInp(0);
+                        Project.Changed = true;
+                    }
+                }
+            };
+            contextMenu.Items.Add(item);
+        }
     }
 }

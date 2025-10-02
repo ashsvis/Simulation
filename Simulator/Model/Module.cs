@@ -179,7 +179,7 @@ namespace Simulator.Model
                     if (xtype == null) continue;
                     Type? type = Type.GetType(xtype.Value);
                     if (type == null) continue;
-                    var element = new Element { Id = id, };
+                    var element = new Element(Elements) { Id = id, };
                     element.Load(xitem, type, projectProxy);
                     elements.Add(element);
                 }

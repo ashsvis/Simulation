@@ -1,12 +1,13 @@
 ﻿using Simulator.Model.Interfaces;
 using Simulator.Model.Logic;
+using Simulator.View;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Xml.Linq;
 
 namespace Simulator.Model.Inputs
 {
-    public class DI : CommonLogic, ICustomDraw, IChangeOrderDI, IManualCommand
+    public class DI : CommonLogic, ICustomDraw, IChangeOrderDI, IManualCommand, IContextMenu
     {
         private (Guid, int, bool) linkSource = (Guid.Empty, 0, false);
 
@@ -192,6 +193,36 @@ namespace Simulator.Model.Inputs
                 return value?.Value;
             }
             return null;
+        }
+
+        public void ClearContextMenu(ContextMenuStrip contextMenu)
+        {
+            contextMenu.Items.Clear();
+        }
+
+        public void AddMenuItems(ContextMenuStrip contextMenu)
+        {
+            ToolStripMenuItem item;
+            item = new ToolStripMenuItem() { Text = "Связь с оборудованием...", Tag = this };
+            item.Click += (s, e) =>
+            {
+                var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentOutputs, this.LinkSource);
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    (Guid idSource, int pinOut) = dlg.Result;
+                    if (idSource != Guid.Empty)
+                    {
+                        this.SetExternalLinkToInp(0, idSource, pinOut, true);
+                        Project.Changed = true;
+                    }
+                    else if (idSource == Guid.Empty)
+                    {
+                        this.ResetExternalLinkToInp(0);
+                        Project.Changed = true;
+                    }
+                }
+            };
+            contextMenu.Items.Add(item);
         }
     }
 }

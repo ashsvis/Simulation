@@ -3,12 +3,13 @@ using System.Xml.Linq;
 
 namespace Simulator.Model
 {
-    public class Element: IChangeIndex, ICopyPaste
+    public class Element: IChangeIndex, IContextMenu //, ICopyPaste
     {
         public const float Step = 8f;
 
-        public Element() 
-        { 
+        public Element(List<Element>? items = null) 
+        {
+            Elements = items;
         }
 
         public int Index { get; set; }
@@ -82,6 +83,15 @@ namespace Simulator.Model
         public Dictionary<int, PointF> InputPins => ipins;
         public Dictionary<int, PointF> OutputPins => opins;
 
+        public List<Element>? Elements { get; private set; }
+        public List<Link>? Links { get; private set; }
+
+        public void Assign(List<Element> elements, List<Link> links)
+        {
+            Elements = elements;
+            Links = links;
+        }
+
         public bool TryGetOutput(PointF point, out int? output, out PointF? pin)
         {
             output = null;
@@ -125,53 +135,131 @@ namespace Simulator.Model
 
 #if DEBUG
 
-            // области выбора
-            using Pen tarpen = new(Color.FromArgb(80, Color.Magenta), 0);
-            foreach (var key in itargets.Keys)
-            {
-                var itarget = itargets[key];
-                graphics.DrawRectangles(tarpen, [itarget]);
-            }
-            foreach (var key in otargets.Keys)
-            {
-                var otarget = otargets[key];
-                graphics.DrawRectangles(tarpen, [otarget]);
-            }
-            // точки привязки входов и выходов
-            using Pen pinpen = new(Color.FromArgb(255, Color.Black), 0);
-            foreach (var key in ipins.Keys)
-            {
-                var pt = ipins[key];
-                var r = new RectangleF(pt.X - 3, pt.Y - 3, 6, 6);
-                graphics.DrawLine(pinpen, new PointF(r.X, r.Y), new PointF(r.X + r.Width, r.Y + r.Height));
-                graphics.DrawLine(pinpen, new PointF(r.X + r.Width, r.Y), new PointF(r.X, r.Y + r.Height));
-            }
-            foreach (var key in opins.Keys)
-            {
-                var pt = opins[key];
-                var r = new RectangleF(pt.X - 3, pt.Y - 3, 6, 6);
-                graphics.DrawLine(pinpen, new PointF(r.X, r.Y), new PointF(r.X + r.Width, r.Y + r.Height));
-                graphics.DrawLine(pinpen, new PointF(r.X + r.Width, r.Y), new PointF(r.X, r.Y + r.Height));
-            }
+            //// области выбора
+            //using Pen tarpen = new(Color.FromArgb(80, Color.Magenta), 0);
+            //foreach (var key in itargets.Keys)
+            //{
+            //    var itarget = itargets[key];
+            //    graphics.DrawRectangles(tarpen, [itarget]);
+            //}
+            //foreach (var key in otargets.Keys)
+            //{
+            //    var otarget = otargets[key];
+            //    graphics.DrawRectangles(tarpen, [otarget]);
+            //}
+            //// точки привязки входов и выходов
+            //using Pen pinpen = new(Color.FromArgb(255, Color.Black), 0);
+            //foreach (var key in ipins.Keys)
+            //{
+            //    var pt = ipins[key];
+            //    var r = new RectangleF(pt.X - 3, pt.Y - 3, 6, 6);
+            //    graphics.DrawLine(pinpen, new PointF(r.X, r.Y), new PointF(r.X + r.Width, r.Y + r.Height));
+            //    graphics.DrawLine(pinpen, new PointF(r.X + r.Width, r.Y), new PointF(r.X, r.Y + r.Height));
+            //}
+            //foreach (var key in opins.Keys)
+            //{
+            //    var pt = opins[key];
+            //    var r = new RectangleF(pt.X - 3, pt.Y - 3, 6, 6);
+            //    graphics.DrawLine(pinpen, new PointF(r.X, r.Y), new PointF(r.X + r.Width, r.Y + r.Height));
+            //    graphics.DrawLine(pinpen, new PointF(r.X + r.Width, r.Y), new PointF(r.X, r.Y + r.Height));
+            //}
 
 #endif
         }
 
-        public string Copy()
+        //public string Copy()
+        //{
+        //    var holder = new XElement("Element");
+        //    Save(holder);
+        //    return holder.ToString();
+        //}
+
+        //public object Paste(string source)
+        //{
+        //    return Clipboard.GetText();
+        //}
+
+        //public bool CanPaste()
+        //{
+        //    return Clipboard.ContainsText();
+        //}
+
+        public void AddMenuItems(ContextMenuStrip contextMenu)
         {
-            var holder = new XElement("Element");
-            Save(holder);
-            return holder.ToString();
+            ToolStripMenuItem item;
+            item = new ToolStripMenuItem() { Text = "Изменить номер...", Tag = this };
+            item.Click += (s, e) =>
+            {
+                var menuItem = (ToolStripMenuItem?)s;
+                if (menuItem?.Tag is Element element && element is IChangeIndex changer && Elements != null)
+                {
+                    var dlg = new Simulator.View.ChangeNumberDialog(changer.Index);
+                    if (dlg.ShowDialog() == DialogResult.OK)
+                    {
+                        if (dlg.EnteredValue > 0 && dlg.EnteredValue <= Elements.Count)
+                        {
+                            var tmp = Elements[changer.Index - 1];
+                            Elements.Remove(tmp);
+                            Elements.Insert(dlg.EnteredValue - 1, tmp);
+                            Project.Changed = true;
+                        }
+                    }
+                }
+            };
+            contextMenu.Items.Add(item);
+            if (this.Instance is IContextMenu context)
+            {
+                contextMenu.Items.Add(new ToolStripSeparator());
+                context.AddMenuItems(contextMenu);
+            }
+            contextMenu.Items.Add(new ToolStripSeparator());
+            item = new ToolStripMenuItem() { Text = "Удалить элемент", Tag = this };
+            item.Click += (s, e) =>
+            {
+                var menuItem = (ToolStripMenuItem?)s;
+                if (menuItem?.Tag is Element element)
+                {
+                    if (MessageBox.Show("Не, реально удалить?", "Удаление элемента",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                    {
+                        DeleteOneElement(element);
+                    }
+                }
+            };
+            contextMenu.Items.Add(item);
         }
 
-        public object Paste(string source)
+        private void DeleteOneElement(Element element)
         {
-            return Clipboard.GetText();
+            if (Elements == null) return;
+            foreach (var item in Elements)
+            {
+                if (item.Instance is ILinkSupport func)
+                {
+                    var n = 0;
+                    foreach (var islinked in func.LinkedInputs)
+                    {
+                        if (islinked)
+                        {
+                            var linkSources = func.InputLinkSources;
+                            (Guid id, int index, bool external) = linkSources[n];
+                            if (Elements.FirstOrDefault(x => x.Id == id) == element)
+                            {
+                                func.ResetValueLinkToInp(n);
+                            }
+                        }
+                        n++;
+                    }
+                }
+            }
+            Links?.RemoveAll(link => link.SourceId == element.Id || link.DestinationId == element.Id);
+            Elements.Remove(element);
+            Project.Changed = true;
         }
 
-        public bool CanPaste()
+        public void ClearContextMenu(ContextMenuStrip contextMenu)
         {
-            return Clipboard.ContainsText();
+            contextMenu.Items.Clear();
         }
     }
 }
