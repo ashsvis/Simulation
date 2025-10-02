@@ -159,12 +159,7 @@ namespace Simulator.Model.Outputs
             }
         }
 
-        public void ClearContextMenu(ContextMenuStrip contextMenu)
-        {
-            contextMenu.Items.Clear();
-        }
-
-        public void AddMenuItems(ContextMenuStrip contextMenu)
+        public override void AddMenuItems(ContextMenuStrip contextMenu)
         {
             ToolStripMenuItem item;
             item = new ToolStripMenuItem() { Text = "Связь с оборудованием...", Tag = this };

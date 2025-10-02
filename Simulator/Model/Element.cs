@@ -207,12 +207,14 @@ namespace Simulator.Model
                 }
             };
             contextMenu.Items.Add(item);
+            contextMenu.Items.Add(new ToolStripSeparator());
             if (this.Instance is IContextMenu context)
             {
-                contextMenu.Items.Add(new ToolStripSeparator());
+                var count = contextMenu.Items.Count;
                 context.AddMenuItems(contextMenu);
+                if (contextMenu.Items.Count > count)
+                    contextMenu.Items.Add(new ToolStripSeparator());
             }
-            contextMenu.Items.Add(new ToolStripSeparator());
             item = new ToolStripMenuItem() { Text = "Удалить элемент", Tag = this };
             item.Click += (s, e) =>
             {
