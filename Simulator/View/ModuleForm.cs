@@ -882,7 +882,7 @@ namespace Simulator
                         items.ForEach(item => item.Selected = false);
                     if (e.Button == MouseButtons.Left)
                     {
-                        segmentmoving = !Project.Running && ((Link)link).Selected;
+                        segmentmoving = ((Link)link).Selected;
                     }
                     ElementSelected?.Invoke(link, EventArgs.Empty);
                 }
@@ -920,7 +920,7 @@ namespace Simulator
                     }
                     if (e.Button == MouseButtons.Left)
                     {
-                        dragging = !Project.Running && output == null && element.Selected;
+                        dragging = output == null && element.Selected;
                     }
 
                     ElementSelected?.Invoke(items.Any(x => x.Selected) ?
@@ -1023,7 +1023,14 @@ namespace Simulator
         }
         private void zoomPad_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!Project.Running)
+            if (Project.Running)
+            {
+                if (TryGetFreeInputPin(e.Location, out Element? element, out _, out _, out _) && element?.Instance is IManualChange _)
+                    Cursor = Cursors.Hand;
+                else
+                    Cursor = Cursors.Default;
+            }
+            else
             {
                 if (ribbon != null)
                     Cursor = Cursors.Cross;

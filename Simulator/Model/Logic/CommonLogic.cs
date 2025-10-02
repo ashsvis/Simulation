@@ -28,6 +28,17 @@ namespace Simulator.Model.Logic
             }
         }
 
+        public void Init()
+        {
+            if (itemId == Guid.Empty) return;
+            for (var i = 0; i < getLinkSources.Length; i++)
+            {
+                (Guid sourceId, _, _) = getLinkSources[i];
+                if (sourceId == Guid.Empty)
+                    Project.WriteValue(itemId, i, ValueSide.Input, ValueKind.Digital, getInputs[i]);
+            }
+        }
+
         public CommonLogic() : this(LogicFunction.None, 1)
         { 
         }

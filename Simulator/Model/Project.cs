@@ -1,6 +1,6 @@
-﻿using System.Collections;
+﻿using Simulator.Model.Interfaces;
+using System.Collections;
 using System.ComponentModel;
-using System.Timers;
 using System.Xml.Linq;
 
 namespace Simulator.Model
@@ -451,6 +451,16 @@ namespace Simulator.Model
         {
             Running = false;
             vals.Clear();
+            foreach (var module in Modules) 
+            { 
+                foreach (var element in module.Elements)
+                {
+                    if (element.Instance is IManualChange changer)
+                    {
+                        changer.Init();
+                    }
+                }
+            }
         }
 
         public static void UpdateElementAndFunction(Logic.CommonLogic ori, Element element, Logic.CommonLogic func)
