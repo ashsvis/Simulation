@@ -33,6 +33,12 @@ namespace Simulator.Model
             }
         }
 
+        public void CalculateTargets()
+        {
+            if (Instance is ILinkSupport element)
+                element.CalculateTargets(location, ref size, itargets, ipins, otargets, opins);
+        }
+
         public override string? ToString()
         {
             return Instance != null ? Instance.GetType().Name.ToString() : base.ToString();

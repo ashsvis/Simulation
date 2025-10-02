@@ -1001,11 +1001,14 @@ namespace Simulator
                                     item.Click += (s, e) =>
                                     {
                                         var menuItem = (ToolStripMenuItem?)s;
-                                        if (menuItem?.Tag is Element element)
+                                        if (menuItem?.Tag is Element element && element.Instance is IAddInput add)
                                         {
+                                            add.AddInput(element);
 
-                                            //Project.Changed = true;
-                                            //zoomPad.Invalidate();
+                                            Link? link = links.FirstOrDefault(link => link.SourceId == element.Id);
+                                            if (link != null)
+                                                ((Link)link).UpdateSourcePoint(element.OutputPins[0]);
+                                            zoomPad.Invalidate();
                                         }
                                     };
                                     cmZoomPad.Items.Add(item);
@@ -1018,32 +1021,52 @@ namespace Simulator
             zoomPad.Invalidate();
         }
 
-        private void DeleteOneElement(Element element)
-        {
-            foreach (var item in items)
-            {
-                if (item.Instance is ILinkSupport func)
-                {
-                    var n = 0;
-                    foreach (var islinked in func.LinkedInputs)
-                    {
-                        if (islinked)
-                        {
-                            var linkSources = func.InputLinkSources;
-                            (Guid id, int index, bool external) = linkSources[n];
-                            if (items.FirstOrDefault(x => x.Id == id) == element)
-                            {
-                                func.ResetValueLinkToInp(n);
-                            }
-                        }
-                        n++;
-                    }
-                }
-            }
-            links.RemoveAll(link => link.SourceId == element.Id || link.DestinationId == element.Id);
-            items.Remove(element);
-            Project.Changed = true;
-        }
+        //private static void AddInputAt(Element element)
+        //{
+        //    if (element.Instance is Model.Logic.AND and)
+        //    {
+        //        var and3 = new Model.Logic.AND3();
+        //        and3.SetItemId(and.ItemId);
+        //        for (var i = 0; i < and.InputLinkSources.Length; i++)
+        //        {
+        //            if (and.LinkedInputs[i])
+        //            {
+        //                var (id, outpin, ext) = and.InputLinkSources[i];
+        //                and3.SetValueLinkToInp(i, id, outpin, ext);
+        //            }
+        //        }
+        //        element.Instance = and3;
+        //        element.CalculateTargets();
+        //    }
+        //    Project.Changed = true;
+        //}
+
+        //private void DeleteOneElement(Element element)
+        //{
+        //    foreach (var item in items)
+        //    {
+        //        if (item.Instance is ILinkSupport func)
+        //        {
+        //            var n = 0;
+        //            foreach (var islinked in func.LinkedInputs)
+        //            {
+        //                if (islinked)
+        //                {
+        //                    var linkSources = func.InputLinkSources;
+        //                    (Guid id, int index, bool external) = linkSources[n];
+        //                    if (items.FirstOrDefault(x => x.Id == id) == element)
+        //                    {
+        //                        func.ResetValueLinkToInp(n);
+        //                    }
+        //                }
+        //                n++;
+        //            }
+        //        }
+        //    }
+        //    links.RemoveAll(link => link.SourceId == element.Id || link.DestinationId == element.Id);
+        //    items.Remove(element);
+        //    Project.Changed = true;
+        //}
 
         private void zoomPad_MouseMove(object sender, MouseEventArgs e)
         {

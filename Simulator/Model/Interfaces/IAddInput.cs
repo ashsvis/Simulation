@@ -2,5 +2,6 @@
 {
     public interface IAddInput
     {
+        void AddInput(Element element);
     }
 }
