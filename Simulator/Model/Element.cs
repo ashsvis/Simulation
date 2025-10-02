@@ -7,9 +7,10 @@ namespace Simulator.Model
     {
         public const float Step = 8f;
 
-        public Element(List<Element>? items = null) 
+        public Element(List<Element>? items = null, List<Link>? links = null) 
         {
             Elements = items;
+            Links = links;
         }
 
         public int Index { get; set; }
@@ -60,7 +61,7 @@ namespace Simulator.Model
             }
         }
 
-        public void Load(XElement item, Type type, IVariable manager)
+        public void Load(XElement item, Type type)
         {
             if (!int.TryParse(item.Attribute("X")?.Value, out int x)) return;
             if (!int.TryParse(item.Attribute("Y")?.Value, out int y)) return;
@@ -191,6 +192,7 @@ namespace Simulator.Model
                             Elements.Remove(tmp);
                             Elements.Insert(dlg.EnteredValue - 1, tmp);
                             Project.Changed = true;
+                            if (contextMenu.Tag is Action action) action.Invoke();
                         }
                     }
                 }
@@ -214,6 +216,7 @@ namespace Simulator.Model
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     {
                         DeleteOneElement(element);
+                        if (contextMenu.Tag is Action action) action.Invoke();
                     }
                 }
             };
@@ -223,9 +226,33 @@ namespace Simulator.Model
         private void DeleteOneElement(Element element)
         {
             if (Elements == null) return;
+            //foreach (var item in Elements)
+            //{
+            //    if (item.Instance is ILinkSupport func)
+            //    {
+            //        var n = 0;
+            //        foreach (var islinked in func.LinkedInputs)
+            //        {
+            //            if (islinked)
+            //            {
+            //                var linkSources = func.InputLinkSources;
+            //                (Guid id, int index, bool external) = linkSources[n];
+            //                if (Elements.FirstOrDefault(x => x.Id == id) == element)
+            //                {
+            //                    func.ResetValueLinkToInp(n);
+            //                }
+            //            }
+            //            n++;
+            //        }
+            //    }
+            //}
+            //Links?.RemoveAll(link => link.SourceId == element.Id || link.DestinationId == element.Id);
+            //Elements.Remove(element);
+            //Project.Changed = true;
+
             foreach (var item in Elements)
             {
-                if (item.Instance is ILinkSupport func)
+                if (item == element && item.Instance is ILinkSupport func)
                 {
                     var n = 0;
                     foreach (var islinked in func.LinkedInputs)
@@ -234,16 +261,17 @@ namespace Simulator.Model
                         {
                             var linkSources = func.InputLinkSources;
                             (Guid id, int index, bool external) = linkSources[n];
-                            if (Elements.FirstOrDefault(x => x.Id == id) == element)
+                            var source = Elements.FirstOrDefault(x => x.Id == id);
+                            if (source != null && source.Selected)
                             {
                                 func.ResetValueLinkToInp(n);
                             }
                         }
                         n++;
                     }
+                    Links?.RemoveAll(link => link.SourceId == item.Id || link.DestinationId == item.Id);
                 }
             }
-            Links?.RemoveAll(link => link.SourceId == element.Id || link.DestinationId == element.Id);
             Elements.Remove(element);
             Project.Changed = true;
         }

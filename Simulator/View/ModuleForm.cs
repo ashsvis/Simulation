@@ -1,10 +1,7 @@
 ﻿using Simulator.Model;
-using Simulator.Model.Inputs;
 using Simulator.Model.Interfaces;
-using Simulator.Model.Outputs;
 using Simulator.View;
 using System.Diagnostics;
-using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Reflection;
 using System.Text;
@@ -321,14 +318,17 @@ namespace Simulator
                             using var exlinkpen = new Pen(Color.FromArgb(150, color));
                             using var exlinkbrush = new SolidBrush(Color.FromArgb(150, color));
 
-                            var pt = item.InputPins[i];
-                            graphics.DrawLine(exlinkpen, PointF.Subtract(pt, new SizeF(Element.Step * 3, 0)), pt);
                             var (moduleName, elementName) = Project.GetAddressById(id);
-                            var text = $"{moduleName}.{elementName}.{pinout + 1}";
-                            var ms = graphics.MeasureString(text, font);
-                            var rect = new RectangleF(pt.X - Element.Step * 3 - ms.Width, pt.Y - ms.Height, ms.Width, ms.Height);
-                            graphics.DrawRectangles(exlinkpen, [rect]);
-                            graphics.DrawString(text, font, exlinkbrush, rect.Location);
+                            if (!string.IsNullOrWhiteSpace(moduleName + elementName))
+                            {
+                                var pt = item.InputPins[i];
+                                graphics.DrawLine(exlinkpen, PointF.Subtract(pt, new SizeF(Element.Step * 3, 0)), pt);
+                                var text = $"{moduleName}.{elementName}.{pinout + 1}";
+                                var ms = graphics.MeasureString(text, font);
+                                var rect = new RectangleF(pt.X - Element.Step * 3 - ms.Width, pt.Y - ms.Height, ms.Width, ms.Height);
+                                graphics.DrawRectangles(exlinkpen, [rect]);
+                                graphics.DrawString(text, font, exlinkbrush, rect.Location);
+                            }
                         }
                     }
                 }
@@ -938,6 +938,7 @@ namespace Simulator
                 {
                     linkFirstPoint = null;
                     cmZoomPad.Items.Clear();
+                    cmZoomPad.Tag = () => zoomPad.Invalidate();
                     ToolStripMenuItem item;
                     if (element?.Instance is ILinkSupport func)
                     {
@@ -1020,54 +1021,6 @@ namespace Simulator
             }
             zoomPad.Invalidate();
         }
-
-        //private static void AddInputAt(Element element)
-        //{
-        //    if (element.Instance is Model.Logic.AND and)
-        //    {
-        //        var and3 = new Model.Logic.AND3();
-        //        and3.SetItemId(and.ItemId);
-        //        for (var i = 0; i < and.InputLinkSources.Length; i++)
-        //        {
-        //            if (and.LinkedInputs[i])
-        //            {
-        //                var (id, outpin, ext) = and.InputLinkSources[i];
-        //                and3.SetValueLinkToInp(i, id, outpin, ext);
-        //            }
-        //        }
-        //        element.Instance = and3;
-        //        element.CalculateTargets();
-        //    }
-        //    Project.Changed = true;
-        //}
-
-        //private void DeleteOneElement(Element element)
-        //{
-        //    foreach (var item in items)
-        //    {
-        //        if (item.Instance is ILinkSupport func)
-        //        {
-        //            var n = 0;
-        //            foreach (var islinked in func.LinkedInputs)
-        //            {
-        //                if (islinked)
-        //                {
-        //                    var linkSources = func.InputLinkSources;
-        //                    (Guid id, int index, bool external) = linkSources[n];
-        //                    if (items.FirstOrDefault(x => x.Id == id) == element)
-        //                    {
-        //                        func.ResetValueLinkToInp(n);
-        //                    }
-        //                }
-        //                n++;
-        //            }
-        //        }
-        //    }
-        //    links.RemoveAll(link => link.SourceId == element.Id || link.DestinationId == element.Id);
-        //    items.Remove(element);
-        //    Project.Changed = true;
-        //}
-
         private void zoomPad_MouseMove(object sender, MouseEventArgs e)
         {
             if (!Project.Running)

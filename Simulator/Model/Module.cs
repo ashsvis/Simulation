@@ -49,9 +49,6 @@ namespace Simulator.Model
         [Browsable(false)]
         public List<Link> Links { get; set; } = [];
 
-        //[Browsable(false)]
-        //public bool Changed { get; set; }
-
         public override string ToString()
         {
             return string.IsNullOrWhiteSpace(Name) ? $"(без имени {Index})" : Name;
@@ -179,8 +176,8 @@ namespace Simulator.Model
                     if (xtype == null) continue;
                     Type? type = Type.GetType(xtype.Value);
                     if (type == null) continue;
-                    var element = new Element(Elements) { Id = id, };
-                    element.Load(xitem, type, projectProxy);
+                    var element = new Element(Elements, Links) { Id = id, };
+                    element.Load(xitem, type);
                     elements.Add(element);
                 }
             }
@@ -276,13 +273,6 @@ namespace Simulator.Model
             foreach (Element element in elements)
             {
                 aCopy.Elements.Add(element);
-
-                //if (element.Instance is ILinkSupport link)
-                //{
-                //    foreach (var seek in link.InputLinkSources)
-                //        link.UpdateInputLinkSources(seek, element.Id);
-                //}
-
             }
             foreach (Link link in elementlinks)
             {
@@ -305,37 +295,6 @@ namespace Simulator.Model
         }
 
         private readonly ConcurrentDictionary<string, ValueItem> vals = [];
-        private readonly ProjectProxy projectProxy = new();
-
-        public int CountVariables(Guid moduleId) => vals.Where(x => Project.GetModuleIdById(x.Value.ElementId) == moduleId).Count();
-
-        public ValueItem? GetVariableByIndex(Guid moduleId, int itemIndex)
-        {
-            var keys = vals.Where(x => Project.GetModuleIdById(x.Value.ElementId) == moduleId).OrderBy(x => $"{Project.GetElementById(x.Value.ElementId)}{x.Value.Side}{x.Value.Pin}").Select(x => x.Key).ToList();
-            if (vals.TryGetValue(keys[itemIndex], out ValueItem? a))
-                return a;
-            return null;
-        }
-
-        public void WriteValue(Guid elementId, int pin, ValueSide side, ValueKind kind, object? value)
-        {
-            var key = $"{elementId}\t{pin}\t{side}\t{kind}";
-            if (vals.TryGetValue(key, out ValueItem? a) && a.Equals(value)) return; // одинаковые значения игнорируем   
-            a = new ValueItem() { ElementId = elementId, Side = side, Pin = pin, Kind = kind, Value = value };
-            vals.AddOrUpdate(key, a,
-                (akey, existingVal) =>
-                {
-                    existingVal.Value = value;
-                    return existingVal;
-                });
-        }
-
-        public ValueItem? ReadValue(Guid elementId, int pin, ValueSide side, ValueKind kind)
-        {
-            var key = $"{elementId}\t{pin}\t{side}\t{kind}";
-            if (vals.TryGetValue(key, out ValueItem? a)) return a;
-            return null;
-        }
 
         public void Clear()
         {

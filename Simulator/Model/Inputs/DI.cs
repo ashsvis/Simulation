@@ -209,11 +209,13 @@ namespace Simulator.Model.Inputs
                     {
                         this.SetExternalLinkToInp(0, idSource, pinOut, true);
                         Project.Changed = true;
+                        if (contextMenu.Tag is Action action) action.Invoke();
                     }
                     else if (idSource == Guid.Empty)
                     {
                         this.ResetExternalLinkToInp(0);
                         Project.Changed = true;
+                        if (contextMenu.Tag is Action action) action.Invoke();
                     }
                 }
             };

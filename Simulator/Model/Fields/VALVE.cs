@@ -34,8 +34,7 @@ namespace Simulator.Model.Fields
             var x = location.X;
             var y = location.Y + height / 2;
             // значение входа
-            var ms = new SizeF(step * 2, step * 2);
-            itargets.Add(0, RectangleF.Empty); //new RectangleF(new PointF(x + step, y - step * 2), ms)
+            itargets.Add(0, RectangleF.Empty);
             ipins.Add(0, new PointF(x, y + step));
             // выход
             x = location.X + width;
@@ -43,8 +42,7 @@ namespace Simulator.Model.Fields
             otargets.Clear();
             opins.Clear();
             // значение выхода
-            ms = new SizeF(step * 4, step * 2);
-            otargets.Add(0, RectangleF.Empty); //new RectangleF(new PointF(x- ms.Width, y), ms)
+            otargets.Add(0, RectangleF.Empty);
             opins.Add(0, new PointF(x, y + step));
         }
 
@@ -221,11 +219,13 @@ namespace Simulator.Model.Fields
                     {
                         this.SetOpenedLinkToInp(0, idSource, pinOut, true);
                         Project.Changed = true;
+                        if (contextMenu.Tag is Action action) action.Invoke();
                     }
                     else if (idSource == Guid.Empty)
                     {
                         this.ResetOpenedLinkToInp(0);
                         Project.Changed = true;
+                        if (contextMenu.Tag is Action action) action.Invoke();
                     }
                 }
             };
@@ -241,11 +241,13 @@ namespace Simulator.Model.Fields
                     {
                         this.SetClosedLinkToInp(0, idSource, pinOut, true);
                         Project.Changed = true;
+                        if (contextMenu.Tag is Action action) action.Invoke();
                     }
                     else if (idSource == Guid.Empty)
                     {
                         this.ResetClosedLinkToInp(0);
                         Project.Changed = true;
+                        if (contextMenu.Tag is Action action) action.Invoke();
                     }
                 }
             };
@@ -261,11 +263,13 @@ namespace Simulator.Model.Fields
                     {
                         this.SetCommandLinkToInp(0, idSource, pinInp, true);
                         Project.Changed = true;
+                        if (contextMenu.Tag is Action action) action.Invoke();
                     }
                     else if (idSource == Guid.Empty)
                     {
                         this.ResetCommandLinkToInp(0);
                         Project.Changed = true;
+                        if (contextMenu.Tag is Action action) action.Invoke();
                     }
                 }
             };
