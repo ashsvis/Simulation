@@ -45,4 +45,44 @@ namespace Simulator.Model.Logic
         }
     }
     public class AND8 : CommonLogic { public AND8() : base(LogicFunction.And, 8) { } }
+
+    public static class AndHelper
+    {
+        public static void AddInputAt(this Model.Logic.AND and, Element element)
+        {
+            var and3 = new Model.Logic.AND3();
+            Project.UpdateElementAndFunction(and, element, and3);
+        }
+
+        public static void AddInputAt(this Model.Logic.AND3 and, Element element)
+        {
+            var and3 = new Model.Logic.AND4();
+            Project.UpdateElementAndFunction(and, element, and3);
+        }
+
+        public static void AddInputAt(this Model.Logic.AND4 and, Element element)
+        {
+            var and3 = new Model.Logic.AND5();
+            Project.UpdateElementAndFunction(and, element, and3);
+        }
+
+        public static void AddInputAt(this Model.Logic.AND5 and, Element element)
+        {
+            var and3 = new Model.Logic.AND6();
+            Project.UpdateElementAndFunction(and, element, and3);
+        }
+
+        public static void AddInputAt(this Model.Logic.AND6 and, Element element)
+        {
+            var and3 = new Model.Logic.AND7();
+            Project.UpdateElementAndFunction(and, element, and3);
+        }
+
+        public static void AddInputAt(this Model.Logic.AND7 and, Element element)
+        {
+            var and3 = new Model.Logic.AND8();
+            Project.UpdateElementAndFunction(and, element, and3);
+        }
+
+    }
 }

@@ -1006,8 +1006,8 @@ namespace Simulator
                                             add.AddInput(element);
 
                                             Link? link = links.FirstOrDefault(link => link.SourceId == element.Id);
-                                            if (link != null)
-                                                ((Link)link).UpdateSourcePoint(element.OutputPins[0]);
+                                            //if (link != null && element.OutputPins.Count > 0)
+                                            //    ((Link)link).UpdateSourcePoint(element.OutputPins[0]);
                                             zoomPad.Invalidate();
                                         }
                                     };

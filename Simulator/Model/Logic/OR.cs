@@ -51,4 +51,44 @@ namespace Simulator.Model.Logic
     }
 
     public class OR8 : CommonLogic { public OR8() : base(LogicFunction.Or, 8) { } }
+
+    public static class OrHelper
+    {
+        public static void AddInputAt(this Model.Logic.OR and, Element element)
+        {
+            var and3 = new Model.Logic.OR3();
+            Project.UpdateElementAndFunction(and, element, and3);
+        }
+
+        public static void AddInputAt(this Model.Logic.OR3 and, Element element)
+        {
+            var and3 = new Model.Logic.OR4();
+            Project.UpdateElementAndFunction(and, element, and3);
+        }
+
+        public static void AddInputAt(this Model.Logic.OR4 and, Element element)
+        {
+            var and3 = new Model.Logic.OR5();
+            Project.UpdateElementAndFunction(and, element, and3);
+        }
+
+        public static void AddInputAt(this Model.Logic.OR5 and, Element element)
+        {
+            var and3 = new Model.Logic.OR6();
+            Project.UpdateElementAndFunction(and, element, and3);
+        }
+
+        public static void AddInputAt(this Model.Logic.OR6 and, Element element)
+        {
+            var and3 = new Model.Logic.OR7();
+            Project.UpdateElementAndFunction(and, element, and3);
+        }
+
+        public static void AddInputAt(this Model.Logic.OR7 and, Element element)
+        {
+            var and3 = new Model.Logic.OR8();
+            Project.UpdateElementAndFunction(and, element, and3);
+        }
+
+    }
 }

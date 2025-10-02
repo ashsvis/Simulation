@@ -51,4 +51,44 @@ namespace Simulator.Model.Logic
     }
 
     public class XOR8 : CommonLogic { public XOR8() : base(LogicFunction.Xor, 8) { } }
+
+    public static class XorHelper
+    {
+        public static void AddInputAt(this Model.Logic.XOR and, Element element)
+        {
+            var and3 = new Model.Logic.XOR3();
+            Project.UpdateElementAndFunction(and, element, and3);
+        }
+
+        public static void AddInputAt(this Model.Logic.XOR3 and, Element element)
+        {
+            var and3 = new Model.Logic.XOR4();
+            Project.UpdateElementAndFunction(and, element, and3);
+        }
+
+        public static void AddInputAt(this Model.Logic.XOR4 and, Element element)
+        {
+            var and3 = new Model.Logic.XOR5();
+            Project.UpdateElementAndFunction(and, element, and3);
+        }
+
+        public static void AddInputAt(this Model.Logic.XOR5 and, Element element)
+        {
+            var and3 = new Model.Logic.XOR6();
+            Project.UpdateElementAndFunction(and, element, and3);
+        }
+
+        public static void AddInputAt(this Model.Logic.XOR6 and, Element element)
+        {
+            var and3 = new Model.Logic.XOR7();
+            Project.UpdateElementAndFunction(and, element, and3);
+        }
+
+        public static void AddInputAt(this Model.Logic.XOR7 and, Element element)
+        {
+            var and3 = new Model.Logic.XOR8();
+            Project.UpdateElementAndFunction(and, element, and3);
+        }
+
+    }
 }
