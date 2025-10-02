@@ -10477,7 +10477,9 @@
               <Input Index="0">
                 <Source Id="cc4a3941-3d58-4a39-ac4e-b41ad616fcd2" />
               </Input>
-              <Input Index="1" />
+              <Input Index="1">
+                <Source Id="ec7b2f84-2846-4cda-9b54-76787617fe47" />
+              </Input>
               <Input Index="2" />
               <Input Index="3" />
             </Inputs>
@@ -10743,6 +10745,19 @@
             </Outputs>
           </Instance>
         </Element>
+        <Element Id="ec7b2f84-2846-4cda-9b54-76787617fe47" X="1224" Y="368">
+          <Instance Type="Simulator.Model.Timer.ONDLY">
+            <Inputs>
+              <Input Index="0" Value="true">
+                <Source Id="f09cc8ff-09a3-4a17-9b58-1cdbe6c5bd47" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <WaitTime>15</WaitTime>
+          </Instance>
+        </Element>
       </Elements>
       <Links>
         <Link Id="2ca79e24-233a-4ede-9666-618c6635309c">
@@ -10869,6 +10884,16 @@
           <Source Id="b9368eae-7c51-46ac-a333-22ee88aa4eff" PinIndex="0" />
           <Destination Id="dc267f19-b398-4f0d-a56f-e4191b039e40" PinIndex="1" />
           <Points Array="424,312 424,312 448,312 448,80 464,80 464,80" />
+        </Link>
+        <Link Id="0b163b3d-a929-4db2-8774-7632c5731067">
+          <Source Id="f09cc8ff-09a3-4a17-9b58-1cdbe6c5bd47" PinIndex="0" />
+          <Destination Id="ec7b2f84-2846-4cda-9b54-76787617fe47" PinIndex="0" />
+          <Points Array="976,432 976,432 992,432 992,392 1216,392 1216,392" />
+        </Link>
+        <Link Id="25ffd3db-bedf-4c80-9beb-f0da34e6140c">
+          <Source Id="ec7b2f84-2846-4cda-9b54-76787617fe47" PinIndex="0" />
+          <Destination Id="ecc755a2-b4ff-4270-810d-75031d6d678b" PinIndex="1" />
+          <Points Array="1280,392 1280,392 1288,392 1288,608 336,608 336,80 352,80 352,80" />
         </Link>
       </Links>
     </Module>
