@@ -995,9 +995,10 @@ namespace Simulator
                             if (element is IContextMenu context)
                             {
                                 context.AddMenuItems(cmZoomPad);
-                                if (element.Instance is IAddInput inst)
-                                {
+                                if (element.Instance is IAddInput || element.Instance is IRemoveInput)
                                     cmZoomPad.Items.Add(new ToolStripSeparator());
+                                if (element.Instance is IAddInput)
+                                {
                                     item = new ToolStripMenuItem() { Text = "Добавить вход", Tag = element };
                                     item.Click += (s, e) =>
                                     {
@@ -1009,6 +1010,26 @@ namespace Simulator
                                             Link? link = links.FirstOrDefault(link => link.SourceId == element.Id);
                                             //if (link != null && element.OutputPins.Count > 0)
                                             //    ((Link)link).UpdateSourcePoint(element.OutputPins[0]);
+                                            Project.Changed = true;
+                                            zoomPad.Invalidate();
+                                        }
+                                    };
+                                    cmZoomPad.Items.Add(item);
+                                }
+                                if (element.Instance is IRemoveInput)
+                                {
+                                    item = new ToolStripMenuItem() { Text = "Удалить последний вход", Tag = element };
+                                    item.Click += (s, e) =>
+                                    {
+                                        var menuItem = (ToolStripMenuItem?)s;
+                                        if (menuItem?.Tag is Element element && element.Instance is IRemoveInput remove)
+                                        {
+                                            remove.RemoveInput(element);
+
+                                            Link? link = links.FirstOrDefault(link => link.SourceId == element.Id);
+                                            //if (link != null && element.OutputPins.Count > 0)
+                                            //    ((Link)link).UpdateSourcePoint(element.OutputPins[0]);
+                                            Project.Changed = true;
                                             zoomPad.Invalidate();
                                         }
                                     };

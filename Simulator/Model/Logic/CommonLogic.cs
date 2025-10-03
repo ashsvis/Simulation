@@ -236,21 +236,21 @@ namespace Simulator.Model.Logic
         public virtual void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog)
         {
             if (inputIndex < 0 || inputIndex >= getLinkSources.Length)
-                throw new ArgumentOutOfRangeException(nameof(inputIndex));
+                return;
             getLinkSources[inputIndex] = (sourceId, outputPinIndex, byDialog);
         }
 
         public virtual void ResetValueLinkToInp(int inputIndex)
         {
             if (inputIndex < 0 || inputIndex >= getLinkSources.Length)
-                throw new ArgumentOutOfRangeException(nameof(inputIndex));
+                return;
             getLinkSources[inputIndex] = (Guid.Empty, 0, false);
         }
 
         public void SetValueToInp(int inputIndex, object? value)
         {
             if (inputIndex < 0 || inputIndex >= getLinkSources.Length)
-                throw new ArgumentOutOfRangeException(nameof(inputIndex));
+                return;
             if (value != null && !LinkedInputs[inputIndex])
             {
                 getInputs[inputIndex] = (bool)value;
@@ -261,7 +261,7 @@ namespace Simulator.Model.Logic
         public object? GetValueFromInp(int inputIndex)
         {
             if (inputIndex < 0 || inputIndex >= getLinkSources.Length)
-                throw new ArgumentOutOfRangeException(nameof(inputIndex));
+                return null;
             (Guid id, int pin, bool external) = getLinkSources[inputIndex];
             if (id != Guid.Empty)
             { 
