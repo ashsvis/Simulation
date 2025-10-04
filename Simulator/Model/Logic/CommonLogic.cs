@@ -69,7 +69,7 @@ namespace Simulator.Model.Logic
         [Category(" Общие"), DisplayName("Функция")]
         public LogicFunction FuncName => logicFunction;
 
-        [Category(" Общие"), DisplayName("Идентификатор")]
+        [Browsable(false)]
         public Guid ItemId => itemId;
 
         [Browsable(false)]
@@ -87,7 +87,7 @@ namespace Simulator.Model.Logic
             } 
         }
 
-        [Category(" Общие"), DisplayName("Имя")]
+        [Category(" Общие"), DisplayName("Имя тега")]
         public string? Name { get; set; }
 
         [Browsable(false), Category("Диагностика"), DisplayName("Показывать значения")]

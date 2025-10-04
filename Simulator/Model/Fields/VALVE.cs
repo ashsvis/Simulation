@@ -1,5 +1,6 @@
 ﻿using Simulator.Model.Interfaces;
 using Simulator.View;
+using System.ComponentModel;
 using System.Drawing.Drawing2D;
 using System.Xml.Linq;
 
@@ -15,9 +16,15 @@ namespace Simulator.Model.Fields
         private bool? isClosed;
         private bool? isCommand;
 
+        [Browsable(false)]
         public (Guid, int, bool) OpenedLinkSource => openedLinkSource;
+        [Browsable(false)]
         public (Guid, int, bool) ClosedLinkSource => closedLinkSource;
+        [Browsable(false)]
         public (Guid, int, bool) CommandLinkSource => commandLinkSource;
+
+        [Category("Дизайн"), DisplayName("Ориентация")]
+        public Orientation Orientation { get; set; }
 
         public VALVE() : base(FieldFunction.Valve) { }
 
@@ -48,15 +55,17 @@ namespace Simulator.Model.Fields
 
         public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush, int index)
         {
-            var control = new RectangleF(rect.X + (rect.Height / 4), rect.Y, rect.Height / 2, rect.Height / 2);
-            var valve = new RectangleF(rect.X, rect.Y + rect.Height / 2, rect.Width, rect.Height / 2);
-            valve.Inflate(-0.5f, -0.5f);
-            using var controlbrush = new SolidBrush(isCommand == true ? Color.Lime : Color.Black);
-            graphics.FillRectangle(!Project.Running ? brush : isCommand == null ? Brushes.Magenta : controlbrush, control);
-            graphics.DrawRectangles(pen, [control]);
-            using GraphicsPath path = new();
-            path.AddLines([
-                    new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
+            if (Orientation == Orientation.Horizontal)
+            {
+                var control = new RectangleF(rect.X + (rect.Height / 4), rect.Y, rect.Height / 2, rect.Height / 2);
+                var valve = new RectangleF(rect.X, rect.Y + rect.Height / 2, rect.Width, rect.Height / 2);
+                valve.Inflate(-0.5f, -0.5f);
+                using var controlbrush = new SolidBrush(isCommand == true ? Color.Lime : Color.Black);
+                graphics.FillRectangle(!Project.Running ? brush : isCommand == null ? Brushes.Magenta : controlbrush, control);
+                graphics.DrawRectangles(pen, [control]);
+                using GraphicsPath path = new();
+                path.AddLines([
+                        new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
                     new PointF(valve.Right, valve.Bottom),
                     new PointF(valve.Right, valve.Top),
                     new PointF(valve.Left, valve.Bottom),
@@ -64,11 +73,11 @@ namespace Simulator.Model.Fields
                     new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
                     new PointF(valve.Left + valve.Width / 2, control.Bottom),
                 ]);
-            using var valvebrush = new SolidBrush(isOpened == true ? Color.Lime : isClosed == true ? Color.Black : pen.Color);
-            graphics.FillPath(!Project.Running ? brush : isOpened == null || isClosed == null || isOpened == true && isClosed == true ? Brushes.Magenta : valvebrush, path);
-            graphics.DrawLines(pen,
-                [
-                    new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
+                using var valvebrush = new SolidBrush(isOpened == true ? Color.Lime : isClosed == true ? Color.Black : pen.Color);
+                graphics.FillPath(!Project.Running ? brush : isOpened == null || isClosed == null || isOpened == true && isClosed == true ? Brushes.Magenta : valvebrush, path);
+                graphics.DrawLines(pen,
+                    [
+                        new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
                     new PointF(valve.Right, valve.Bottom),
                     new PointF(valve.Right, valve.Top),
                     new PointF(valve.Left, valve.Bottom),
@@ -76,6 +85,46 @@ namespace Simulator.Model.Fields
                     new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
                     new PointF(valve.Left + valve.Width / 2, control.Bottom),
                 ]);
+                using var sf = new StringFormat();
+                sf.Alignment = StringAlignment.Center;
+                graphics.DrawString(Name, font, fontbrush, new PointF(rect.Left + rect.Width / 2, rect.Bottom), sf);
+            }
+            else
+            {
+                var control = new RectangleF(rect.X + rect.Width - rect.Height / 2, rect.Y + (rect.Height / 4), rect.Height / 2, rect.Height / 2);
+                var valve = new RectangleF(rect.X, rect.Y, rect.Width / 2, rect.Height);
+                valve.Inflate(-0.5f, -0.5f);
+                using var controlbrush = new SolidBrush(isCommand == true ? Color.Lime : Color.Black);
+                graphics.FillRectangle(!Project.Running ? brush : isCommand == null ? Brushes.Magenta : controlbrush, control);
+                graphics.DrawRectangles(pen, [control]);
+                using GraphicsPath path = new();
+                path.AddLines(
+                    [
+                    new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
+                    new PointF(valve.Right, valve.Bottom),
+                    new PointF(valve.Left, valve.Bottom),
+                    new PointF(valve.Right, valve.Top),
+                    new PointF(valve.Left, valve.Top),
+                    new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
+                    new PointF(control.Left, valve.Top + valve.Height / 2),
+                ]);
+                using var valvebrush = new SolidBrush(isOpened == true ? Color.Lime : isClosed == true ? Color.Black : pen.Color);
+                graphics.FillPath(!Project.Running ? brush : isOpened == null || isClosed == null || isOpened == true && isClosed == true ? Brushes.Magenta : valvebrush, path);
+                graphics.DrawLines(pen,
+                    [
+                    new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
+                    new PointF(valve.Right, valve.Bottom),
+                    new PointF(valve.Left, valve.Bottom),
+                    new PointF(valve.Right, valve.Top),
+                    new PointF(valve.Left, valve.Top),
+                    new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
+                    new PointF(control.Left, valve.Top + valve.Height / 2),
+                ]);
+                using var sf = new StringFormat();
+                sf.Alignment = StringAlignment.Far;
+                sf.LineAlignment = StringAlignment.Center;
+                graphics.DrawString(Name, font, fontbrush, new PointF(rect.Left + valve.Width / 2, rect.Top + rect.Height / 2), sf);
+            }
         }
 
         public void SetOpenedLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog)
@@ -135,6 +184,13 @@ namespace Simulator.Model.Fields
                     xsource.Add(new XAttribute("PinIndex", commandLinkSource.Item2));
                 xtance.Add(xsource);
             }
+            if (Orientation != Orientation.Horizontal)
+            {
+                XElement xsource = new("Design");
+                xsource.Add(new XAttribute("Orientation", Orientation));
+                if (Orientation != Orientation.Horizontal)
+                    xtance.Add(xsource);
+            }
         }
 
         public override void Load(XElement? xtance)
@@ -172,6 +228,12 @@ namespace Simulator.Model.Fields
                     else
                         commandLinkSource = (guid, 0, true);
                 }
+            }
+            xsource = xtance?.Element("Design");
+            if (xsource != null)
+            {
+                if (Enum.TryParse(typeof(Orientation), xsource.Attribute("Orientation")?.Value, out object? orientation))
+                    Orientation = (Orientation)orientation;
             }
         }
 
