@@ -11913,6 +11913,7 @@
             <CommandState Id="e242c1cb-d4ad-4f04-b773-ef71630901c3" />
             <Design>
               <Orientation>Vertical</Orientation>
+              <OpenColor>Magenta</OpenColor>
               <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
