@@ -847,10 +847,14 @@ namespace Simulator
                                         if (menuItem?.Tag is Element element && element.Instance is IAddInput add)
                                         {
                                             add.AddInput(element);
-
-                                            Link? link = links.FirstOrDefault(link => link.SourceId == element.Id);
-                                            //if (link != null && element.OutputPins.Count > 0)
-                                            //    ((Link)link).UpdateSourcePoint(element.OutputPins[0]);
+                                            links?.ForEach(link =>
+                                            {
+                                                if (link.SourceId == element.Id)
+                                                {
+                                                    for (var i = 0; i < element.OutputPins.Count; i++)
+                                                        link.UpdateSourcePoint(element.OutputPins[i]);
+                                                }
+                                            });
                                             Project.Changed = true;
                                             zoomPad.Invalidate();
                                         }
@@ -863,13 +867,22 @@ namespace Simulator
                                     item.Click += (s, e) =>
                                     {
                                         var menuItem = (ToolStripMenuItem?)s;
-                                        if (menuItem?.Tag is Element element && element.Instance is IRemoveInput remove)
+                                        if (menuItem?.Tag is Element element &&
+                                           element.Instance is ILinkSupport sup &&
+                                           element.Instance is IRemoveInput remove)
                                         {
+                                            (Guid sourceId, int pinOut, bool external) = sup.InputLinkSources[^1];
+                                            links?.RemoveAll(link => link.SourceId == sourceId && 
+                                                link.DestinationId == element.Id && link.DestinationPinIndex == sup.InputLinkSources.Length - 1);
                                             remove.RemoveInput(element);
-
-                                            Link? link = links.FirstOrDefault(link => link.SourceId == element.Id);
-                                            //if (link != null && element.OutputPins.Count > 0)
-                                            //    ((Link)link).UpdateSourcePoint(element.OutputPins[0]);
+                                            links?.ForEach(link => 
+                                                { 
+                                                    if (link.SourceId == element.Id)
+                                                    {
+                                                        for (var i = 0; i < element.OutputPins.Count; i++)
+                                                            link.UpdateSourcePoint(element.OutputPins[i]);
+                                                    }
+                                                });
                                             Project.Changed = true;
                                             zoomPad.Invalidate();
                                         }
@@ -1288,7 +1301,7 @@ namespace Simulator
             items.RemoveAll(x => x.Selected);
             Project.Changed = true;
             ElementSelected?.Invoke(null, EventArgs.Empty);
-            panelForm.RefreshPanels();
+            Project.RefreshPanels();
         }
 
         private void timerInterface_Tick(object sender, EventArgs e)
