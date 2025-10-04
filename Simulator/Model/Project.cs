@@ -478,6 +478,16 @@ namespace Simulator.Model
             element.CalculateTargets();
             Project.Changed = true;
         }
+
+        private static Action? action;
+
+        internal static void RefreshPanels(Action? act = null)
+        {
+            if (act == null)
+                action?.Invoke();
+            else
+                action = act;
+        }
     }
 
     public enum ValueKind

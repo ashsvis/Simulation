@@ -212,7 +212,7 @@ namespace Simulator.Model
                 var menuItem = (ToolStripMenuItem?)s;
                 if (menuItem?.Tag is Element element)
                 {
-                    if (MessageBox.Show("Не, реально удалить?", "Удаление элемента",
+                    if (MessageBox.Show("Точно удалить?", "Удаление элемента",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     {
                         DeleteOneElement(element);
@@ -226,54 +226,25 @@ namespace Simulator.Model
         private void DeleteOneElement(Element element)
         {
             if (Elements == null) return;
-            //foreach (var item in Elements)
-            //{
-            //    if (item.Instance is ILinkSupport func)
-            //    {
-            //        var n = 0;
-            //        foreach (var islinked in func.LinkedInputs)
-            //        {
-            //            if (islinked)
-            //            {
-            //                var linkSources = func.InputLinkSources;
-            //                (Guid id, int index, bool external) = linkSources[n];
-            //                if (Elements.FirstOrDefault(x => x.Id == id) == element)
-            //                {
-            //                    func.ResetValueLinkToInp(n);
-            //                }
-            //            }
-            //            n++;
-            //        }
-            //    }
-            //}
-            //Links?.RemoveAll(link => link.SourceId == element.Id || link.DestinationId == element.Id);
-            //Elements.Remove(element);
-            //Project.Changed = true;
-
+            foreach (var item in Elements)
+                if (item == element && item.Instance is ILinkSupport func)
+                    Links?.RemoveAll(link => link.SourceId == item.Id || link.DestinationId == item.Id);
             foreach (var item in Elements)
             {
-                if (item == element && item.Instance is ILinkSupport func)
+                if (item.Instance is ILinkSupport func)
                 {
                     var n = 0;
-                    foreach (var islinked in func.LinkedInputs)
+                    foreach ((Guid sourceId, int pinOut, bool external) in func.InputLinkSources)
                     {
-                        if (islinked)
-                        {
-                            var linkSources = func.InputLinkSources;
-                            (Guid id, int index, bool external) = linkSources[n];
-                            var source = Elements.FirstOrDefault(x => x.Id == id);
-                            if (source != null && source.Selected)
-                            {
-                                func.ResetValueLinkToInp(n);
-                            }
-                        }
+                        if (sourceId == element.Id)
+                            func.ResetValueLinkToInp(n);
                         n++;
                     }
-                    Links?.RemoveAll(link => link.SourceId == item.Id || link.DestinationId == item.Id);
                 }
-            }
+            }    
             Elements.Remove(element);
             Project.Changed = true;
+            Project.RefreshPanels();
         }
 
         public void ClearContextMenu(ContextMenuStrip contextMenu)

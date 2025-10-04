@@ -1,7 +1,5 @@
 ﻿using Simulator.Model;
 using Simulator.View;
-using System.ComponentModel;
-using System.Diagnostics;
 
 namespace Simulator
 {
@@ -64,6 +62,7 @@ namespace Simulator
                     panels[i].Refresh();
                 }
             }
+            Project.RefreshPanels(RefreshPanels);
         }
 
         public void HideAllBut(PanelForm panel)

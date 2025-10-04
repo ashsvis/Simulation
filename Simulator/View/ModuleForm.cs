@@ -1259,31 +1259,36 @@ namespace Simulator
 
         private void DeleteAllSelectedElements()
         {
+            List<Element> selected = [];
             foreach (var item in items)
             {
-                if (item.Selected && item.Instance is ILinkSupport func)
+                if (item.Selected)
                 {
-                    var n = 0;
-                    foreach (var islinked in func.LinkedInputs)
+                    selected.Add(item);
+                    if (item.Instance is ILinkSupport func)
+                        links?.RemoveAll(link => link.SourceId == item.Id || link.DestinationId == item.Id);
+                }
+            }
+            foreach (var element in selected)
+            {
+                foreach (var item in items)
+                {
+                    if (item.Instance is ILinkSupport func)
                     {
-                        if (islinked)
+                        var n = 0;
+                        foreach ((Guid sourceId, int pinOut, bool external) in func.InputLinkSources)
                         {
-                            var linkSources = func.InputLinkSources;
-                            (Guid id, int index, bool external) = linkSources[n];
-                            var source = items.FirstOrDefault(x => x.Id == id);
-                            if (source != null && source.Selected)
-                            {
+                            if (sourceId == element.Id)
                                 func.ResetValueLinkToInp(n);
-                            }
+                            n++;
                         }
-                        n++;
                     }
-                    links.RemoveAll(link => link.SourceId == item.Id || link.DestinationId == item.Id);
                 }
             }
             items.RemoveAll(x => x.Selected);
             Project.Changed = true;
             ElementSelected?.Invoke(null, EventArgs.Empty);
+            panelForm.RefreshPanels();
         }
 
         private void timerInterface_Tick(object sender, EventArgs e)
