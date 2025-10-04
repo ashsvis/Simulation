@@ -26,6 +26,21 @@ namespace Simulator.Model.Fields
         [Category("Дизайн"), DisplayName("Ориентация")]
         public Orientation Orientation { get; set; }
 
+        [Category("Дизайн"), DisplayName("Цвет открытия")]
+        public Color OpenColor { get; set; } = Color.LimeGreen;
+        
+        [Category("Дизайн"), DisplayName("Цвет закрытия")]
+        public Color CloseColor { get; set; } = Color.Black;
+
+        [Category("Дизайн"), DisplayName("Цвет хода")]
+        public Color MoveColor { get; set; } = Color.Gold;
+
+        [Category("Дизайн"), DisplayName("Цвет аварии")]
+        public Color ErrorColor { get; set; } = Color.OrangeRed;
+
+        [Category("Дизайн"), DisplayName("Цвет команды")]
+        public Color CommandColor { get; set; } = Color.Blue;
+
         public VALVE() : base(FieldFunction.Valve) { }
 
         public override void CalculateTargets(PointF location, ref SizeF size,
@@ -60,8 +75,8 @@ namespace Simulator.Model.Fields
                 var control = new RectangleF(rect.X + (rect.Height / 4), rect.Y, rect.Height / 2, rect.Height / 2);
                 var valve = new RectangleF(rect.X, rect.Y + rect.Height / 2, rect.Width, rect.Height / 2);
                 valve.Inflate(-0.5f, -0.5f);
-                using var controlbrush = new SolidBrush(isCommand == true ? Color.Lime : Color.Black);
-                graphics.FillRectangle(!Project.Running ? brush : isCommand == null ? Brushes.Magenta : controlbrush, control);
+                using var controlbrush = new SolidBrush(isCommand == null ? ErrorColor : isCommand == true ? CommandColor : CloseColor);
+                graphics.FillRectangle(!Project.Running ? brush : controlbrush, control);
                 graphics.DrawRectangles(pen, [control]);
                 using GraphicsPath path = new();
                 path.AddLines([
@@ -73,8 +88,8 @@ namespace Simulator.Model.Fields
                     new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
                     new PointF(valve.Left + valve.Width / 2, control.Bottom),
                 ]);
-                using var valvebrush = new SolidBrush(isOpened == true ? Color.Lime : isClosed == true ? Color.Black : pen.Color);
-                graphics.FillPath(!Project.Running ? brush : isOpened == null || isClosed == null || isOpened == true && isClosed == true ? Brushes.Magenta : valvebrush, path);
+                using var valvebrush = new SolidBrush(isOpened == null || isClosed == null || isOpened == true && isClosed == true ? ErrorColor : isOpened == true ? OpenColor : isClosed == true ? CloseColor : MoveColor);
+                graphics.FillPath(!Project.Running ? brush : valvebrush, path);
                 graphics.DrawLines(pen,
                     [
                         new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
@@ -89,13 +104,13 @@ namespace Simulator.Model.Fields
                 sf.Alignment = StringAlignment.Center;
                 graphics.DrawString(Name, font, fontbrush, new PointF(rect.Left + rect.Width / 2, rect.Bottom), sf);
             }
-            else
+            else if (Orientation == Orientation.Vertical)
             {
                 var control = new RectangleF(rect.X + rect.Width - rect.Height / 2, rect.Y + (rect.Height / 4), rect.Height / 2, rect.Height / 2);
                 var valve = new RectangleF(rect.X, rect.Y, rect.Width / 2, rect.Height);
                 valve.Inflate(-0.5f, -0.5f);
-                using var controlbrush = new SolidBrush(isCommand == true ? Color.Lime : Color.Black);
-                graphics.FillRectangle(!Project.Running ? brush : isCommand == null ? Brushes.Magenta : controlbrush, control);
+                using var controlbrush = new SolidBrush(isCommand == null ? ErrorColor : isCommand == true ? CommandColor : CloseColor);
+                graphics.FillRectangle(!Project.Running ? brush : controlbrush, control);
                 graphics.DrawRectangles(pen, [control]);
                 using GraphicsPath path = new();
                 path.AddLines(
@@ -108,8 +123,8 @@ namespace Simulator.Model.Fields
                     new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
                     new PointF(control.Left, valve.Top + valve.Height / 2),
                 ]);
-                using var valvebrush = new SolidBrush(isOpened == true ? Color.Lime : isClosed == true ? Color.Black : pen.Color);
-                graphics.FillPath(!Project.Running ? brush : isOpened == null || isClosed == null || isOpened == true && isClosed == true ? Brushes.Magenta : valvebrush, path);
+                using var valvebrush = new SolidBrush(isOpened == null || isClosed == null || isOpened == true && isClosed == true ? ErrorColor : isOpened == true ? OpenColor : isClosed == true ? CloseColor : MoveColor);
+                graphics.FillPath(!Project.Running ? brush : valvebrush, path);
                 graphics.DrawLines(pen,
                     [
                     new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
@@ -123,7 +138,7 @@ namespace Simulator.Model.Fields
                 using var sf = new StringFormat();
                 sf.Alignment = StringAlignment.Far;
                 sf.LineAlignment = StringAlignment.Center;
-                graphics.DrawString(Name, font, fontbrush, new PointF(rect.Left + valve.Width / 2, rect.Top + rect.Height / 2), sf);
+                graphics.DrawString(Name, font, fontbrush, new PointF(rect.Left + valve.Width / 2 - 3f, rect.Top + rect.Height / 2), sf);
             }
         }
 
@@ -184,12 +199,27 @@ namespace Simulator.Model.Fields
                     xsource.Add(new XAttribute("PinIndex", commandLinkSource.Item2));
                 xtance.Add(xsource);
             }
-            if (Orientation != Orientation.Horizontal)
+            if (Orientation == Orientation.Vertical ||
+               OpenColor != Color.LimeGreen ||
+               CloseColor != Color.Black ||
+               MoveColor != Color.Gold ||
+               ErrorColor != Color.OrangeRed ||
+               CommandColor != Color.Blue)
             {
                 XElement xsource = new("Design");
-                xsource.Add(new XAttribute("Orientation", Orientation));
+                xtance.Add(xsource);
                 if (Orientation != Orientation.Horizontal)
-                    xtance.Add(xsource);
+                    xsource.Add(new XElement("Orientation", Orientation));
+                if (OpenColor != Color.LimeGreen)
+                    xsource.Add(new XElement("OpenColor", OpenColor.Name));
+                if (CloseColor != Color.Black)
+                    xsource.Add(new XElement("CloseColor", CloseColor.Name));
+                if (MoveColor != Color.Gold)
+                    xsource.Add(new XElement("MoveColor", MoveColor.Name));
+                if (ErrorColor != Color.OrangeRed)
+                    xsource.Add(new XElement("ErrorColor", ErrorColor.Name));
+                if (CommandColor != Color.Blue)
+                    xsource.Add(new XElement("CommandColor", CommandColor.Name));
             }
         }
 
@@ -232,8 +262,27 @@ namespace Simulator.Model.Fields
             xsource = xtance?.Element("Design");
             if (xsource != null)
             {
-                if (Enum.TryParse(typeof(Orientation), xsource.Attribute("Orientation")?.Value, out object? orientation))
+                if (Enum.TryParse(typeof(Orientation), xsource.Element("Orientation")?.Value, out object? orientation))
                     Orientation = (Orientation)orientation;
+                try
+                {
+                    var xcolor = xsource?.Element("OpenColor");
+                    if (xcolor != null)
+                        OpenColor = Color.FromName($"{xcolor?.Value}");
+                    xcolor = xsource?.Element("CloseColor");
+                    if (xcolor != null)
+                        CloseColor = Color.FromName($"{xcolor?.Value}");
+                    xcolor = xsource?.Element("MoveColor");
+                    if (xcolor != null)
+                        MoveColor = Color.FromName($"{xcolor?.Value}");
+                    xcolor = xsource?.Element("ErrorColor");
+                    if (xcolor != null)
+                        ErrorColor = Color.FromName($"{xcolor?.Value}");
+                    xcolor = xsource?.Element("CommandColor");
+                    if (xcolor != null)
+                        CommandColor = Color.FromName($"{xcolor?.Value}");
+                }
+                catch { }
             }
         }
 
