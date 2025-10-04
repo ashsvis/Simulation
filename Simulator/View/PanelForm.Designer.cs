@@ -473,11 +473,11 @@
             // tsbRun
             // 
             tsbRun.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            tsbRun.Image = Properties.Resources.compile;
+            tsbRun.Image = Properties.Resources.run;
             tsbRun.ImageTransparentColor = Color.Magenta;
             tsbRun.Name = "tsbRun";
             tsbRun.Size = new Size(23, 22);
-            tsbRun.Text = "Симуляция";
+            tsbRun.Text = "Пуск";
             tsbRun.Click += tsbRun_Click;
             // 
             // splitContainer1

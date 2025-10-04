@@ -207,7 +207,7 @@ namespace Simulator
             }
             tsmiLeftPanelVisible.Checked = panLeft.Width > 0;
             tsmiRightPanelVisible.Checked = panRight.Width > 0;
-            tsmiRun.Checked = tsbRun.Checked = Project.Running;
+            tsmiRun.Checked = Project.Running;
             tsbAddModule.Enabled = tsbAddBock.Enabled = !Project.Running;
             tsmiCreate.Enabled = tsmiOpen.Enabled = tsmiAddModule.Enabled = tsbOpenProject.Enabled = !Project.Running;
         }
@@ -768,15 +768,20 @@ namespace Simulator
 
         private void tsbRun_Click(object sender, EventArgs e)
         {
-            if (tsbRun.Checked)
+            if (Project.Running)
             {
+                tsbRun.Text = "Пуск";
+                tsbRun.Image = Properties.Resources.run;
                 Project.Stop();
                 Host.RefreshPanels();
             }
             else
             {
+                tsbRun.Text = "Стоп";
+                tsbRun.Image = Properties.Resources.stop;
                 Project.Start();
                 Host.RefreshPanels();
+
             }
         }
 
