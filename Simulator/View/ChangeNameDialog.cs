@@ -7,6 +7,8 @@
         public ChangeNameDialog(string enteredValue)
         {
             InitializeComponent();
+            if (Properties.Settings.Default.DarkMode)
+                ThemeManager.ApplyDarkTheme(this);
             EnteredValue = enteredValue;
             tbValue.Text = enteredValue.ToString();
         }

@@ -133,10 +133,13 @@
             // 
             // menuMainStrip
             // 
+            menuMainStrip.GripMargin = new Padding(0);
             menuMainStrip.Items.AddRange(new ToolStripItem[] { файлToolStripMenuItem, инструментыToolStripMenuItem, справкаToolStripMenuItem, окноToolStripMenuItem });
             menuMainStrip.Location = new Point(0, 25);
             menuMainStrip.MdiWindowListItem = окноToolStripMenuItem;
             menuMainStrip.Name = "menuMainStrip";
+            menuMainStrip.Padding = new Padding(0);
+            menuMainStrip.RenderMode = ToolStripRenderMode.System;
             menuMainStrip.Size = new Size(1002, 24);
             menuMainStrip.TabIndex = 1;
             menuMainStrip.Text = "menuStrip1";
@@ -145,7 +148,7 @@
             // 
             файлToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tsmiCreate, tsmiOpen, tsmiAddModule, toolStripSeparator, tsmiSave, tsmiSaveAs, toolStripSeparator1, tsmiPrint, tsmiPreview, toolStripSeparator2, tsmiExit });
             файлToolStripMenuItem.Name = "файлToolStripMenuItem";
-            файлToolStripMenuItem.Size = new Size(48, 20);
+            файлToolStripMenuItem.Size = new Size(48, 24);
             файлToolStripMenuItem.Text = "&Файл";
             // 
             // tsmiCreate
@@ -236,7 +239,7 @@
             // 
             инструментыToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { настройкиToolStripMenuItem, параметрыToolStripMenuItem, toolStripMenuItem2, tsmiRun });
             инструментыToolStripMenuItem.Name = "инструментыToolStripMenuItem";
-            инструментыToolStripMenuItem.Size = new Size(95, 20);
+            инструментыToolStripMenuItem.Size = new Size(95, 24);
             инструментыToolStripMenuItem.Text = "&Инструменты";
             // 
             // настройкиToolStripMenuItem
@@ -309,7 +312,7 @@
             // 
             справкаToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { опрограммеToolStripMenuItem });
             справкаToolStripMenuItem.Name = "справкаToolStripMenuItem";
-            справкаToolStripMenuItem.Size = new Size(65, 20);
+            справкаToolStripMenuItem.Size = new Size(65, 24);
             справкаToolStripMenuItem.Text = "&Справка";
             // 
             // опрограммеToolStripMenuItem
@@ -322,7 +325,7 @@
             // 
             окноToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { поГоризонталиToolStripMenuItem, воВертикалиToolStripMenuItem, каскадомToolStripMenuItem, упорядочитьСвернутыеToolStripMenuItem, toolStripMenuItem1 });
             окноToolStripMenuItem.Name = "окноToolStripMenuItem";
-            окноToolStripMenuItem.Size = new Size(48, 20);
+            окноToolStripMenuItem.Size = new Size(48, 24);
             окноToolStripMenuItem.Text = "&Окно";
             // 
             // поГоризонталиToolStripMenuItem
@@ -376,6 +379,7 @@
             panLeft.Controls.Add(tlpTools);
             panLeft.Dock = DockStyle.Left;
             panLeft.Location = new Point(0, 49);
+            panLeft.Margin = new Padding(0);
             panLeft.Name = "panLeft";
             panLeft.Size = new Size(210, 456);
             panLeft.TabIndex = 4;
@@ -403,6 +407,8 @@
             tsToolModules.Items.AddRange(new ToolStripItem[] { tsbOpenProject, tsbSave, toolStripSeparator5, tsbAddModule, tsbShowModuleForm, tsbDeleteModule, toolStripSeparator3, tsbRun });
             tsToolModules.Location = new Point(0, 0);
             tsToolModules.Name = "tsToolModules";
+            tsToolModules.Padding = new Padding(0);
+            tsToolModules.RenderMode = ToolStripRenderMode.System;
             tsToolModules.Size = new Size(206, 25);
             tsToolModules.TabIndex = 6;
             tsToolModules.Text = "toolStrip1";
@@ -505,8 +511,9 @@
             tcTools.Controls.Add(tpEquipment);
             tcTools.Dock = DockStyle.Fill;
             tcTools.Location = new Point(0, 0);
-            tcTools.Margin = new Padding(3, 3, 0, 3);
+            tcTools.Margin = new Padding(0);
             tcTools.Name = "tcTools";
+            tcTools.Padding = new Point(0, 0);
             tcTools.SelectedIndex = 0;
             tcTools.Size = new Size(203, 208);
             tcTools.TabIndex = 2;
@@ -524,15 +531,12 @@
             // 
             // tvModules
             // 
-            tvModules.BackColor = Color.FromArgb(64, 64, 64);
             tvModules.ContextMenuStrip = cmModules;
             tvModules.Dock = DockStyle.Fill;
-            tvModules.ForeColor = SystemColors.Window;
             tvModules.FullRowSelect = true;
             tvModules.HideSelection = false;
-            tvModules.LineColor = Color.WhiteSmoke;
             tvModules.Location = new Point(3, 3);
-            tvModules.Margin = new Padding(3, 3, 0, 3);
+            tvModules.Margin = new Padding(0);
             tvModules.Name = "tvModules";
             tvModules.Size = new Size(189, 174);
             tvModules.TabIndex = 2;
@@ -572,15 +576,12 @@
             // 
             // tvEquipment
             // 
-            tvEquipment.BackColor = Color.FromArgb(64, 64, 64);
             tvEquipment.ContextMenuStrip = cmEquipment;
             tvEquipment.Dock = DockStyle.Fill;
-            tvEquipment.ForeColor = SystemColors.Window;
             tvEquipment.FullRowSelect = true;
             tvEquipment.HideSelection = false;
-            tvEquipment.LineColor = Color.WhiteSmoke;
             tvEquipment.Location = new Point(3, 3);
-            tvEquipment.Margin = new Padding(3, 3, 0, 3);
+            tvEquipment.Margin = new Padding(0);
             tvEquipment.Name = "tvEquipment";
             tvEquipment.Size = new Size(189, 174);
             tvEquipment.TabIndex = 3;
@@ -612,8 +613,9 @@
             tabControl1.Controls.Add(tpProps);
             tabControl1.Dock = DockStyle.Fill;
             tabControl1.Location = new Point(0, 0);
-            tabControl1.Margin = new Padding(3, 3, 0, 3);
+            tabControl1.Margin = new Padding(0);
             tabControl1.Name = "tabControl1";
+            tabControl1.Padding = new Point(0, 0);
             tabControl1.SelectedIndex = 0;
             tabControl1.Size = new Size(203, 213);
             tabControl1.TabIndex = 1;
@@ -655,18 +657,16 @@
             // 
             // tvLibrary
             // 
-            tvLibrary.BackColor = Color.FromArgb(64, 64, 64);
             tvLibrary.Dock = DockStyle.Fill;
-            tvLibrary.ForeColor = SystemColors.Window;
             tvLibrary.FullRowSelect = true;
             tvLibrary.HideSelection = false;
-            tvLibrary.LineColor = Color.WhiteSmoke;
             tvLibrary.Location = new Point(3, 3);
+            tvLibrary.Margin = new Padding(0);
             tvLibrary.Name = "tvLibrary";
             treeNode1.Name = "Узел0";
             treeNode1.Text = "Библиотека";
             tvLibrary.Nodes.AddRange(new TreeNode[] { treeNode1 });
-            tvLibrary.Size = new Size(188, 416);
+            tvLibrary.Size = new Size(191, 422);
             tvLibrary.TabIndex = 1;
             tvLibrary.AfterSelect += tvLibrary_AfterSelect;
             tvLibrary.MouseDown += tvLibrary_MouseDown;
@@ -676,6 +676,7 @@
             panRight.Controls.Add(tlpLibrary);
             panRight.Dock = DockStyle.Right;
             panRight.Location = new Point(793, 49);
+            panRight.Margin = new Padding(0);
             panRight.Name = "panRight";
             panRight.Size = new Size(209, 456);
             panRight.TabIndex = 8;
@@ -713,11 +714,12 @@
             // 
             tabControl3.Controls.Add(tabPage2);
             tabControl3.Dock = DockStyle.Fill;
-            tabControl3.Location = new Point(4, 3);
-            tabControl3.Margin = new Padding(0, 3, 3, 3);
+            tabControl3.Location = new Point(4, 0);
+            tabControl3.Margin = new Padding(0);
             tabControl3.Name = "tabControl3";
+            tabControl3.Padding = new Point(0, 0);
             tabControl3.SelectedIndex = 0;
-            tabControl3.Size = new Size(202, 450);
+            tabControl3.Size = new Size(205, 456);
             tabControl3.TabIndex = 1;
             // 
             // tabPage2
@@ -727,7 +729,7 @@
             tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(194, 422);
+            tabPage2.Size = new Size(197, 428);
             tabPage2.TabIndex = 0;
             tabPage2.Text = "Библиотека";
             tabPage2.UseVisualStyleBackColor = true;
@@ -778,10 +780,13 @@
             // toolStripCaption
             // 
             toolStripCaption.BackColor = SystemColors.ActiveCaption;
+            toolStripCaption.GripMargin = new Padding(0);
             toolStripCaption.GripStyle = ToolStripGripStyle.Hidden;
             toolStripCaption.Items.AddRange(new ToolStripItem[] { tsbHostClose, tslPanelCaption, tsbMinimize, tsbScreenToRight, tslScreenNumber, tsbScreenToLeft });
             toolStripCaption.Location = new Point(0, 0);
             toolStripCaption.Name = "toolStripCaption";
+            toolStripCaption.Padding = new Padding(0);
+            toolStripCaption.RenderMode = ToolStripRenderMode.System;
             toolStripCaption.Size = new Size(1002, 25);
             toolStripCaption.TabIndex = 6;
             toolStripCaption.Text = "toolStrip1";

@@ -72,7 +72,7 @@ namespace Simulator
             // zoomPad
             // 
             zoomPad.AllowDrop = true;
-            zoomPad.BackColor = Color.FromArgb(64, 64, 64);
+            zoomPad.BackColor = Color.FromArgb(60, 63, 65);
             zoomPad.ContextMenuStrip = cmZoomPad;
             zoomPad.Dock = DockStyle.Fill;
             zoomPad.ForeColor = SystemColors.Window;
@@ -95,7 +95,7 @@ namespace Simulator
             // cmZoomPad
             // 
             cmZoomPad.Name = "contextMenuStrip1";
-            cmZoomPad.Size = new Size(181, 26);
+            cmZoomPad.Size = new Size(61, 4);
             cmZoomPad.Opening += cmZoomPad_Opening;
             // 
             // tsModule

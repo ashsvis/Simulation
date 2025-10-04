@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace Simulator.View
+﻿namespace Simulator.View
 {
     public partial class ChangeNumberDialog : Form
     {
@@ -17,6 +7,8 @@ namespace Simulator.View
         public ChangeNumberDialog(int enteredValue)
         {
             InitializeComponent();
+            if (Properties.Settings.Default.DarkMode)
+                ThemeManager.ApplyDarkTheme(this);
             EnteredValue = enteredValue;
             tbValue.Text = enteredValue.ToString();
         }

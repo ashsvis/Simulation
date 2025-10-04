@@ -1,4 +1,5 @@
 ﻿using Simulator.Model;
+using Simulator.View;
 using System.ComponentModel;
 using System.Diagnostics;
 
@@ -37,6 +38,8 @@ namespace Simulator
         public HostForm()
         {
             InitializeComponent();
+            if (Properties.Settings.Default.DarkMode)
+                ThemeManager.ApplyDarkTheme(this);
             Width = 0;
             Height = 1;
             MultiScreensMode = Properties.Settings.Default.MultiScreensMode;

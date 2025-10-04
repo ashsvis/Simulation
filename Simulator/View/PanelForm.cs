@@ -16,6 +16,8 @@ namespace Simulator
         public PanelForm(HostForm hostForm, int panelIndex, bool isPrimary, Rectangle bounds)
         {
             InitializeComponent();
+            if (Properties.Settings.Default.DarkMode)
+                ThemeManager.ApplyDarkTheme(this);
             UpdateScreenControls(hostForm);
             Host = hostForm;
             PanelIndex = panelIndex;

@@ -12,6 +12,8 @@ namespace Simulator.View
         public SelectLinkSourceForm(KindLinkSource kind, (Guid, int, bool)? linkSource = null)
         {
             InitializeComponent();
+            if (Properties.Settings.Default.DarkMode)
+                ThemeManager.ApplyDarkTheme(this);
             this.kind = kind;
             this.linkSource = linkSource;
         }

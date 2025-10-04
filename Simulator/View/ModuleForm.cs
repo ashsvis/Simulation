@@ -73,6 +73,8 @@ namespace Simulator
         public ModuleForm(PanelForm panelForm, Model.Module module)
         {
             InitializeComponent();
+            if (Properties.Settings.Default.DarkMode)
+                ThemeManager.ApplyDarkTheme(this);
             this.panelForm = panelForm;
             Module = module;
             Project.Changed = false;
