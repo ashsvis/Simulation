@@ -571,7 +571,7 @@
             tpEquipment.Padding = new Padding(3);
             tpEquipment.Size = new Size(195, 180);
             tpEquipment.TabIndex = 2;
-            tpEquipment.Text = "Оборудование";
+            tpEquipment.Text = "Железо";
             tpEquipment.UseVisualStyleBackColor = true;
             // 
             // tvEquipment

@@ -256,7 +256,7 @@ namespace Simulator.Model
         public static TreeNode[] GetEquipmentTree()
         {
             List<TreeNode> collection = [];
-            var rootNode = new TreeNode("Оборудование");
+            var rootNode = new TreeNode("Эмуляция");
             collection.Add(rootNode);
             int nunit = 1;
             foreach (var unit in Equipment.OrderBy(x => x.Name))

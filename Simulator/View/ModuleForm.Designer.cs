@@ -72,10 +72,9 @@ namespace Simulator
             // zoomPad
             // 
             zoomPad.AllowDrop = true;
-            zoomPad.BackColor = Color.FromArgb(60, 63, 65);
+            zoomPad.BackColor = SystemColors.Window;
             zoomPad.ContextMenuStrip = cmZoomPad;
             zoomPad.Dock = DockStyle.Fill;
-            zoomPad.ForeColor = SystemColors.Window;
             zoomPad.Location = new Point(0, 0);
             zoomPad.MaxZoom = 20F;
             zoomPad.MinZoom = 0.1F;

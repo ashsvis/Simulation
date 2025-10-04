@@ -300,8 +300,8 @@ namespace Simulator
             var graphics = e.Graphics;
             if (graphics == null) return;
 
-            graphics.SmoothingMode = SmoothingMode.HighQuality;
-            graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            graphics.SmoothingMode = SmoothingMode.HighSpeed;
+            graphics.PixelOffsetMode = PixelOffsetMode.HighSpeed;
             using var font = new Font("Consolas", Element.Step + 2f);
             try
             {
@@ -316,9 +316,9 @@ namespace Simulator
                             if (!external) continue;
 
                             ValueItem? val = Project.ReadValue(id, pinout, ValueSide.Output, ValueKind.Digital);
-                            Color color = val != null && val.Value != null ? (bool)val.Value == true ? Color.Lime : Color.Red : Color.Silver;
-                            using var exlinkpen = new Pen(Color.FromArgb(150, color));
-                            using var exlinkbrush = new SolidBrush(Color.FromArgb(150, color));
+                            Color color = val != null && val.Value != null ? (bool)val.Value == true ? Color.LimeGreen : Color.OrangeRed : Color.Gray;
+                            using var exlinkpen = new Pen(Color.FromArgb(255, color), 0);
+                            using var exlinkbrush = new SolidBrush(Color.FromArgb(255, color));
 
                             var (moduleName, elementName) = Project.GetAddressById(id);
                             if (!string.IsNullOrWhiteSpace(moduleName + elementName))
@@ -376,9 +376,9 @@ namespace Simulator
                             var ms = graphics.MeasureString(text, font);
                             var rect = new RectangleF(pt.X, item.Bounds.Bottom + Element.Step, ms.Width, ms.Height);
                             ValueItem? val = Project.ReadValue(item.Id, pinout, ValueSide.Output, ValueKind.Digital);
-                            Color color = val != null && val.Value != null ? (bool)val.Value == true ? Color.Lime : Color.Red : Color.Silver;
-                            using var exlinkpen = new Pen(Color.FromArgb(150, color));
-                            using var exlinkbrush = new SolidBrush(Color.FromArgb(150, color));
+                            Color color = val != null && val.Value != null ? (bool)val.Value == true ? Color.LimeGreen : Color.OrangeRed : Color.Gray;
+                            using var exlinkpen = new Pen(Color.FromArgb(255, color), 0);
+                            using var exlinkbrush = new SolidBrush(Color.FromArgb(255, color));
                             graphics.DrawLine(exlinkpen, pt, new PointF(pt.X, item.Bounds.Bottom + Element.Step));
                             graphics.DrawRectangles(exlinkpen, [rect]);
                             graphics.DrawString(text, font, exlinkbrush, rect.Location);
@@ -464,14 +464,14 @@ namespace Simulator
                 if (linkFirstPoint != null)
                 {
                     var mp = PrepareMousePosition(mousePosition);
-                    using var pen = new Pen(Color.Silver, 0);
+                    using var pen = new Pen(Color.Magenta, 0);
                     pen.DashStyle = DashStyle.Dash;
                     graphics.DrawLine(pen, (PointF)linkFirstPoint, mp);
                 }
                 // прорисовка "резиновой" рамки 
                 if (ribbon != null && linkFirstPoint == null && !dragging && !segmentmoving)
                 {
-                    using var pen = new Pen(Color.FromArgb(200, partSelection ? Color.LimeGreen : Color.Aqua), 0);
+                    using var pen = new Pen(Color.FromArgb(200, partSelection ? Color.Lime : Color.Blue), 0);
                     pen.DashStyle = DashStyle.Dash;
                     graphics.DrawRectangle(pen, PrepareRect((Rectangle)ribbon));
                 }
@@ -489,169 +489,6 @@ namespace Simulator
             var pt2 = PrepareMousePosition(Point.Add(rectangle.Location, size));
             return Rectangle.Ceiling(new RectangleF(pt1, new SizeF(pt2.X - pt1.X, pt2.Y - pt1.Y)));
         }
-
-
-        /*
-            
-        private void BuildLinks()
-        {
-            // подготовка сетки с тенями от существующих элементов и связей
-            grid = BuildGrid();
-            // составление списка связей для построения
-            //List<Link> links = [];
-            links.Clear();
-            foreach (var item in items)
-            {
-                if (item.Instance is ILinkSupport function && function.LinkedInputs.Any(x => x == true))
-                {
-                    var n = 0;
-                    foreach (var isLinked in function.LinkedInputs)
-                    {
-                        if (isLinked)
-                        {
-                            if (item.InputPins.TryGetValue(n, out PointF targetPinPoint))
-                            {
-                                (Guid sourceId, int outputIndex) = function.InputLinkSources[n];
-                                var source = items.FirstOrDefault(x => x.Id == sourceId);
-                                if (source != null)
-                                {
-                                    var sourcePinPoint = source.OutputPins[outputIndex];
-                                    links.Add(new Link(Guid.NewGuid(), sourcePinPoint, targetPinPoint));
-                                }
-                            }
-                        }
-                        n++;
-                    }
-                }
-            }
-            foreach (var link in links.OrderBy(link => link.Length))
-            {
-                // помещение затравки волны в сетку
-                var tpt = link.SourcePoint;
-                var spt = link.TargetPoint;
-                var tx = -1;
-                var ty = -1;
-                for (var y = 0; y < grid.GetLength(0); y++)
-                {
-                    for (var x = 0; x < grid.GetLength(1); x++)
-                    {
-                        if (spt == grid[y, x].Point)
-                            grid[y, x].Kind = 1;
-                        if (tpt == grid[y, x].Point)
-                        {
-                            tx = x;
-                            ty = y;
-                        }
-                    }
-                }
-                if (tx < 0 || ty < 0) continue;
-                // генерация волны
-                var changed = true;
-                var wave = 1;
-                while (changed) 
-                {
-                    changed = false;
-                    for (var y = 0; y < grid.GetLength(0); y++)
-                    {
-                        for (var x = 0; x < grid.GetLength(1); x++)
-                        {
-                            if (grid[y, x].Kind == wave)
-                            {
-                                if (x > 0 && grid[y, x - 1].Kind == 0)
-                                {
-                                    grid[y, x - 1].Kind = wave + 1;
-                                    changed = true;
-                                }
-                                if (x < grid.GetLength(1) - 1 && grid[y, x + 1].Kind == 0)
-                                {
-                                    grid[y, x + 1].Kind = wave + 1;
-                                    changed = true;
-                                }
-                                if (y > 0 && grid[y - 1, x].Kind == 0)
-                                {
-                                    grid[y - 1, x].Kind = wave + 1;
-                                    changed = true;
-                                }
-                                if (y < grid.GetLength(0) - 1 && grid[y + 1, x].Kind == 0)
-                                {
-                                    grid[y + 1, x].Kind = wave + 1;
-                                    changed = true;
-                                }
-                                if (changed && grid[ty, tx].Kind > 0)
-                                    goto exit;
-                            }
-                        }
-                    }
-                    wave++;
-                }
-            exit: if (changed) // путь найден
-                {
-                    var vector = LinkVector.Horizontal;
-                    // следуем путём
-                    var x = tx;
-                    var y = ty;
-                    wave = grid[y, x].Kind;
-                    grid[y, x].Kind = -2;
-                    link.BeginUpdate();
-                    try
-                    {
-                        link.AddPoint(grid[y, x].Point);
-                        while (wave > 1)
-                        {
-                            if (x > 0 && grid[y, x - 1].Kind == wave - 1)
-                            {
-                                if (vector != LinkVector.Horizontal)
-                                    link.AddPoint(grid[y, x].Point);
-                                x--;
-                                grid[y, x].Kind = -2;
-                                vector = LinkVector.Horizontal;
-                            }
-                            else if (x < grid.GetLength(1) - 1 && grid[y, x + 1].Kind == wave - 1)
-                            {
-                                if (vector != LinkVector.Horizontal)
-                                    link.AddPoint(grid[y, x].Point);
-                                x++;
-                                grid[y, x].Kind = -2;
-                                vector = LinkVector.Horizontal;
-                            }
-                            else if (y > 0 && grid[y - 1, x].Kind == wave - 1)
-                            {
-                                if (vector != LinkVector.Vertical)
-                                    link.AddPoint(grid[y, x].Point);
-                                y--;
-                                grid[y, x].Kind = -2;
-                                vector = LinkVector.Vertical;
-                            }
-                            else if (y < grid.GetLength(0) - 1 && grid[y + 1, x].Kind == wave - 1)
-                            {
-                                if (vector != LinkVector.Vertical)
-                                    link.AddPoint(grid[y, x].Point);
-                                y++;
-                                grid[y, x].Kind = -2;
-                                vector = LinkVector.Vertical;
-                            }
-                            wave--;
-                        }
-                        link.AddPoint(grid[y, x].Point);
-                    }
-                    finally
-                    {
-                        link.EndUpdate();
-                    }
-                }
-                // очистка от предыдущей волны
-                for (var iy = 0; iy < grid.GetLength(0); iy++)
-                {
-                    for (var ix = 0; ix < grid.GetLength(1); ix++)
-                    {
-                        if (grid[iy, ix].Kind > 0 || grid[iy, ix].Kind == -2)
-                            grid[iy, ix].Kind = 0;
-                    }
-                }
-            }
-        }
-
-        */
 
         private Link? BuildLink(Guid sourceId, int sourcePin, PointF sourcePinPoint, Guid destinationId, int destinationPin, PointF destinationPinPoint)
         {
