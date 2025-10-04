@@ -374,12 +374,14 @@ namespace Simulator
                             }
                             var text = sb.ToString();
                             var ms = graphics.MeasureString(text, font);
-                            var rect = new RectangleF(pt.X, item.Bounds.Bottom + Element.Step, ms.Width, ms.Height);
+                            var rect = new RectangleF(pt.X + Element.Step, item.Bounds.Bottom + Element.Step, ms.Width, ms.Height);
                             ValueItem? val = Project.ReadValue(item.Id, pinout, ValueSide.Output, ValueKind.Digital);
                             Color color = val != null && val.Value != null ? (bool)val.Value == true ? Color.LimeGreen : Color.OrangeRed : Color.Gray;
                             using var exlinkpen = new Pen(Color.FromArgb(255, color), 0);
                             using var exlinkbrush = new SolidBrush(Color.FromArgb(255, color));
-                            graphics.DrawLine(exlinkpen, pt, new PointF(pt.X, item.Bounds.Bottom + Element.Step));
+                            graphics.DrawLine(exlinkpen, pt, new PointF(pt.X + Element.Step, pt.Y));
+                            graphics.DrawLine(exlinkpen, new PointF(pt.X + Element.Step, pt.Y), 
+                                new PointF(pt.X + Element.Step, item.Bounds.Bottom + Element.Step));
                             graphics.DrawRectangles(exlinkpen, [rect]);
                             graphics.DrawString(text, font, exlinkbrush, rect.Location);
                         }

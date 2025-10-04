@@ -34,7 +34,6 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = SystemColors.Window;
             Name = "ZoomControl";
             Size = new Size(485, 304);
             ResumeLayout(false);
