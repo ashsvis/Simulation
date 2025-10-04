@@ -675,6 +675,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Aqua</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -686,6 +687,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Aqua</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -697,6 +699,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Aqua</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -708,6 +711,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>PaleGoldenrod</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -719,6 +723,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>PaleGoldenrod</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -730,6 +735,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>PaleGoldenrod</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -741,6 +747,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>PaleGoldenrod</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -752,6 +759,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>PaleGoldenrod</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -763,6 +771,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Magenta</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -774,6 +783,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Magenta</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -785,6 +795,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Magenta</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -796,6 +807,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Magenta</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -807,6 +819,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Magenta</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -818,6 +831,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Aqua</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -829,6 +843,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Aqua</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11258,6 +11273,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Aqua</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11269,6 +11285,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Aqua</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11280,6 +11297,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Aqua</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11291,6 +11309,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Magenta</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11302,6 +11321,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Magenta</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11313,6 +11333,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>PaleGoldenrod</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11324,6 +11345,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>PaleGoldenrod</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11334,7 +11356,8 @@
             <CommandState Id="b959b66e-73e9-45ce-bf0a-7c51c512dfd7" />
             <Design>
               <Orientation>Vertical</Orientation>
-              <OpenColor>PaleGoldenrod</OpenColor>
+              <OpenColor>Khaki</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11345,7 +11368,8 @@
             <CommandState Id="1405eb31-3ee7-4ca4-8680-6716599b47ab" />
             <Design>
               <Orientation>Vertical</Orientation>
-              <OpenColor>PaleGoldenrod</OpenColor>
+              <OpenColor>Khaki</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11357,6 +11381,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>PaleGoldenrod</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11368,6 +11393,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Magenta</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11379,6 +11405,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Magenta</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11390,6 +11417,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Magenta</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11401,6 +11429,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Aqua</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11412,6 +11441,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Aqua</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11752,6 +11782,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Aqua</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11763,6 +11794,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Aqua</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11774,6 +11806,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>PaleGoldenrod</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11785,6 +11818,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>PaleGoldenrod</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11796,6 +11830,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>PaleGoldenrod</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11807,6 +11842,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>PaleGoldenrod</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11818,6 +11854,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>PaleGoldenrod</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11829,6 +11866,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Magenta</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11840,6 +11878,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Magenta</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11851,6 +11890,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Magenta</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11862,6 +11902,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Magenta</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11872,6 +11913,7 @@
             <CommandState Id="e242c1cb-d4ad-4f04-b773-ef71630901c3" />
             <Design>
               <Orientation>Vertical</Orientation>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11883,6 +11925,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Aqua</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11894,6 +11937,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Aqua</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
@@ -11905,6 +11949,7 @@
             <Design>
               <Orientation>Vertical</Orientation>
               <OpenColor>Aqua</OpenColor>
+              <MoveColor>Yellow</MoveColor>
             </Design>
           </Instance>
         </Element>
