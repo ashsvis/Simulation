@@ -187,7 +187,7 @@ namespace Simulator.Model.Diagram
                 graphics.FillRectangle(brush, rect);
                 graphics.DrawRectangles(pen, [rect]);
             }
-            customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush, 0);
+            customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush, 0, selected);
             var y = -step + location.Y;
             var x = location.X + size.Width / 2f;
             if (getInputs.Length > 0)

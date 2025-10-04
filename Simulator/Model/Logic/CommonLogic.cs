@@ -477,7 +477,7 @@ namespace Simulator.Model.Logic
                     }
                     y += step * 2;
                 }
-                customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush, index);
+                customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush, index, selected);
                 // индекс элемента в списке
                 if (customDraw == null && index != 0)
                 {

@@ -118,7 +118,7 @@ namespace Simulator.Model.Fields
                 graphics.FillRectangle(brush, rect);
                 graphics.DrawRectangles(pen, [rect]);
             }
-            customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush, 0);
+            customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush, 0, selected);
             
             //var step = Element.Step;
             //var y = -step + location.Y;

@@ -68,7 +68,7 @@ namespace Simulator.Model.Fields
             opins.Add(0, new PointF(x, y + step));
         }
 
-        public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush, int index)
+        public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush, int index, bool selected)
         {
             if (Orientation == Orientation.Horizontal)
             {
@@ -79,8 +79,7 @@ namespace Simulator.Model.Fields
                 graphics.FillRectangle(!Project.Running ? brush : controlbrush, control);
                 graphics.DrawRectangles(pen, [control]);
                 using GraphicsPath path = new();
-                path.AddLines([
-                        new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
+                path.AddLines([new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
                     new PointF(valve.Right, valve.Bottom),
                     new PointF(valve.Right, valve.Top),
                     new PointF(valve.Left, valve.Bottom),
@@ -88,11 +87,16 @@ namespace Simulator.Model.Fields
                     new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
                     new PointF(valve.Left + valve.Width / 2, control.Bottom),
                 ]);
-                using var valvebrush = new SolidBrush(isOpened == null || isClosed == null || isOpened == true && isClosed == true ? ErrorColor : isOpened == true ? OpenColor : isClosed == true ? CloseColor : MoveColor);
+                using var valvebrush = new SolidBrush(
+                    isOpened == null || isClosed == null || isOpened == true && isClosed == true 
+                       ? ErrorColor 
+                       : isOpened == true 
+                          ? OpenColor 
+                          : isClosed == true 
+                             ? CloseColor 
+                             : MoveColor);
                 graphics.FillPath(!Project.Running ? brush : valvebrush, path);
-                graphics.DrawLines(pen,
-                    [
-                        new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
+                graphics.DrawLines(pen, [new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
                     new PointF(valve.Right, valve.Bottom),
                     new PointF(valve.Right, valve.Top),
                     new PointF(valve.Left, valve.Bottom),
@@ -102,7 +106,8 @@ namespace Simulator.Model.Fields
                 ]);
                 using var sf = new StringFormat();
                 sf.Alignment = StringAlignment.Center;
-                graphics.DrawString(Name, font, fontbrush, new PointF(rect.Left + rect.Width / 2, rect.Bottom), sf);
+                using var fbrush = new SolidBrush(selected ? Color.Magenta : pen.Color);
+                graphics.DrawString(Name, font, fbrush, new PointF(rect.Left + rect.Width / 2, rect.Bottom), sf);
             }
             else if (Orientation == Orientation.Vertical)
             {
@@ -113,9 +118,7 @@ namespace Simulator.Model.Fields
                 graphics.FillRectangle(!Project.Running ? brush : controlbrush, control);
                 graphics.DrawRectangles(pen, [control]);
                 using GraphicsPath path = new();
-                path.AddLines(
-                    [
-                    new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
+                path.AddLines([new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
                     new PointF(valve.Right, valve.Bottom),
                     new PointF(valve.Left, valve.Bottom),
                     new PointF(valve.Right, valve.Top),
@@ -123,11 +126,16 @@ namespace Simulator.Model.Fields
                     new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
                     new PointF(control.Left, valve.Top + valve.Height / 2),
                 ]);
-                using var valvebrush = new SolidBrush(isOpened == null || isClosed == null || isOpened == true && isClosed == true ? ErrorColor : isOpened == true ? OpenColor : isClosed == true ? CloseColor : MoveColor);
+                using var valvebrush = new SolidBrush(
+                    isOpened == null || isClosed == null || isOpened == true && isClosed == true 
+                        ? ErrorColor 
+                        : isOpened == true 
+                             ? OpenColor 
+                             : isClosed == true 
+                                 ? CloseColor 
+                                 : MoveColor);
                 graphics.FillPath(!Project.Running ? brush : valvebrush, path);
-                graphics.DrawLines(pen,
-                    [
-                    new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
+                graphics.DrawLines(pen, [new PointF(valve.Left + valve.Width / 2, valve.Top + valve.Height / 2),
                     new PointF(valve.Right, valve.Bottom),
                     new PointF(valve.Left, valve.Bottom),
                     new PointF(valve.Right, valve.Top),
@@ -138,7 +146,8 @@ namespace Simulator.Model.Fields
                 using var sf = new StringFormat();
                 sf.Alignment = StringAlignment.Far;
                 sf.LineAlignment = StringAlignment.Center;
-                graphics.DrawString(Name, font, fontbrush, new PointF(rect.Left + valve.Width / 2 - 3f, rect.Top + rect.Height / 2), sf);
+                using var fbrush = new SolidBrush(selected ? Color.Magenta : pen.Color);
+                graphics.DrawString(Name, font, fbrush, new PointF(rect.Left + valve.Width / 2 - 3f, rect.Top + rect.Height / 2), sf);
             }
         }
 
