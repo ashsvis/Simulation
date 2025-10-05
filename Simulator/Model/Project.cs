@@ -140,6 +140,15 @@ namespace Simulator.Model
             return string.Empty;
         }
 
+        internal static Element? GetFieldElementById(Guid id)
+        {
+            foreach (var field in Fields)
+                foreach (var element in field.Elements)
+                    if (id == element.Id)
+                        return element;
+            return null;
+        }
+
         internal static void WriteValue(Guid elementId, int pin, ValueSide side, ValueKind kind, object? value)
         {
             var key = $"{elementId}\t{pin}\t{side}\t{kind}";
@@ -164,7 +173,7 @@ namespace Simulator.Model
         public static List<Unit> Equipment { get; set; } = [];
 
         [Browsable(false)]
-        public static List<Unit> Fields { get; set; } = [];
+        public static List<Field> Fields { get; set; } = [];
 
         [Browsable(false)]
         public static List<Module> Blocks { get; set; } = [];
@@ -238,6 +247,7 @@ namespace Simulator.Model
             Description = string.Empty;
             Modules.Clear();
             Equipment.Clear();
+            Fields.Clear();
             vals.Clear();
             Blocks.Clear();
             file = filename;
@@ -306,7 +316,7 @@ namespace Simulator.Model
                     {
                         foreach (XElement xfield in xfields.Elements("Field"))
                         {
-                            var field = new Unit();
+                            var field = new Field();
                             if (Guid.TryParse(xfield.Element("Id")?.Value, out Guid id))
                                 field.Id = id;
                             if (field.Id == Guid.Empty)
@@ -351,6 +361,22 @@ namespace Simulator.Model
                 module.Index = nmodule++;
                 var moduleNode = new TreeNode(module.ToString()) { Tag = module };
                 rootNode.Nodes.Add(moduleNode);
+            }
+            rootNode.ExpandAll();
+            return [.. collection];
+        }
+
+        public static TreeNode[] GetFieldTree()
+        {
+            List<TreeNode> collection = [];
+            var rootNode = new TreeNode("Мнемосхемы");
+            collection.Add(rootNode);
+            int nfield = 1;
+            foreach (var field in Fields.OrderBy(x => x.Name))
+            {
+                field.Index = nfield++;
+                var fieldNode = new TreeNode(field.ToString()) { Tag = field };
+                rootNode.Nodes.Add(fieldNode);
             }
             rootNode.ExpandAll();
             return [.. collection];
@@ -420,6 +446,7 @@ namespace Simulator.Model
             var fieldNode = new TreeNode("Поле");
             rootNode.Nodes.Add(fieldNode);
             fieldNode.Nodes.Add(new TreeNode("Клапан") { Tag = typeof(Fields.VALVE) });
+            fieldNode.Nodes.Add(new TreeNode("Место под рисунок") { Tag = typeof(Fields.IMAGEHOLDER) });
             rootNode.Expand();
             andNode.Collapse();
             orNode.Collapse();
@@ -434,6 +461,7 @@ namespace Simulator.Model
             file = string.Empty;
             Modules.Clear();
             Equipment.Clear();
+            Fields.Clear();
             Blocks.Clear();
             Changed = false;
             OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.Clear));
@@ -448,13 +476,22 @@ namespace Simulator.Model
             return module;
         }
 
-        public static Module AddUnitToProject(Unit? newModule = null)
+        public static Module AddUnitToProject(Unit? newUnit = null)
         {
-            var module = newModule ?? new Unit();
+            var module = newUnit ?? new Unit();
             Equipment.Add(module);
             Changed = true;
             OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.AddUnit));
             return module;
+        }
+
+        public static Module AddFieldToProject(Field? newField = null)
+        {
+            var field = newField ?? new Field();
+            Fields.Add(field);
+            Changed = true;
+            OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.AddField));
+            return field;
         }
 
         public static void RemoveModuleFromProject(Module module)
@@ -469,6 +506,13 @@ namespace Simulator.Model
             Equipment.Remove(unit);
             Changed = true;
             OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.RemoveUnit));
+        }
+
+        public static void RemoveFieldFromProject(Field unit)
+        {
+            Fields.Remove(unit);
+            Changed = true;
+            OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.RemoveField));
         }
 
         public static Module AddBlockToProject()
@@ -602,6 +646,8 @@ namespace Simulator.Model
         RemoveModule,
         AddUnit,
         RemoveUnit,
+        AddField,
+        RemoveField,
         AddBlock,
         RemoveBlock,
     }

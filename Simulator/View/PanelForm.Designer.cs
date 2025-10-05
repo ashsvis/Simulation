@@ -78,6 +78,8 @@
             cmEquipment = new ContextMenuStrip(components);
             tsmiRenameUnit = new ToolStripMenuItem();
             tsmiUnitDublicate = new ToolStripMenuItem();
+            tbField = new TabPage();
+            tvField = new TreeView();
             tabControl1 = new TabControl();
             tpProps = new TabPage();
             pgProps = new PropertyGrid();
@@ -128,6 +130,7 @@
             cmModules.SuspendLayout();
             tpEquipment.SuspendLayout();
             cmEquipment.SuspendLayout();
+            tbField.SuspendLayout();
             tabControl1.SuspendLayout();
             tpProps.SuspendLayout();
             panRight.SuspendLayout();
@@ -431,6 +434,7 @@
             // 
             tcTools.Controls.Add(tpModules);
             tcTools.Controls.Add(tpEquipment);
+            tcTools.Controls.Add(tbField);
             tcTools.Dock = DockStyle.Fill;
             tcTools.Location = new Point(0, 0);
             tcTools.Margin = new Padding(0);
@@ -529,6 +533,30 @@
             tsmiUnitDublicate.Size = new Size(170, 22);
             tsmiUnitDublicate.Text = "Дублировать";
             tsmiUnitDublicate.Click += tsmiUnitDublicate_Click;
+            // 
+            // tbField
+            // 
+            tbField.Controls.Add(tvField);
+            tbField.Location = new Point(4, 24);
+            tbField.Name = "tbField";
+            tbField.Padding = new Padding(3);
+            tbField.Size = new Size(195, 179);
+            tbField.TabIndex = 3;
+            tbField.Text = "Поле";
+            tbField.UseVisualStyleBackColor = true;
+            // 
+            // tvField
+            // 
+            tvField.ContextMenuStrip = cmEquipment;
+            tvField.Dock = DockStyle.Fill;
+            tvField.FullRowSelect = true;
+            tvField.HideSelection = false;
+            tvField.Location = new Point(3, 3);
+            tvField.Margin = new Padding(0);
+            tvField.Name = "tvField";
+            tvField.Size = new Size(189, 173);
+            tvField.TabIndex = 4;
+            tvField.MouseDown += tvField_MouseDown;
             // 
             // tabControl1
             // 
@@ -975,6 +1003,7 @@
             cmModules.ResumeLayout(false);
             tpEquipment.ResumeLayout(false);
             cmEquipment.ResumeLayout(false);
+            tbField.ResumeLayout(false);
             tabControl1.ResumeLayout(false);
             tpProps.ResumeLayout(false);
             panRight.ResumeLayout(false);
@@ -1079,5 +1108,7 @@
         private ToolStripSeparator toolStripSeparator7;
         private ToolStripSeparator toolStripSeparator9;
         private ToolStripSeparator toolStripSeparator8;
+        private TabPage tbField;
+        private TreeView tvField;
     }
 }

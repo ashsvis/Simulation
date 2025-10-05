@@ -23,6 +23,8 @@ namespace Simulator
             tvModules.BackColor = Color.FromArgb(63, 64, 65);
             tvEquipment.ForeColor = Color.FromArgb(253, 254, 255);
             tvEquipment.BackColor = Color.FromArgb(63, 64, 65);
+            tvField.ForeColor = Color.FromArgb(253, 254, 255);
+            tvField.BackColor = Color.FromArgb(63, 64, 65);
             tvLibrary.ForeColor = Color.FromArgb(253, 254, 255);
             tvLibrary.BackColor = Color.FromArgb(63, 64, 65);
             pgProps.ViewForeColor = Color.FromArgb(253, 254, 255);
@@ -63,6 +65,8 @@ namespace Simulator
             tvModules.Nodes.AddRange(Project.GetModulesTree());
             tvEquipment.Nodes.Clear();
             tvEquipment.Nodes.AddRange(Project.GetEquipmentTree());
+            tvField.Nodes.Clear();
+            tvField.Nodes.AddRange(Project.GetFieldTree());
             if (e.ChangeKind == ProjectChangeKind.Clear || e.ChangeKind == ProjectChangeKind.Load)
             {
                 pgProps.SelectedObject = null;
@@ -83,6 +87,9 @@ namespace Simulator
 
             tvEquipment.Nodes.Clear();
             tvEquipment.Nodes.AddRange(Project.GetEquipmentTree());
+
+            tvField.Nodes.Clear();
+            tvField.Nodes.AddRange(Project.GetFieldTree());
 
             timerInterface.Enabled = true;
         }
@@ -119,6 +126,9 @@ namespace Simulator
 
             tvEquipment.Nodes.Clear();
             tvEquipment.Nodes.AddRange(Project.GetEquipmentTree());
+
+            tvField.Nodes.Clear();
+            tvField.Nodes.AddRange(Project.GetFieldTree());
         }
 
         public void AddModuleToProject(Module? newModule = null)
@@ -143,18 +153,36 @@ namespace Simulator
         {
             var unit = Project.AddUnitToProject(newUnit);
 
-            tvEquipment.Nodes.Clear();
-            tvEquipment.Nodes.AddRange(Project.GetEquipmentTree());
+            tvField.Nodes.Clear();
+            tvField.Nodes.AddRange(Project.GetEquipmentTree());
 
-            var node = tvEquipment.Nodes[0].Nodes.Cast<TreeNode>().FirstOrDefault(x => x.Tag == unit);
+            var node = tvField.Nodes[0].Nodes.Cast<TreeNode>().FirstOrDefault(x => x.Tag == unit);
             if (node != null)
             {
-                tvEquipment.SelectedNode = node;
+                tvField.SelectedNode = node;
                 node.EnsureVisible();
                 pgProps.SelectedObject = unit;
             }
 
             CreateNewModuleForm(unit);
+        }
+
+        public void AddFieldToProject(Field? newField = null)
+        {
+            var field = Project.AddFieldToProject(newField);
+
+            tvField.Nodes.Clear();
+            tvField.Nodes.AddRange(Project.GetFieldTree());
+
+            var node = tvField.Nodes[0].Nodes.Cast<TreeNode>().FirstOrDefault(x => x.Tag == field);
+            if (node != null)
+            {
+                tvField.SelectedNode = node;
+                node.EnsureVisible();
+                pgProps.SelectedObject = field;
+            }
+
+            CreateNewModuleForm(field);
         }
 
         private void tsmiAddModule_Click(object sender, EventArgs e)
@@ -166,6 +194,9 @@ namespace Simulator
                     break;
                 case 1:
                     AddUnitToProject();
+                    break;
+                case 2:
+                    AddFieldToProject();
                     break;
             }
         }
@@ -217,9 +248,14 @@ namespace Simulator
                         !Project.Running && tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module;
                     break;
                 case 1:
-                    tsbShowModuleForm.Enabled = tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Unit;
+                    tsbShowModuleForm.Enabled = tvField.SelectedNode != null && tvField.SelectedNode.Tag is Model.Unit;
                     tsbDeleteModule.Enabled =
-                        !Project.Running && tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Unit;
+                        !Project.Running && tvField.SelectedNode != null && tvField.SelectedNode.Tag is Model.Unit;
+                    break;
+                case 2:
+                    tsbShowModuleForm.Enabled = tvField.SelectedNode != null && tvField.SelectedNode.Tag is Model.Field;
+                    tsbDeleteModule.Enabled =
+                        !Project.Running && tvField.SelectedNode != null && tvField.SelectedNode.Tag is Model.Field;
                     break;
             }
             tsmiLeftPanelVisible.Checked = panLeft.Width > 0;
@@ -390,6 +426,9 @@ namespace Simulator
 
                 tvEquipment.Nodes.Clear();
                 tvEquipment.Nodes.AddRange(Project.GetEquipmentTree());
+
+                tvField.Nodes.Clear();
+                tvField.Nodes.AddRange(Project.GetFieldTree());
             }
         }
 
@@ -555,13 +594,24 @@ namespace Simulator
                     }
                     break;
                 case 1:
-                    if (tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Unit unit)
+                    if (tvField.SelectedNode != null && tvField.SelectedNode.Tag is Model.Unit unit)
                     {
                         if (MessageBox.Show("Это оборудование будет удалено безвозвратно! Удалить?",
                             "Удаление текущего оборудования", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                         {
                             Project.RemoveUnitFromProject(unit);
                             Host.RemoveModuleChildWindowFromPanels(unit);
+                        }
+                    }
+                    break;
+                case 2:
+                    if (tvField.SelectedNode != null && tvField.SelectedNode.Tag is Model.Field field)
+                    {
+                        if (MessageBox.Show("Эта мнемосхема будет удалена безвозвратно! Удалить?",
+                            "Удаление текущей мнемосхемы", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                        {
+                            Project.RemoveFieldFromProject(field);
+                            Host.RemoveModuleChildWindowFromPanels(field);
                         }
                     }
                     break;
@@ -573,14 +623,19 @@ namespace Simulator
             switch (tcTools.SelectedIndex)
             {
                 case 0:
-                    if (tvModules.SelectedNode is not TreeNode node) return;
-                    if (node.Tag is not Model.Module treeModule) return;
-                    EnsureShowModuleChildForm(treeModule);
+                    if (tvModules.SelectedNode is not TreeNode treeModule) return;
+                    if (treeModule.Tag is not Model.Module module) return;
+                    EnsureShowModuleChildForm(module);
                     break;
                 case 1:
-                    if (tvEquipment.SelectedNode is not TreeNode node1) return;
-                    if (node1.Tag is not Model.Unit treeModule1) return;
-                    EnsureShowModuleChildForm(treeModule1);
+                    if (tvEquipment.SelectedNode is not TreeNode treeUnit) return;
+                    if (treeUnit.Tag is not Model.Unit unit) return;
+                    EnsureShowModuleChildForm(unit);
+                    break;
+                case 2:
+                    if (tvField.SelectedNode is not TreeNode treeField) return;
+                    if (treeField.Tag is not Model.Field field) return;
+                    EnsureShowModuleChildForm(field);
                     break;
             }
         }
@@ -736,14 +791,14 @@ namespace Simulator
 
         private void tsmiRenameUnit_Click(object sender, EventArgs e)
         {
-            if (tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Unit module)
+            if (tvField.SelectedNode != null && tvField.SelectedNode.Tag is Model.Unit module)
             {
                 var dlg = new ChangeNameDialog(module.Name);
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
                     if (!string.IsNullOrWhiteSpace(dlg.EnteredValue) && !Project.Equipment.Any(x => x.Name.Equals(dlg.EnteredValue)))
                     {
-                        tvEquipment.SelectedNode.Text = dlg.EnteredValue;
+                        tvField.SelectedNode.Text = dlg.EnteredValue;
                         module.Name = dlg.EnteredValue;
                         Project.Changed = true;
                     }
@@ -755,7 +810,7 @@ namespace Simulator
 
         private void tsmiUnitDublicate_Click(object sender, EventArgs e)
         {
-            if (tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Unit unit)
+            if (tvField.SelectedNode != null && tvField.SelectedNode.Tag is Model.Unit unit)
             {
                 var dlg = new ChangeNameDialog(unit.Name);
                 if (dlg.ShowDialog() == DialogResult.OK)
@@ -775,7 +830,7 @@ namespace Simulator
 
         private void cmEquipment_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            var isLinkToUnit = tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Unit;
+            var isLinkToUnit = tvField.SelectedNode != null && tvField.SelectedNode.Tag is Model.Unit;
             tsmiUnitDublicate.Visible = isLinkToUnit;
             tsmiRenameUnit.Visible = isLinkToUnit;
             e.Cancel = !isLinkToUnit;
@@ -783,13 +838,13 @@ namespace Simulator
 
         private void tvEquipment_MouseDown(object sender, MouseEventArgs e)
         {
-            var node = tvEquipment.GetNodeAt(e.X, e.Y);
+            var node = tvField.GetNodeAt(e.X, e.Y);
             if (node != null)
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    tvEquipment.SelectedNode = null;
-                    tvEquipment.SelectedNode = node;
+                    tvField.SelectedNode = null;
+                    tvField.SelectedNode = node;
                     if (node.Tag is Model.Unit unit)
                     {
                         pgProps.SelectedObject = unit;
@@ -799,7 +854,7 @@ namespace Simulator
                     return;
                 }
             }
-            tvEquipment.SelectedNode = node;
+            tvField.SelectedNode = node;
 
         }
 
@@ -846,6 +901,28 @@ namespace Simulator
         internal void RefreshPanels()
         {
             Host.RefreshPanels();
+        }
+
+        private void tvField_MouseDown(object sender, MouseEventArgs e)
+        {
+            var node = tvField.GetNodeAt(e.X, e.Y);
+            if (node != null)
+            {
+                if (e.Button == MouseButtons.Left)
+                {
+                    tvField.SelectedNode = null;
+                    tvField.SelectedNode = node;
+                    if (node.Tag is Model.Field field)
+                    {
+                        pgProps.SelectedObject = field;
+                        if (e.Clicks > 1)
+                            EnsureShowModuleChildForm(field);
+                    }
+                    return;
+                }
+            }
+            tvField.SelectedNode = node;
+
         }
     }
 }

@@ -71,8 +71,11 @@ namespace Simulator.Model
             {
                 link.SetItemId(Id);
             }
-            if (Instance is ILoadSave inst) 
+            if (Instance is ILoadSave inst)
+            {
                 inst.Load(item.Element("Instance"));
+                CalculateTargets();
+            }
         }
 
         public SizeF Size { get => size; set => size = value; }
