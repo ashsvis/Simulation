@@ -537,6 +537,7 @@ namespace Simulator.Model
         public static void UpdateElementAndFunction(Logic.CommonLogic ori, Element element, Logic.CommonLogic func)
         {
             func.SetItemId(ori.ItemId);
+            func.Name = ori.Name;
             for (var i = 0; i < ori.InputLinkSources.Length; i++)
             {
                 if (ori.LinkedInputs[i])

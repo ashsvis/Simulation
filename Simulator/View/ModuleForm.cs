@@ -305,14 +305,12 @@ namespace Simulator
                             using var exlinkpen = new Pen(Color.FromArgb(255, color), 0);
                             using var exlinkbrush = new SolidBrush(Color.FromArgb(255, color));
 
-                            //var (moduleName, elementName) = Project.GetAddressById(id);
                             var (moduleName, elementName, inputName) = Project.GetOutputByElementId(id, pinout);
 
                             if (!string.IsNullOrWhiteSpace(moduleName + elementName))
                             {
                                 var pt = item.InputPins[i];
                                 graphics.DrawLine(exlinkpen, PointF.Subtract(pt, new SizeF(Element.Step * 3, 0)), pt);
-                                //var text = pinout > 0 ? $"{moduleName}.{elementName}.{pinout + 1}" : $"{moduleName}.{elementName}";
                                 var text = $"{moduleName}.{elementName}.{inputName}";
                                 var ms = graphics.MeasureString(text, font);
                                 var rect = new RectangleF(pt.X - Element.Step * 3 - ms.Width, pt.Y - ms.Height, ms.Width, ms.Height);
