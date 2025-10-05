@@ -310,10 +310,10 @@ namespace Simulator
                             if (!string.IsNullOrWhiteSpace(moduleName + elementName))
                             {
                                 var pt = item.InputPins[i];
-                                graphics.DrawLine(exlinkpen, PointF.Subtract(pt, new SizeF(Element.Step * 3, 0)), pt);
+                                graphics.DrawLine(exlinkpen, PointF.Subtract(pt, new SizeF(Element.Step, 0)), pt);
                                 var text = $"{moduleName}.{elementName}.{inputName}";
                                 var ms = graphics.MeasureString(text, font);
-                                var rect = new RectangleF(pt.X - Element.Step * 3 - ms.Width, pt.Y - ms.Height, ms.Width, ms.Height);
+                                var rect = new RectangleF(pt.X - Element.Step - ms.Width, pt.Y - ms.Height, ms.Width, ms.Height);
                                 graphics.DrawRectangles(exlinkpen, [rect]);
                                 graphics.DrawString(text, font, exlinkbrush, rect.Location);
                             }
