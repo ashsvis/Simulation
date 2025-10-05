@@ -1,9 +1,13 @@
 ﻿using Simulator.Model.Interfaces;
+using Simulator.Model.Outputs;
+using Simulator.View;
+using System.Drawing.Imaging;
+using System.Text;
 using System.Xml.Linq;
 
 namespace Simulator.Model.Fields
 {
-    public class IMAGEHOLDER : CommonFields, ICustomDraw
+    public class IMAGEHOLDER : CommonFields, ICustomDraw, IContextMenu
     {
         private float width = Element.Step * 100;
         private float height = Element.Step * 100;
@@ -38,6 +42,8 @@ namespace Simulator.Model.Fields
             }
         }
 
+        private Image? image;
+
         public override void CalculateTargets(PointF location, ref SizeF size,
             Dictionary<int, RectangleF> itargets, Dictionary<int, PointF> ipins, Dictionary<int, RectangleF> otargets, Dictionary<int, PointF> opins)
         {
@@ -52,7 +58,12 @@ namespace Simulator.Model.Fields
 
         public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush, int index, bool selected)
         {
-            graphics.DrawRectangles(pen, [rect]);
+            if (image != null) 
+            {
+                graphics.DrawImageUnscaledAndClipped(image, Rectangle.Ceiling(rect));
+            }
+            else
+                graphics.DrawRectangles(pen, [rect]);
         }
 
         public override void Save(XElement xtance)
@@ -62,6 +73,15 @@ namespace Simulator.Model.Fields
             xsource.Add(new XAttribute("Width", (int)Width));
             xsource.Add(new XAttribute("Height", (int)Height));
             xtance.Add(xsource);
+            if (image != null)
+                xtance.Add(new XElement("Image", ImageToByteArray(image)));
+        }
+
+        private static byte[] ImageToByteArray(System.Drawing.Image imageIn)
+        {
+            using var ms = new MemoryStream();
+            imageIn.Save(ms, ImageFormat.Png);
+            return ms.ToArray();
         }
 
         public override void Load(XElement? xtance)
@@ -77,6 +97,41 @@ namespace Simulator.Model.Fields
                     Height = height;
                 busy = false;
             }
+            var ximage = xtance?.Element("Image");
+            if (ximage != null)
+            {
+                try
+                {
+                    byte[] bytes = Encoding.Default.GetBytes(ximage.Value);
+                    var ms = new MemoryStream(bytes);
+                    image = Image.FromStream(ms);
+                }
+                catch { }
+            }
+
+        }
+
+        public void ClearContextMenu(ContextMenuStrip contextMenu)
+        {
+            contextMenu.Items.Clear();
+        }
+
+        public void AddMenuItems(ContextMenuStrip contextMenu)
+        {
+            ToolStripMenuItem item;
+            item = new ToolStripMenuItem() { Text = "Загрузить рисунок...", Tag = this };
+            item.Click += (s, e) =>
+            {
+                var dlg = new OpenFileDialog() { DefaultExt = ".png", Filter = "*.png|*.png" };
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+                    image = Image.FromFile(dlg.FileName);
+                    Width = image.Width;
+                    Height = image.Height;
+                    Project.RefreshPanels();
+                }
+            };
+            contextMenu.Items.Add(item);
         }
     }
 }
