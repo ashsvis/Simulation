@@ -42,37 +42,25 @@ namespace Simulator
         private bool dragging = false;
         private bool segmentmoving = false;
 
-        private readonly List<ValueItem[]> elements = [];
-
-        private readonly ProjectProxy projectProxy = new();
-
-        private int BuildTableElements()
-        {
-            elements.Clear();
-            if (projectProxy is IVariable manager)
-            {
-                foreach (var element in Module.Elements)
-                {
-                    List<ValueItem> items = [];
-                    for (var i = 0; i < 8; i++)
-                    {
-                        ValueItem? item = manager.ReadValue(element.Id, i, ValueSide.Input, ValueKind.Digital);
-                        items.Add(item ?? new ValueItem());
-                    }
-                    for (var i = 0; i < 5; i++)
-                    {
-                        ValueItem? item = manager.ReadValue(element.Id, i, ValueSide.Output, ValueKind.Digital);
-                        items.Add(item ?? new ValueItem());
-                    }
-                    elements.Add([.. items]);
-                }
-            }
-            return elements.Count;
-        }
+        private readonly View.ZoomControl zoomPad;
 
         public ModuleForm(PanelForm panelForm, Model.Module module)
         {
             InitializeComponent();
+            zoomPad = new ZoomControl() 
+            { 
+                Dock = DockStyle.Fill, 
+                ForeColor = Color.FromArgb(253, 254, 255),
+                BackColor = Color.FromArgb(63, 64, 65),
+            };
+            zoomPad.DragEnter += zoomPad_DragEnter;
+            zoomPad.DragOver += zoomPad_DragOver;
+            zoomPad.DragDrop += zoomPad_DragDrop;
+            zoomPad.OnDraw += zoomPad_OnDraw;
+            zoomPad.MouseDown += zoomPad_MouseDown;
+            zoomPad.MouseMove += zoomPad_MouseMove;
+            zoomPad.MouseUp += zoomPad_MouseUp;
+            Controls.Add(zoomPad);
             if (Properties.Settings.Default.DarkMode)
                 ThemeManager.ApplyDarkTheme(this);
             this.panelForm = panelForm;
@@ -93,7 +81,6 @@ namespace Simulator
         private void Item_ResultChanged(object sender, ResultCalculateEventArgs args)
         {
             zoomPad.Invalidate();
-            lvVariables.Invalidate();
         }
 
         private void ModuleForm_Load(object sender, EventArgs e)
@@ -102,9 +89,6 @@ namespace Simulator
             links.ForEach(item => item.SetSelect(false));
             ElementSelected?.Invoke(Module, EventArgs.Empty);
             timerInterface.Enabled = true;
-            splitContainer1.SplitterDistance = splitContainer1.ClientSize.Height;
-            lvVariables.VirtualListSize = BuildTableElements();
-            lvVariables.Invalidate();
         }
 
         private void ModuleForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -121,10 +105,9 @@ namespace Simulator
         private void Module_SimulationTick(object? sender, EventArgs e)
         {
             zoomPad.Invalidate();
-            lvVariables.Invalidate();
         }
 
-        private void zoomPad_DragEnter(object sender, DragEventArgs e)
+        private void zoomPad_DragEnter(object? sender, DragEventArgs e)
         {
             if (!Project.Running && e.Data != null)
             {
@@ -135,7 +118,7 @@ namespace Simulator
                 e.Effect = DragDropEffects.None;
         }
 
-        private void zoomPad_DragOver(object sender, DragEventArgs e)
+        private void zoomPad_DragOver(object? sender, DragEventArgs e)
         {
             if (e.Data == null) return;
             if (Project.Running) return;
@@ -153,7 +136,7 @@ namespace Simulator
                 (float)Math.Round(pointF.Y / gridStep) * gridStep);
         }
 
-        private void zoomPad_DragDrop(object sender, DragEventArgs e)
+        private void zoomPad_DragDrop(object? sender, DragEventArgs e)
         {
             if (e.Data == null) return;
             if (Project.Running) return;
@@ -295,7 +278,7 @@ namespace Simulator
             return false;
         }
 
-        private void zoomPad_OnDraw(object sender, ZoomControl.DrawEventArgs e)
+        private void zoomPad_OnDraw(object? sender, ZoomControl.DrawEventArgs e)
         {
             var graphics = e.Graphics;
             if (graphics == null) return;
@@ -700,7 +683,7 @@ namespace Simulator
             return grid;
         }
 
-        private void zoomPad_MouseDown(object sender, MouseEventArgs e)
+        private void zoomPad_MouseDown(object? sender, MouseEventArgs e)
         {
             mousePosition = firstMouseDown = e.Location;
             linkFirstPoint = null;
@@ -896,7 +879,8 @@ namespace Simulator
             }
             zoomPad.Invalidate();
         }
-        private void zoomPad_MouseMove(object sender, MouseEventArgs e)
+
+        private void zoomPad_MouseMove(object? sender, MouseEventArgs e)
         {
             if (Project.Running)
             {
@@ -952,7 +936,7 @@ namespace Simulator
             }
         }
 
-        private void zoomPad_MouseUp(object sender, MouseEventArgs e)
+        private void zoomPad_MouseUp(object? sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
@@ -1022,10 +1006,6 @@ namespace Simulator
                     var value = tar.GetValueFromInp((int)pin);
                     if (value is bool bval)
                         tar.SetValueToInp((int)pin, !bval);
-
-                    lvVariables.VirtualListSize = BuildTableElements();
-                    lvVariables.Invalidate();
-
                 }
                 if (TryGetPin(e.Location, out element, out pin, out _, out output) &&
                     element != null && pin != null && element.Instance is IManualCommand comm && output == true)
@@ -1033,10 +1013,6 @@ namespace Simulator
                     var value = comm.GetValueFromOut((int)pin) ?? false;
                     if (value is bool bval)
                         comm.SetValueToOut((int)pin, !bval);
-
-                    lvVariables.VirtualListSize = BuildTableElements();
-                    lvVariables.Invalidate();
-
                 }
                 if (TryGetPin(e.Location, out Element? elementSecond, out int? pinSecond, out PointF? linkSecondPoint, out bool? outputSecond) &&
                      elementSecond?.Instance is ILinkSupport target && elementFirst?.Instance is ILinkSupport source)
@@ -1093,9 +1069,6 @@ namespace Simulator
         public void UpdateView()
         {
             zoomPad.Invalidate();
-
-            lvVariables.VirtualListSize = BuildTableElements();
-            lvVariables.Invalidate();
         }
 
         private void tsbSave_Click(object sender, EventArgs e)
@@ -1112,7 +1085,7 @@ namespace Simulator
             }
         }
 
-        private void ModuleForm_KeyDown(object sender, KeyEventArgs e)
+        private void ModuleForm_KeyDown(object? sender, KeyEventArgs e)
         {
             switch (e.KeyCode)
             {
@@ -1176,7 +1149,7 @@ namespace Simulator
             }
         }
 
-        private void PasteElementsAndLinksFromClipboard()
+        internal void PasteElementsAndLinksFromClipboard()
         {
             if (Clipboard.ContainsData("XML Spreadsheet"))
             {
@@ -1235,7 +1208,7 @@ namespace Simulator
             }
         }
 
-        private void CopySelectedElementsAndLinkToClipboard()
+        internal void CopySelectedElementsAndLinkToClipboard()
         {
             var root = new XElement("Clipboard");
             XDocument doc = new(new XComment("Выборка"), root);
@@ -1264,7 +1237,7 @@ namespace Simulator
             Clipboard.SetData("XML Spreadsheet", xmlStream);
         }
 
-        private void CutSelectedElementsAndLinkToClipboard()
+        internal void CutSelectedElementsAndLinkToClipboard()
         {
             CopySelectedElementsAndLinkToClipboard();
             DeleteAllSelectedElements();
@@ -1304,42 +1277,12 @@ namespace Simulator
             Project.RefreshPanels();
         }
 
-        private void timerInterface_Tick(object sender, EventArgs e)
+        private void timerInterface_Tick(object? sender, EventArgs e)
         {
-            tsbSave.Enabled = Project.Changed;
-            tsbCut.Enabled = tsbCopy.Enabled = items.Any(x => x.Selected);
-            tsbPaste.Enabled = Clipboard.ContainsData("XML Spreadsheet");
+            // stub
         }
 
-        private void tsbCut_Click(object sender, EventArgs e)
-        {
-            CutSelectedElementsAndLinkToClipboard();
-        }
-
-        private void tsbCopy_Click(object sender, EventArgs e)
-        {
-            CopySelectedElementsAndLinkToClipboard();
-        }
-
-        private void tsbPaste_Click(object sender, EventArgs e)
-        {
-            PasteElementsAndLinksFromClipboard();
-        }
-
-        private void lvVariables_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
-        {
-            try
-            {
-                ValueItem[] data = elements[e.ItemIndex];
-                var item = new ListViewItem($"L{e.ItemIndex + 1}");
-                e.Item = item;
-                foreach (var a in data)
-                    item.SubItems.Add($"{a}");
-            }
-            catch { }
-        }
-
-        private void cmZoomPad_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void cmZoomPad_Opening(object? sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = Project.Running || cmZoomPad.Items.Count == 0;
         }

@@ -18,6 +18,21 @@ namespace Simulator
             InitializeComponent();
             if (Properties.Settings.Default.DarkMode)
                 ThemeManager.ApplyDarkTheme(this);
+
+            tvModules.ForeColor = Color.FromArgb(253, 254, 255);
+            tvModules.BackColor = Color.FromArgb(63, 64, 65);
+            tvEquipment.ForeColor = Color.FromArgb(253, 254, 255);
+            tvEquipment.BackColor = Color.FromArgb(63, 64, 65);
+            tvLibrary.ForeColor = Color.FromArgb(253, 254, 255);
+            tvLibrary.BackColor = Color.FromArgb(63, 64, 65);
+            pgProps.ViewForeColor = Color.FromArgb(253, 254, 255);
+            pgProps.ViewBackColor = Color.FromArgb(63, 64, 65);
+            pgProps.LineColor = Color.FromArgb(73, 74, 75);
+            pgProps.CategoryForeColor = Color.FromArgb(253, 254, 255);
+            pgProps.CategorySplitterColor = Color.FromArgb(73, 74, 75);
+            pgProps.HelpForeColor = Color.FromArgb(253, 254, 255);
+            pgProps.HelpBackColor = Color.FromArgb(73, 74, 75);
+
             UpdateScreenControls(hostForm);
             Host = hostForm;
             PanelIndex = panelIndex;
@@ -193,7 +208,7 @@ namespace Simulator
         private void timerInterface_Tick(object sender, EventArgs e)
         {
             tsbSave.Enabled = tsmiSave.Enabled = Project.Changed;
-            îêíîToolStripMenuItem.Visible = MdiChildren.Length > 0;
+            tsmiWindow.Visible = MdiChildren.Length > 0;
             switch (tcTools.SelectedIndex)
             {
                 case 0:
@@ -211,7 +226,27 @@ namespace Simulator
             tsmiRightPanelVisible.Checked = panRight.Width > 0;
             tsmiRun.Checked = Project.Running;
             tsbAddModule.Enabled = tsbAddBock.Enabled = !Project.Running;
-            tsmiCreate.Enabled = tsmiOpen.Enabled = tsmiAddModule.Enabled = tsbOpenProject.Enabled = !Project.Running;
+            tsmiCreate.Enabled = tsmiOpen.Enabled = tsmiAddModule.Enabled = !Project.Running;
+            tsbPaste.Enabled = !Project.Running && ActiveMdiChild is ModuleForm && Clipboard.ContainsData("XML Spreadsheet");
+            tsbCut.Enabled = tsbCopy.Enabled = ActiveMdiChild is ModuleForm form && form.Module.Elements.Any(x => x.Selected);
+        }
+
+        private void tsbCut_Click(object? sender, EventArgs e)
+        {
+            if (ActiveMdiChild is ModuleForm form && form.Module.Elements.Any(x => x.Selected))
+                form.CutSelectedElementsAndLinkToClipboard();
+        }
+
+        private void tsbCopy_Click(object? sender, EventArgs e)
+        {
+            if (ActiveMdiChild is ModuleForm form && form.Module.Elements.Any(x => x.Selected))
+                form.CopySelectedElementsAndLinkToClipboard();
+        }
+
+        private void tsbPaste_Click(object sender, EventArgs e)
+        {
+            if (ActiveMdiChild is ModuleForm form)
+                form.PasteElementsAndLinksFromClipboard();
         }
 
         private void ïîÃîğèçîíòàëèToolStripMenuItem_Click(object sender, EventArgs e)
@@ -781,6 +816,11 @@ namespace Simulator
             {
                 tsbRun.Text = "Ñòîï";
                 tsbRun.Image = Properties.Resources.stop;
+                foreach (var form in MdiChildren.OfType<ModuleForm>())
+                {
+                    form.Module.Elements.ForEach(x => x.Selected = false);
+                    form.Module.Links.ForEach(x => x.SetSelect(false));
+                }
                 Project.Start();
                 Host.RefreshPanels();
 
