@@ -93,14 +93,14 @@ namespace Simulator.Model.Logic
         [Browsable(false), Category("Диагностика"), DisplayName("Показывать значения")]
         public bool VisibleValues { get; set; } = true;
 
-        [Category("Входы"), DisplayName("Управление")]
+        [Browsable(false), Category("Входы"), DisplayName("Управление")]
         public bool[] Inputs => getInputs;
 
         [Category("Входы"), DisplayName("Инверсия")]
         [DynamicPropertyFilter(nameof(FuncName), "And,Or")]
         public bool[] InverseInputs => getInverseInputs;
 
-        [Category("Выходы"), DisplayName("Выход 1")]
+        [Browsable(false), Category("Выходы"), DisplayName("Выход 1")]
         [DynamicPropertyFilter(nameof(FuncName), "Not,And,Or,Xor,Rs,Sr,Fe,Pulse,OnDelay,OffDelay")]
         public virtual bool Out
         {
@@ -113,7 +113,7 @@ namespace Simulator.Model.Logic
             }
         }
 
-        [Category("Выходы"), DisplayName("Состояние")]
+        [Browsable(false), Category("Выходы"), DisplayName("Состояние")]
         [DynamicPropertyFilter(nameof(FuncName), "Assembly")]
         public object[] Outputs => getOutputs;
 

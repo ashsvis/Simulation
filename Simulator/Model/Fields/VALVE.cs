@@ -26,19 +26,19 @@ namespace Simulator.Model.Fields
         [Category("Дизайн"), DisplayName("Ориентация")]
         public Orientation Orientation { get; set; }
 
-        [Category("Дизайн"), DisplayName("Цвет открытия")]
+        [Category("Цвет состояния"), DisplayName("Открыто")]
         public Color OpenColor { get; set; } = Color.LimeGreen;
         
-        [Category("Дизайн"), DisplayName("Цвет закрытия")]
+        [Category("Цвет состояния"), DisplayName("Закрыто")]
         public Color CloseColor { get; set; } = Color.Black;
 
-        [Category("Дизайн"), DisplayName("Цвет хода")]
+        [Category("Цвет состояния"), DisplayName("Ход")]
         public Color MoveColor { get; set; } = Color.Gold;
 
-        [Category("Дизайн"), DisplayName("Цвет аварии")]
+        [Category("Цвет состояния"), DisplayName("Авария")]
         public Color ErrorColor { get; set; } = Color.OrangeRed;
 
-        [Category("Дизайн"), DisplayName("Цвет команды")]
+        [Category("Цвет управления"), DisplayName("Команда")]
         public Color CommandColor { get; set; } = Color.Blue;
 
         public VALVE() : base(FieldFunction.Valve) { }

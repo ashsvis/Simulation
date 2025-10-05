@@ -52,7 +52,9 @@ namespace Simulator
                 Dock = DockStyle.Fill, 
                 ForeColor = Color.FromArgb(253, 254, 255),
                 BackColor = Color.FromArgb(63, 64, 65),
+                AllowDrop = true,
             };
+            zoomPad.ContextMenuStrip = cmZoomPad;
             zoomPad.DragEnter += zoomPad_DragEnter;
             zoomPad.DragOver += zoomPad_DragOver;
             zoomPad.DragDrop += zoomPad_DragDrop;
@@ -303,12 +305,15 @@ namespace Simulator
                             using var exlinkpen = new Pen(Color.FromArgb(255, color), 0);
                             using var exlinkbrush = new SolidBrush(Color.FromArgb(255, color));
 
-                            var (moduleName, elementName) = Project.GetAddressById(id);
+                            //var (moduleName, elementName) = Project.GetAddressById(id);
+                            var (moduleName, elementName, inputName) = Project.GetOutputByElementId(id, pinout);
+
                             if (!string.IsNullOrWhiteSpace(moduleName + elementName))
                             {
                                 var pt = item.InputPins[i];
                                 graphics.DrawLine(exlinkpen, PointF.Subtract(pt, new SizeF(Element.Step * 3, 0)), pt);
-                                var text = $"{moduleName}.{elementName}.{pinout + 1}";
+                                //var text = pinout > 0 ? $"{moduleName}.{elementName}.{pinout + 1}" : $"{moduleName}.{elementName}";
+                                var text = $"{moduleName}.{elementName}.{inputName}";
                                 var ms = graphics.MeasureString(text, font);
                                 var rect = new RectangleF(pt.X - Element.Step * 3 - ms.Width, pt.Y - ms.Height, ms.Width, ms.Height);
                                 graphics.DrawRectangles(exlinkpen, [rect]);
@@ -352,8 +357,8 @@ namespace Simulator
                             StringBuilder sb = new();
                             foreach (var (element, pininp) in dict[key])
                             {
-                                var (moduleName, elementName) = Project.GetAddressById(element.Id);
-                                sb.AppendLine($"{moduleName}.{elementName}.{pininp + 1}");
+                                var (moduleName, elementName, inputName) = Project.GetInputByElementId(element.Id, pininp);
+                                sb.AppendLine($"{moduleName}.{elementName}.{inputName}");
                             }
                             var text = sb.ToString();
                             var ms = graphics.MeasureString(text, font);

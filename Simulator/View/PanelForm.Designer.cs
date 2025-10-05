@@ -560,6 +560,7 @@
             pgProps.Location = new Point(3, 3);
             pgProps.Margin = new Padding(3, 3, 0, 3);
             pgProps.Name = "pgProps";
+            pgProps.PropertySort = PropertySort.Categorized;
             pgProps.Size = new Size(189, 180);
             pgProps.TabIndex = 0;
             pgProps.UseCompatibleTextRendering = true;

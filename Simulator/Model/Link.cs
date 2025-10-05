@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Simulator.Model.Interfaces;
+using System.ComponentModel;
 using System.Globalization;
 using System.Xml.Linq;
 
@@ -132,7 +133,7 @@ namespace Simulator.Model
         }
 
 
-        [Category(" Общие"), DisplayName("Идентификатор")]
+        [Browsable(false), Category(" Общие"), DisplayName("Идентификатор")]
         public Guid Id => guids[2];
 
         public void SetId(Guid id)
@@ -140,7 +141,10 @@ namespace Simulator.Model
             guids[2] = id;
         }
 
-        [Category("Источник"), DisplayName("Идентификатор")]
+        [Category("Источник"), DisplayName("Имя тега")]
+        public string SourceName => Project.GetElementById(guids[0]);
+
+        [Browsable(false)]
         public Guid SourceId => guids[0];
 
         public void SetSourceId(Guid id)
@@ -151,7 +155,10 @@ namespace Simulator.Model
         [Category("Источник"), DisplayName("Выход"), Description("Индекс выхода источника")]
         public int SourcePinIndex { get; }
 
-        [Category("Приёмник"), DisplayName("Идентификатор")]
+        [Category("Приёмник"), DisplayName("Имя тега")]
+        public string DestinationName => Project.GetElementById(guids[1]);
+
+        [Browsable(false)]
         public Guid DestinationId => guids[1];
 
         public void SetDestinationId(Guid id)

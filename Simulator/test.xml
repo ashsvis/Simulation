@@ -30,7 +30,9 @@
         <Element Id="f4791613-9a0d-4950-ac1e-60710d66b518" X="512" Y="40">
           <Instance Type="Simulator.Model.Logic.NOT">
             <Inputs>
-              <Input Index="0" />
+              <Input Index="0">
+                <Source Id="66dd2bc3-848f-4adb-92d6-b51f548e4ce3" External="true" />
+              </Input>
             </Inputs>
             <Outputs>
               <Output Index="0" Invert="true" />
@@ -145,6 +147,17 @@
             </Inputs>
             <Outputs>
               <Output Index="0" Invert="true" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="66dd2bc3-848f-4adb-92d6-b51f548e4ce3" X="200" Y="144">
+          <Instance Type="Simulator.Model.Trigger.RS" Name="RS">
+            <Inputs>
+              <Input Index="0" Name="S" />
+              <Input Index="1" Name="R" />
+            </Inputs>
+            <Outputs>
+              <Output Index="0" Name="Q" />
             </Outputs>
           </Instance>
         </Element>

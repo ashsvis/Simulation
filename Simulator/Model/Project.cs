@@ -11,17 +11,85 @@ namespace Simulator.Model
 
         internal static (string, string) GetAddressById(Guid id)
         {
+            var k = 1;
             foreach (var module in Modules)
             {
                 var n = 1;
                 foreach (var element in module.Elements)
                 {
                     if (id == element.Id)
-                        return (module.Name, "L" + n);
+                    {
+                        var localName = $"L{n}";
+                        return (!string.IsNullOrEmpty(module.Name) ? module.Name : $"Task{k}", 
+                                element.Instance is IFunction func ? func.Name ?? localName : localName);
+                    }
                     n++;
                 }
+                k++;
             }
             return ("", "");
+        }
+
+        internal static (string, string, string) GetInputByElementId(Guid id, int pin)
+        {
+            var k = 1;
+            foreach (var module in Modules)
+            {
+                var moduleName = !string.IsNullOrEmpty(module.Name) ? module.Name : $"Task{k}";
+                var n = 1;
+                foreach (var element in module.Elements)
+                {
+                    if (id == element.Id)
+                    {
+                        var elementName = $"L{n}";
+                        var inputName = pin.ToString();
+                        if (element.Instance is IFunction func)
+                        {
+                            if (!string.IsNullOrEmpty(func.Name))
+                                elementName = func.Name;
+                            if (pin < func.InputNames.Length)
+                                inputName = !string.IsNullOrEmpty(func.InputNames[pin]) 
+                                    ? func.InputNames[pin] 
+                                    : func.InputNames.Length > 1 ? $"In{pin + 1}" : "Inp";
+                        }
+                        return (moduleName, elementName, inputName);
+                    }
+                    n++;
+                }
+                k++;
+            }
+            return ("", "", "");
+        }
+
+        internal static (string, string, string) GetOutputByElementId(Guid id, int pin)
+        {
+            var k = 1;
+            foreach (var module in Modules)
+            {
+                var moduleName = !string.IsNullOrEmpty(module.Name) ? module.Name : $"Task{k}";
+                var n = 1;
+                foreach (var element in module.Elements)
+                {
+                    if (id == element.Id)
+                    {
+                        var elementName = $"L{n}";
+                        var inputName = pin.ToString();
+                        if (element.Instance is IFunction func)
+                        {
+                            if (!string.IsNullOrEmpty(func.Name))
+                                elementName = func.Name;
+                            if (pin < func.OutputNames.Length)
+                                inputName = !string.IsNullOrEmpty(func.OutputNames[pin]) 
+                                    ? func.OutputNames[pin] 
+                                    : func.OutputNames.Length > 1 ? $"Out{pin + 1}" : "Out";
+                        }
+                        return (moduleName, elementName, inputName);
+                    }
+                    n++;
+                }
+                k++;
+            }
+            return ("", "", "");
         }
 
         internal static string GetModuleNameById(Guid id)
@@ -32,7 +100,7 @@ namespace Simulator.Model
                 foreach (var element in module.Elements)
                 {
                     if (id == element.Id)
-                        return module.Name;
+                        return !string.IsNullOrEmpty(module.Name) ? module.Name : $"Task{n}";
                     n++;
                 }
             }
@@ -62,7 +130,10 @@ namespace Simulator.Model
                 foreach (var element in module.Elements)
                 {
                     if (id == element.Id)
-                        return "L" + n;
+                    {
+                        var localName = $"L{n}";
+                        return element.Instance is IFunction func ? func.Name ?? localName : localName;
+                    }
                     n++;
                 }
             }
