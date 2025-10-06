@@ -1,8 +1,4 @@
 ﻿using Simulator.Model.Interfaces;
-using Simulator.Model.Outputs;
-using Simulator.View;
-using System.Drawing.Imaging;
-using System.Text;
 using System.Xml.Linq;
 
 namespace Simulator.Model.Fields
@@ -74,14 +70,18 @@ namespace Simulator.Model.Fields
             xsource.Add(new XAttribute("Height", (int)Height));
             xtance.Add(xsource);
             if (image != null)
-                xtance.Add(new XElement("Image", ImageToByteArray(image)));
+            {
+                xtance.Add(new XElement("Image", ImageTo64String(image)));
+            }
         }
 
-        private static byte[] ImageToByteArray(System.Drawing.Image imageIn)
+        private static string ImageTo64String(System.Drawing.Image imageIn)
         {
             using var ms = new MemoryStream();
-            imageIn.Save(ms, ImageFormat.Png);
-            return ms.ToArray();
+            imageIn.Save(ms, imageIn.RawFormat);
+            byte[] imageBytes = ms.ToArray();
+            string base64String = Convert.ToBase64String(imageBytes);
+            return base64String;
         }
 
         public override void Load(XElement? xtance)
@@ -102,8 +102,8 @@ namespace Simulator.Model.Fields
             {
                 try
                 {
-                    byte[] bytes = Encoding.Default.GetBytes(ximage.Value);
-                    var ms = new MemoryStream(bytes);
+                    byte[] bytes = Convert.FromBase64String(ximage.Value);
+                    using var ms = new MemoryStream(bytes);
                     image = Image.FromStream(ms);
                 }
                 catch { }
@@ -128,6 +128,7 @@ namespace Simulator.Model.Fields
                     image = Image.FromFile(dlg.FileName);
                     Width = image.Width;
                     Height = image.Height;
+                    Project.Changed = true;
                     Project.RefreshPanels();
                 }
             };
