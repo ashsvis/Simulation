@@ -132,6 +132,8 @@ namespace Simulator
 
         public static PointF SnapToGrid(PointF pointF, int koeff = 1)
         {
+            if ((ModifierKeys & Keys.Alt) == Keys.Alt)
+                return pointF;
             float gridStep = Element.Step * koeff;
             return new PointF(
                 (float)Math.Round(pointF.X / gridStep) * gridStep,
@@ -941,7 +943,7 @@ namespace Simulator
 
         private void zoomPad_MouseUp(object? sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left )
             {
                 if (!Project.Running && ribbon != null) // выбор рамкой
                 {
@@ -979,25 +981,31 @@ namespace Simulator
 
                     ribbon = null;
                 }
-                if (dragging)  // перетаскивание элемент(а,ов)
+                if (dragging )  // перетаскивание элемент(а,ов)
                 {
                     dragging = false;
-                    foreach (var item in items.Where(x => x.Selected))
+                    if (firstMouseDown != e.Location)
                     {
-                        item.Location = SnapToGrid(item.Location);
-                        foreach (var link in links.Where(x => x.DestinationId == item.Id))
-                            link.UpdateDestinationPoint(item.InputPins[link.DestinationPinIndex]);
-                        foreach (var link in links.Where(x => x.SourceId == item.Id))
-                            link.UpdateSourcePoint(item.OutputPins[link.SourcePinIndex]);
-                        foreach (var link in links.Where(x => x.DestinationId == item.Id || x.SourceId == item.Id))
-                            link.SnapPointsToGrid(SnapToGrid);
+                        foreach (var item in items.Where(x => x.Selected))
+                        {
+                            item.Location = SnapToGrid(item.Location);
+                            foreach (var link in links.Where(x => x.DestinationId == item.Id))
+                                link.UpdateDestinationPoint(item.InputPins[link.DestinationPinIndex]);
+                            foreach (var link in links.Where(x => x.SourceId == item.Id))
+                                link.UpdateSourcePoint(item.OutputPins[link.SourcePinIndex]);
+                            foreach (var link in links.Where(x => x.DestinationId == item.Id || x.SourceId == item.Id))
+                                link.SnapPointsToGrid(SnapToGrid);
+                        }
                     }
                 }
                 if (segmentmoving)  // перемещение сегмента линии связи
                 {
                     segmentmoving = false;
-                    if (link != null)
-                        ((Link)link).SnapPointsToGrid(SnapToGrid);
+                    if (firstMouseDown != e.Location)
+                    {
+                        if (link != null)
+                            ((Link)link).SnapPointsToGrid(SnapToGrid);
+                    }
                 }
                 var elementFirst = element;
                 var pinFirst = pin;

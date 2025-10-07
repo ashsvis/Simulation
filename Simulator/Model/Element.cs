@@ -1,4 +1,5 @@
 ﻿using Simulator.Model.Interfaces;
+using System.Globalization;
 using System.Xml.Linq;
 
 namespace Simulator.Model
@@ -63,10 +64,11 @@ namespace Simulator.Model
 
         public void Load(XElement item, Type type)
         {
-            if (!int.TryParse(item.Attribute("X")?.Value, out int x)) return;
-            if (!int.TryParse(item.Attribute("Y")?.Value, out int y)) return;
+            var fp = CultureInfo.GetCultureInfo("en-US");
+            if (!float.TryParse(item.Attribute("X")?.Value, fp, out float x)) return;
+            if (!float.TryParse(item.Attribute("Y")?.Value, fp, out float y)) return;
             Instance = Activator.CreateInstance(type);
-            Location = new Point(x, y);
+            Location = new PointF(x, y);
             if (Instance is ILinkSupport link)
             {
                 link.SetItemId(Id);
