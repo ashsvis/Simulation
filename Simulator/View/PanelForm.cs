@@ -838,13 +838,13 @@ namespace Simulator
 
         private void tvEquipment_MouseDown(object sender, MouseEventArgs e)
         {
-            var node = tvField.GetNodeAt(e.X, e.Y);
+            var node = tvEquipment.GetNodeAt(e.X, e.Y);
             if (node != null)
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    tvField.SelectedNode = null;
-                    tvField.SelectedNode = node;
+                    tvEquipment.SelectedNode = null;
+                    tvEquipment.SelectedNode = node;
                     if (node.Tag is Model.Unit unit)
                     {
                         pgProps.SelectedObject = unit;
@@ -854,7 +854,7 @@ namespace Simulator
                     return;
                 }
             }
-            tvField.SelectedNode = node;
+            tvEquipment.SelectedNode = node;
 
         }
 
