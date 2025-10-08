@@ -83,11 +83,9 @@
             tabControl1 = new TabControl();
             tpProps = new TabPage();
             pgProps = new PropertyGrid();
-            pnLeftSize = new Panel();
             tvLibrary = new TreeView();
             panRight = new Panel();
             tlpLibrary = new TableLayoutPanel();
-            panRightSize = new Panel();
             tabControl3 = new TabControl();
             tabPage2 = new TabPage();
             tsToolLibrary = new ToolStrip();
@@ -118,6 +116,8 @@
             tsbPaste = new ToolStripButton();
             toolStripSeparator6 = new ToolStripSeparator();
             tsbHelp = new ToolStripButton();
+            splitterLeft = new Splitter();
+            splitterRight = new Splitter();
             menuMainStrip.SuspendLayout();
             panLeft.SuspendLayout();
             tlpTools.SuspendLayout();
@@ -401,7 +401,6 @@
             tlpTools.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tlpTools.ColumnStyles.Add(new ColumnStyle());
             tlpTools.Controls.Add(splitContainer1, 0, 1);
-            tlpTools.Controls.Add(pnLeftSize, 1, 1);
             tlpTools.Dock = DockStyle.Fill;
             tlpTools.Location = new Point(0, 0);
             tlpTools.Name = "tlpTools";
@@ -426,7 +425,7 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(tabControl1);
-            splitContainer1.Size = new Size(203, 425);
+            splitContainer1.Size = new Size(207, 425);
             splitContainer1.SplitterDistance = 207;
             splitContainer1.TabIndex = 2;
             // 
@@ -441,7 +440,7 @@
             tcTools.Name = "tcTools";
             tcTools.Padding = new Point(0, 0);
             tcTools.SelectedIndex = 0;
-            tcTools.Size = new Size(203, 207);
+            tcTools.Size = new Size(207, 207);
             tcTools.TabIndex = 2;
             // 
             // tpModules
@@ -450,7 +449,7 @@
             tpModules.Location = new Point(4, 24);
             tpModules.Name = "tpModules";
             tpModules.Padding = new Padding(3);
-            tpModules.Size = new Size(195, 179);
+            tpModules.Size = new Size(199, 179);
             tpModules.TabIndex = 1;
             tpModules.Text = "Задачи";
             tpModules.UseVisualStyleBackColor = true;
@@ -464,7 +463,7 @@
             tvModules.Location = new Point(3, 3);
             tvModules.Margin = new Padding(0);
             tvModules.Name = "tvModules";
-            tvModules.Size = new Size(189, 173);
+            tvModules.Size = new Size(193, 173);
             tvModules.TabIndex = 2;
             tvModules.MouseDown += tvModules_MouseDown;
             // 
@@ -495,7 +494,7 @@
             tpEquipment.Location = new Point(4, 24);
             tpEquipment.Name = "tpEquipment";
             tpEquipment.Padding = new Padding(3);
-            tpEquipment.Size = new Size(195, 179);
+            tpEquipment.Size = new Size(199, 179);
             tpEquipment.TabIndex = 2;
             tpEquipment.Text = "Железо";
             tpEquipment.UseVisualStyleBackColor = true;
@@ -509,7 +508,7 @@
             tvEquipment.Location = new Point(3, 3);
             tvEquipment.Margin = new Padding(0);
             tvEquipment.Name = "tvEquipment";
-            tvEquipment.Size = new Size(189, 173);
+            tvEquipment.Size = new Size(193, 173);
             tvEquipment.TabIndex = 3;
             tvEquipment.MouseDown += tvEquipment_MouseDown;
             // 
@@ -540,7 +539,7 @@
             tbField.Location = new Point(4, 24);
             tbField.Name = "tbField";
             tbField.Padding = new Padding(3);
-            tbField.Size = new Size(195, 179);
+            tbField.Size = new Size(199, 179);
             tbField.TabIndex = 3;
             tbField.Text = "Поле";
             tbField.UseVisualStyleBackColor = true;
@@ -554,7 +553,7 @@
             tvField.Location = new Point(3, 3);
             tvField.Margin = new Padding(0);
             tvField.Name = "tvField";
-            tvField.Size = new Size(189, 173);
+            tvField.Size = new Size(193, 173);
             tvField.TabIndex = 4;
             tvField.MouseDown += tvField_MouseDown;
             // 
@@ -567,7 +566,7 @@
             tabControl1.Name = "tabControl1";
             tabControl1.Padding = new Point(0, 0);
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(203, 214);
+            tabControl1.Size = new Size(207, 214);
             tabControl1.TabIndex = 1;
             // 
             // tpProps
@@ -576,7 +575,7 @@
             tpProps.Location = new Point(4, 24);
             tpProps.Name = "tpProps";
             tpProps.Padding = new Padding(3);
-            tpProps.Size = new Size(195, 186);
+            tpProps.Size = new Size(199, 186);
             tpProps.TabIndex = 1;
             tpProps.Text = "Свойства";
             tpProps.UseVisualStyleBackColor = true;
@@ -589,24 +588,10 @@
             pgProps.Margin = new Padding(3, 3, 0, 3);
             pgProps.Name = "pgProps";
             pgProps.PropertySort = PropertySort.Categorized;
-            pgProps.Size = new Size(189, 180);
+            pgProps.Size = new Size(193, 180);
             pgProps.TabIndex = 0;
             pgProps.UseCompatibleTextRendering = true;
             pgProps.PropertyValueChanged += pgProps_PropertyValueChanged;
-            // 
-            // pnLeftSize
-            // 
-            pnLeftSize.Cursor = Cursors.VSplit;
-            pnLeftSize.Dock = DockStyle.Right;
-            pnLeftSize.Location = new Point(206, 0);
-            pnLeftSize.Margin = new Padding(0);
-            pnLeftSize.Name = "pnLeftSize";
-            pnLeftSize.Size = new Size(4, 431);
-            pnLeftSize.TabIndex = 5;
-            pnLeftSize.Paint += pnLeftSize_Paint;
-            pnLeftSize.MouseDown += pnLeftSize_MouseDown;
-            pnLeftSize.MouseMove += pnLeftSize_MouseMove;
-            pnLeftSize.MouseUp += pnLeftSize_MouseUp;
             // 
             // tvLibrary
             // 
@@ -619,7 +604,7 @@
             treeNode1.Name = "Узел0";
             treeNode1.Text = "Библиотека";
             tvLibrary.Nodes.AddRange(new TreeNode[] { treeNode1 });
-            tvLibrary.Size = new Size(191, 397);
+            tvLibrary.Size = new Size(195, 397);
             tvLibrary.TabIndex = 1;
             tvLibrary.AfterSelect += tvLibrary_AfterSelect;
             tvLibrary.MouseDown += tvLibrary_MouseDown;
@@ -639,7 +624,6 @@
             tlpLibrary.ColumnCount = 2;
             tlpLibrary.ColumnStyles.Add(new ColumnStyle());
             tlpLibrary.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tlpLibrary.Controls.Add(panRightSize, 0, 0);
             tlpLibrary.Controls.Add(tabControl3, 1, 0);
             tlpLibrary.Dock = DockStyle.Fill;
             tlpLibrary.Location = new Point(0, 0);
@@ -649,30 +633,16 @@
             tlpLibrary.Size = new Size(209, 431);
             tlpLibrary.TabIndex = 4;
             // 
-            // panRightSize
-            // 
-            panRightSize.Cursor = Cursors.VSplit;
-            panRightSize.Dock = DockStyle.Left;
-            panRightSize.Location = new Point(0, 0);
-            panRightSize.Margin = new Padding(0);
-            panRightSize.Name = "panRightSize";
-            panRightSize.Size = new Size(4, 431);
-            panRightSize.TabIndex = 6;
-            panRightSize.Paint += pnLeftSize_Paint;
-            panRightSize.MouseDown += panRightSize_MouseDown;
-            panRightSize.MouseMove += panRightSize_MouseMove;
-            panRightSize.MouseUp += panRightSize_MouseUp;
-            // 
             // tabControl3
             // 
             tabControl3.Controls.Add(tabPage2);
             tabControl3.Dock = DockStyle.Fill;
-            tabControl3.Location = new Point(4, 0);
+            tabControl3.Location = new Point(0, 0);
             tabControl3.Margin = new Padding(0);
             tabControl3.Name = "tabControl3";
             tabControl3.Padding = new Point(0, 0);
             tabControl3.SelectedIndex = 0;
-            tabControl3.Size = new Size(205, 431);
+            tabControl3.Size = new Size(209, 431);
             tabControl3.TabIndex = 1;
             // 
             // tabPage2
@@ -682,7 +652,7 @@
             tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(197, 403);
+            tabPage2.Size = new Size(201, 403);
             tabPage2.TabIndex = 0;
             tabPage2.Text = "Библиотека";
             tabPage2.UseVisualStyleBackColor = true;
@@ -967,11 +937,36 @@
             tsbHelp.Size = new Size(23, 22);
             tsbHelp.Text = "С&правка";
             // 
+            // splitterLeft
+            // 
+            splitterLeft.Cursor = Cursors.VSplit;
+            splitterLeft.Location = new Point(210, 74);
+            splitterLeft.MinSize = 0;
+            splitterLeft.Name = "splitterLeft";
+            splitterLeft.Size = new Size(3, 431);
+            splitterLeft.TabIndex = 12;
+            splitterLeft.TabStop = false;
+            splitterLeft.SplitterMoved += splitterLeft_SplitterMoved;
+            // 
+            // splitterRight
+            // 
+            splitterRight.Cursor = Cursors.VSplit;
+            splitterRight.Dock = DockStyle.Right;
+            splitterRight.Location = new Point(790, 74);
+            splitterRight.MinSize = 0;
+            splitterRight.Name = "splitterRight";
+            splitterRight.Size = new Size(3, 431);
+            splitterRight.TabIndex = 13;
+            splitterRight.TabStop = false;
+            splitterRight.SplitterMoved += splitterRight_SplitterMoved;
+            // 
             // PanelForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1002, 527);
+            Controls.Add(splitterRight);
+            Controls.Add(splitterLeft);
             Controls.Add(panRight);
             Controls.Add(panLeft);
             Controls.Add(statusMainStrip);
@@ -1055,7 +1050,6 @@
         private SplitContainer splitContainer1;
         private PropertyGrid pgProps;
         private TableLayoutPanel tlpTools;
-        private Panel pnLeftSize;
         private ToolStripButton tsbHostClose;
         private ToolStripLabel tslPanelCaption;
         private ToolStripMenuItem tsmiAddModule;
@@ -1074,7 +1068,6 @@
         private TableLayoutPanel tlpLibrary;
         private TabControl tabControl3;
         private TabPage tabPage2;
-        private Panel panRightSize;
         private ToolStrip tsToolLibrary;
         private ToolStripButton tsbAddBock;
         private ToolStripButton tsbShowBlockForm;
@@ -1110,5 +1103,7 @@
         private ToolStripSeparator toolStripSeparator8;
         private TabPage tbField;
         private TreeView tvField;
+        private Splitter splitterLeft;
+        private Splitter splitterRight;
     }
 }

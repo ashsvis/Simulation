@@ -538,56 +538,6 @@ namespace Simulator
                 UpdateScreenControls(Host);
         }
 
-        private void panRightSize_MouseDown(object sender, MouseEventArgs e)
-        {
-            mousePosition = firstMouseDown = e.Location;
-        }
-
-        private void panRightSize_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                var mp = mousePosition;
-                var pt = e.Location;
-                var delta = new Size(pt.X - mp.X, pt.Y - mp.Y);
-                mousePosition = e.Location;
-                panRight.SuspendLayout();
-                panRight.Width -= delta.Width;
-                panRight.ResumeLayout();
-            }
-        }
-
-        private void panRightSize_MouseUp(object sender, MouseEventArgs e)
-        {
-            Properties.Settings.Default.RightToolsPanelWidth = panRight.Width;
-            Properties.Settings.Default.Save();
-        }
-
-        private void pnLeftSize_MouseDown(object sender, MouseEventArgs e)
-        {
-            mousePosition = firstMouseDown = e.Location;
-        }
-
-        private void pnLeftSize_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                var mp = mousePosition;
-                var pt = e.Location;
-                var delta = new Size(pt.X - mp.X, pt.Y - mp.Y);
-                mousePosition = e.Location;
-                panLeft.SuspendLayout();
-                panLeft.Width += delta.Width;
-                panLeft.ResumeLayout();
-            }
-        }
-
-        private void pnLeftSize_MouseUp(object sender, MouseEventArgs e)
-        {
-            Properties.Settings.Default.LeftToolsPanelWidth = panLeft.Width;
-            Properties.Settings.Default.Save();
-        }
-
         private void tsbDeleteModule_Click(object sender, EventArgs e)
         {
             switch (tcTools.SelectedIndex)
@@ -662,16 +612,6 @@ namespace Simulator
             }
             else if (module != null)
                 CreateNewModuleForm(module);
-        }
-
-        private void tsbHorizontalLayout_Click(object sender, EventArgs e)
-        {
-            LayoutMdi(MdiLayout.TileHorizontal);
-        }
-
-        private void tsbCascadeLayout_Click(object sender, EventArgs e)
-        {
-            LayoutMdi(MdiLayout.Cascade);
         }
 
         private void tvLibrary_AfterSelect(object sender, TreeViewEventArgs e)
@@ -933,6 +873,18 @@ namespace Simulator
             }
             tvField.SelectedNode = node;
 
+        }
+
+        private void splitterLeft_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            Properties.Settings.Default.LeftToolsPanelWidth = panLeft.Width;
+            Properties.Settings.Default.Save();
+        }
+
+        private void splitterRight_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            Properties.Settings.Default.RightToolsPanelWidth = panRight.Width;
+            Properties.Settings.Default.Save();
         }
     }
 }
