@@ -8,14 +8,16 @@ namespace Simulator.View
     {
         private readonly KindLinkSource kind;
         private readonly (Guid, int, bool)? linkSource;
+        private readonly Module? module;
 
-        public SelectLinkSourceForm(KindLinkSource kind, (Guid, int, bool)? linkSource = null)
+        public SelectLinkSourceForm(KindLinkSource kind, (Guid, int, bool)? linkSource = null, Module? module = null)
         {
             InitializeComponent();
             if (Properties.Settings.Default.DarkMode)
                 ThemeManager.ApplyDarkTheme(this);
             this.kind = kind;
             this.linkSource = linkSource;
+            this.module = module;
         }
 
         public (Guid, int) Result { get; private set; }
@@ -26,40 +28,86 @@ namespace Simulator.View
             switch (kind)
             {
                 case KindLinkSource.LogicOutputs:
-                    foreach (var module in Project.Modules.OrderBy(x => x.Name))
+                    if (module != null && module.GetType() == typeof(Module))
                     {
-                        var moduleNode = new TreeNode(string.IsNullOrWhiteSpace(module.Name) ? $"Задача {module.Index}" : module.Name);
-                        tvSources.Nodes.Add(moduleNode);
-                        var n = 1;
-                        foreach (var item in module.Elements)
+                        var modules = new TreeNode("Проект");
+                        tvSources.Nodes.Add(modules);
+                        foreach (var module in Project.Modules.OrderBy(x => x.Name))
                         {
-                            if (item.Instance is IFunction func && item.Instance is ILinkSupport link)
+                            var moduleNode = new TreeNode(string.IsNullOrWhiteSpace(module.Name) ? $"Задача {module.Index}" : module.Name);
+                            modules.Nodes.Add(moduleNode);
+                            var n = 1;
+                            foreach (var item in module.Elements)
                             {
+                                if (item.Instance is IFunction func && item.Instance is ILinkSupport link)
+                                {
 
-                                var elementName = string.IsNullOrWhiteSpace(func.Name) ? $"L{n}({func.FuncName})" : func.Name;
-                                if (func.OutputNames.Length == 1)
-                                {
-                                    var outputName = string.IsNullOrWhiteSpace(func.OutputNames[0]) ? "Out" : func.OutputNames[0];
-                                    var outputNode = new TreeNode($"{elementName}.{outputName}") { Tag = new Tuple<Guid, int>(item.Id, 0) };
-                                    moduleNode.Nodes.Add(outputNode);
-                                    if (linkSource != null && linkSource.Value.Item1 == item.Id)
-                                        tvSources.SelectedNode = outputNode;
-                                }
-                                else if (func.OutputNames.Length > 1)
-                                {
-                                    var elementNode = new TreeNode($"{elementName}");
-                                    moduleNode.Nodes.Add(elementNode);
-                                    for (var i = 0; i < func.OutputNames.Length; i++)
+                                    var elementName = string.IsNullOrWhiteSpace(func.Name) ? $"L{n}({func.FuncName})" : func.Name;
+                                    if (func.OutputNames.Length == 1)
                                     {
-                                        var outputName = string.IsNullOrWhiteSpace(func.OutputNames[i]) ? "Out" : func.OutputNames[i];
-                                        var outputNode = new TreeNode($"{i + 1}. {outputName}") { Tag = new Tuple<Guid, int>(item.Id, i) };
-                                        elementNode.Nodes.Add(outputNode);
+                                        var outputName = string.IsNullOrWhiteSpace(func.OutputNames[0]) ? "Out" : func.OutputNames[0];
+                                        var outputNode = new TreeNode($"{elementName}.{outputName}") { Tag = new Tuple<Guid, int>(item.Id, 0) };
+                                        moduleNode.Nodes.Add(outputNode);
                                         if (linkSource != null && linkSource.Value.Item1 == item.Id)
                                             tvSources.SelectedNode = outputNode;
                                     }
+                                    else if (func.OutputNames.Length > 1)
+                                    {
+                                        var elementNode = new TreeNode($"{elementName}");
+                                        moduleNode.Nodes.Add(elementNode);
+                                        for (var i = 0; i < func.OutputNames.Length; i++)
+                                        {
+                                            var outputName = string.IsNullOrWhiteSpace(func.OutputNames[i]) ? "Out" : func.OutputNames[i];
+                                            var outputNode = new TreeNode($"{i + 1}. {outputName}") { Tag = new Tuple<Guid, int>(item.Id, i) };
+                                            elementNode.Nodes.Add(outputNode);
+                                            if (linkSource != null && linkSource.Value.Item1 == item.Id)
+                                                tvSources.SelectedNode = outputNode;
+                                        }
+                                    }
                                 }
+                                n++;
                             }
-                            n++;
+                        }
+                    }
+                    if (module != null && module.GetType() == typeof(Unit))
+                    {
+                        var units = new TreeNode("Эмуляция");
+                        tvSources.Nodes.Add(units);
+                        foreach (var module in Project.Equipment.OrderBy(x => x.Name))
+                        {
+                            var moduleNode = new TreeNode(string.IsNullOrWhiteSpace(module.Name) ? $"Юнит {module.Index}" : module.Name);
+                            units.Nodes.Add(moduleNode);
+                            var n = 1;
+                            foreach (var item in module.Elements)
+                            {
+                                if (item.Instance is IFunction func && item.Instance is ILinkSupport link)
+                                {
+
+                                    var elementName = string.IsNullOrWhiteSpace(func.Name) ? $"L{n}({func.FuncName})" : func.Name;
+                                    if (func.OutputNames.Length == 1)
+                                    {
+                                        var outputName = string.IsNullOrWhiteSpace(func.OutputNames[0]) ? "Out" : func.OutputNames[0];
+                                        var outputNode = new TreeNode($"{elementName}.{outputName}") { Tag = new Tuple<Guid, int>(item.Id, 0) };
+                                        moduleNode.Nodes.Add(outputNode);
+                                        if (linkSource != null && linkSource.Value.Item1 == item.Id)
+                                            tvSources.SelectedNode = outputNode;
+                                    }
+                                    else if (func.OutputNames.Length > 1)
+                                    {
+                                        var elementNode = new TreeNode($"{elementName}");
+                                        moduleNode.Nodes.Add(elementNode);
+                                        for (var i = 0; i < func.OutputNames.Length; i++)
+                                        {
+                                            var outputName = string.IsNullOrWhiteSpace(func.OutputNames[i]) ? "Out" : func.OutputNames[i];
+                                            var outputNode = new TreeNode($"{i + 1}. {outputName}") { Tag = new Tuple<Guid, int>(item.Id, i) };
+                                            elementNode.Nodes.Add(outputNode);
+                                            if (linkSource != null && linkSource.Value.Item1 == item.Id)
+                                                tvSources.SelectedNode = outputNode;
+                                        }
+                                    }
+                                }
+                                n++;
+                            }
                         }
                     }
                     break;

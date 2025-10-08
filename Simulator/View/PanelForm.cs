@@ -248,9 +248,9 @@ namespace Simulator
                         !Project.Running && tvModules.SelectedNode != null && tvModules.SelectedNode.Tag is Model.Module;
                     break;
                 case 1:
-                    tsbShowModuleForm.Enabled = tvField.SelectedNode != null && tvField.SelectedNode.Tag is Model.Unit;
+                    tsbShowModuleForm.Enabled = tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Unit;
                     tsbDeleteModule.Enabled =
-                        !Project.Running && tvField.SelectedNode != null && tvField.SelectedNode.Tag is Model.Unit;
+                        !Project.Running && tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Unit;
                     break;
                 case 2:
                     tsbShowModuleForm.Enabled = tvField.SelectedNode != null && tvField.SelectedNode.Tag is Model.Field;
@@ -604,7 +604,7 @@ namespace Simulator
                     }
                     break;
                 case 1:
-                    if (tvField.SelectedNode != null && tvField.SelectedNode.Tag is Model.Unit unit)
+                    if (tvEquipment.SelectedNode != null && tvEquipment.SelectedNode.Tag is Model.Unit unit)
                     {
                         if (MessageBox.Show("Ёто оборудование будет удалено безвозвратно! ”далить?",
                             "”даление текущего оборудовани€", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)

@@ -325,7 +325,7 @@ namespace Simulator
 
                 // подсчёт внешних ссылок в модулях проекта
                 Dictionary<string, List<(Element, int)>> dict = [];
-                foreach (var module in Project.Modules)
+                foreach (var module in Project.Modules.Union(Project.Equipment))
                 {
                     foreach (var item in module.Elements)
                     {
@@ -782,7 +782,7 @@ namespace Simulator
                                     var menuItem = (ToolStripMenuItem?)s;
                                     if (menuItem?.Tag is Element element && element.Instance is ILinkSupport fn)
                                     {
-                                        var dlg = new SelectLinkSourceForm(KindLinkSource.LogicOutputs, linkSource);
+                                        var dlg = new SelectLinkSourceForm(KindLinkSource.LogicOutputs, linkSource, Module);
                                         if (dlg.ShowDialog() == DialogResult.OK)
                                         {
                                             (Guid idSource, int pinOut) = dlg.Result;
