@@ -22,7 +22,7 @@ namespace Simulator.Model.Logic
 
         public override void Calculate()
         {
-            bool input = (bool)GetInputValue(0);
+            bool input = (bool)(GetInputValue(0) ?? false);
             Out = !input;
             Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
         }

@@ -1,5 +1,4 @@
-﻿using Simulator.Model.Fields;
-using Simulator.Model.Interfaces;
+﻿using Simulator.Model.Interfaces;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -202,10 +201,10 @@ namespace Simulator.Model.Logic
 
         public virtual void Calculate()
         {
-            bool result = (bool)GetInputValue(0) ^ getInverseInputs[0];
+            bool result = (bool)(GetInputValue(0) ?? false) ^ getInverseInputs[0];
             for (var i = 0; i < InputValues.Length; i++)
             {
-                var input = (bool)GetInputValue(i) ^ getInverseInputs[i];
+                var input = (bool)(GetInputValue(i) ?? false) ^ getInverseInputs[i];
                 result = logicFunction switch
                 {
                     LogicFunction.And => result && input,
@@ -219,12 +218,39 @@ namespace Simulator.Model.Logic
             Project.WriteValue(itemId, 0, ValueSide.Output, ValueKind.Digital, Out);
         }
 
-        public virtual object GetInputValue(int pin)
+        public object? GetInputValue(int pin)
         {
             (Guid id, int pinout, bool _) = getLinkSources[pin];
             if (id != Guid.Empty)
-                return (bool)(Project.ReadValue(id, pinout, ValueSide.Output, ValueKind.Digital)?.Value ?? false);
-            return (bool)(Project.ReadValue(itemId, pin, ValueSide.Input, ValueKind.Digital)?.Value ?? false);
+            {
+                var item = Project.ReadValue(id, pinout, ValueSide.Output, ValueKind.Digital);
+                if (item != null)
+                    return (bool)(item?.Value ?? false);
+                item = Project.ReadValue(id, pinout, ValueSide.Output, ValueKind.Analog);
+                if (item != null)
+                    return (double)(item?.Value ?? 0.0);
+            }
+            else
+            {
+                var item = Project.ReadValue(itemId, pin, ValueSide.Input, ValueKind.Digital);
+                if (item != null)
+                    return (bool)(item?.Value ?? false);
+                item = Project.ReadValue(itemId, pin, ValueSide.Input, ValueKind.Analog);
+                if (item != null)
+                    return (double)(item?.Value ?? 0.0);
+            }
+            return null;
+        }
+
+        public object? GetOutputValue(int pin)
+        {
+            var item = Project.ReadValue(itemId, pin, ValueSide.Output, ValueKind.Digital);
+            if (item != null)
+                return (bool)(item?.Value ?? false);
+            item = Project.ReadValue(itemId, pin, ValueSide.Output, ValueKind.Analog);
+            if (item != null)
+                return (double)(item?.Value ?? 0.0);
+            return null;
         }
 
         private static bool CalcXor(object[] inputValues)
@@ -252,7 +278,7 @@ namespace Simulator.Model.Logic
             getLinkSources[inputIndex] = (Guid.Empty, 0, false);
         }
 
-        public virtual void SetValueToInp(int inputIndex, object? value)
+        public void SetValueToInp(int inputIndex, object? value)
         {
             if (inputIndex < 0 || inputIndex >= getLinkSources.Length)
                 return;
@@ -437,14 +463,14 @@ namespace Simulator.Model.Logic
                     bool isExternal = this is ILinkSupport link1 && link1.InputLinkSources[i].Item3;
                     if (Project.Running && VisibleValues)
                     {
-                        var item = Project.ReadValue(itemId, i, ValueSide.Input, ValueKind.Digital);
-                        string text = string.Empty;
-                        if (item != null)
-                            text = $"{GetInputValue(i)}"[..1].ToUpper();
-                        else
+                        var text = string.Empty;
+                        var value = GetInputValue(i);
+                        if (value is bool bval)
+                            text = $"{bval}"[..1].ToUpper();
+                        else if (value is double dval)
                         {
                             var fp = CultureInfo.GetCultureInfo("en-US");
-                            text = $"{Project.ReadValue(itemId, i, ValueSide.Input, ValueKind.Analog)?.Value ?? 0.0}";
+                            text = dval.ToString(fp);
                         }
                         var ms = graphics.MeasureString(text, font);
                         using var iformat = new StringFormat();
@@ -484,14 +510,23 @@ namespace Simulator.Model.Logic
                     // значение выхода
                     if (Project.Running && OutputNames.Length > 0 && VisibleValues && this is ILinkSupport link)
                     {
-                        var item = Project.ReadValue(itemId, i, ValueSide.Output, ValueKind.Digital);
-                        string text = string.Empty;
-                        if (item != null)
-                            text = $"{Project.ReadValue(itemId, i, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
-                        else
+                        //var item = Project.ReadValue(itemId, i, ValueSide.Output, ValueKind.Digital);
+                        //string text = string.Empty;
+                        //if (item != null)
+                        //    text = $"{Project.ReadValue(itemId, i, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
+                        //else
+                        //{
+                        //    var fp = CultureInfo.GetCultureInfo("en-US");
+                        //    text = $"{Project.ReadValue(itemId, i, ValueSide.Output, ValueKind.Analog)?.Value ?? 0.0}";
+                        //}
+                        var text = string.Empty;
+                        var value = GetOutputValue(i);
+                        if (value is bool bval)
+                            text = $"{bval}"[..1].ToUpper();
+                        else if (value is double dval)
                         {
                             var fp = CultureInfo.GetCultureInfo("en-US");
-                            text = $"{Project.ReadValue(itemId, i, ValueSide.Output, ValueKind.Analog)?.Value ?? 0.0}";
+                            text = dval.ToString(fp);
                         }
                         var ms = graphics.MeasureString(text, font);
                         graphics.DrawString(text, font, fontbrush, new PointF(x, y - ms.Height));

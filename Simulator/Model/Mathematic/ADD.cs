@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace Simulator.Model.Mathematic
 {
-    public class ADD : CommonLogic
+    public class ADD : CommonLogic, IManualChange
     {
         private readonly double[] getInputs;
 
@@ -42,29 +42,21 @@ namespace Simulator.Model.Mathematic
 
         public override void Calculate()
         {
-            var a = (double)GetInputValue(0);
-            var b = (double)GetInputValue(1);
+            var a = (double)(GetInputValue(0) ?? double.NaN);
+            var b = (double)(GetInputValue(1) ?? double.NaN);
             var @out = a + b;
             Out = @out;
             Project.WriteValue(itemId, 0, ValueSide.Output, ValueKind.Analog, Out);
         }
 
-        public override object GetInputValue(int pin)
-        {
-            (Guid id, int pinout, bool _) = getLinkSources[pin];
-            if (id != Guid.Empty)
-                return (double)(Project.ReadValue(id, pinout, ValueSide.Output, ValueKind.Analog)?.Value ?? double.NaN);
-            return (double)(Project.ReadValue(itemId, pin, ValueSide.Input, ValueKind.Analog)?.Value ?? double.NaN);
-        }
-
-        public override void SetValueToInp(int inputIndex, object? value)
+        public new void SetValueToInp(int inputIndex, object? value)
         {
             if (inputIndex < 0 || inputIndex >= getLinkSources.Length)
                 return;
             if (value != null && !LinkedInputs[inputIndex])
             {
-                getInputs[inputIndex] = (double)value;
-                Project.WriteValue(itemId, inputIndex, ValueSide.Input, ValueKind.Analog, (double)value);
+                getInputs[inputIndex] = (double)(value ?? 0.0);
+                Project.WriteValue(itemId, inputIndex, ValueSide.Input, ValueKind.Analog, (double)(value ?? 0.0));
             }
         }
     }

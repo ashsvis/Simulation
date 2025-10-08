@@ -25,7 +25,7 @@ namespace Simulator.Model.Outputs
 
         public override void Calculate()
         {
-            bool input = (bool)GetInputValue(0);
+            bool input = (bool)(GetInputValue(0) ?? false);
             Project.WriteValue(ItemId, 0, ValueSide.Input, ValueKind.Digital, input);
             if (linkSource.Item1 != Guid.Empty)
             {
@@ -105,7 +105,7 @@ namespace Simulator.Model.Outputs
                 {
                     var staterect = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height / 3);
                     staterect.Offset(0, rect.Height / 3);
-                    bool value = (bool)GetInputValue(0);
+                    bool value = (bool)(GetInputValue(0) ?? false);
                     using var statebrush = new SolidBrush(value ? Color.Lime : Color.Red);
                     graphics.DrawString(value ? "\"1\"" : "\"0\"", font, statebrush, staterect, format);
                 }

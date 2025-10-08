@@ -568,6 +568,7 @@ namespace Simulator.Model
         public static void Stop()
         {
             Running = false;
+            vals.Clear();
         }
 
         public static void UpdateElementAndFunction(Logic.CommonLogic ori, Element element, Logic.CommonLogic func)

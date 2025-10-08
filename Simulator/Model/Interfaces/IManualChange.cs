@@ -5,6 +5,6 @@
         void SetValueToInp(int inputIndex, object? value);
         object? GetValueFromInp(int inputIndex);
         void Init();
-        object GetInputValue(int pin);
+        object? GetInputValue(int pin);
     }
 }

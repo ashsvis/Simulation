@@ -1019,7 +1019,7 @@ namespace Simulator
                         tar.SetValueToInp((int)pin, !bval);
                     else
                     {
-                        value = (double)tar.GetInputValue(0);
+                        value = (double)(tar.GetInputValue(0) ?? 0.0);
                         var dlg = new ChangeValueDialog((double)(value ?? 0.0));
                         if (dlg.ShowDialog() == DialogResult.OK)
                         {
