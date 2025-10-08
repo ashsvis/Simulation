@@ -1,9 +1,10 @@
-﻿using Simulator.Model.Logic;
+﻿using Simulator.Model.Interfaces;
+using Simulator.Model.Logic;
 using System.ComponentModel;
 
 namespace Simulator.Model.Trigger
 {
-    public class RS : CommonLogic
+    public class RS : CommonLogic, IEmbededMemory
     {
         public RS() : base(LogicFunction.Rs, 2) 
         { 
@@ -32,6 +33,12 @@ namespace Simulator.Model.Trigger
                 Out = false;
             else if (s)
                 Out = true;
+            Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
+        }
+
+        public new void Init()
+        {
+            Out = false;
             Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
         }
     }

@@ -261,6 +261,16 @@ namespace Simulator
             tsmiLeftPanelVisible.Checked = panLeft.Width > 0;
             tsmiRightPanelVisible.Checked = panRight.Width > 0;
             tsmiRun.Checked = Project.Running;
+            if (Project.Running)
+            {
+                tsbRun.Text = "Стоп";
+                tsbRun.Image = Properties.Resources.stop;
+            }
+            else
+            {
+                tsbRun.Text = "Пуск";
+                tsbRun.Image = Properties.Resources.run;
+            }
             tsbAddModule.Enabled = tsbAddBock.Enabled = !Project.Running;
             tsmiCreate.Enabled = tsmiOpen.Enabled = tsmiAddModule.Enabled = !Project.Running;
             tsbPaste.Enabled = !Project.Running && ActiveMdiChild is ModuleForm && Clipboard.ContainsData("XML Spreadsheet");

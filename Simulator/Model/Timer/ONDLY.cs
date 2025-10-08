@@ -6,7 +6,7 @@ using System.Xml.Linq;
 
 namespace Simulator.Model.Timer
 {
-    public class ONDLY : CommonLogic, ICustomDraw
+    public class ONDLY : CommonLogic, ICustomDraw, IEmbededMemory
     {
         public ONDLY() : base(LogicFunction.OnDelay, 1) 
         {
@@ -97,6 +97,12 @@ namespace Simulator.Model.Timer
             base.Load(xtance);
             if (double.TryParse(xtance?.Element("WaitTime")?.Value, CultureInfo.GetCultureInfo("en-US"), out double value))
                 WaitTime = value;
+        }
+
+        public new void Init()
+        {
+            time = DateTime.Now;
+            state = false;
         }
     }
 }

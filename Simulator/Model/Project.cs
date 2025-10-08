@@ -537,6 +537,17 @@ namespace Simulator.Model
 
         public static void Start()
         {
+            vals.Clear();
+            foreach (var module in Modules) 
+            { 
+                foreach (var element in module.Elements)
+                {
+                    if (element.Instance is IManualChange changer)
+                        changer.Init();
+                    if (element.Instance is IEmbededMemory memory)
+                        memory.Init();
+                }
+            }
             foreach (var module in Modules) 
             { 
                 foreach (var element in module.Elements)
@@ -565,17 +576,6 @@ namespace Simulator.Model
         public static void Stop()
         {
             Running = false;
-            vals.Clear();
-            foreach (var module in Modules) 
-            { 
-                foreach (var element in module.Elements)
-                {
-                    if (element.Instance is IManualChange changer)
-                    {
-                        changer.Init();
-                    }
-                }
-            }
         }
 
         public static void UpdateElementAndFunction(Logic.CommonLogic ori, Element element, Logic.CommonLogic func)

@@ -7,7 +7,7 @@ using static System.Windows.Forms.AxHost;
 
 namespace Simulator.Model.Timer
 {
-    public class PULSE : CommonLogic, ICustomDraw
+    public class PULSE : CommonLogic, ICustomDraw, IEmbededMemory
     {
         public PULSE() : base(LogicFunction.Pulse, 1) 
         {
@@ -104,6 +104,13 @@ namespace Simulator.Model.Timer
             base.Load(xtance);
             if (double.TryParse(xtance?.Element("WaitTime")?.Value, CultureInfo.GetCultureInfo("en-US"), out double value))
                 WaitTime = value;
+        }
+
+        public new void Init()
+        {
+            time = DateTime.Now;
+            Out = false;
+            Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
         }
     }
 }
