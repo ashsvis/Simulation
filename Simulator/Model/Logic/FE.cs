@@ -1,6 +1,5 @@
 ﻿using Simulator.Model.Interfaces;
 using System.ComponentModel;
-using static System.Windows.Forms.DataFormats;
 
 namespace Simulator.Model.Logic
 {
@@ -21,22 +20,20 @@ namespace Simulator.Model.Logic
         {
             bool input = (bool)InputValues[0];
             bool @out;
-            if (!input && !Out)
+            if (!input && !(bool)Out)
             {
                 time = DateTime.Now + TimeSpan.FromSeconds(waitTime);
                 @out = false;
             }
             else
                 @out = time > DateTime.Now;
-            var changed = @out != Out;
             Out = @out;
-            //if (changed)
-                Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
+            Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
         }
 
         public void Reset()
         {
-            if (Out)
+            if (Out is bool bval && bval)
                 time = DateTime.Now;
         }
 

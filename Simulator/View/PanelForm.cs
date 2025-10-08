@@ -10,9 +10,6 @@ namespace Simulator
         public bool IsPrimary { get; }
         public new Rectangle Bounds { get; }
 
-        private Point firstMouseDown;
-        private Point mousePosition;
-
         public PanelForm(HostForm hostForm, int panelIndex, bool isPrimary, Rectangle bounds)
         {
             InitializeComponent();

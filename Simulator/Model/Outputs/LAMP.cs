@@ -19,7 +19,7 @@ namespace Simulator.Model.Outputs
 
         public override void Calculate()
         {
-            bool input = GetInputValue(0);
+            bool input = (bool)GetInputValue(0);
             Project.WriteValue(ItemId, 0, ValueSide.Input, ValueKind.Digital, input);
         }
 
@@ -71,7 +71,7 @@ namespace Simulator.Model.Outputs
             lamprect.Offset(0, -2);
             if (Project.Running)
             {
-                if (GetInputValue(0))
+                if ((bool)GetInputValue(0))
                 {
                     using var fill = new SolidBrush(Color);
                     graphics.FillEllipse(fill, lamprect);

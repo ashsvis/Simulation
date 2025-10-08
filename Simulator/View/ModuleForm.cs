@@ -1017,6 +1017,15 @@ namespace Simulator
                     var value = tar.GetValueFromInp((int)pin);
                     if (value is bool bval)
                         tar.SetValueToInp((int)pin, !bval);
+                    else
+                    {
+                        value = (double)tar.GetInputValue(0);
+                        var dlg = new ChangeValueDialog((double)(value ?? 0.0));
+                        if (dlg.ShowDialog() == DialogResult.OK)
+                        {
+                            tar.SetValueToInp((int)pin, dlg.EnteredValue);
+                        }
+                    }
                 }
                 if (TryGetPin(e.Location, out element, out pin, out _, out output) &&
                     element != null && pin != null && element.Instance is IManualCommand comm && output == true)

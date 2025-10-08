@@ -420,6 +420,9 @@ namespace Simulator.Model
             xorNode.Nodes.Add(new TreeNode("7x") { Tag = typeof(Logic.XOR7) });
             xorNode.Nodes.Add(new TreeNode("8x") { Tag = typeof(Logic.XOR8) });
             rootNode.Nodes.Add(logicaNode);
+            var mathNode = new TreeNode("Арифметика");
+            rootNode.Nodes.Add(mathNode);
+            mathNode.Nodes.Add(new TreeNode("Сложение") { Tag = typeof(Mathematic.ADD) });
             var triggerNode = new TreeNode("Триггеры");
             rootNode.Nodes.Add(triggerNode);
             triggerNode.Nodes.Add(new TreeNode("RS-триггер") { Tag = typeof(Trigger.RS) });

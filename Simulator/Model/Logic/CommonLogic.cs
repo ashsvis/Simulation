@@ -1,6 +1,8 @@
-﻿using Simulator.Model.Interfaces;
+﻿using Simulator.Model.Fields;
+using Simulator.Model.Interfaces;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Xml.Linq;
 
 namespace Simulator.Model.Logic
@@ -11,12 +13,12 @@ namespace Simulator.Model.Logic
         private readonly bool[] getInverseInputs;
         protected readonly (Guid, int, bool)[] getLinkSources;
         private readonly string[] getInputNames;
-        private readonly object[] getOutputs;
+        protected readonly object[] getOutputs;
         private readonly bool[] getInverseOutputs;
         private readonly string[] getOutputNames;
         private readonly LogicFunction logicFunction;
 
-        private Guid itemId;
+        protected Guid itemId;
         public void SetItemId(Guid id)
         {
             itemId = id;
@@ -28,7 +30,7 @@ namespace Simulator.Model.Logic
             }
         }
 
-        public void Init()
+        public virtual void Init()
         {
             if (itemId == Guid.Empty) return;
             for (var i = 0; i < getLinkSources.Length; i++)
@@ -82,6 +84,7 @@ namespace Simulator.Model.Logic
                     LogicFunction.And => "&",
                     LogicFunction.Or => "1",
                     LogicFunction.Xor => "=1",
+                    LogicFunction.Add => "ADD",
                     _ => "",
                 };
             } 
@@ -101,17 +104,19 @@ namespace Simulator.Model.Logic
         public bool[] InverseInputs => getInverseInputs;
 
         [Browsable(false), Category("Выходы"), DisplayName("Выход 1")]
-        [DynamicPropertyFilter(nameof(FuncName), "Not,And,Or,Xor,Rs,Sr,Fe,Pulse,OnDelay,OffDelay")]
-        public virtual bool Out
+        [DynamicPropertyFilter(nameof(FuncName), "Not,And,Or,Xor,Rs,Sr,Fe,Pulse,OnDelay,OffDelay,Add")]
+        public virtual object Out
         {
-            get => getOutputs.Length > 0 && (bool)(getOutputs[0] ?? false);
+            get => getOutputs.Length > 0 && getOutputs[0] is bool bval && bval;
             protected set
             {
-                if (getOutputs.Length == 0 || (bool)(getOutputs[0] ?? false) == value) return;
+                if (getOutputs.Length == 0) return;
                 getOutputs[0] = value;
                 ResultChanged?.Invoke(this, new ResultCalculateEventArgs(nameof(Out), value));
             }
         }
+
+        protected void OnResultChanged() => ResultChanged?.Invoke(this, new ResultCalculateEventArgs(nameof(Out), Out));
 
         [Browsable(false), Category("Выходы"), DisplayName("Состояние")]
         [DynamicPropertyFilter(nameof(FuncName), "Assembly")]
@@ -135,7 +140,7 @@ namespace Simulator.Model.Logic
                 List<object> list = [];
                 for (var i = 0; i < getInputs.Length; i++)
                 {
-                    (Guid id, int pinout, bool external) = getLinkSources[i];
+                    (Guid id, int pinout, bool _) = getLinkSources[i];
                     if (id != Guid.Empty)
                     {
                         ValueItem? value = Project.ReadValue(id, pinout, ValueSide.Output, ValueKind.Digital);
@@ -164,7 +169,7 @@ namespace Simulator.Model.Logic
         {
             for (var i = 0; i < getLinkSources.Length; i++)
             {
-                (Guid id, int input, bool external) = getLinkSources[i];
+                (Guid id, int input, bool _) = getLinkSources[i];
                 if (id == seek.Item1 && input == seek.Item2)
                 {
                     getLinkSources[i].Item1 = newId;
@@ -197,10 +202,10 @@ namespace Simulator.Model.Logic
 
         public virtual void Calculate()
         {
-            bool result = GetInputValue(0) ^ getInverseInputs[0];
+            bool result = (bool)GetInputValue(0) ^ getInverseInputs[0];
             for (var i = 0; i < InputValues.Length; i++)
             {
-                var input = GetInputValue(i) ^ getInverseInputs[i];
+                var input = (bool)GetInputValue(i) ^ getInverseInputs[i];
                 result = logicFunction switch
                 {
                     LogicFunction.And => result && input,
@@ -214,9 +219,9 @@ namespace Simulator.Model.Logic
             Project.WriteValue(itemId, 0, ValueSide.Output, ValueKind.Digital, Out);
         }
 
-        protected bool GetInputValue(int pin)
+        public virtual object GetInputValue(int pin)
         {
-            (Guid id, int pinout, bool external) = getLinkSources[pin];
+            (Guid id, int pinout, bool _) = getLinkSources[pin];
             if (id != Guid.Empty)
                 return (bool)(Project.ReadValue(id, pinout, ValueSide.Output, ValueKind.Digital)?.Value ?? false);
             return (bool)(Project.ReadValue(itemId, pin, ValueSide.Input, ValueKind.Digital)?.Value ?? false);
@@ -247,7 +252,7 @@ namespace Simulator.Model.Logic
             getLinkSources[inputIndex] = (Guid.Empty, 0, false);
         }
 
-        public void SetValueToInp(int inputIndex, object? value)
+        public virtual void SetValueToInp(int inputIndex, object? value)
         {
             if (inputIndex < 0 || inputIndex >= getLinkSources.Length)
                 return;
@@ -258,11 +263,11 @@ namespace Simulator.Model.Logic
             }
         }
 
-        public object? GetValueFromInp(int inputIndex)
+        public virtual object? GetValueFromInp(int inputIndex)
         {
             if (inputIndex < 0 || inputIndex >= getLinkSources.Length)
                 return null;
-            (Guid id, int pin, bool external) = getLinkSources[inputIndex];
+            (Guid id, int pin, bool _) = getLinkSources[inputIndex];
             if (id != Guid.Empty)
             { 
                 ValueItem? valtem = Project.ReadValue(id, pin, ValueSide.Output, ValueKind.Digital);
@@ -291,8 +296,8 @@ namespace Simulator.Model.Logic
                         xinput.Add(new XAttribute("Name", InputNames[i]));
                     if (InverseInputs[i])
                         xinput.Add(new XAttribute("Invert", InverseInputs[i]));
-                    if (Inputs[i])
-                        xinput.Add(new XAttribute("Value", Inputs[i]));
+                    if (Inputs[i] is bool bval)
+                        xinput.Add(new XAttribute("Value", bval));
                     if (id != Guid.Empty)
                     {
                         XElement xsource = new("Source");
@@ -432,7 +437,15 @@ namespace Simulator.Model.Logic
                     bool isExternal = this is ILinkSupport link1 && link1.InputLinkSources[i].Item3;
                     if (Project.Running && VisibleValues)
                     {
-                        var text = $"{GetInputValue(i)}"[..1].ToUpper();
+                        var item = Project.ReadValue(itemId, i, ValueSide.Input, ValueKind.Digital);
+                        string text = string.Empty;
+                        if (item != null)
+                            text = $"{GetInputValue(i)}"[..1].ToUpper();
+                        else
+                        {
+                            var fp = CultureInfo.GetCultureInfo("en-US");
+                            text = $"{Project.ReadValue(itemId, i, ValueSide.Input, ValueKind.Analog)?.Value ?? 0.0}";
+                        }
                         var ms = graphics.MeasureString(text, font);
                         using var iformat = new StringFormat();
                         iformat.Alignment = StringAlignment.Near;
@@ -471,7 +484,15 @@ namespace Simulator.Model.Logic
                     // значение выхода
                     if (Project.Running && OutputNames.Length > 0 && VisibleValues && this is ILinkSupport link)
                     {
-                        var text = $"{Project.ReadValue(itemId, i, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
+                        var item = Project.ReadValue(itemId, i, ValueSide.Output, ValueKind.Digital);
+                        string text = string.Empty;
+                        if (item != null)
+                            text = $"{Project.ReadValue(itemId, i, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
+                        else
+                        {
+                            var fp = CultureInfo.GetCultureInfo("en-US");
+                            text = $"{Project.ReadValue(itemId, i, ValueSide.Output, ValueKind.Analog)?.Value ?? 0.0}";
+                        }
                         var ms = graphics.MeasureString(text, font);
                         graphics.DrawString(text, font, fontbrush, new PointF(x, y - ms.Height));
                     }

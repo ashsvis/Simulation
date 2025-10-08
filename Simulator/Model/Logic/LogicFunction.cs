@@ -16,6 +16,10 @@
         Lamp,
         DigInp,
         DigOut,
-        Block
+        Block,
+        Add,
+        Sub,
+        Mul,
+        Div,
     }
 }

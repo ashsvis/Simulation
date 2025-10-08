@@ -35,7 +35,7 @@ namespace Simulator.Model.Timer
         {
             bool input = (bool)InputValues[0];
             bool @out;
-            if (!input && !Out)
+            if (!input && !(bool)Out)
             {
                 time = DateTime.Now + TimeSpan.FromSeconds(WaitTime);
                 @out = false;
@@ -61,7 +61,7 @@ namespace Simulator.Model.Timer
             }
             rect.Inflate(-1, -1);
             graphics.FillRectangle(brush, rect);
-            if (Project.Running && Out)
+            if (Project.Running && (bool)Out)
             {
                 var kf = (time - DateTime.Now).TotalMilliseconds / (WaitTime * 1000);
                 var r = rect;
