@@ -510,15 +510,6 @@ namespace Simulator.Model.Logic
                     // значение выхода
                     if (Project.Running && OutputNames.Length > 0 && VisibleValues && this is ILinkSupport link)
                     {
-                        //var item = Project.ReadValue(itemId, i, ValueSide.Output, ValueKind.Digital);
-                        //string text = string.Empty;
-                        //if (item != null)
-                        //    text = $"{Project.ReadValue(itemId, i, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
-                        //else
-                        //{
-                        //    var fp = CultureInfo.GetCultureInfo("en-US");
-                        //    text = $"{Project.ReadValue(itemId, i, ValueSide.Output, ValueKind.Analog)?.Value ?? 0.0}";
-                        //}
                         var text = string.Empty;
                         var value = GetOutputValue(i);
                         if (value is bool bval)
