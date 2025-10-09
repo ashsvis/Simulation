@@ -298,17 +298,17 @@ namespace Simulator
                 {
                     if (item.Instance is ILinkSupport sup)
                     {
-                        for (var i = 0; i < sup.InputLinkSources.Length; i++)
+                        for (var i = 0; i < sup.Inputs.Length; i++)
                         {
-                            var (id, pinout, external) = sup.InputLinkSources[i];
-                            if (!external) continue;
-
-                            ValueItem? val = Project.ReadValue(id, pinout, ValueDirect.Output, ValueKind.Digital);
+                            var ls = sup.Inputs[i].LinkSource;
+                            if (ls == null) continue;
+                            if (!ls.External) continue;
+                            ValueItem? val = Project.ReadValue(ls.Id, ls.PinIndex, ValueDirect.Output, ValueKind.Digital);
                             Color color = val != null && val.Value != null ? (bool)val.Value == true ? Color.LimeGreen : Color.OrangeRed : Color.Gray;
                             using var exlinkpen = new Pen(Color.FromArgb(255, color), 0);
                             using var exlinkbrush = new SolidBrush(Color.FromArgb(255, color));
 
-                            var (moduleName, elementName, inputName) = Project.GetOutputByElementId(id, pinout);
+                            var (moduleName, elementName, inputName) = Project.GetOutputByElementId(ls.Id, ls.PinIndex);
 
                             if (!string.IsNullOrWhiteSpace(moduleName + elementName))
                             {
@@ -332,12 +332,13 @@ namespace Simulator
                     {
                         if (item.Instance is ILinkSupport sup)
                         {
-                            for (var i = 0; i < sup.InputLinkSources.Length; i++)
+                            for (var i = 0; i < sup.Inputs.Length; i++)
                             {
-                                var (id, pinout, external) = sup.InputLinkSources[i];
-                                if (!external) continue;
+                                var ls = sup.Inputs[i].LinkSource;
+                                if (ls == null) continue;
+                                if (!ls.External) continue;
 
-                                var key = $"{id}.{pinout}";
+                                var key = $"{ls.Id}.{ls.PinIndex}";
                                 if (!dict.ContainsKey(key)) dict.Add(key, []);
                                 dict[key].Add((item, i));
                             }
@@ -572,8 +573,8 @@ namespace Simulator
                     {
                         if (TryGetPin(e.Location, out element, out pin, out _, out output) && output == false && pin != null)
                         {
-                            (Guid, int, bool) linkSource = func.InputLinkSources[(int)pin];
-                            if (linkSource.Item1 == Guid.Empty || linkSource.Item1 != Guid.Empty && linkSource.Item3)
+                            var ls = func.Inputs[(int)pin].LinkSource;
+                            if (ls == null || ls != null && ls.External)
                             {
                                 item = new ToolStripMenuItem() { Text = "Связь по входу...", Tag = element };
                                 item.Click += (s, e) =>
@@ -581,7 +582,9 @@ namespace Simulator
                                     var menuItem = (ToolStripMenuItem?)s;
                                     if (menuItem?.Tag is Element element && element.Instance is ILinkSupport fn)
                                     {
-                                        var dlg = new SelectLinkSourceForm(KindLinkSource.LogicOutputs, linkSource, Module);
+                                        (Guid, int, bool)? link = null;
+                                        if (ls != null) link = (ls.Id, ls.PinIndex, ls.External);
+                                        var dlg = new SelectLinkSourceForm(KindLinkSource.LogicOutputs, link, Module);
                                         if (dlg.ShowDialog() == DialogResult.OK)
                                         {
                                             (Guid idSource, int pinOut) = dlg.Result;
@@ -596,7 +599,7 @@ namespace Simulator
                             }
                             else if (func.Inputs[(int)pin].LinkSource != null)
                             {
-                                if (linkSource.Item1 != Guid.Empty && !linkSource.Item3)
+                                if (ls != null && !ls.External)
                                 {
                                     item = new ToolStripMenuItem() { Text = "Удалить связь по входу", Tag = element };
                                     item.Click += (s, e) =>
@@ -658,9 +661,12 @@ namespace Simulator
                                            element.Instance is ILinkSupport sup &&
                                            element.Instance is IRemoveInput remove)
                                         {
-                                            (Guid sourceId, int pinOut, bool external) = sup.InputLinkSources[^1];
+                                            var ls = sup.Inputs[^1].LinkSource;
+                                            (Guid sourceId, int pinOut, bool external) = ls != null 
+                                                   ? (ls.Id, ls.PinIndex, ls.External) 
+                                                   : (Guid.Empty, 0, false);
                                             links?.RemoveAll(link => link.SourceId == sourceId && 
-                                                link.DestinationId == element.Id && link.DestinationPinIndex == sup.InputLinkSources.Length - 1);
+                                                link.DestinationId == element.Id && link.DestinationPinIndex == sup.Inputs.Length - 1);
                                             remove.RemoveInput(element);
                                             links?.ForEach(link => 
                                                 { 
@@ -1009,9 +1015,15 @@ namespace Simulator
                         {
                             if (element.Instance is ILinkSupport link)
                             {
-                                foreach (var seek in link.InputLinkSources)
+                                foreach (var input in link.Inputs)
+                                {
+                                    var ls = input.LinkSource;
+                                    var seek = ls != null
+                                           ? (ls.Id, ls.PinIndex, ls.External)
+                                           : (Guid.Empty, 0, false);
                                     link.UpdateInputLinkSources(seek,
                                         guids.TryGetValue(seek.Item1, out Guid value) ? value : Guid.Empty);
+                                }
                             }
                         }
                     }
@@ -1092,9 +1104,10 @@ namespace Simulator
                     if (item.Instance is ILinkSupport func)
                     {
                         var n = 0;
-                        foreach ((Guid sourceId, int pinOut, bool external) in func.InputLinkSources)
+                        foreach (var input in func.Inputs)
                         {
-                            if (sourceId == element.Id)
+                            var seek = input.LinkSource;
+                            if (seek != null && seek.Id == element.Id)
                                 func.ResetValueLinkToInp(n);
                             n++;
                         }

@@ -4,9 +4,6 @@ namespace Simulator.Model.Interfaces
 {
     public interface ILinkSupport
     {
-        //bool[] LinkedInputs { get; }
-        //object[] LinkedOutputs { get; }
-        (Guid, int, bool)[] InputLinkSources { get; }
         void UpdateInputLinkSources((Guid, int, bool) seek, Guid newId);
         Input[] Inputs { get; }
         Output[] Outputs { get; }

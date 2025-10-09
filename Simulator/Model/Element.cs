@@ -239,9 +239,10 @@ namespace Simulator.Model
                 if (item.Instance is ILinkSupport func)
                 {
                     var n = 0;
-                    foreach ((Guid sourceId, int pinOut, bool external) in func.InputLinkSources)
+                    foreach (var input in func.Inputs)
                     {
-                        if (sourceId == element.Id)
+                        var ls = input.LinkSource;
+                        if (ls != null && ls.Id == element.Id)
                             func.ResetValueLinkToInp(n);
                         n++;
                     }

@@ -49,9 +49,13 @@ namespace Simulator.Model
             {
                 if (element.Instance is ILinkSupport link)
                 {
-                    foreach (var seek in link.InputLinkSources)
+                    foreach (var input in link.Inputs)
+                    {
+                        var ls = input.LinkSource;
+                        var seek = ls != null ? (ls.Id, ls.PinIndex, ls.External) : (Guid.Empty, 0, false);
                         link.UpdateInputLinkSources(seek,
                             guids.TryGetValue(seek.Item1, out Guid value) ? value : Guid.Empty);
+                    }
                 }
             }
             // установление связей

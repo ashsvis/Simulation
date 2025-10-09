@@ -105,13 +105,14 @@ namespace Simulator.Model
                 if (item.Instance is ILinkSupport func)
                 {
                     var n = 0;
-                    foreach (var (id, output, external) in func.InputLinkSources)
+                    foreach (var input in func.Inputs)
                     {
-                        if (id != Guid.Empty)
+                        var ls = input.LinkSource;
+                        if (ls != null)
                         {
-                            var sourceItem = elements.FirstOrDefault(x => x.Id == id);
+                            var sourceItem = elements.FirstOrDefault(x => x.Id == ls.Id);
                             if (sourceItem != null && sourceItem.Instance is ILinkSupport source && source.Outputs.Length > 0)
-                                func.SetValueLinkToInp(n, id, output, false);
+                                func.SetValueLinkToInp(n, ls.Id, ls.PinIndex, false);
                         }
                         n++;
                     }
@@ -363,9 +364,13 @@ namespace Simulator.Model
             {
                 if (element.Instance is ILinkSupport link)
                 {
-                    foreach (var seek in link.InputLinkSources)
+                    foreach (var input in link.Inputs)
+                    {
+                        var ls = input.LinkSource;
+                        var seek = ls != null ? (ls.Id, ls.PinIndex, ls.External) : (Guid.Empty, 0 , false);
                         link.UpdateInputLinkSources(seek,
                             guids.TryGetValue(seek.Item1, out Guid value) ? value : Guid.Empty);
+                    }
                 }
             }
             // установление связей
