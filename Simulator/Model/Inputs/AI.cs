@@ -1,4 +1,5 @@
 ﻿using Simulator.Model.Common;
+using Simulator.Model.Fields;
 using Simulator.Model.Interfaces;
 using Simulator.Model.Logic;
 using Simulator.Model.Mathematic;
@@ -18,7 +19,7 @@ namespace Simulator.Model.Inputs
 
         public AI() : base(LogicFunction.AnaInp, 0, 1)
         {
-            ((AnalogOutput)Outputs[0]).Value = 0.0;
+            SetValueToOut(0, 0.0);
         }
 
         [Category("Настройки"), DisplayName("Текст"), Description("Наименование входа")]
@@ -29,7 +30,8 @@ namespace Simulator.Model.Inputs
 
         public override void Calculate()
         {
-            SetValueToOut(0, GetValueFromInp(0));
+            var value = GetValueFromInp(0);
+            SetValueToOut(0, value);
         }
 
         /// <summary>

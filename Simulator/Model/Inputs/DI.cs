@@ -1,4 +1,5 @@
 ﻿using Simulator.Model.Common;
+using Simulator.Model.Fields;
 using Simulator.Model.Interfaces;
 using Simulator.Model.Logic;
 using Simulator.View;
@@ -16,7 +17,7 @@ namespace Simulator.Model.Inputs
 
         public DI() : base(LogicFunction.DigInp, 0, 1)
         {
-            ((DigitalOutput)Outputs[0]).Value = false;
+            SetValueToOut(0, false);
         }
 
         [Category("Настройки"), DisplayName("Текст"), Description("Наименование входа")]
@@ -27,7 +28,10 @@ namespace Simulator.Model.Inputs
 
         public override void Calculate()
         {
-            SetValueToOut(0, GetValueFromInp(0));
+            var value = linkSource.Item1 == Guid.Empty 
+                ? GetValueFromInp(0) 
+                : Project.ReadValue(linkSource.Item1, linkSource.Item2, ValueDirect.Output, ValueKind.Digital);
+            SetValueToOut(0, value);
         }
 
         /// <summary>
