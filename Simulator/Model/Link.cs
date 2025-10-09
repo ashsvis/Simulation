@@ -268,7 +268,7 @@ namespace Simulator.Model
             CalculateSegmentTargets();
         }
 
-        private void SegmentOptimization()
+        public void SegmentOptimization()
         {
             var pt1 = points[0];
             var pt2 = points[^1];

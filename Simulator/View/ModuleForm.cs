@@ -481,212 +481,10 @@ namespace Simulator
             return Rectangle.Ceiling(new RectangleF(pt1, new SizeF(pt2.X - pt1.X, pt2.Y - pt1.Y)));
         }
 
-        private Link? BuildLink(Guid sourceId, int sourcePin, PointF sourcePinPoint, Guid destinationId, int destinationPin, PointF destinationPinPoint)
+        private static Link? BuildLink(Guid sourceId, int sourcePin, PointF sourcePinPoint, Guid destinationId, int destinationPin, PointF destinationPinPoint)
         {
-            // подготовка сетки с тенями от существующих элементов и связей
-            grid = BuildGrid();
             var link = new Link(Guid.NewGuid(), sourceId, sourcePin, destinationId, destinationPin, sourcePinPoint, destinationPinPoint);
-            // помещение затравки волны в сетку
-            var tpt = link.SourcePoint;
-            var spt = link.TargetPoint;
-            var tx = -1;
-            var ty = -1;
-            for (var y = 0; y < grid.GetLength(0); y++)
-            {
-                for (var x = 0; x < grid.GetLength(1); x++)
-                {
-                    if (spt == grid[y, x].Point)
-                        grid[y, x].Kind = 1;
-                    if (tpt == grid[y, x].Point)
-                    {
-                        tx = x;
-                        ty = y;
-                    }
-                }
-            }
-            if (tx < 0 || ty < 0) return null;
-
-            // генерация волны
-            var changed = true;
-            var wave = 1;
-            while (changed)
-            {
-                changed = false;
-                for (var y = 0; y < grid.GetLength(0); y++)
-                {
-                    for (var x = 0; x < grid.GetLength(1); x++)
-                    {
-                        if (grid[y, x].Kind == wave)
-                        {
-                            if (x > 0 && grid[y, x - 1].Kind == 0)
-                            {
-                                grid[y, x - 1].Kind = wave + 1;
-                                changed = true;
-                            }
-                            if (x < grid.GetLength(1) - 1 && grid[y, x + 1].Kind == 0)
-                            {
-                                grid[y, x + 1].Kind = wave + 1;
-                                changed = true;
-                            }
-                            if (y > 0 && grid[y - 1, x].Kind == 0)
-                            {
-                                grid[y - 1, x].Kind = wave + 1;
-                                changed = true;
-                            }
-                            if (y < grid.GetLength(0) - 1 && grid[y + 1, x].Kind == 0)
-                            {
-                                grid[y + 1, x].Kind = wave + 1;
-                                changed = true;
-                            }
-                            if (changed && grid[ty, tx].Kind > 0)
-                                goto exit;
-                        }
-                    }
-                }
-                wave++;
-            }
-        exit: if (changed) // путь найден
-            {
-                var vector = LinkVector.Horizontal;
-                // следуем путём
-                var x = tx;
-                var y = ty;
-                wave = grid[y, x].Kind;
-                grid[y, x].Kind = -2;
-                link.BeginUpdate();
-                try
-                {
-                    link.AddPoint(grid[y, x].Point);
-                    while (wave > 1)
-                    {
-                        if (y > 0 && grid[y - 1, x].Kind == wave - 1)
-                        {
-                            if (vector != LinkVector.Vertical)
-                                link.AddPoint(grid[y, x].Point);
-                            y--;
-                            grid[y, x].Kind = -2;
-                            vector = LinkVector.Vertical;
-                        }
-                        else if (y < grid.GetLength(0) - 1 && grid[y + 1, x].Kind == wave - 1)
-                        {
-                            if (vector != LinkVector.Vertical)
-                                link.AddPoint(grid[y, x].Point);
-                            y++;
-                            grid[y, x].Kind = -2;
-                            vector = LinkVector.Vertical;
-                        }
-                        else if (x > 0 && grid[y, x - 1].Kind == wave - 1)
-                        {
-                            if (vector != LinkVector.Horizontal)
-                                link.AddPoint(grid[y, x].Point);
-                            x--;
-                            grid[y, x].Kind = -2;
-                            vector = LinkVector.Horizontal;
-                        }
-                        else if (x < grid.GetLength(1) - 1 && grid[y, x + 1].Kind == wave - 1)
-                        {
-                            if (vector != LinkVector.Horizontal)
-                                link.AddPoint(grid[y, x].Point);
-                            x++;
-                            grid[y, x].Kind = -2;
-                            vector = LinkVector.Horizontal;
-                        }
-                        wave--;
-                    }
-                    link.AddPoint(grid[y, x].Point);
-                }
-                finally
-                {
-                    link.EndUpdate();
-                }
-            }
-            // очистка от предыдущей волны
-            ClearGridFromWaves();
             return link;
-        }
-
-        private void ClearGridFromWaves()
-        {
-            for (var iy = 0; iy < grid.GetLength(0); iy++)
-            {
-                for (var ix = 0; ix < grid.GetLength(1); ix++)
-                {
-                    if (grid[iy, ix].Kind > 0 || grid[iy, ix].Kind == -2)
-                        grid[iy, ix].Kind = 0;
-                }
-            }
-        }
-
-        private Cell[,] BuildGrid()
-        {
-            var minX = float.MaxValue;
-            var minY = float.MaxValue;
-            var maxX = float.MinValue;
-            var maxY = float.MinValue;
-            foreach (var item in items)
-            {
-                if (item.Bounds.X < minX) minX = item.Bounds.X;
-                if (item.Bounds.Y < minY) minY = item.Bounds.Y;
-                if (item.Bounds.X > maxX) maxX = item.Bounds.X;
-                if (item.Bounds.Y > maxY) maxY = item.Bounds.Y;
-
-                var bottomRightPoint = new PointF(item.Bounds.X + item.Bounds.Width, item.Bounds.Y + item.Bounds.Height);
-                if (bottomRightPoint.X < minX) minX = bottomRightPoint.X;
-                if (bottomRightPoint.Y < minY) minY = bottomRightPoint.Y;
-                if (bottomRightPoint.X > maxX) maxX = bottomRightPoint.X;
-                if (bottomRightPoint.Y > maxY) maxY = bottomRightPoint.Y;
-            }
-            minX -= Element.Step * 10;
-            minY -= Element.Step * 10;
-            maxX += Element.Step * 10;
-            maxY += Element.Step * 10;
-
-            int lengthY = (int)((maxY - minY) / Element.Step) + 1;
-            int lengthX = (int)((maxX - minX) / Element.Step) + 1;
-            if (lengthY < 0) lengthY = 0;
-            if (lengthX < 0) lengthX = 0;
-            // создание пустой сетки
-            Cell[,] grid = new Cell[lengthY, lengthX];
-            for (int y = 0; y < lengthY; y++)
-                for (int x = 0; x < lengthX; x++)
-                    grid[y, x] = new Cell { Point = new PointF(minX + x * Element.Step, minY + y * Element.Step) };
-            // эти точки не должны заполняться тенью
-            List<PointF> mustBeFree = [];
-            foreach (var item in items)
-            {
-                if (item.Instance is ILinkSupport link)
-                {
-                    var n = 0;
-                    foreach (var isLinked in link.Inputs)
-                    {
-                        if (item.InputPins.TryGetValue(n, out PointF targetPinPoint))
-                            mustBeFree.Add(targetPinPoint);
-                        n++;
-                    }
-                    n = 0;
-                    foreach (var output in link.Outputs)
-                    {
-                        if (item.OutputPins.TryGetValue(n, out PointF sourcePinPoint))
-                            mustBeFree.Add(sourcePinPoint);
-                        n++;
-                    }
-                }
-            }
-            // заполнение тенями элементов
-            for (int y = 0; y < lengthY; y++)
-            {
-                for (int x = 0; x < lengthX; x++)
-                {
-                    if (items.Select(item => new RectangleF(
-                        item.Bounds.X + Element.Step, item.Bounds.Y + Element.Step, item.Bounds.Width + Element.Step * 3, item.Bounds.Height + Element.Step * 3))
-                        .Any(rect => rect.Contains(grid[y, x].Point)))
-                    {
-                        if (!mustBeFree.Contains(grid[y, x].Point))
-                            grid[y, x].Kind = -1;
-                    }
-                }
-            }
-            return grid;
         }
 
         private void zoomPad_MouseDown(object? sender, MouseEventArgs e)
@@ -990,12 +788,7 @@ namespace Simulator
                         foreach (var item in items.Where(x => x.Selected))
                         {
                             item.Location = SnapToGrid(item.Location);
-                            foreach (var link in links.Where(x => x.DestinationId == item.Id))
-                                link.UpdateDestinationPoint(item.InputPins[link.DestinationPinIndex]);
-                            foreach (var link in links.Where(x => x.SourceId == item.Id))
-                                link.UpdateSourcePoint(item.OutputPins[link.SourcePinIndex]);
-                            foreach (var link in links.Where(x => x.DestinationId == item.Id || x.SourceId == item.Id))
-                                link.SnapPointsToGrid(SnapToGrid);
+                            UpdateLinks(item);
                         }
                     }
                 }
@@ -1053,6 +846,7 @@ namespace Simulator
                                     ((Link)link).SetSelect(true);
                                     links.Add((Link)link);
                                     ((Link)link).UpdateSourcePoint(elementFirst.OutputPins[((Link)link).SourcePinIndex]);
+                                    UpdateLinks(elementSecond);
                                     Project.Changed = true;
                                 }
                             }
@@ -1070,6 +864,7 @@ namespace Simulator
                                     ((Link)link).SetSelect(true);
                                     links.Add((Link)link);
                                     ((Link)link).UpdateDestinationPoint(elementFirst.InputPins[((Link)link).DestinationPinIndex]);
+                                    UpdateLinks(elementSecond);
                                     Project.Changed = true;
                                 }
                             }
@@ -1083,6 +878,16 @@ namespace Simulator
                 linkFirstPoint = null;
                 zoomPad.Invalidate();
             }
+        }
+
+        private void UpdateLinks(Element item)
+        {
+            foreach (var link in links.Where(x => x.DestinationId == item.Id))
+                link.UpdateDestinationPoint(item.InputPins[link.DestinationPinIndex]);
+            foreach (var link in links.Where(x => x.SourceId == item.Id))
+                link.UpdateSourcePoint(item.OutputPins[link.SourcePinIndex]);
+            foreach (var link in links.Where(x => x.DestinationId == item.Id || x.SourceId == item.Id))
+                link.SnapPointsToGrid(SnapToGrid);
         }
 
         public void UpdateView()
