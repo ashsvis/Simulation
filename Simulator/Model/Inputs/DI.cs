@@ -28,10 +28,10 @@ namespace Simulator.Model.Inputs
 
         public override void Calculate()
         {
-            var value = linkSource.Item1 == Guid.Empty 
-                ? GetValueFromInp(0) 
-                : Project.ReadValue(linkSource.Item1, linkSource.Item2, ValueDirect.Output, ValueKind.Digital);
-            SetValueToOut(0, value);
+            bool output = (bool)(GetOutputValue(0) ?? false);
+            if (linkSource.Item1 != Guid.Empty)
+                output = (bool)(Project.ReadValue(linkSource.Item1, 0, ValueDirect.Input, ValueKind.Digital)?.Value ?? false);
+            Project.WriteValue(ItemId, 0, ValueDirect.Output, ValueKind.Digital, output);
         }
 
         /// <summary>
