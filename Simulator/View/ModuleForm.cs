@@ -819,12 +819,18 @@ namespace Simulator
                             tar.SetValueToInp((int)pin, dlg.EnteredValue);
                     }
                 }
-                if (TryGetPin(e.Location, out element, out pin, out _, out output) &&
+                if (Project.Running && TryGetPin(e.Location, out element, out pin, out _, out output) &&
                     element != null && pin != null && element.Instance is IManualCommand comm && output == true)
                 {
                     var value = comm.GetValueFromOut((int)pin) ?? false;
                     if (value is bool bval)
                         comm.SetValueToOut((int)pin, !bval);
+                    else
+                    {
+                        var dlg = new ChangeValueDialog((double)(value ?? 0.0));
+                        if (dlg.ShowDialog() == DialogResult.OK)
+                            comm.SetValueToOut((int)pin, dlg.EnteredValue);
+                    }
                 }
                 if (TryGetPin(e.Location, out Element? elementSecond, out int? pinSecond, out PointF? linkSecondPoint, out bool? outputSecond) &&
                      elementSecond?.Instance is ILinkSupport target && elementFirst?.Instance is ILinkSupport source)

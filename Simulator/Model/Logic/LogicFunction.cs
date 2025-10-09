@@ -16,6 +16,8 @@
         Lamp,
         DigInp,
         DigOut,
+        AnaInp,
+        AnaOut,
         Block,
         Add,
         Sub,

@@ -340,6 +340,7 @@ namespace Simulator.Model
             var inputNode = new TreeNode("Входные сигналы");
             rootNode.Nodes.Add(inputNode);
             inputNode.Nodes.Add(new TreeNode("Дискретный вход") { Tag = typeof(Inputs.DI) });
+            inputNode.Nodes.Add(new TreeNode("Аналоговый вход") { Tag = typeof(Inputs.AI) });
             var logicaNode = new TreeNode("Логика");
             logicaNode.Nodes.Add(new TreeNode("Инвертор") { Tag = typeof(Logic.NOT) });
             var orNode = new TreeNode("Дизъюнкция (\"ИЛИ\")");
