@@ -11,7 +11,7 @@ namespace Simulator.Model.Timer
     {
         public OFFDLY() : base(LogicFunction.OffDelay, 1) 
         {
-            ((DigitalOutput)Outputs[0]).Value = false;
+            SetValueToOut(0, false);
         }
 
         [Browsable(false)]

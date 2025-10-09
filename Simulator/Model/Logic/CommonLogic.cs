@@ -222,7 +222,7 @@ namespace Simulator.Model.Logic
         //[Browsable(false)]
         //public object[] LinkedOutputs => [Out];
 
-        public event ResultCalculateEventHandler? ResultChanged;
+        //public event ResultCalculateEventHandler? ResultChanged;
 
         public virtual void Calculate()
         {

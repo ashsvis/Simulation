@@ -9,9 +9,9 @@ namespace Simulator.Model.Trigger
     {
         public SR() : base(LogicFunction.Sr, 2) 
         {
-            InputNames[0] = "S";
-            InputNames[1] = "R";
-            OutputNames[0] = "Q";
+            Inputs[0].Name = "S";
+            Inputs[1].Name = "R";
+            Outputs[0].Name = "Q";
         }
 
         [Browsable(false)]
@@ -25,22 +25,17 @@ namespace Simulator.Model.Trigger
 
         public override void Calculate()
         {
-            InverseInputs[0] = false;
-            InverseInputs[1] = false;
-            InverseOutputs[0] = false;
-            var s = (bool)InputValues[0];
-            var r = (bool)InputValues[1];
+            var s = (bool)(GetInputValue(0) ?? false);
+            var r = (bool)(GetInputValue(1) ?? false);
             if (s)
-                Out = true;
+                SetValueToOut(0, true);
             else if (r)
-                Out = false;
-            Project.WriteValue(ItemId, 0, ValueDirect.Output, ValueKind.Digital, Out);
+                SetValueToOut(0, false);
         }
 
         public new void Init()
         {
-            Out = false;
-            Project.WriteValue(ItemId, 0, ValueDirect.Output, ValueKind.Digital, Out);
+            SetValueToOut(0, false);
         }
     }
 }

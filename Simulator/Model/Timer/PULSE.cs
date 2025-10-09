@@ -12,7 +12,7 @@ namespace Simulator.Model.Timer
     {
         public PULSE() : base(LogicFunction.Pulse, 1) 
         {
-            ((DigitalOutput)Outputs[0]).Value = false;
+            SetValueToOut(0, false);
         }
 
         [Browsable(false)]

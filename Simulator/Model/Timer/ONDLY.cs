@@ -11,7 +11,7 @@ namespace Simulator.Model.Timer
     {
         public ONDLY() : base(LogicFunction.OnDelay, 1) 
         {
-            ((DigitalOutput)Outputs[0]).Value = false;
+            SetValueToOut(0, false);
         }
 
         [Browsable(false)]

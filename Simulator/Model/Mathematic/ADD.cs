@@ -9,7 +9,7 @@ namespace Simulator.Model.Mathematic
     {
         public ADD() : base(LogicFunction.Add, 2) 
         {
-            ((AnalogOutput)Outputs[0]).Value = 0.0;
+            SetValueToOut(0, 0.0);
         }
 
         public override void Init()

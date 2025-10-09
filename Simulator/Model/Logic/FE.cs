@@ -8,7 +8,7 @@ namespace Simulator.Model.Logic
     {
         public FE() : base(LogicFunction.Fe, 1) 
         {
-            ((DigitalOutput)Outputs[0]).Value = false;
+            SetValueToOut(0, false);
         }
 
         [Browsable(false)]

@@ -7,7 +7,7 @@ namespace Simulator.Model.Logic
     {
         public NOT() : base(LogicFunction.Not, 1) 
         {
-            ((DigitalOutput)Outputs[0]).Value = true;
+            SetValueToOut(0, true);
         }
 
         [Browsable(false)]
