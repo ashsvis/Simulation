@@ -126,6 +126,14 @@ namespace Simulator.View
                                 if (linkSource != null && linkSource.Value.Item1 == item.Id)
                                     tvSources.SelectedNode = elementNode;
                             }
+                            if (item.Instance is Model.Inputs.AI ai)
+                            {
+                                var elementName = (string.IsNullOrWhiteSpace(ai.Name) ? $"AI{ai.Order}" : ai.Name) + " " + ai.Description;
+                                var elementNode = new TreeNode(elementName) { Tag = new Tuple<Guid, int>(item.Id, ai.Order) };
+                                unitNode.Nodes.Add(elementNode);
+                                if (linkSource != null && linkSource.Value.Item1 == item.Id)
+                                    tvSources.SelectedNode = elementNode;
+                            }
                         }
                     }
                     break;
@@ -140,6 +148,14 @@ namespace Simulator.View
                             {
                                 var elementName = (string.IsNullOrWhiteSpace(@do.Name) ? $"DO{@do.Order}" : @do.Name) +" " + @do.Description;
                                 var elementNode = new TreeNode(elementName) { Tag = new Tuple<Guid, int>(item.Id, @do.Order) };
+                                unitNode.Nodes.Add(elementNode);
+                                if (linkSource != null && linkSource.Value.Item1 == item.Id)
+                                    tvSources.SelectedNode = elementNode;
+                            }
+                            if (item.Instance is Model.Outputs.AO ao)
+                            {
+                                var elementName = (string.IsNullOrWhiteSpace(ao.Name) ? $"AO{ao.Order}" : ao.Name) + " " + ao.Description;
+                                var elementNode = new TreeNode(elementName) { Tag = new Tuple<Guid, int>(item.Id, ao.Order) };
                                 unitNode.Nodes.Add(elementNode);
                                 if (linkSource != null && linkSource.Value.Item1 == item.Id)
                                     tvSources.SelectedNode = elementNode;

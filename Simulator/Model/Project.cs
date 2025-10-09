@@ -389,14 +389,11 @@ namespace Simulator.Model
             rootNode.Nodes.Add(outputNode);
             outputNode.Nodes.Add(new TreeNode("Лампа") { Tag = typeof(Outputs.LAMP) });
             outputNode.Nodes.Add(new TreeNode("Дискретный выход") { Tag = typeof(Outputs.DO) });
+            outputNode.Nodes.Add(new TreeNode("Аналоговый выход") { Tag = typeof(Outputs.AO) });
             var diagramNode = new TreeNode("Диаграмма");
             rootNode.Nodes.Add(diagramNode);
             diagramNode.Nodes.Add(new TreeNode("Начало") { Tag = typeof(Diagram.START) });
             diagramNode.Nodes.Add(new TreeNode("Конец") { Tag = typeof(Diagram.FINISH) });
-            //var blocksNode = new TreeNode("Блоки") { Tag = Blocks };
-            //rootNode.Nodes.Add(blocksNode);
-            //foreach (var block in Blocks)
-            //    blocksNode.Nodes.Add(new TreeNode(block.Name) { Tag = block });
             var fieldNode = new TreeNode("Поле");
             rootNode.Nodes.Add(fieldNode);
             fieldNode.Nodes.Add(new TreeNode("Клапан") { Tag = typeof(Fields.VALVE) });

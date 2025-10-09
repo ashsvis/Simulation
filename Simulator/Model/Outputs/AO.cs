@@ -1,5 +1,4 @@
 ﻿using Simulator.Model.Common;
-using Simulator.Model.Fields;
 using Simulator.Model.Interfaces;
 using Simulator.Model.Logic;
 using Simulator.Model.Mathematic;
@@ -9,31 +8,32 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Xml.Linq;
 
-namespace Simulator.Model.Inputs
+namespace Simulator.Model.Outputs
 {
-    public class AI : CommonAnalog, ICustomDraw, IChangeOrderDI, IContextMenu, IManualCommand
+    public class AO : CommonAnalog, ICustomDraw, IChangeOrderDO, IContextMenu
     {
         private (Guid, int, bool) linkSource = (Guid.Empty, 0, false);
 
         public (Guid, int, bool) LinkSource => linkSource;
 
-        public AI() : base(LogicFunction.AnaInp, 0, 1)
+        public AO() : base(LogicFunction.AnaOut, 1, 0)
         {
-            SetValueToOut(0, 0.0);
         }
 
-        [Category("Настройки"), DisplayName("Текст"), Description("Наименование входа")]
-        public string Description { get; set; } = "Аналоговый вход";
+        [Category("Настройки"), DisplayName("Текст"), Description("Наименование выхода")]
+        public string Description { get; set; } = "Аналоговый выход";
 
-        [Category("Настройки"), DisplayName("Номер"), Description("Индекс входа")]
+        [Category("Настройки"), DisplayName("Номер"), Description("Индекс выхода")]
         public int Order { get; set; }
 
         public override void Calculate()
         {
-            double output = (double)(GetOutputValue(0) ?? 0.0);
+            double input = (double)(GetInputValue(0) ?? 0.0);
+            Project.WriteValue(ItemId, 0, ValueDirect.Input, ValueKind.Analog, input);
             if (linkSource.Item1 != Guid.Empty)
-                output = (double)(Project.ReadValue(linkSource.Item1, 0, ValueDirect.Input, ValueKind.Analog)?.Value ?? 0.0);
-            Project.WriteValue(ItemId, 0, ValueDirect.Output, ValueKind.Analog, output);
+            {
+                Project.WriteValue(linkSource.Item1, 0, ValueDirect.Output, ValueKind.Analog, input);
+            }
         }
 
         /// <summary>
@@ -59,19 +59,18 @@ namespace Simulator.Model.Inputs
             var width = step * 24;
             var height = step * 6;
             size = new SizeF(width, height);
+            // входы
+            var y = step + location.Y;
+            var x = -step + location.X;
             itargets.Clear();
             ipins.Clear();
-            // выходы
-            var y = step + location.Y;
-            var x = width + location.X;
+            y += step * 2;
+            // значение входа
+            var ms = new SizeF(step * 2, step * 2);
+            itargets.Add(0, new RectangleF(new PointF(x - ms.Width + step, y - ms.Height), ms));
+            ipins.Add(0, new PointF(x, y));
             otargets.Clear();
             opins.Clear();
-            y = height / 2 + location.Y;
-            // значение выхода
-            var ms = new SizeF(step * 2, step * 2);
-            otargets.Add(0, new RectangleF(new PointF(x, y - ms.Height), ms));
-            var pt = new PointF(x + step, y);
-            opins.Add(0, pt);
         }
 
         public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush, int index, bool selected)
@@ -87,24 +86,11 @@ namespace Simulator.Model.Inputs
                 if (named)
                 {
                     var msn = graphics.MeasureString(Name, font);
-                    graphics.DrawString(Name, font, fontbrush, new PointF(rect.X + rect.Width - rect.Height / 2, rect.Y - msn.Height), format);
+                    graphics.DrawString(Name, font, fontbrush, new PointF(rect.X + rect.Height / 2, rect.Y - msn.Height), format);
                 }
 
-                // горизонтальная риска справа, напротив выхода
-                graphics.DrawLine(pen, new PointF(rect.Right, rect.Y + rect.Height / 2),
-                    new PointF(rect.Right + Element.Step, rect.Y + rect.Height / 2));
-                // значение выхода
-                if (Project.Running && VisibleValues)
-                {
-                    var fp = CultureInfo.GetCultureInfo("en-US");
-                    var val = (double)(GetOutputValue(0) ?? 0.0);
-                    var textval = $"{val.ToString(fp)}";
-                    var ms = graphics.MeasureString(textval, font);
-                    graphics.DrawString(textval, font, fontbrush, new PointF(rect.Right, rect.Y + rect.Height / 2 - ms.Height));
-                }
-
-                var funcrect = new RectangleF(rect.X + rect.Height * 3, rect.Y, rect.Height, rect.Height / 3);
-                var text = $"AI{Order}";
+                var funcrect = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height / 3);
+                var text = $"AO{Order}";
                 format.LineAlignment = StringAlignment.Center;
                 using var lampFont = new Font(font.FontFamily, font.Size);
                 graphics.DrawString(text, lampFont, fontbrush, funcrect, format);
@@ -112,23 +98,21 @@ namespace Simulator.Model.Inputs
                 // индекс элемента в списке
                 if (index != 0)
                 {
-                    var labelrect = new RectangleF(rect.X + rect.Height * 3, rect.Bottom - rect.Height / 3, rect.Height, rect.Height / 3);
+                    var labelrect = new RectangleF(rect.X, rect.Bottom - rect.Height / 3, rect.Height, rect.Height / 3);
                     text = $"L{index}";
                     var ms = graphics.MeasureString(text, font);
                     format.Alignment = StringAlignment.Center;
                     graphics.DrawString(text, font, fontbrush, labelrect, format);
                 }
-
                 if (Project.Running)
                 {
-                    var staterect = new RectangleF(rect.X + rect.Height * 3, rect.Y, rect.Height, rect.Height / 3);
+                    var staterect = new RectangleF(rect.X, rect.Y, rect.Height, rect.Height / 3);
                     staterect.Offset(0, rect.Height / 3);
-                    var value = (double)(Project.ReadValue(ItemId, 0, ValueDirect.Output, ValueKind.Analog)?.Value ?? 0.0);
+                    double value = (double)(GetInputValue(0) ?? 0.0);
                     var fp = CultureInfo.GetCultureInfo("en-US");
                     graphics.DrawString(value.ToString(fp), font, brush, staterect, format);
                 }
-                var descrect = new RectangleF(rect.X, rect.Y, rect.Height * 3, rect.Height);
-                graphics.FillRectangle(brush, descrect);
+                var descrect = new RectangleF(rect.X + rect.Height, rect.Y, rect.Height * 3, rect.Height);
                 graphics.DrawRectangles(pen, [descrect]);
                 using var textFont = new Font("Arial Narrow", font.Size);
                 graphics.DrawString(Description, textFont, fontbrush, descrect, format);
@@ -178,30 +162,19 @@ namespace Simulator.Model.Inputs
             }
         }
 
-        public object? GetValueFromOut(int outputIndex)
-        {
-            if (outputIndex >= 0 && outputIndex < Outputs.Length)
-            {
-                if (Outputs[outputIndex] is AnalogOutput output)
-                    return output.Value;
-                return null;
-            }
-            return null;
-        }
-
         public override void AddMenuItems(ContextMenuStrip contextMenu)
         {
             ToolStripMenuItem item;
             item = new ToolStripMenuItem() { Text = "Связь с оборудованием...", Tag = this };
             item.Click += (s, e) =>
             {
-                var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentOutputs, this.LinkSource);
+                var dlg = new SelectLinkSourceForm(KindLinkSource.EquipmentInputs, this.LinkSource);
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
-                    (Guid idSource, int pinOut) = dlg.Result;
+                    (Guid idSource, int pinInp) = dlg.Result;
                     if (idSource != Guid.Empty)
                     {
-                        this.SetExternalLinkToInp(0, idSource, pinOut, true);
+                        this.SetExternalLinkToInp(0, idSource, pinInp, true);
                         Project.Changed = true;
                         if (contextMenu.Tag is Action action) action.Invoke();
                     }

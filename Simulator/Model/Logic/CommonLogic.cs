@@ -22,22 +22,14 @@ namespace Simulator.Model.Logic
         {
             itemId = id;
             for (var i = 0; i < inputs.Length; i++)
-            {
                 inputs[i].ItemId = itemId;
-                //SetValueToInp(i, false);
-            }
             for (var i = 0; i < outputs.Length; i++)
-            {
                 outputs[i].ItemId = itemId;
-                //SetValueToOut(i, false);
-            }
         }
 
         public virtual void Init()
         {
             if (itemId == Guid.Empty) return;
-            //for (var i = 0; i < inputs.Length; i++)
-            //    SetValueToInp(i, false);
         }
 
         public CommonLogic() : this(LogicFunction.None, 1)
@@ -415,7 +407,7 @@ namespace Simulator.Model.Logic
                         else if (value is double dval)
                         {
                             var fp = CultureInfo.GetCultureInfo("en-US");
-                            text = dval.ToString(fp);
+                            text = dval.ToString("0.0##", fp);
                         }
                         var ms = graphics.MeasureString(text, font);
                         using var iformat = new StringFormat();
@@ -463,7 +455,7 @@ namespace Simulator.Model.Logic
                         else if (value is double dval)
                         {
                             var fp = CultureInfo.GetCultureInfo("en-US");
-                            text = dval.ToString(fp);
+                            text = dval.ToString("0.0##", fp);
                         }
                         var ms = graphics.MeasureString(text, font);
                         graphics.DrawString(text, font, fontbrush, new PointF(x, y - ms.Height));
