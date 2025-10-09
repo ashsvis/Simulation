@@ -9,13 +9,6 @@ namespace Simulator.Model.Logic
 {
     public class CommonLogic : FilterablePropertyBase, ICalculate, ILoadSave, IDraw, IManualChange, IContextMenu, ILinkSupport
     {
-        //private readonly bool[] getInputs;
-        //private readonly bool[] getInverseInputs;
-        //protected readonly (Guid, int, bool)[] getLinkSources;
-        //private readonly string[] getInputNames;
-        //protected readonly object[] getOutputs;
-        //private readonly bool[] getInverseOutputs;
-        //private readonly string[] getOutputNames;
         private readonly LogicFunction logicFunction;
 
         private readonly Input[] inputs;
