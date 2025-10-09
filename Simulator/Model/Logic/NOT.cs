@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Simulator.Model.Common;
+using System.ComponentModel;
 
 namespace Simulator.Model.Logic
 {
@@ -6,9 +7,7 @@ namespace Simulator.Model.Logic
     {
         public NOT() : base(LogicFunction.Not, 1) 
         {
-            InverseInputs[0] = false;
-            InverseOutputs[0] = true;
-            Out = true;
+            ((DigitalOutput)Outputs[0]).Value = true;
         }
 
         [Browsable(false)]
@@ -23,8 +22,7 @@ namespace Simulator.Model.Logic
         public override void Calculate()
         {
             bool input = (bool)(GetInputValue(0) ?? false);
-            Out = !input;
-            Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
+            SetValueToOut(0, !input);
         }
 
     }

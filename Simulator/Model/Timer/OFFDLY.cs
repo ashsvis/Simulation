@@ -1,4 +1,5 @@
-﻿using Simulator.Model.Interfaces;
+﻿using Simulator.Model.Common;
+using Simulator.Model.Interfaces;
 using Simulator.Model.Logic;
 using System.ComponentModel;
 using System.Globalization;
@@ -10,7 +11,7 @@ namespace Simulator.Model.Timer
     {
         public OFFDLY() : base(LogicFunction.OffDelay, 1) 
         {
-            OutputValues[0] = false;
+            ((DigitalOutput)Outputs[0]).Value = false;
         }
 
         [Browsable(false)]
@@ -25,7 +26,7 @@ namespace Simulator.Model.Timer
 
         public override void Calculate()
         {
-            bool input = (bool)InputValues[0];
+            bool input = (bool)(GetInputValue(0) ?? false);
             if (input)
             {
                 time = DateTime.Now + TimeSpan.FromSeconds(WaitTime);
@@ -33,8 +34,7 @@ namespace Simulator.Model.Timer
             }
             else
                 state = time > DateTime.Now;
-            Out = input || state && !input;
-            Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
+            SetValueToOut(0, input || state && !input);
        }
 
         public void CustomDraw(Graphics graphics, RectangleF rect, Pen pen, Brush brush, Font font, Brush fontbrush, int index, bool selected)

@@ -2,12 +2,18 @@
 {
     public class AnalogOutput : Output
     {
-        public AnalogOutput(int index, string? name)
+        public AnalogOutput(Guid itemId, int index, string? name) : base(itemId)
         {
-            DirectKind = DirectKind.Output;
+            ValueSide = ValueDirect.Output;
             ValueKind = ValueKind.Analog;
             Index = index;
             Name = name;
+        }
+
+        public double Value 
+        {
+            get => (double)(Project.ReadValue(ItemId, Index, ValueDirect.Output, ValueKind.Analog)?.Value ?? 0.0);
+            set => Project.WriteValue(ItemId, Index, ValueDirect.Output, ValueKind.Analog, value);
         }
     }
 }

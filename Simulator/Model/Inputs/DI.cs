@@ -1,4 +1,5 @@
-﻿using Simulator.Model.Interfaces;
+﻿using Simulator.Model.Common;
+using Simulator.Model.Interfaces;
 using Simulator.Model.Logic;
 using Simulator.View;
 using System.ComponentModel;
@@ -7,7 +8,7 @@ using System.Xml.Linq;
 
 namespace Simulator.Model.Inputs
 {
-    public class DI : CommonLogic, ICustomDraw, IChangeOrderDI, IManualCommand, IContextMenu
+    public class DI : CommonLogic, ICustomDraw, IChangeOrderDI, IContextMenu
     {
         private (Guid, int, bool) linkSource = (Guid.Empty, 0, false);
 
@@ -15,7 +16,7 @@ namespace Simulator.Model.Inputs
 
         public DI() : base(LogicFunction.DigInp, 0, 1)
         {
-            OutputValues[0] = false;
+            ((DigitalOutput)Outputs[0]).Value = false;
         }
 
         [Category("Настройки"), DisplayName("Текст"), Description("Наименование входа")]
@@ -26,15 +27,14 @@ namespace Simulator.Model.Inputs
 
         public override void Calculate()
         {
-            if (linkSource.Item1 != Guid.Empty)
-            {
-                ValueItem? item = Project.ReadValue(linkSource.Item1, 0, ValueSide.Input, ValueKind.Digital);
-                if (item != null)
-                {
-                    OutputValues[0] = item.Value ?? false;
-                    Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, item.Value);
-                }
-            }
+            //if (linkSource.Item1 != Guid.Empty)
+            //{
+            //    ValueItem? item = Project.ReadValue(linkSource.Item1, 0, ValueDirect.Input, ValueKind.Digital);
+            //    if (item != null)
+            //    {
+                    SetValueToOut(0, GetValueFromInp(0));
+            //    }
+            //}
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Simulator.Model.Inputs
                 {
                     var staterect = new RectangleF(rect.X + rect.Height * 3, rect.Y, rect.Height, rect.Height / 3);
                     staterect.Offset(0, rect.Height / 3);
-                    var value = (bool)(Project.ReadValue(ItemId, 0, ValueSide.Output, ValueKind.Digital)?.Value ?? false);
+                    var value = (bool)(Project.ReadValue(ItemId, 0, ValueDirect.Output, ValueKind.Digital)?.Value ?? false);
                     using var statebrush = new SolidBrush(value ? Color.Lime : Color.Red);
                     graphics.DrawString(value ? "\"1\"" : "\"0\"", font, statebrush, staterect, format);
                 }
@@ -177,23 +177,23 @@ namespace Simulator.Model.Inputs
             }
         }
 
-        public void SetValueToOut(int outputIndex, object? value)
-        {
-            if (outputIndex >= 0 && outputIndex < OutputValues.Length)
-            {
-                Project.WriteValue(ItemId, outputIndex, ValueSide.Output, ValueKind.Digital, (bool)(value ?? false));
-            }
-        }
+        //public void SetValueToOut(int outputIndex, object? value)
+        //{
+        //    if (outputIndex >= 0 && outputIndex < OutputValues.Length)
+        //    {
+        //        Project.WriteValue(ItemId, outputIndex, ValueDirect.Output, ValueKind.Digital, (bool)(value ?? false));
+        //    }
+        //}
 
-        public object? GetValueFromOut(int outputIndex)
-        {
-            if (outputIndex >= 0 && outputIndex < OutputValues.Length)
-            {
-                ValueItem? value = Project.ReadValue(ItemId, outputIndex, ValueSide.Output, ValueKind.Digital);
-                return value?.Value;
-            }
-            return null;
-        }
+        //public object? GetValueFromOut(int outputIndex)
+        //{
+        //    if (outputIndex >= 0 && outputIndex < OutputValues.Length)
+        //    {
+        //        ValueItem? value = Project.ReadValue(ItemId, outputIndex, ValueDirect.Output, ValueKind.Digital);
+        //        return value?.Value;
+        //    }
+        //    return null;
+        //}
 
         public override void AddMenuItems(ContextMenuStrip contextMenu)
         {

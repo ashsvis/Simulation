@@ -1,4 +1,5 @@
-﻿using Simulator.Model.Interfaces;
+﻿using Simulator.Model.Common;
+using Simulator.Model.Interfaces;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -6,38 +7,50 @@ using System.Xml.Linq;
 
 namespace Simulator.Model.Logic
 {
-    public class CommonLogic : FilterablePropertyBase, IFunction, ICalculate, ILinkSupport, ILoadSave, IDraw, IManualChange, IContextMenu
+    public class CommonLogic : FilterablePropertyBase, ICalculate, ILoadSave, IDraw, IManualChange, IContextMenu
     {
-        private readonly bool[] getInputs;
-        private readonly bool[] getInverseInputs;
-        protected readonly (Guid, int, bool)[] getLinkSources;
-        private readonly string[] getInputNames;
-        protected readonly object[] getOutputs;
-        private readonly bool[] getInverseOutputs;
-        private readonly string[] getOutputNames;
+        //private readonly bool[] getInputs;
+        //private readonly bool[] getInverseInputs;
+        //protected readonly (Guid, int, bool)[] getLinkSources;
+        //private readonly string[] getInputNames;
+        //protected readonly object[] getOutputs;
+        //private readonly bool[] getInverseOutputs;
+        //private readonly string[] getOutputNames;
         private readonly LogicFunction logicFunction;
+
+        private readonly Input[] inputs;
+        private readonly Output[] outputs;
+
+        public Input[] Inputs => inputs;
+        public Output[] Outputs => outputs;
 
         protected Guid itemId;
         public void SetItemId(Guid id)
         {
             itemId = id;
-            for (var i = 0; i < getLinkSources.Length; i++) 
+            //for (var i = 0; i < getLinkSources.Length; i++) 
+            //{
+            //    (Guid sourceId, _, _) = getLinkSources[i];
+            //    if (sourceId == Guid.Empty)
+            //        Project.WriteValue(id, i, ValueSide.Input, ValueKind.Digital, getInputs[i]);
+            //}
+            for (var i = 0; i < inputs.Length; i++)
             {
-                (Guid sourceId, _, _) = getLinkSources[i];
-                if (sourceId == Guid.Empty)
-                    Project.WriteValue(id, i, ValueSide.Input, ValueKind.Digital, getInputs[i]);
+                inputs[i].ItemId = itemId;
+                if (inputs[i].LinkSource == null || inputs[i].LinkSource?.Id == Guid.Empty)
+                    Project.WriteValue(id, i, ValueDirect.Input, ValueKind.Digital, false);
             }
         }
 
         public virtual void Init()
         {
             if (itemId == Guid.Empty) return;
-            for (var i = 0; i < getLinkSources.Length; i++)
-            {
-                (Guid sourceId, _, _) = getLinkSources[i];
-                if (sourceId == Guid.Empty)
-                    Project.WriteValue(itemId, i, ValueSide.Input, ValueKind.Digital, getInputs[i]);
-            }
+            //for (var i = 0; i < getLinkSources.Length; i++)
+            //{
+            //    (Guid sourceId, _, _) = getLinkSources[i];
+            //    if (sourceId == Guid.Empty)
+            //        Project.WriteValue(itemId, i, ValueSide.Input, ValueKind.Digital, getInputs[i]);
+            //}
         }
 
         public CommonLogic() : this(LogicFunction.None, 1)
@@ -46,25 +59,37 @@ namespace Simulator.Model.Logic
 
         public CommonLogic(LogicFunction func, int inputCount, int outputCount = 1)
         {
-            logicFunction = func;
-            getInputs = [];
-            getInverseInputs = [];
-            getLinkSources = [];
-            getInputNames = [];
-            getOutputs = [];
-            getInverseOutputs = [];
-            getOutputNames = [];
-            if (inputCount > 0)
+            inputs = new Input[inputCount];
+            for (var i = 0; i < inputs.Length; i++)
             {
-                getInputs = new bool[inputCount];
-                getInverseInputs = new bool[inputCount];
-                getLinkSources = new (Guid, int, bool)[inputCount];
-                getInputNames = new string[inputCount];
+                inputs[i] = new DigitalInput(itemId, i);
             }
-            getOutputs = new object[outputCount];
-            for (var i = 0; i < outputCount; i++) getOutputs[i] = false;
-            getInverseOutputs = new bool[outputCount];
-            getOutputNames = new string[outputCount];
+
+            outputs = new Output[outputCount];
+            for (var i = 0; i < outputs.Length; i++)
+            {
+                outputs[i] = new DigitalOutput(itemId, i);
+            }
+
+            logicFunction = func;
+            //getInputs = [];
+            //getInverseInputs = [];
+            //getLinkSources = [];
+            //getInputNames = [];
+            //getOutputs = [];
+            //getInverseOutputs = [];
+            //getOutputNames = [];
+            //if (inputCount > 0)
+            //{
+            //    getInputs = new bool[inputCount];
+            //    getInverseInputs = new bool[inputCount];
+            //    getLinkSources = new (Guid, int, bool)[inputCount];
+            //    getInputNames = new string[inputCount];
+            //}
+            //getOutputs = new object[outputCount];
+            //for (var i = 0; i < outputCount; i++) getOutputs[i] = false;
+            //getInverseOutputs = new bool[outputCount];
+            //getOutputNames = new string[outputCount];
         }
 
         [Category(" Общие"), DisplayName("Функция")]
@@ -95,159 +120,177 @@ namespace Simulator.Model.Logic
         [Browsable(false), Category("Диагностика"), DisplayName("Показывать значения")]
         public bool VisibleValues { get; set; } = true;
 
-        [Browsable(false), Category("Входы"), DisplayName("Управление")]
-        public bool[] Inputs => getInputs;
+        //[Browsable(false), Category("Входы"), DisplayName("Управление")]
+        //public bool[] Inputs => getInputs;
 
-        [Category("Входы"), DisplayName("Инверсия")]
-        [DynamicPropertyFilter(nameof(FuncName), "And,Or")]
-        public bool[] InverseInputs => getInverseInputs;
+        //[Category("Входы"), DisplayName("Инверсия")]
+        //[DynamicPropertyFilter(nameof(FuncName), "And,Or")]
+        //public bool[] InverseInputs => getInverseInputs;
 
-        [Browsable(false), Category("Выходы"), DisplayName("Выход 1")]
-        [DynamicPropertyFilter(nameof(FuncName), "Not,And,Or,Xor,Rs,Sr,Fe,Pulse,OnDelay,OffDelay,Add")]
-        public virtual object Out
-        {
-            get => getOutputs.Length > 0 && getOutputs[0] is bool bval && bval;
-            protected set
-            {
-                if (getOutputs.Length == 0) return;
-                getOutputs[0] = value;
-                ResultChanged?.Invoke(this, new ResultCalculateEventArgs(nameof(Out), value));
-            }
-        }
+        //[Browsable(false), Category("Выходы"), DisplayName("Выход 1")]
+        //[DynamicPropertyFilter(nameof(FuncName), "Not,And,Or,Xor,Rs,Sr,Fe,Pulse,OnDelay,OffDelay,Add")]
+        //public virtual object Out
+        //{
+        //    get => getOutputs.Length > 0 && getOutputs[0] is bool bval && bval;
+        //    protected set
+        //    {
+        //        if (getOutputs.Length == 0) return;
+        //        getOutputs[0] = value;
+        //        ResultChanged?.Invoke(this, new ResultCalculateEventArgs(nameof(Out), value));
+        //    }
+        //}
 
-        protected void OnResultChanged() => ResultChanged?.Invoke(this, new ResultCalculateEventArgs(nameof(Out), Out));
+        //protected void OnResultChanged() => ResultChanged?.Invoke(this, new ResultCalculateEventArgs(nameof(Out), Out));
 
-        [Browsable(false), Category("Выходы"), DisplayName("Состояние")]
-        [DynamicPropertyFilter(nameof(FuncName), "Assembly")]
-        public object[] Outputs => getOutputs;
+        //[Browsable(false), Category("Выходы"), DisplayName("Состояние")]
+        //[DynamicPropertyFilter(nameof(FuncName), "Assembly")]
+        //public object[] Outputs => getOutputs;
 
-        [Category("Выходы"), DisplayName(" Инверсия"), DefaultValue(false)]
-        [DynamicPropertyFilter(nameof(FuncName), "And,Or")]
-        public bool[] InverseOutputs => getInverseOutputs;
+        //[Category("Выходы"), DisplayName(" Инверсия"), DefaultValue(false)]
+        //[DynamicPropertyFilter(nameof(FuncName), "And,Or")]
+        //public bool[] InverseOutputs => getInverseOutputs;
 
-        [Browsable(false)]
-        public string[] InputNames => getInputNames;
+        //[Browsable(false)]
+        //public string[] InputNames => getInputNames;
 
-        [Browsable(false)]
-        public string[] OutputNames => getOutputNames;
+        //[Browsable(false)]
+        //public string[] OutputNames => getOutputNames;
 
-        [Browsable(false)]
-        public object[] InputValues
-        {
-            get
-            {
-                List<object> list = [];
-                for (var i = 0; i < getInputs.Length; i++)
-                {
-                    (Guid id, int pinout, bool _) = getLinkSources[i];
-                    if (id != Guid.Empty)
-                    {
-                        ValueItem? value = Project.ReadValue(id, pinout, ValueSide.Output, ValueKind.Digital);
-                        if (value != null && value.Value != null)
-                            list.Add(value.Value);
-                        else
-                        {
-                            ValueItem? val = Project.ReadValue(itemId, i, ValueSide.Input, ValueKind.Digital);
-                            list.Add(val?.Value ?? false);
-                        }
-                    }
-                    else
-                    {
-                        ValueItem? value = Project.ReadValue(itemId, i, ValueSide.Input, ValueKind.Digital);
-                        list.Add(value?.Value ?? false);
-                    }
-                }
-                return [.. list];
-            }
-        }
+        //[Browsable(false)]
+        //public object[] InputValues
+        //{
+        //    get
+        //    {
+        //        List<object> list = [];
+        //        for (var i = 0; i < getInputs.Length; i++)
+        //        {
+        //            (Guid id, int pinout, bool _) = getLinkSources[i];
+        //            if (id != Guid.Empty)
+        //            {
+        //                ValueItem? value = Project.ReadValue(id, pinout, ValueSide.Output, ValueKind.Digital);
+        //                if (value != null && value.Value != null)
+        //                    list.Add(value.Value);
+        //                else
+        //                {
+        //                    ValueItem? val = Project.ReadValue(itemId, i, ValueSide.Input, ValueKind.Digital);
+        //                    list.Add(val?.Value ?? false);
+        //                }
+        //            }
+        //            else
+        //            {
+        //                ValueItem? value = Project.ReadValue(itemId, i, ValueSide.Input, ValueKind.Digital);
+        //                list.Add(value?.Value ?? false);
+        //            }
+        //        }
+        //        return [.. list];
+        //    }
+        //}
 
-        [Browsable(false)]
-        public (Guid, int, bool)[] InputLinkSources => getLinkSources;
+        //[Browsable(false)]
+        //public (Guid, int, bool)[] InputLinkSources => getLinkSources;
 
-        public void UpdateInputLinkSources((Guid, int, bool) seek, Guid newId)
-        {
-            for (var i = 0; i < getLinkSources.Length; i++)
-            {
-                (Guid id, int input, bool _) = getLinkSources[i];
-                if (id == seek.Item1 && input == seek.Item2)
-                {
-                    getLinkSources[i].Item1 = newId;
-                }
-            }
-        }
+        //public void UpdateInputLinkSources((Guid, int, bool) seek, Guid newId)
+        //{
+        //    for (var i = 0; i < getLinkSources.Length; i++)
+        //    {
+        //        (Guid id, int input, bool _) = getLinkSources[i];
+        //        if (id == seek.Item1 && input == seek.Item2)
+        //        {
+        //            getLinkSources[i].Item1 = newId;
+        //        }
+        //    }
+        //}
 
-        [Browsable(false)]
-        public object[] OutputValues => getOutputs;
+        //[Browsable(false)]
+        //public object[] OutputValues => getOutputs;
 
-        [Browsable(false)]
-        public bool[] LinkedInputs 
-        { 
-            get 
-            {
-                List<bool> list = [];
-                for (var i = 0; i < getInputs.Length; i++)
-                {
-                    (Guid id, _, _) = getLinkSources[i];
-                    list.Add(id != Guid.Empty);
-                }
-                return [.. list];
-            } 
-        }
+        //[Browsable(false)]
+        //public bool[] LinkedInputs 
+        //{ 
+        //    get 
+        //    {
+        //        List<bool> list = [];
+        //        for (var i = 0; i < getInputs.Length; i++)
+        //        {
+        //            (Guid id, _, _) = getLinkSources[i];
+        //            list.Add(id != Guid.Empty);
+        //        }
+        //        return [.. list];
+        //    } 
+        //}
 
-        [Browsable(false)]
-        public object[] LinkedOutputs => [Out];
+        //[Browsable(false)]
+        //public object[] LinkedOutputs => [Out];
 
         public event ResultCalculateEventHandler? ResultChanged;
 
         public virtual void Calculate()
         {
-            bool result = (bool)(GetInputValue(0) ?? false) ^ getInverseInputs[0];
-            for (var i = 0; i < InputValues.Length; i++)
+            bool result = (bool)(GetInputValue(0) ?? false) ^ GetInverseInputs(0);
+            for (var i = 0; i < inputs.Length; i++)
             {
-                var input = (bool)(GetInputValue(i) ?? false) ^ getInverseInputs[i];
+                var input = (bool)(GetInputValue(i) ?? false) ^ GetInverseInputs(i);
                 result = logicFunction switch
                 {
                     LogicFunction.And => result && input,
                     LogicFunction.Or => result || input,
-                    LogicFunction.Xor => CalcXor(InputValues),
+                    LogicFunction.Xor => CalcXor(inputs),
                     _ => logicFunction == LogicFunction.None && result,
                 };
             }
-            var @out = result ^ getInverseOutputs[0];
-            Out = @out;
-            Project.WriteValue(itemId, 0, ValueSide.Output, ValueKind.Digital, Out);
+            SetValueToInp(0, result ^ GetInverseOutputs(0));
+        }
+
+        public bool GetInverseInputs(int pin)
+        {
+            if (pin < inputs.Length && inputs[pin] is DigitalInput input)
+                return input.Inverse;
+            return false;
+        }
+
+        public bool GetInverseOutputs(int pin)
+        {
+            if (pin < outputs.Length && outputs[pin] is DigitalOutput output)
+                return output.Inverse;
+            return false;
         }
 
         public object? GetInputValue(int pin)
         {
-            (Guid id, int pinout, bool _) = getLinkSources[pin];
-            if (id != Guid.Empty)
+            if (pin < inputs.Length)
             {
-                var item = Project.ReadValue(id, pinout, ValueSide.Output, ValueKind.Digital);
-                if (item != null)
-                    return (bool)(item?.Value ?? false);
-                item = Project.ReadValue(id, pinout, ValueSide.Output, ValueKind.Analog);
-                if (item != null)
-                    return (double)(item?.Value ?? 0.0);
-            }
-            else
-            {
-                var item = Project.ReadValue(itemId, pin, ValueSide.Input, ValueKind.Digital);
-                if (item != null)
-                    return (bool)(item?.Value ?? false);
-                item = Project.ReadValue(itemId, pin, ValueSide.Input, ValueKind.Analog);
-                if (item != null)
-                    return (double)(item?.Value ?? 0.0);
+                if (inputs[pin] is DigitalInput dinput)
+                    return dinput.Value;
+                if (inputs[pin] is AnalogInput ainput)
+                    return ainput.Value;
+                //if (input.LinkSource != null && input.LinkSource.Id != Guid.Empty)
+                //{
+                //    var item = Project.ReadValue(id, pinout, ValueSide.Output, ValueKind.Digital);
+                //    if (item != null)
+                //        return (bool)(item?.Value ?? false);
+                //    item = Project.ReadValue(id, pinout, ValueSide.Output, ValueKind.Analog);
+                //    if (item != null)
+                //        return (double)(item?.Value ?? 0.0);
+                //}
+                //else
+                //{
+                //    var item = Project.ReadValue(itemId, pin, ValueSide.Input, ValueKind.Digital);
+                //    if (item != null)
+                //        return (bool)(item?.Value ?? false);
+                //    item = Project.ReadValue(itemId, pin, ValueSide.Input, ValueKind.Analog);
+                //    if (item != null)
+                //        return (double)(item?.Value ?? 0.0);
+                //}
             }
             return null;
         }
 
         public object? GetOutputValue(int pin)
         {
-            var item = Project.ReadValue(itemId, pin, ValueSide.Output, ValueKind.Digital);
+            var item = Project.ReadValue(itemId, pin, ValueDirect.Output, ValueKind.Digital);
             if (item != null)
                 return (bool)(item?.Value ?? false);
-            item = Project.ReadValue(itemId, pin, ValueSide.Output, ValueKind.Analog);
+            item = Project.ReadValue(itemId, pin, ValueDirect.Output, ValueKind.Analog);
             if (item != null)
                 return (double)(item?.Value ?? 0.0);
             return null;
@@ -266,44 +309,59 @@ namespace Simulator.Model.Logic
         /// <param name="getMethod">Ссылка на метод, записываемая в целевом элементе, для этого входа</param>
         public virtual void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog)
         {
-            if (inputIndex < 0 || inputIndex >= getLinkSources.Length)
-                return;
-            getLinkSources[inputIndex] = (sourceId, outputPinIndex, byDialog);
+            if (inputIndex < 0 || inputIndex >= inputs.Length) return;
+            inputs[inputIndex].LinkSource = new LinkSource(sourceId, outputPinIndex, byDialog);
         }
 
         public virtual void ResetValueLinkToInp(int inputIndex)
         {
-            if (inputIndex < 0 || inputIndex >= getLinkSources.Length)
-                return;
-            getLinkSources[inputIndex] = (Guid.Empty, 0, false);
+            if (inputIndex < 0 || inputIndex >= inputs.Length) return;
+            inputs[inputIndex].LinkSource = null;
         }
 
         public void SetValueToInp(int inputIndex, object? value)
         {
-            if (inputIndex < 0 || inputIndex >= getLinkSources.Length)
-                return;
-            if (value != null && !LinkedInputs[inputIndex])
+            if (inputIndex < 0 || inputIndex >= inputs.Length) return;
+            if (value != null)
             {
-                getInputs[inputIndex] = (bool)value;
-                Project.WriteValue(itemId, inputIndex, ValueSide.Input, ValueKind.Digital, (bool)value);
+                if (inputs[inputIndex] is DigitalInput digital)
+                    digital.Value = (bool)value;
+                if (inputs[inputIndex] is AnalogInput analog)
+                    analog.Value = (double)value;
+            }
+        }
+
+        public void SetValueToOut(int outputIndex, object? value)
+        {
+            if (outputIndex < 0 || outputIndex >= outputs.Length) return;
+            if (value != null)
+            {
+                if (outputs[outputIndex] is DigitalOutput digital)
+                    digital.Value = (bool)value;
+                if (outputs[outputIndex] is AnalogOutput analog)
+                    analog.Value = (double)value;
             }
         }
 
         public virtual object? GetValueFromInp(int inputIndex)
         {
-            if (inputIndex < 0 || inputIndex >= getLinkSources.Length)
-                return null;
-            (Guid id, int pin, bool _) = getLinkSources[inputIndex];
-            if (id != Guid.Empty)
-            { 
-                ValueItem? valtem = Project.ReadValue(id, pin, ValueSide.Output, ValueKind.Digital);
-                return valtem?.Value;
-            }
-            else
-            {
-                ValueItem? valtem = Project.ReadValue(itemId, inputIndex, ValueSide.Input, ValueKind.Digital);
-                return valtem?.Value;
-            }
+            if (inputIndex < 0 || inputIndex >= inputs.Length) return null;
+            if (inputs[inputIndex] is DigitalInput digital)
+                return digital.Value;
+            if (inputs[inputIndex] is AnalogInput analog)
+                return analog.Value;
+            //(Guid id, int pin, bool _) = getLinkSources[inputIndex];
+            //if (id != Guid.Empty)
+            //{ 
+            //    ValueItem? valtem = Project.ReadValue(id, pin, ValueSide.Output, ValueKind.Digital);
+            //    return valtem?.Value;
+            //}
+            //else
+            //{
+            //    ValueItem? valtem = Project.ReadValue(itemId, inputIndex, ValueSide.Input, ValueKind.Digital);
+            //    return valtem?.Value;
+            //}
+            return null;
         }
 
         public virtual void Save(XElement xtance)
@@ -311,44 +369,53 @@ namespace Simulator.Model.Logic
             if (Inputs.Length > 0)
             {
                 XElement xinputs = new("Inputs");
-                for (var i = 0; i < Inputs.Length; i++)
+                for (var i = 0; i < inputs.Length; i++)
                 {
-                    (Guid id, int output, bool external) = getLinkSources[i];
                     XElement xinput = new("Input");
                     xinputs.Add(xinput);
                     xinput.Add(new XAttribute("Index", i));
-
-                    if (!string.IsNullOrWhiteSpace(InputNames[i]))
-                        xinput.Add(new XAttribute("Name", InputNames[i]));
-                    if (InverseInputs[i])
-                        xinput.Add(new XAttribute("Invert", InverseInputs[i]));
-                    if (Inputs[i] is bool bval)
-                        xinput.Add(new XAttribute("Value", bval));
-                    if (id != Guid.Empty)
+                    var name = inputs[i].Name;
+                    if (!string.IsNullOrWhiteSpace(name))
+                        xinput.Add(new XAttribute("Name", name));
+                    if (inputs[i] is DigitalInput input && input.Inverse)
+                        xinput.Add(new XAttribute("Invert", true));
+                    if (inputs[i].LinkSource == null)
                     {
-                        XElement xsource = new("Source");
-                        xsource.Add(new XAttribute("Id", id));
-                        if (output > 0)
-                            xsource.Add(new XAttribute("PinIndex", output));
-                        if (external)
-                            xsource.Add(new XAttribute("External", external));
-                        xinput.Add(xsource);
+                        if (inputs[i] is DigitalInput binput && binput.Value)
+                            xinput.Add(new XAttribute("Value", binput.Value));
+                        if (inputs[i] is AnalogInput ainput && ainput.Value != 0.0)
+                            xinput.Add(new XAttribute("Value", ainput.Value));
+                    }
+                    else
+                    {
+                        var ls = inputs[i].LinkSource;
+                        if (ls != null)
+                        {
+                            XElement xsource = new("Source");
+                            xsource.Add(new XAttribute("Id", ls.Id));
+                            if (ls.PinIndex > 0)
+                                xsource.Add(new XAttribute("PinIndex", ls.PinIndex));
+                            if (ls.External)
+                                xsource.Add(new XAttribute("External", true));
+                            xinput.Add(xsource);
+                        }
                     }
                 }
                 xtance.Add(xinputs);
             }
-            if (OutputNames.Length > 0)
+            if (outputs.Length > 0)
             {
                 XElement xoutputs = new("Outputs");
-                for (var i = 0; i < InverseOutputs.Length; i++)
+                for (var i = 0; i < outputs.Length; i++)
                 {
                     XElement xoutput = new("Output");
                     xoutputs.Add(xoutput);
                     xoutput.Add(new XAttribute("Index", i));
-                    if (!string.IsNullOrWhiteSpace(OutputNames[i]))
-                        xoutput.Add(new XAttribute("Name", OutputNames[i]));
-                    if (InverseOutputs[i])
-                        xoutput.Add(new XAttribute("Invert", InverseOutputs[i]));
+                    var name = outputs[i].Name;
+                    if (!string.IsNullOrWhiteSpace(name))
+                        xoutput.Add(new XAttribute("Name", name));
+                    if (outputs[i] is DigitalOutput output && output.Inverse)
+                        xoutput.Add(new XAttribute("Invert", true));
                 }
                 xtance.Add(xoutputs);
             }
@@ -367,9 +434,12 @@ namespace Simulator.Model.Logic
                     if (int.TryParse(item.Attribute("Index")?.Value, out int index))
                     {
                         var name = item.Attribute("Name")?.Value;
-                        if (name != null) InputNames[index] = name;
+                        if (name != null) inputs[index].Name = name;
                         if (bool.TryParse(item.Attribute("Invert")?.Value, out bool invert))
-                            InverseInputs[index] = invert;
+                        {
+                            if (inputs[index] is DigitalInput input)
+                                input.Inverse = invert;
+                        }
                         var xsource = item.Element("Source");
                         if (xsource != null)
                         {
@@ -379,15 +449,18 @@ namespace Simulator.Model.Logic
                                 if (bool.TryParse(xsource.Attribute("External")?.Value, out bool bval))
                                     external = bval;
                                 if (int.TryParse(xsource.Attribute("PinIndex")?.Value, out int outputIndex))
-                                    getLinkSources[index] = (guid, outputIndex, external);
+                                    inputs[index].LinkSource = new LinkSource(guid, outputIndex, external);
                                 else
-                                    getLinkSources[index] = (guid, 0, external);
+                                    inputs[index].LinkSource = new LinkSource(guid, 0, external);
                             }
                         }
-                        if (bool.TryParse(item.Attribute("Value")?.Value, out bool value))
+                        if (bool.TryParse(item.Attribute("Value")?.Value, out bool bvalue) && inputs[index] is DigitalInput dinput)
                         {
-                            getInputs[index] = value;
-                            Project.WriteValue(itemId, index, ValueSide.Input, ValueKind.Digital, value);
+                            dinput.Value = bvalue;
+                        }
+                        else if (double.TryParse(item.Attribute("Value")?.Value, out double avalue) && inputs[index] is AnalogInput ainput)
+                        {
+                            ainput.Value = avalue;
                         }
                     }
                 }
@@ -400,9 +473,9 @@ namespace Simulator.Model.Logic
                     if (int.TryParse(item.Attribute("Index")?.Value, out int index))
                     {
                         var name = item.Attribute("Name")?.Value;
-                        if (name != null) OutputNames[index] = name;
-                        if (bool.TryParse(item.Attribute("Invert")?.Value, out bool invert))
-                            InverseOutputs[index] = invert;
+                        if (name != null) outputs[index].Name = name;
+                        if (bool.TryParse(item.Attribute("Invert")?.Value, out bool invert) && outputs[index] is DigitalOutput doutput)
+                            doutput.Inverse = invert;
                     }
                 }
             }
@@ -419,7 +492,7 @@ namespace Simulator.Model.Logic
                 using var fontbrush = new SolidBrush(selected ? Color.Magenta : foreColor);
                 using var format = new StringFormat();
                 format.Alignment = StringAlignment.Center;
-                var max = Math.Max(InverseInputs.Length, InverseOutputs.Length);
+                var max = Math.Max(inputs.Length, outputs.Length);
                 var step = Element.Step;
                 var height = step + max * step * 4 + step;
                 var width = step + 1 * step * 4 + step;
@@ -440,12 +513,12 @@ namespace Simulator.Model.Logic
                 // входы
                 var y = step + location.Y;
                 var x = -step + location.X;
-                for (var i = 0; i < InverseInputs.Length; i++)
+                for (var i = 0; i < inputs.Length; i++)
                 {
                     y += step * 2;
                     // горизонтальная риска слева, напротив входа
                     graphics.DrawLine(pen, new PointF(x, y), new PointF(x + step, y));
-                    if (InverseInputs[i])
+                    if (inputs[i] is DigitalInput input && input.Inverse)
                     {
                         var r = new RectangleF(x + step / 2, y - step / 2, step, step);
                         // рисуем кружок инверсии
@@ -453,10 +526,11 @@ namespace Simulator.Model.Logic
                         graphics.DrawEllipse(pen, r);
                     }
                     // наименование входа
-                    if (!string.IsNullOrEmpty(InputNames[i]))
+                    var name = inputs[i].Name ?? "";
+                    if (!string.IsNullOrEmpty(name))
                     {
-                        var ms = graphics.MeasureString(InputNames[i], font);
-                        graphics.DrawString(InputNames[i], font, fontbrush, new PointF(x + step, y - ms.Height / 2));
+                        var ms = graphics.MeasureString(name, font);
+                        graphics.DrawString(name, font, fontbrush, new PointF(x + step, y - ms.Height / 2));
                     }
                     // значение входа
                     bool isLinked = this is ILinkSupport link && link.LinkedInputs[i];
@@ -483,18 +557,18 @@ namespace Simulator.Model.Logic
                 // выходы
                 y = step + location.Y;
                 x = width + location.X;
-                for (var i = 0; i < InverseOutputs.Length; i++)
+                for (var i = 0; i < outputs.Length; i++)
                 {
-                    if (InverseOutputs.Length == 1)
+                    if (outputs.Length == 1)
                         y = height / 2 + location.Y;
                     else
                         y += step * 2;
-                    if (OutputNames.Length > 0)
+                    if (outputs.Length > 0)
                     {
                         // горизонтальная риска справа, напротив выхода
                         graphics.DrawLine(pen, new PointF(x, y), new PointF(x + step, y));
                     }
-                    if (InverseOutputs[i] && customDraw == null)
+                    if (outputs[i] is DigitalOutput output && output.Inverse && customDraw == null)
                     {
                         var r = new RectangleF(x - step / 2, y - step / 2, step, step);
                         // рисуем кружок инверсии
@@ -502,13 +576,14 @@ namespace Simulator.Model.Logic
                         graphics.DrawEllipse(pen, r);
                     }
                     // наименование выхода
-                    if (OutputNames.Length > 0 && !string.IsNullOrEmpty(OutputNames[i]))
+                    var name = outputs.Length > 0 ? outputs[i].Name ?? ""  : "";
+                    if (!string.IsNullOrEmpty(name))
                     {
-                        var ms = graphics.MeasureString(OutputNames[i], font);
-                        graphics.DrawString(OutputNames[i], font, fontbrush, new PointF(x - ms.Width, y - ms.Height / 2));
+                        var ms = graphics.MeasureString(name, font);
+                        graphics.DrawString(name, font, fontbrush, new PointF(x - ms.Width, y - ms.Height / 2));
                     }
                     // значение выхода
-                    if (Project.Running && OutputNames.Length > 0 && VisibleValues && this is ILinkSupport link)
+                    if (Project.Running && outputs.Length > 0 && VisibleValues)
                     {
                         var text = string.Empty;
                         var value = GetOutputValue(i);
@@ -545,7 +620,7 @@ namespace Simulator.Model.Logic
         {
             var step = Element.Step;
             var width = step + 1 * step * 4 + step;
-            var max = Math.Max(LinkedInputs.Length, LinkedOutputs.Length);
+            var max = Math.Max(inputs.Length, outputs.Length);
             var height = step + max * step * 4 + step;
             size = new SizeF(width, height);
             // входы
@@ -554,7 +629,7 @@ namespace Simulator.Model.Logic
             var n = 0;
             itargets.Clear();
             ipins.Clear();
-            for (var i = 0; i < LinkedInputs.Length; i++)
+            for (var i = 0; i < inputs.Length; i++)
             {
                 y += step * 2;
                 // значение входа
@@ -570,9 +645,9 @@ namespace Simulator.Model.Logic
             n = 0;
             otargets.Clear();
             opins.Clear();
-            for (var i = 0; i < OutputNames.Length; i++)
+            for (var i = 0; i < outputs.Length; i++)
             {
-                if (OutputNames.Length == 1)
+                if (outputs.Length == 1)
                     y = height / 2 + location.Y;
                 else
                     y += step * 2;

@@ -2,12 +2,27 @@
 {
     public class AnalogInput : Input
     {
-        public AnalogInput(int index, string? name)
+        public AnalogInput(Guid itemId, int index, string? name) : base(itemId)
         {
-            DirectKind = DirectKind.Input;
+            ValueSide = ValueDirect.Input;
             ValueKind = ValueKind.Analog;
             Index = index;
             Name = name;
+        }
+
+        public double Value 
+        {
+            get
+            {
+                if (LinkSource == null)
+                    return (double)(Project.ReadValue(ItemId, Index, ValueDirect.Input, ValueKind.Analog)?.Value ?? 0.0);
+                return (double)(Project.ReadValue(LinkSource.Id, LinkSource.PinIndex, ValueDirect.Output, ValueKind.Analog)?.Value ?? 0.0);
+            }
+            set
+            {
+                if (LinkSource == null)
+                    Project.WriteValue(ItemId, Index, ValueDirect.Input, ValueKind.Analog, value);
+            }
         }
     }
 }

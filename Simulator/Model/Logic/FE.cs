@@ -1,4 +1,5 @@
-﻿using Simulator.Model.Interfaces;
+﻿using Simulator.Model.Common;
+using Simulator.Model.Interfaces;
 using System.ComponentModel;
 
 namespace Simulator.Model.Logic
@@ -7,7 +8,7 @@ namespace Simulator.Model.Logic
     {
         public FE() : base(LogicFunction.Fe, 1) 
         {
-            OutputValues[0] = false;
+            ((DigitalOutput)Outputs[0]).Value = false;
         }
 
         [Browsable(false)]
@@ -15,25 +16,25 @@ namespace Simulator.Model.Logic
 
         private DateTime time;
         private readonly double waitTime = 0.2;
+        private bool @out;
 
         public override void Calculate()
         {
-            bool input = (bool)InputValues[0];
-            bool @out;
-            if (!input && !(bool)Out)
+            bool input = (bool)(GetInputValue(0) ?? false);
+            bool output = (bool)(GetOutputValue(0) ?? false);
+            if (!input && !output)
             {
                 time = DateTime.Now + TimeSpan.FromSeconds(waitTime);
                 @out = false;
             }
             else
                 @out = time > DateTime.Now;
-            Out = @out;
-            Project.WriteValue(ItemId, 0, ValueSide.Output, ValueKind.Digital, Out);
+            SetValueToOut(0, @out);
         }
 
         public void Reset()
         {
-            if (Out is bool bval && bval)
+            if ((bool)(GetOutputValue(0) ?? false))
                 time = DateTime.Now;
         }
 

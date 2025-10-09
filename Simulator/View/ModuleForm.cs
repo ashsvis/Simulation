@@ -1,4 +1,5 @@
 ﻿using Simulator.Model;
+using Simulator.Model.Common;
 using Simulator.Model.Interfaces;
 using Simulator.View;
 using System.Diagnostics;
@@ -302,7 +303,7 @@ namespace Simulator
                             var (id, pinout, external) = sup.InputLinkSources[i];
                             if (!external) continue;
 
-                            ValueItem? val = Project.ReadValue(id, pinout, ValueSide.Output, ValueKind.Digital);
+                            ValueItem? val = Project.ReadValue(id, pinout, ValueDirect.Output, ValueKind.Digital);
                             Color color = val != null && val.Value != null ? (bool)val.Value == true ? Color.LimeGreen : Color.OrangeRed : Color.Gray;
                             using var exlinkpen = new Pen(Color.FromArgb(255, color), 0);
                             using var exlinkbrush = new SolidBrush(Color.FromArgb(255, color));
@@ -363,7 +364,7 @@ namespace Simulator
                             var text = sb.ToString();
                             var ms = graphics.MeasureString(text, font);
                             var rect = new RectangleF(pt.X + Element.Step, item.Bounds.Bottom + Element.Step, ms.Width, ms.Height);
-                            ValueItem? val = Project.ReadValue(item.Id, pinout, ValueSide.Output, ValueKind.Digital);
+                            ValueItem? val = Project.ReadValue(item.Id, pinout, ValueDirect.Output, ValueKind.Digital);
                             Color color = val != null && val.Value != null ? (bool)val.Value == true ? Color.LimeGreen : Color.OrangeRed : Color.Gray;
                             using var exlinkpen = new Pen(Color.FromArgb(255, color), 0);
                             using var exlinkbrush = new SolidBrush(Color.FromArgb(255, color));
@@ -383,7 +384,7 @@ namespace Simulator
                     if (source?.Instance is ILinkSupport lsup && lsup != null && link.SourcePinIndex < lsup.OutputValues.Length)
                     {
                         var pin = link.SourcePinIndex;
-                        ValueItem? val = Project.ReadValue(lsup.ItemId, pin, ValueSide.Output, ValueKind.Digital);
+                        ValueItem? val = Project.ReadValue(lsup.ItemId, pin, ValueDirect.Output, ValueKind.Digital);
                         if (val != null && val.Value != null)
                             link.SetValue(val.Value);
                     }

@@ -1,4 +1,5 @@
-﻿using Simulator.Model.Interfaces;
+﻿using Simulator.Model.Common;
+using Simulator.Model.Interfaces;
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -304,13 +305,13 @@ namespace Simulator.Model
         public ValueItem[] GetElementVariablesByIndex(Guid elementId)
         {
             List<ValueItem> result = [];
-            var inputkeys = vals.Where(x => x.Value.ElementId == elementId && x.Value.Side == ValueSide.Input).OrderBy(x => x.Value.Pin).Select(x => x.Key).ToList();
+            var inputkeys = vals.Where(x => x.Value.ElementId == elementId && x.Value.Side == ValueDirect.Input).OrderBy(x => x.Value.Pin).Select(x => x.Key).ToList();
             foreach (var key in inputkeys)
             {
                 if (vals.TryGetValue(key, out ValueItem? a))
                     result.Add(a);
             }
-            var outputkeys = vals.Where(x => x.Value.ElementId == elementId && x.Value.Side == ValueSide.Output).OrderBy(x => x.Value.Pin).Select(x => x.Key).ToList();
+            var outputkeys = vals.Where(x => x.Value.ElementId == elementId && x.Value.Side == ValueDirect.Output).OrderBy(x => x.Value.Pin).Select(x => x.Key).ToList();
             foreach (var key in outputkeys)
             {
                 if (vals.TryGetValue(key, out ValueItem? a))

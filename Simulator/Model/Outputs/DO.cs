@@ -1,4 +1,5 @@
-﻿using Simulator.Model.Interfaces;
+﻿using Simulator.Model.Common;
+using Simulator.Model.Interfaces;
 using Simulator.Model.Logic;
 using Simulator.View;
 using System.ComponentModel;
@@ -26,10 +27,10 @@ namespace Simulator.Model.Outputs
         public override void Calculate()
         {
             bool input = (bool)(GetInputValue(0) ?? false);
-            Project.WriteValue(ItemId, 0, ValueSide.Input, ValueKind.Digital, input);
+            Project.WriteValue(ItemId, 0, ValueDirect.Input, ValueKind.Digital, input);
             if (linkSource.Item1 != Guid.Empty)
             {
-                Project.WriteValue(linkSource.Item1, 0, ValueSide.Output, ValueKind.Digital, input);
+                Project.WriteValue(linkSource.Item1, 0, ValueDirect.Output, ValueKind.Digital, input);
             }
         }
 

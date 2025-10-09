@@ -1,8 +1,8 @@
 ﻿namespace Simulator.Model.Common
 {
-    public enum DirectKind
+    public enum ValueDirect
     {
         Input,
-        Output
+        Output,
     }
 }

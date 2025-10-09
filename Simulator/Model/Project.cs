@@ -1,4 +1,5 @@
-﻿using Simulator.Model.Interfaces;
+﻿using Simulator.Model.Common;
+using Simulator.Model.Interfaces;
 using System.Collections;
 using System.ComponentModel;
 using System.Xml.Linq;
@@ -149,13 +150,13 @@ namespace Simulator.Model
             return null;
         }
 
-        internal static void WriteValue(Guid elementId, int pin, ValueSide side, ValueKind kind, object? value)
+        internal static void WriteValue(Guid elementId, int pin, ValueDirect side, ValueKind kind, object? value)
         {
             var key = $"{elementId}\t{pin}\t{side}\t{kind}";
             vals[key] = new ValueItem() { ElementId = elementId, Side = side, Pin = pin, Kind = kind, Value = value };
         }
 
-        internal static ValueItem? ReadValue(Guid elementId, int pin, ValueSide side, ValueKind kind)
+        internal static ValueItem? ReadValue(Guid elementId, int pin, ValueDirect side, ValueKind kind)
         {
             var key = $"{elementId}\t{pin}\t{side}\t{kind}";
             if (vals.ContainsKey(key))
@@ -575,12 +576,13 @@ namespace Simulator.Model
         {
             func.SetItemId(ori.ItemId);
             func.Name = ori.Name;
-            for (var i = 0; i < ori.InputLinkSources.Length; i++)
+            for (var i = 0; i < ori.Inputs.Length; i++)
             {
-                if (ori.LinkedInputs[i])
+                if (ori.Inputs[i].LinkSource != null)
                 {
-                    var (id, outpin, ext) = ori.InputLinkSources[i];
-                    func.SetValueLinkToInp(i, id, outpin, ext);
+                    var ls = ori.Inputs[i].LinkSource;
+                    if (ls != null)
+                        func.SetValueLinkToInp(i, ls.Id, ls.PinIndex, ls.External);
                 }
             }
             element.Instance = func;
@@ -597,52 +599,6 @@ namespace Simulator.Model
             else
                 action = act;
         }
-    }
-
-    public enum ValueKind
-    {
-        None,
-        Digital,
-        Analog,
-    }
-
-    public enum ValueSide
-    {
-        Input,
-        Output,
-    }
-
-    public class ValueItem
-    {
-        public ValueKind Kind { get; set; }
-        public ValueSide Side { get; set; }
-        public object? Value { get; set; }
-        public int Pin { get; set; }
-        public Guid ElementId { get; set; }
-
-        public override string ToString()
-        {
-            return Kind switch
-            {
-                ValueKind.Analog => $"{Value}",
-                ValueKind.Digital => $"{Value ?? false}"[..1].ToUpper(),
-                _ => string.Empty,
-            };
-        }
-    }
-
-    public enum ProjectChangeKind
-    {
-        Clear,
-        Load,
-        AddModule,
-        RemoveModule,
-        AddUnit,
-        RemoveUnit,
-        AddField,
-        RemoveField,
-        AddBlock,
-        RemoveBlock,
     }
 
     public delegate void ProjectEventHandler(object? sender, ProjectEventArgs args);

@@ -1,4 +1,5 @@
 using Simulator.Model;
+using Simulator.Model.Common;
 using Simulator.View;
 
 namespace Simulator
@@ -338,26 +339,6 @@ namespace Simulator
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message, "Вставка элемента", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                else if (node.Tag is Model.Unit block)
-                {
-                    try
-                    {
-                        var module = new Element() { Type = typeof(Model.Logic.BLK) };
-                        if (module != null)
-                        {
-                            module.Instance = new Model.Logic.BLK(block.Id);
-                            var ret = tvLibrary.DoDragDrop(module, DragDropEffects.Copy);
-                            if (ret == DragDropEffects.None)
-                            {
-                                Cursor = Cursors.Default;
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message, "Вставка блока", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 if (e.Clicks > 1)

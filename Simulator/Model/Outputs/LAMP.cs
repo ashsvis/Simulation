@@ -1,4 +1,5 @@
-﻿using Simulator.Model.Interfaces;
+﻿using Simulator.Model.Common;
+using Simulator.Model.Interfaces;
 using Simulator.Model.Logic;
 using System.ComponentModel;
 using System.Xml.Linq;
@@ -20,7 +21,7 @@ namespace Simulator.Model.Outputs
         public override void Calculate()
         {
             bool input = (bool)(GetInputValue(0) ?? false);
-            Project.WriteValue(ItemId, 0, ValueSide.Input, ValueKind.Digital, input);
+            Project.WriteValue(ItemId, 0, ValueDirect.Input, ValueKind.Digital, input);
         }
 
         public override void CalculateTargets(PointF location, ref SizeF size,

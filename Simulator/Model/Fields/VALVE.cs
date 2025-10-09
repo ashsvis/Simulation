@@ -1,4 +1,5 @@
-﻿using Simulator.Model.Interfaces;
+﻿using Simulator.Model.Common;
+using Simulator.Model.Interfaces;
 using Simulator.View;
 using System.ComponentModel;
 using System.Drawing.Drawing2D;
@@ -299,21 +300,21 @@ namespace Simulator.Model.Fields
         {
             if (openedLinkSource.Item1 != Guid.Empty)
             {
-                ValueItem? item = Project.ReadValue(openedLinkSource.Item1, 0, ValueSide.Input, ValueKind.Digital);
+                ValueItem? item = Project.ReadValue(openedLinkSource.Item1, 0, ValueDirect.Input, ValueKind.Digital);
                 isOpened = (bool?)item?.Value;
             }
             else
                 isOpened = null;
             if (closedLinkSource.Item1 != Guid.Empty)
             {
-                ValueItem? item = Project.ReadValue(closedLinkSource.Item1, 0, ValueSide.Input, ValueKind.Digital);
+                ValueItem? item = Project.ReadValue(closedLinkSource.Item1, 0, ValueDirect.Input, ValueKind.Digital);
                 isClosed = (bool?)item?.Value;
             }
             else
                 isClosed = null;
             if (commandLinkSource.Item1 != Guid.Empty)
             {
-                ValueItem? item = Project.ReadValue(commandLinkSource.Item1, 0, ValueSide.Output, ValueKind.Digital);
+                ValueItem? item = Project.ReadValue(commandLinkSource.Item1, 0, ValueDirect.Output, ValueKind.Digital);
                 isCommand = (bool?)item?.Value;
             }
             else

@@ -2,7 +2,8 @@
 {
     public enum ValueKind
     {
+        None,
         Digital,
-        Analog
+        Analog,
     }
 }
