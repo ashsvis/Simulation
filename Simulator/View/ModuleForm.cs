@@ -244,7 +244,7 @@ namespace Simulator
             {
                 var item = items[i];
                 if (item.TryGetInput(pt, out pin, out point) &&
-                    item.Instance is ILinkSupport link && pin is int ipin && !link.LinkedInputs[ipin])
+                    item.Instance is ILinkSupport link && pin is int ipin && link.Inputs[ipin].LinkSource == null)
                 {
                     output = false;
                     target = items[i];
@@ -381,7 +381,7 @@ namespace Simulator
                 foreach (var link in links.Where(x => !x.Selected))
                 {
                     Element? source = items.FirstOrDefault(x => x.Id == link.SourceId);
-                    if (source?.Instance is ILinkSupport lsup && lsup != null && link.SourcePinIndex < lsup.OutputValues.Length)
+                    if (source?.Instance is ILinkSupport lsup && lsup != null && link.SourcePinIndex < lsup.Outputs.Length)
                     {
                         var pin = link.SourcePinIndex;
                         ValueItem? val = Project.ReadValue(lsup.ItemId, pin, ValueDirect.Output, ValueKind.Digital);
@@ -657,14 +657,14 @@ namespace Simulator
                 if (item.Instance is ILinkSupport link)
                 {
                     var n = 0;
-                    foreach (var isLinked in link.LinkedInputs)
+                    foreach (var isLinked in link.Inputs)
                     {
                         if (item.InputPins.TryGetValue(n, out PointF targetPinPoint))
                             mustBeFree.Add(targetPinPoint);
                         n++;
                     }
                     n = 0;
-                    foreach (var output in link.LinkedOutputs)
+                    foreach (var output in link.Outputs)
                     {
                         if (item.OutputPins.TryGetValue(n, out PointF sourcePinPoint))
                             mustBeFree.Add(sourcePinPoint);
@@ -796,7 +796,7 @@ namespace Simulator
                                 };
                                 cmZoomPad.Items.Add(item);
                             }
-                            else if (func.LinkedInputs[(int)pin])
+                            else if (func.Inputs[(int)pin].LinkSource != null)
                             {
                                 if (linkSource.Item1 != Guid.Empty && !linkSource.Item3)
                                 {
@@ -1045,7 +1045,7 @@ namespace Simulator
                         if (pinSecond != null && pinFirst != null && outputFirst == true && outputSecond == false)
                         {
                             // от выхода ко входу
-                            if (!target.LinkedInputs[(int)pinSecond])
+                            if (target.Inputs[(int)pinSecond].LinkSource == null)
                             {
                                 target.SetValueLinkToInp((int)pinSecond, elementFirst.Id, (int)pinFirst, false);
                                 var link = BuildLink(elementFirst.Id, (int)pinFirst, (PointF)linkFirstPoint, elementSecond.Id, (int)pinSecond, (PointF)linkSecondPoint);
@@ -1062,7 +1062,7 @@ namespace Simulator
                         else if (pinSecond != null && pinFirst != null && outputFirst == false && outputSecond == true)
                         {
                             // от входа к выходу
-                            if (!source.LinkedInputs[(int)pinFirst])
+                            if (source.Inputs[(int)pinFirst].LinkSource == null)
                             {
                                 source.SetValueLinkToInp((int)pinFirst, elementSecond.Id, (int)pinSecond, false);
                                 var link = BuildLink(elementSecond.Id, (int)pinSecond, (PointF)linkSecondPoint, elementFirst.Id, (int)pinFirst, (PointF)linkFirstPoint);

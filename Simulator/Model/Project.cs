@@ -10,27 +10,6 @@ namespace Simulator.Model
     {
         private static readonly Hashtable vals = [];
 
-        //internal static (string, string) GetAddressById(Guid id)
-        //{
-        //    var k = 1;
-        //    foreach (var module in Modules)
-        //    {
-        //        var n = 1;
-        //        foreach (var element in module.Elements)
-        //        {
-        //            if (id == element.Id)
-        //            {
-        //                var localName = $"L{n}";
-        //                return (!string.IsNullOrEmpty(module.Name) ? module.Name : $"Task{k}", 
-        //                        element.Instance is IFunction func ? func.Name ?? localName : localName);
-        //            }
-        //            n++;
-        //        }
-        //        k++;
-        //    }
-        //    return ("", "");
-        //}
-
         internal static (string, string, string) GetInputByElementId(Guid id, int pin)
         {
             var k = 1;
@@ -92,36 +71,6 @@ namespace Simulator.Model
             }
             return ("", "", "");
         }
-
-        //internal static string GetModuleNameById(Guid id)
-        //{
-        //    foreach (var module in Modules)
-        //    {
-        //        var n = 1;
-        //        foreach (var element in module.Elements)
-        //        {
-        //            if (id == element.Id)
-        //                return !string.IsNullOrEmpty(module.Name) ? module.Name : $"Task{n}";
-        //            n++;
-        //        }
-        //    }
-        //    return string.Empty;
-        //}
-
-        //internal static Guid GetModuleIdById(Guid id)
-        //{
-        //    foreach (var module in Modules)
-        //    {
-        //        var n = 1;
-        //        foreach (var element in module.Elements)
-        //        {
-        //            if (id == element.Id)
-        //                return module.Id;
-        //            n++;
-        //        }
-        //    }
-        //    return Guid.Empty;
-        //}
 
         internal static string GetElementById(Guid id)
         {

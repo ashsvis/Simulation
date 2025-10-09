@@ -110,7 +110,7 @@ namespace Simulator.Model
                         if (id != Guid.Empty)
                         {
                             var sourceItem = elements.FirstOrDefault(x => x.Id == id);
-                            if (sourceItem != null && sourceItem.Instance is ILinkSupport source && source.OutputValues.Length > 0)
+                            if (sourceItem != null && sourceItem.Instance is ILinkSupport source && source.Outputs.Length > 0)
                                 func.SetValueLinkToInp(n, id, output, false);
                         }
                         n++;

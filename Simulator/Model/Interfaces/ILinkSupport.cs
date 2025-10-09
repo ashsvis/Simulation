@@ -1,13 +1,15 @@
-﻿namespace Simulator.Model.Interfaces
+﻿using Simulator.Model.Common;
+
+namespace Simulator.Model.Interfaces
 {
     public interface ILinkSupport
     {
-        bool[] LinkedInputs { get; }
-        object[] LinkedOutputs { get; }
+        //bool[] LinkedInputs { get; }
+        //object[] LinkedOutputs { get; }
         (Guid, int, bool)[] InputLinkSources { get; }
         void UpdateInputLinkSources((Guid, int, bool) seek, Guid newId);
-        object[] InputValues { get; }
-        object[] OutputValues { get; }
+        Input[] Inputs { get; }
+        Output[] Outputs { get; }
         void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog);
         void ResetValueLinkToInp(int inputIndex);
         void CalculateTargets(PointF location, ref SizeF size,

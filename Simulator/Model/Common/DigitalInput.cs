@@ -16,8 +16,16 @@
             get
             {
                 if (LinkSource == null)
-                    return (bool)(Project.ReadValue(ItemId, Index, ValueDirect.Input, ValueKind.Digital)?.Value ?? false);
-                return (bool)(Project.ReadValue(LinkSource.Id, LinkSource.PinIndex, ValueDirect.Output, ValueKind.Digital)?.Value ?? false);
+                {
+                    var item = Project.ReadValue(ItemId, Index, ValueDirect.Input, ValueKind.Digital);
+                    if (item != null)
+                        return (bool)(item.Value ?? false);
+                    return false;
+                }
+                else
+                {
+                    return (bool)(Project.ReadValue(LinkSource.Id, LinkSource.PinIndex, ValueDirect.Output, ValueKind.Digital)?.Value ?? false);
+                }
             }
             set
             {

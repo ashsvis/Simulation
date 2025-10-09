@@ -1,14 +1,20 @@
-﻿using Simulator.Model.Interfaces;
+﻿using Simulator.Model.Common;
+using Simulator.Model.Interfaces;
 using System.ComponentModel;
 using System.Xml.Linq;
 
 namespace Simulator.Model.Fields
 {
-    public class CommonFields : FilterablePropertyBase, ILinkSupport, ILoadSave, IDraw
+    public class CommonFields : FilterablePropertyBase, ILoadSave, IDraw
     {
-        private readonly object[] getInputs;
-        private readonly object[] getOutputs;
-        private readonly (Guid, int, bool)[] getLinkSources;
+        //private readonly object[] getInputs;
+        //private readonly object[] getOutputs;
+        //private readonly (Guid, int, bool)[] getLinkSources;
+        private readonly Input[] inputs;
+        private readonly Output[] outputs;
+
+        public Input[] Inputs => inputs;
+        public Output[] Outputs => outputs;
 
         private Guid itemId;
 
@@ -26,73 +32,75 @@ namespace Simulator.Model.Fields
 
         public CommonFields(FieldFunction func)
         {
-            getInputs = [];
-            getOutputs = [];
-            getLinkSources = [];
-            Out = new object();
+            //getInputs = [];
+            //getOutputs = [];
+            //getLinkSources = [];
+            //Out = new object();
             var inputCount = 1;
+            inputs = new Input[inputCount];
             var outputCount = 1;
-            getInputs = new object[inputCount];
-            getOutputs = new object[outputCount];
-            getLinkSources = new (Guid, int, bool)[inputCount];
+            outputs = new Output[outputCount];
+            //getInputs = new object[inputCount];
+            //getOutputs = new object[outputCount];
+            //getLinkSources = new (Guid, int, bool)[inputCount];
         }
 
-        [Browsable(false)]
-        public bool[] LinkedInputs
-        {
-            get
-            {
-                List<bool> list = [];
-                for (var i = 0; i < getInputs.Length; i++)
-                {
-                    (Guid id, int _, bool _) = getLinkSources[i];
-                    list.Add(id != Guid.Empty);
-                }
-                return [.. list];
-            }
-        }
+        //[Browsable(false)]
+        //public bool[] LinkedInputs
+        //{
+        //    get
+        //    {
+        //        List<bool> list = [];
+        //        for (var i = 0; i < getInputs.Length; i++)
+        //        {
+        //            (Guid id, int _, bool _) = getLinkSources[i];
+        //            list.Add(id != Guid.Empty);
+        //        }
+        //        return [.. list];
+        //    }
+        //}
 
-        [Browsable(false)]
-        public object[] LinkedOutputs => getOutputs;
+        //[Browsable(false)]
+        //public object[] LinkedOutputs => getOutputs;
 
-        [Browsable(false)]
-        public (Guid, int, bool)[] InputLinkSources => getLinkSources;
+        //[Browsable(false)]
+        //public (Guid, int, bool)[] InputLinkSources => getLinkSources;
 
-        public void UpdateInputLinkSources((Guid, int, bool) seek, Guid newId)
-        {
-            for (var i = 0; i < getLinkSources.Length; i++)
-            {
-                (Guid id, int input, bool external) = getLinkSources[i];
-                if (id == seek.Item1 && input == seek.Item2)
-                {
-                    getLinkSources[i].Item1 = newId;
-                }
-            }
-        }
+        //public void UpdateInputLinkSources((Guid, int, bool) seek, Guid newId)
+        //{
+        //    for (var i = 0; i < getLinkSources.Length; i++)
+        //    {
+        //        (Guid id, int input, bool external) = getLinkSources[i];
+        //        if (id == seek.Item1 && input == seek.Item2)
+        //        {
+        //            getLinkSources[i].Item1 = newId;
+        //        }
+        //    }
+        //}
 
-        [Browsable(false)]
-        public object Out { get; set; }
+        //[Browsable(false)]
+        //public object Out { get; set; }
 
-        [Browsable(false)]
-        public object[] InputValues => [];
+        //[Browsable(false)]
+        //public object[] InputValues => [];
 
-        [Browsable(false)]
-        public object[] OutputValues => [];
+        //[Browsable(false)]
+        //public object[] OutputValues => [];
 
         [Category(" Общие"), DisplayName("Имя тега")]
         public string? Name { get; set; }
 
-        public void ResetValueLinkToInp(int inputIndex)
-        {
-            if (inputIndex >= 0 && inputIndex < getLinkSources.Length)
-                getLinkSources[inputIndex] = (Guid.Empty, 0, false);
-        }
+        //public void ResetValueLinkToInp(int inputIndex)
+        //{
+        //    if (inputIndex >= 0 && inputIndex < getLinkSources.Length)
+        //        getLinkSources[inputIndex] = (Guid.Empty, 0, false);
+        //}
 
-        public void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog)
-        {
-            if (inputIndex >= 0 && inputIndex < getLinkSources.Length)
-                getLinkSources[inputIndex] = (sourceId, outputPinIndex, byDialog);
-        }
+        //public void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog)
+        //{
+        //    if (inputIndex >= 0 && inputIndex < getLinkSources.Length)
+        //        getLinkSources[inputIndex] = (sourceId, outputPinIndex, byDialog);
+        //}
 
         public virtual void Load(XElement? xtance)
         {
@@ -153,7 +161,7 @@ namespace Simulator.Model.Fields
             var n = 0;
             itargets.Clear();
             ipins.Clear();
-            if (getInputs.Length > 0)
+            if (inputs.Length > 0)
             {
                 // значение входа
                 var ms = new SizeF(step * 2, step * 2);
@@ -165,7 +173,7 @@ namespace Simulator.Model.Fields
             n = 0;
             otargets.Clear();
             opins.Clear();
-            if (getOutputs.Length > 0)
+            if (outputs.Length > 0)
             {
                 // значение выхода
                 var ms = new SizeF(step * 2, step * 2);

@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace Simulator.Model.Inputs
 {
-    public class DI : CommonLogic, ICustomDraw, IChangeOrderDI, IContextMenu
+    public class DI : CommonLogic, ICustomDraw, IChangeOrderDI, IContextMenu, IManualCommand
     {
         private (Guid, int, bool) linkSource = (Guid.Empty, 0, false);
 
@@ -27,14 +27,7 @@ namespace Simulator.Model.Inputs
 
         public override void Calculate()
         {
-            //if (linkSource.Item1 != Guid.Empty)
-            //{
-            //    ValueItem? item = Project.ReadValue(linkSource.Item1, 0, ValueDirect.Input, ValueKind.Digital);
-            //    if (item != null)
-            //    {
-                    SetValueToOut(0, GetValueFromInp(0));
-            //    }
-            //}
+            SetValueToOut(0, GetValueFromInp(0));
         }
 
         /// <summary>
@@ -95,12 +88,12 @@ namespace Simulator.Model.Inputs
                 graphics.DrawLine(pen, new PointF(rect.Right, rect.Y + rect.Height / 2),
                     new PointF(rect.Right + Element.Step, rect.Y + rect.Height / 2));
                 // значение выхода
-                //if (Project.Running && VisibleValues)
-                //{
-                //    var textval = $"{Project.ReadValue(ItemId, 0, ValueSide.Output, ValueKind.Digital)?.Value ?? false}"[..1].ToUpper();
-                //    var ms = graphics.MeasureString(textval, font);
-                //    graphics.DrawString(textval, font, fontbrush, new PointF(rect.Right, rect.Y + rect.Height / 2 - ms.Height));
-                //}
+                if (Project.Running && VisibleValues)
+                {
+                    var textval = $"{GetOutputValue(0) ?? false}"[..1].ToUpper();
+                    var ms = graphics.MeasureString(textval, font);
+                    graphics.DrawString(textval, font, fontbrush, new PointF(rect.Right, rect.Y + rect.Height / 2 - ms.Height));
+                }
 
                 var funcrect = new RectangleF(rect.X + rect.Height * 3, rect.Y, rect.Height, rect.Height / 3);
                 var text = $"DI{Order}";
@@ -177,23 +170,16 @@ namespace Simulator.Model.Inputs
             }
         }
 
-        //public void SetValueToOut(int outputIndex, object? value)
-        //{
-        //    if (outputIndex >= 0 && outputIndex < OutputValues.Length)
-        //    {
-        //        Project.WriteValue(ItemId, outputIndex, ValueDirect.Output, ValueKind.Digital, (bool)(value ?? false));
-        //    }
-        //}
-
-        //public object? GetValueFromOut(int outputIndex)
-        //{
-        //    if (outputIndex >= 0 && outputIndex < OutputValues.Length)
-        //    {
-        //        ValueItem? value = Project.ReadValue(ItemId, outputIndex, ValueDirect.Output, ValueKind.Digital);
-        //        return value?.Value;
-        //    }
-        //    return null;
-        //}
+        public object? GetValueFromOut(int outputIndex)
+        {
+            if (outputIndex >= 0 && outputIndex < Outputs.Length)
+            {
+                if (Outputs[outputIndex] is DigitalOutput output)
+                    return output.Value;
+                return null;
+            }
+            return null;
+        }
 
         public override void AddMenuItems(ContextMenuStrip contextMenu)
         {
