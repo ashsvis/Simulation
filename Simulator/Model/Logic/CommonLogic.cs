@@ -11,33 +11,33 @@ namespace Simulator.Model.Logic
     {
         private readonly LogicFunction logicFunction;
 
-        private readonly Input[] inputs;
-        private readonly Output[] outputs;
+        private Input[] inputs;
+        private Output[] outputs;
 
         public Input[] Inputs => inputs;
         public Output[] Outputs => outputs;
 
         protected Guid itemId;
-        public void SetItemId(Guid id)
+        public virtual void SetItemId(Guid id)
         {
             itemId = id;
             for (var i = 0; i < inputs.Length; i++)
             {
                 inputs[i].ItemId = itemId;
-                SetValueToInp(i, false);
+                //SetValueToInp(i, false);
             }
             for (var i = 0; i < outputs.Length; i++)
             {
                 outputs[i].ItemId = itemId;
-                SetValueToOut(i, false);
+                //SetValueToOut(i, false);
             }
         }
 
         public virtual void Init()
         {
             if (itemId == Guid.Empty) return;
-            for (var i = 0; i < inputs.Length; i++)
-                SetValueToInp(i, false);
+            //for (var i = 0; i < inputs.Length; i++)
+            //    SetValueToInp(i, false);
         }
 
         public CommonLogic() : this(LogicFunction.None, 1)

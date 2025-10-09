@@ -2,7 +2,7 @@
 {
     public class AnalogOutput : Output
     {
-        public AnalogOutput(Guid itemId, int index, string? name) : base(itemId)
+        public AnalogOutput(Guid itemId, int index, string? name = null) : base(itemId)
         {
             ValueSide = ValueDirect.Output;
             ValueKind = ValueKind.Analog;

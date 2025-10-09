@@ -1012,20 +1012,18 @@ namespace Simulator
                 var pinFirst = pin;
                 var outputFirst = output;
                 var linkFirst = linkFirstPoint;
-                if (TryGetFreeInputPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
+                if (Project.Running && TryGetFreeInputPin(e.Location, out element, out pin, out linkFirstPoint, out output) &&
                     element != null && pin != null && element.Instance is IManualChange tar && output == false)
                 {
+                    linkFirstPoint = null;
                     var value = tar.GetValueFromInp((int)pin);
                     if (value is bool bval)
                         tar.SetValueToInp((int)pin, !bval);
                     else
                     {
-                        value = (double)(tar.GetInputValue(0) ?? 0.0);
                         var dlg = new ChangeValueDialog((double)(value ?? 0.0));
                         if (dlg.ShowDialog() == DialogResult.OK)
-                        {
                             tar.SetValueToInp((int)pin, dlg.EnteredValue);
-                        }
                     }
                 }
                 if (TryGetPin(e.Location, out element, out pin, out _, out output) &&

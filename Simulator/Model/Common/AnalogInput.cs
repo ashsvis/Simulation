@@ -2,7 +2,7 @@
 {
     public class AnalogInput : Input
     {
-        public AnalogInput(Guid itemId, int index, string? name) : base(itemId)
+        public AnalogInput(Guid itemId, int index, string? name = null) : base(itemId)
         {
             ValueSide = ValueDirect.Input;
             ValueKind = ValueKind.Analog;
