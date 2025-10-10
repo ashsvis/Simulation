@@ -1,4 +1,5 @@
-﻿using Simulator.Model.Logic;
+﻿using Simulator.Model.Common;
+using Simulator.Model.Logic;
 
 namespace Simulator.Model.Interfaces
 {
@@ -6,14 +7,8 @@ namespace Simulator.Model.Interfaces
     {
         string? Name { get; set; }
         LogicFunction FuncName { get; }
-        string FuncSymbol { get; }
-        bool[] InverseInputs { get; }
-        bool[] InverseOutputs { get; }
-        string[] InputNames { get; }
-        string[] OutputNames { get; }
-        bool VisibleValues { get; set; }
-
-        event ResultCalculateEventHandler? ResultChanged;
+        Input[] Inputs { get; }
+        Output[] Outputs { get; }
     }
 
     public delegate void ResultCalculateEventHandler(object sender, ResultCalculateEventArgs args);

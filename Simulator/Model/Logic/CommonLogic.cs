@@ -7,12 +7,12 @@ using System.Xml.Linq;
 
 namespace Simulator.Model.Logic
 {
-    public class CommonLogic : FilterablePropertyBase, ICalculate, ILoadSave, IDraw, IManualChange, IContextMenu, ILinkSupport
+    public class CommonLogic : FilterablePropertyBase, IFunction, ICalculate, ILoadSave, IDraw, IManualChange, IContextMenu, ILinkSupport
     {
         private readonly LogicFunction logicFunction;
 
-        private Input[] inputs;
-        private Output[] outputs;
+        private readonly Input[] inputs;
+        private readonly Output[] outputs;
 
         public Input[] Inputs => inputs;
         public Output[] Outputs => outputs;
@@ -79,10 +79,6 @@ namespace Simulator.Model.Logic
         [Browsable(false), Category("Диагностика"), DisplayName("Показывать значения")]
         public bool VisibleValues { get; set; } = true;
 
-        [Browsable(false)]
-        public (Guid, int, bool)[] InputLinkSources => 
-            inputs.Where(x => x.LinkSource != null).Select(x => (x.LinkSource.Id, x.LinkSource.PinIndex, x.LinkSource.External)).ToArray();
-
         public void UpdateInputLinkSources((Guid, int, bool) seek, Guid newId)
         {
             for (var i = 0; i < inputs.Length; i++)
@@ -95,25 +91,6 @@ namespace Simulator.Model.Logic
                 }
             }
         }
-
-        [Browsable(false)]
-        public bool[] LinkedInputs
-        {
-            get
-            {
-                List<bool> list = [];
-                for (var i = 0; i < inputs.Length; i++)
-                {
-                    var ls = inputs[i].LinkSource;
-                    if (ls != null)
-                        list.Add(ls.Id != Guid.Empty);
-                }
-                return [.. list];
-            }
-        }
-
-        [Browsable(false)]
-        public object[] LinkedOutputs => outputs;
 
         public virtual void Calculate()
         {
@@ -179,11 +156,13 @@ namespace Simulator.Model.Logic
         /// который потом вызывается для получения актуального значения
         /// </summary>
         /// <param name="inputIndex">номер входа</param>
-        /// <param name="getMethod">Ссылка на метод, записываемая в целевом элементе, для этого входа</param>
         public virtual void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog)
         {
             if (inputIndex < 0 || inputIndex >= inputs.Length) return;
-            inputs[inputIndex].LinkSource = new LinkSource(sourceId, outputPinIndex, byDialog);
+            if (sourceId == Guid.Empty)
+                inputs[inputIndex].LinkSource = null;
+            else
+                inputs[inputIndex].LinkSource = new LinkSource(sourceId, outputPinIndex, byDialog);
         }
 
         public virtual void ResetValueLinkToInp(int inputIndex)

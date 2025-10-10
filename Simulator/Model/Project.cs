@@ -10,7 +10,7 @@ namespace Simulator.Model
     {
         private static readonly Hashtable vals = [];
 
-        internal static (string, string, string) GetInputByElementId(Guid id, int pin)
+        internal static (string, string, string?) GetInputByElementId(Guid id, int pin)
         {
             var k = 1;
             foreach (var module in Modules.Union(Equipment))
@@ -27,10 +27,10 @@ namespace Simulator.Model
                         {
                             if (!string.IsNullOrEmpty(func.Name))
                                 elementName = func.Name;
-                            if (pin < func.InputNames.Length)
-                                inputName = !string.IsNullOrEmpty(func.InputNames[pin]) 
-                                    ? func.InputNames[pin] 
-                                    : func.InputNames.Length > 1 ? $"In{pin + 1}" : "Inp";
+                            if (pin < func.Inputs.Length)
+                                inputName = !string.IsNullOrEmpty(func.Inputs[pin].Name) 
+                                    ? func.Inputs[pin].Name 
+                                    : func.Inputs.Length > 1 ? $"In{pin + 1}" : "Inp";
                         }
                         return (moduleName, elementName, inputName);
                     }
@@ -41,7 +41,7 @@ namespace Simulator.Model
             return ("", "", "");
         }
 
-        internal static (string, string, string) GetOutputByElementId(Guid id, int pin)
+        internal static (string, string, string?) GetOutputByElementId(Guid id, int pin)
         {
             var k = 1;
             foreach (var module in Modules.Union(Equipment))
@@ -58,10 +58,10 @@ namespace Simulator.Model
                         {
                             if (!string.IsNullOrEmpty(func.Name))
                                 elementName = func.Name;
-                            if (pin < func.OutputNames.Length)
-                                inputName = !string.IsNullOrEmpty(func.OutputNames[pin]) 
-                                    ? func.OutputNames[pin] 
-                                    : func.OutputNames.Length > 1 ? $"Out{pin + 1}" : "Out";
+                            if (pin < func.Outputs.Length)
+                                inputName = !string.IsNullOrEmpty(func.Outputs[pin].Name) 
+                                    ? func.Outputs[pin].Name 
+                                    : func.Outputs.Length > 1 ? $"Out{pin + 1}" : "Out";
                         }
                         return (moduleName, elementName, inputName);
                     }

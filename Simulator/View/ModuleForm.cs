@@ -16,11 +16,6 @@ namespace Simulator
 
         private readonly List<Element> items;
         private readonly List<Link> links;
-        private Cell[,] grid = new Cell[0, 0];
-
-        private readonly List<Element> dis = [];
-        private readonly List<Element> dos = [];
-
 
         private Point firstMouseDown;
         private Point mousePosition;
@@ -70,14 +65,12 @@ namespace Simulator
             Module = module;
             Project.Changed = false;
             items = Module.Elements;
-            items.Where(x => x.Instance is IChangeOrderDI).ToList().ForEach(dis.Add);
-            items.Where(x => x.Instance is IChangeOrderDO).ToList().ForEach(dos.Add);
             links = Module.Links;
-            items.ForEach(item =>
-            {
-                if (item.Instance is IFunction instance)
-                    instance.ResultChanged += Item_ResultChanged;
-            });
+            //items.ForEach(item =>
+            //{
+                //if (item.Instance is IFunction instance)
+                //    instance.ResultChanged += Item_ResultChanged;
+            //});
             panelForm.SimulationTick += Module_SimulationTick;
         }
 
@@ -97,11 +90,11 @@ namespace Simulator
         private void ModuleForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             timerInterface.Enabled = false;
-            items.ForEach(item =>
-            {
-                if (item.Instance is IFunction instance)
-                    instance.ResultChanged -= Item_ResultChanged;
-            });
+            //items.ForEach(item =>
+            //{
+            //    if (item.Instance is IFunction instance)
+            //        instance.ResultChanged -= Item_ResultChanged;
+            //});
             panelForm.SimulationTick -= Module_SimulationTick;
         }
 
@@ -154,8 +147,8 @@ namespace Simulator
                     if (item.Instance is IBlock block)
                         block.ConnectToLibrary();
                     item.Location = SnapToGrid(PrepareMousePosition(zoomPad.PointToClient(new Point(e.X, e.Y))));
-                    if (item.Instance is IFunction instance)
-                        instance.ResultChanged += Item_ResultChanged;
+                    //if (item.Instance is IFunction instance)
+                    //    instance.ResultChanged += Item_ResultChanged;
                     if (item.Instance is ILinkSupport link)
                     {
                         link.SetItemId(item.Id);

@@ -37,6 +37,7 @@
             // tvSources
             // 
             tvSources.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            tvSources.Font = new Font("Consolas", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 204);
             tvSources.FullRowSelect = true;
             tvSources.HideSelection = false;
             tvSources.Location = new Point(12, 12);

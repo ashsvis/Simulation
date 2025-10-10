@@ -39,25 +39,25 @@ namespace Simulator.View
                             var n = 1;
                             foreach (var item in module.Elements)
                             {
-                                if (item.Instance is IFunction func && item.Instance is ILinkSupport link)
+                                if (item.Instance is IFunction func/* item.Instance is ILinkSupport link*/)
                                 {
 
                                     var elementName = string.IsNullOrWhiteSpace(func.Name) ? $"L{n}({func.FuncName})" : func.Name;
-                                    if (func.OutputNames.Length == 1)
+                                    if (func.Outputs.Length == 1)
                                     {
-                                        var outputName = string.IsNullOrWhiteSpace(func.OutputNames[0]) ? "Out" : func.OutputNames[0];
+                                        var outputName = string.IsNullOrWhiteSpace(func.Outputs[0].Name) ? "Out" : func.Outputs[0].Name;
                                         var outputNode = new TreeNode($"{elementName}.{outputName}") { Tag = new Tuple<Guid, int>(item.Id, 0) };
                                         moduleNode.Nodes.Add(outputNode);
                                         if (linkSource != null && linkSource.Value.Item1 == item.Id)
                                             tvSources.SelectedNode = outputNode;
                                     }
-                                    else if (func.OutputNames.Length > 1)
+                                    else if (func.Outputs.Length > 1)
                                     {
                                         var elementNode = new TreeNode($"{elementName}");
                                         moduleNode.Nodes.Add(elementNode);
-                                        for (var i = 0; i < func.OutputNames.Length; i++)
+                                        for (var i = 0; i < func.Outputs.Length; i++)
                                         {
-                                            var outputName = string.IsNullOrWhiteSpace(func.OutputNames[i]) ? "Out" : func.OutputNames[i];
+                                            var outputName = string.IsNullOrWhiteSpace(func.Outputs[i].Name) ? "Out" : func.Outputs[i].Name;
                                             var outputNode = new TreeNode($"{i + 1}. {outputName}") { Tag = new Tuple<Guid, int>(item.Id, i) };
                                             elementNode.Nodes.Add(outputNode);
                                             if (linkSource != null && linkSource.Value.Item1 == item.Id)
@@ -84,21 +84,21 @@ namespace Simulator.View
                                 {
 
                                     var elementName = string.IsNullOrWhiteSpace(func.Name) ? $"L{n}({func.FuncName})" : func.Name;
-                                    if (func.OutputNames.Length == 1)
+                                    if (func.Outputs.Length == 1)
                                     {
-                                        var outputName = string.IsNullOrWhiteSpace(func.OutputNames[0]) ? "Out" : func.OutputNames[0];
+                                        var outputName = string.IsNullOrWhiteSpace(func.Outputs[0].Name) ? "Out" : func.Outputs[0].Name;
                                         var outputNode = new TreeNode($"{elementName}.{outputName}") { Tag = new Tuple<Guid, int>(item.Id, 0) };
                                         moduleNode.Nodes.Add(outputNode);
                                         if (linkSource != null && linkSource.Value.Item1 == item.Id)
                                             tvSources.SelectedNode = outputNode;
                                     }
-                                    else if (func.OutputNames.Length > 1)
+                                    else if (func.Outputs.Length > 1)
                                     {
                                         var elementNode = new TreeNode($"{elementName}");
                                         moduleNode.Nodes.Add(elementNode);
-                                        for (var i = 0; i < func.OutputNames.Length; i++)
+                                        for (var i = 0; i < func.Outputs.Length; i++)
                                         {
-                                            var outputName = string.IsNullOrWhiteSpace(func.OutputNames[i]) ? "Out" : func.OutputNames[i];
+                                            var outputName = string.IsNullOrWhiteSpace(func.Outputs[i].Name) ? "Out" : func.Outputs[i].Name;
                                             var outputNode = new TreeNode($"{i + 1}. {outputName}") { Tag = new Tuple<Guid, int>(item.Id, i) };
                                             elementNode.Nodes.Add(outputNode);
                                             if (linkSource != null && linkSource.Value.Item1 == item.Id)
@@ -168,16 +168,16 @@ namespace Simulator.View
 
         private void tvSources_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            btnAccept.Enabled = e.Node != null && e.Node.Level > 0 && e.Node.Nodes.Count == 0;
+            btnAccept.Enabled = false;
             var n = 0;
             if (e.Node != null && e.Node.Level > 0)
             {
                 foreach (var node in e.Node.Parent.Nodes.Cast<TreeNode>())
                 {
-                    if (node == e.Node)
+                    if (node == e.Node && e.Node.Tag is Tuple<Guid, int> tuple)
                     {
-                        var tuple = (Tuple<Guid, int>)e.Node.Tag;
                         Result = (tuple.Item1, tuple.Item2);
+                        btnAccept.Enabled = true;
                         break;
                     }
                     n++;
