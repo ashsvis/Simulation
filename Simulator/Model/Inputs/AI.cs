@@ -1,7 +1,6 @@
 ﻿using Simulator.Model.Common;
 using Simulator.Model.Fields;
 using Simulator.Model.Interfaces;
-using Simulator.Model.Logic;
 using Simulator.Model.Mathematic;
 using Simulator.View;
 using System.ComponentModel;
@@ -99,7 +98,7 @@ namespace Simulator.Model.Inputs
                 {
                     var fp = CultureInfo.GetCultureInfo("en-US");
                     var val = (double)(GetOutputValue(0) ?? 0.0);
-                    var textval = $"{val.ToString(fp)}";
+                    var textval = val.ToString(fp);
                     var ms = graphics.MeasureString(textval, font);
                     graphics.DrawString(textval, font, fontbrush, new PointF(rect.Right, rect.Y + rect.Height / 2 - ms.Height));
                 }

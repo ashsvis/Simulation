@@ -3,9 +3,9 @@ using Simulator.Model.Interfaces;
 
 namespace Simulator.Model.Mathematic
 {
-    public class ADD : CommonAnalog, IManualChange
+    public class MIN : CommonAnalog, IManualChange
     {
-        public ADD() : base(LogicFunction.Add, 2) 
+        public MIN() : base(LogicFunction.Min, 2)
         {
             SetValueToOut(0, 0.0);
         }
@@ -14,7 +14,7 @@ namespace Simulator.Model.Mathematic
         {
             var a = (double)(GetInputValue(0) ?? double.NaN);
             var b = (double)(GetInputValue(1) ?? double.NaN);
-            SetValueToOut(0, a + b);
+            SetValueToOut(0, Math.Min(a, b));
         }
     }
 }

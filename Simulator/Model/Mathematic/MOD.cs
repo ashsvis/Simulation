@@ -3,18 +3,25 @@ using Simulator.Model.Interfaces;
 
 namespace Simulator.Model.Mathematic
 {
-    public class ADD : CommonAnalog, IManualChange
+    public class MOD : CommonAnalog, IManualChange
     {
-        public ADD() : base(LogicFunction.Add, 2) 
+        public MOD() : base(LogicFunction.Mod, 2)
         {
+            SetValueToInp(1, 1.0);
             SetValueToOut(0, 0.0);
+        }
+
+        public override void Init()
+        {
+            base.Init();
+            SetValueToInp(1, 1.0);
         }
 
         public override void Calculate()
         {
             var a = (double)(GetInputValue(0) ?? double.NaN);
             var b = (double)(GetInputValue(1) ?? double.NaN);
-            SetValueToOut(0, a + b);
+            SetValueToOut(0, Convert.ToDouble(Convert.ToInt64(a) % Convert.ToInt64(b)));
         }
     }
 }

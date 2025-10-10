@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Simulator.Model.Common;
+using System.ComponentModel;
 
 namespace Simulator.Model.Logic
 {

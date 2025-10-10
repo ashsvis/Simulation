@@ -3,9 +3,9 @@ using Simulator.Model.Interfaces;
 
 namespace Simulator.Model.Mathematic
 {
-    public class ADD : CommonAnalog, IManualChange
+    public class LOG : CommonAnalog, IManualChange
     {
-        public ADD() : base(LogicFunction.Add, 2) 
+        public LOG() : base(LogicFunction.Log, 1)
         {
             SetValueToOut(0, 0.0);
         }
@@ -13,8 +13,7 @@ namespace Simulator.Model.Mathematic
         public override void Calculate()
         {
             var a = (double)(GetInputValue(0) ?? double.NaN);
-            var b = (double)(GetInputValue(1) ?? double.NaN);
-            SetValueToOut(0, a + b);
+            SetValueToOut(0, Math.Log10(a));
         }
     }
 }

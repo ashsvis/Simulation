@@ -9,7 +9,7 @@ namespace Simulator.Model.Logic
 {
     public class CommonLogic : FilterablePropertyBase, IFunction, ICalculate, ILoadSave, IDraw, IManualChange, IContextMenu, ILinkSupport
     {
-        private readonly LogicFunction logicFunction;
+        protected readonly LogicFunction logicFunction;
 
         private readonly Input[] inputs;
         private readonly Output[] outputs;
@@ -69,7 +69,6 @@ namespace Simulator.Model.Logic
                     LogicFunction.And => "&",
                     LogicFunction.Or => "1",
                     LogicFunction.Xor => "=1",
-                    LogicFunction.Add => "ADD",
                     _ => "",
                 };
             } 
@@ -383,7 +382,7 @@ namespace Simulator.Model.Logic
                         else if (value is double dval)
                         {
                             var fp = CultureInfo.GetCultureInfo("en-US");
-                            text = dval.ToString("0.0##", fp);
+                            text = Math.Round(dval, 4).ToString("0.####", fp);
                         }
                         var ms = graphics.MeasureString(text, font);
                         using var iformat = new StringFormat();
@@ -431,7 +430,7 @@ namespace Simulator.Model.Logic
                         else if (value is double dval)
                         {
                             var fp = CultureInfo.GetCultureInfo("en-US");
-                            text = dval.ToString("0.0##", fp);
+                            text = Math.Round(dval, 4).ToString("0.####", fp);
                         }
                         var ms = graphics.MeasureString(text, font);
                         graphics.DrawString(text, font, fontbrush, new PointF(x, y - ms.Height));

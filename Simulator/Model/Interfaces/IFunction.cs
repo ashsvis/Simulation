@@ -1,5 +1,4 @@
 ﻿using Simulator.Model.Common;
-using Simulator.Model.Logic;
 
 namespace Simulator.Model.Interfaces
 {

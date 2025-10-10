@@ -1,6 +1,5 @@
 ﻿using Simulator.Model.Common;
 using Simulator.Model.Interfaces;
-using Simulator.Model.Logic;
 using Simulator.Model.Mathematic;
 using Simulator.View;
 using System.ComponentModel;

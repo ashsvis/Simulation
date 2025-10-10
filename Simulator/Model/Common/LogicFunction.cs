@@ -1,4 +1,4 @@
-﻿namespace Simulator.Model.Logic
+﻿namespace Simulator.Model.Common
 {
     public enum LogicFunction
     {
@@ -23,5 +23,21 @@
         Sub,
         Mul,
         Div,
+        Mod,
+        Abs,
+        Neg,
+        Min,
+        Max,
+        Avg,
+        Lmt,
+        Rond,
+        Trnc,
+        Sqrt,
+        Sbrt,
+        Pow,
+        Exp,
+        Ln,
+        Log,
+
     }
 }
