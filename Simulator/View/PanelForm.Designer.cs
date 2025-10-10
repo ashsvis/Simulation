@@ -114,8 +114,6 @@
             tsbCut = new ToolStripButton();
             tsbCopy = new ToolStripButton();
             tsbPaste = new ToolStripButton();
-            toolStripSeparator6 = new ToolStripSeparator();
-            tsbHelp = new ToolStripButton();
             splitterLeft = new Splitter();
             splitterRight = new Splitter();
             menuMainStrip.SuspendLayout();
@@ -783,7 +781,7 @@
             // toolStripMain
             // 
             toolStripMain.GripStyle = ToolStripGripStyle.Hidden;
-            toolStripMain.Items.AddRange(new ToolStripItem[] { tsbCreate, tsbOpen, tsbSave, печатьToolStripButton, toolStripSeparator7, tsbRun, toolStripSeparator9, tsbAddModule, tsbShowModuleForm, tsbDeleteModule, toolStripSeparator8, tsbCut, tsbCopy, tsbPaste, toolStripSeparator6, tsbHelp });
+            toolStripMain.Items.AddRange(new ToolStripItem[] { tsbCreate, tsbOpen, tsbSave, печатьToolStripButton, toolStripSeparator7, tsbRun, toolStripSeparator9, tsbAddModule, tsbShowModuleForm, tsbDeleteModule, toolStripSeparator8, tsbCut, tsbCopy, tsbPaste });
             toolStripMain.Location = new Point(0, 49);
             toolStripMain.Name = "toolStripMain";
             toolStripMain.RenderMode = ToolStripRenderMode.System;
@@ -921,21 +919,6 @@
             tsbPaste.Size = new Size(23, 22);
             tsbPaste.Text = "&Вставить";
             tsbPaste.Click += tsbPaste_Click;
-            // 
-            // toolStripSeparator6
-            // 
-            toolStripSeparator6.Name = "toolStripSeparator6";
-            toolStripSeparator6.Size = new Size(6, 25);
-            // 
-            // tsbHelp
-            // 
-            tsbHelp.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            tsbHelp.Enabled = false;
-            tsbHelp.Image = (Image)resources.GetObject("tsbHelp.Image");
-            tsbHelp.ImageTransparentColor = Color.Magenta;
-            tsbHelp.Name = "tsbHelp";
-            tsbHelp.Size = new Size(23, 22);
-            tsbHelp.Text = "С&правка";
             // 
             // splitterLeft
             // 
@@ -1096,8 +1079,6 @@
         private ToolStripButton tsbCut;
         private ToolStripButton tsbCopy;
         private ToolStripButton tsbPaste;
-        private ToolStripSeparator toolStripSeparator6;
-        private ToolStripButton tsbHelp;
         private ToolStripSeparator toolStripSeparator7;
         private ToolStripSeparator toolStripSeparator9;
         private ToolStripSeparator toolStripSeparator8;

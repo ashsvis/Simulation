@@ -69,6 +69,7 @@ namespace Simulator.Model.Logic
                     LogicFunction.And => "&",
                     LogicFunction.Or => "1",
                     LogicFunction.Xor => "=1",
+                    LogicFunction.SelD => "SEL",
                     _ => "",
                 };
             } 

@@ -419,6 +419,10 @@ namespace Simulator.Model
             compareNode.Nodes.Add(new TreeNode("Вход больше или равен уставке") { Tag = typeof(Compare.GE) });
             compareNode.Nodes.Add(new TreeNode("Ограничение снизу") { Tag = typeof(Mathematic.LML) });
             compareNode.Nodes.Add(new TreeNode("Ограничение сверху") { Tag = typeof(Mathematic.LMG) });
+            var selectorNode = new TreeNode("Селекторы");
+            rootNode.Nodes.Add(selectorNode);
+            selectorNode.Nodes.Add(new TreeNode("Аналоговый селектор") { Tag = typeof(Selector.SELA) });
+            selectorNode.Nodes.Add(new TreeNode("Дискретный селектор") { Tag = typeof(Selector.SELD) });
             var outputNode = new TreeNode("Выходные сигналы");
             rootNode.Nodes.Add(outputNode);
             outputNode.Nodes.Add(new TreeNode("Лампа") { Tag = typeof(Outputs.LAMP) });

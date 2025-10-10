@@ -842,6 +842,7 @@ namespace Simulator
                 if (Project.Running && TryGetPin(e.Location, out element, out pin, out _, out output) &&
                     element != null && pin != null && element.Instance is IManualCommand comm && output == true)
                 {
+                    linkFirstPoint = null;
                     var value = comm.GetValueFromOut((int)pin) ?? false;
                     if (value is bool bval)
                         comm.SetValueToOut((int)pin, !bval);
