@@ -30,6 +30,8 @@
         Max,
         Avg,
         Lmt,
+        LmL,
+        LmG,
         Rond,
         Trnc,
         Sqrt,
@@ -38,6 +40,13 @@
         Exp,
         Ln,
         Log,
-
+        Eq,
+        Ne,
+        Lt,
+        Le,
+        Gt,
+        Ge,
+        SelD,
+        SelA
     }
 }

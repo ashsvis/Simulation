@@ -4,7 +4,6 @@ using Simulator.Model.Logic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Xml.Linq;
-using static System.Windows.Forms.AxHost;
 
 namespace Simulator.Model.Timer
 {

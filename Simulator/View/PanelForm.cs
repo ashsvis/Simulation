@@ -270,7 +270,7 @@ namespace Simulator
                 tsbRun.Image = Properties.Resources.run;
             }
             tsbAddModule.Enabled = tsbAddBock.Enabled = !Project.Running;
-            tsmiCreate.Enabled = tsmiOpen.Enabled = tsmiAddModule.Enabled = !Project.Running;
+            tsbCreate.Enabled = tsbOpen.Enabled = tsmiCreate.Enabled = tsmiOpen.Enabled = tsmiSaveAs.Enabled = tsmiAddModule.Enabled = !Project.Running;
             tsbPaste.Enabled = !Project.Running && ActiveMdiChild is ModuleForm && Clipboard.ContainsData("XML Spreadsheet");
             tsbCut.Enabled = tsbCopy.Enabled = ActiveMdiChild is ModuleForm form && form.Module.Elements.Any(x => x.Selected);
         }

@@ -373,6 +373,7 @@ namespace Simulator.Model
             rootNode.Nodes.Add(logicaNode);
             var mathNode = new TreeNode("Математика");
             rootNode.Nodes.Add(mathNode);
+            mathNode.Nodes.Add(new TreeNode("Ограничение значения") { Tag = typeof(Mathematic.LMT) });
             mathNode.Nodes.Add(new TreeNode("Абсолютное значение") { Tag = typeof(Mathematic.ABS) });
             mathNode.Nodes.Add(new TreeNode("Изменение знака") { Tag = typeof(Mathematic.NEG) });
             mathNode.Nodes.Add(new TreeNode("Минимальное из двух") { Tag = typeof(Mathematic.MIN) });
@@ -408,6 +409,16 @@ namespace Simulator.Model
             generatorNode.Nodes.Add(new TreeNode("Задержка включения") { Tag = typeof(Timer.ONDLY) });
             generatorNode.Nodes.Add(new TreeNode("Задержка выключения") { Tag = typeof(Timer.OFFDLY) });
             generatorNode.Nodes.Add(new TreeNode("Формирователь импульса") { Tag = typeof(Timer.PULSE) });
+            var compareNode = new TreeNode("Компараторы");
+            rootNode.Nodes.Add(compareNode);
+            compareNode.Nodes.Add(new TreeNode("Вход равен уставке") { Tag = typeof(Compare.EQ) });
+            compareNode.Nodes.Add(new TreeNode("Вход не равен уставке") { Tag = typeof(Compare.NE) });
+            compareNode.Nodes.Add(new TreeNode("Вход меньше уставки") { Tag = typeof(Compare.LT) });
+            compareNode.Nodes.Add(new TreeNode("Вход меньше или равен уставке") { Tag = typeof(Compare.LE) });
+            compareNode.Nodes.Add(new TreeNode("Вход больше уставки") { Tag = typeof(Compare.GT) });
+            compareNode.Nodes.Add(new TreeNode("Вход больше или равен уставке") { Tag = typeof(Compare.GE) });
+            compareNode.Nodes.Add(new TreeNode("Ограничение снизу") { Tag = typeof(Mathematic.LML) });
+            compareNode.Nodes.Add(new TreeNode("Ограничение сверху") { Tag = typeof(Mathematic.LMG) });
             var outputNode = new TreeNode("Выходные сигналы");
             rootNode.Nodes.Add(outputNode);
             outputNode.Nodes.Add(new TreeNode("Лампа") { Tag = typeof(Outputs.LAMP) });
