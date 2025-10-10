@@ -342,6 +342,7 @@ namespace Simulator.Model
             inputNode.Nodes.Add(new TreeNode("Дискретный вход") { Tag = typeof(Inputs.DI) });
             inputNode.Nodes.Add(new TreeNode("Аналоговый вход") { Tag = typeof(Inputs.AI) });
             var logicaNode = new TreeNode("Логика");
+            logicaNode.Nodes.Add(new TreeNode("Флаг") { Tag = typeof(Logic.FLAG) });
             logicaNode.Nodes.Add(new TreeNode("Инвертор") { Tag = typeof(Logic.NOT) });
             var orNode = new TreeNode("Дизъюнкция (\"ИЛИ\")");
             logicaNode.Nodes.Add(orNode);
@@ -373,7 +374,7 @@ namespace Simulator.Model
             rootNode.Nodes.Add(logicaNode);
             var mathNode = new TreeNode("Математика");
             rootNode.Nodes.Add(mathNode);
-            mathNode.Nodes.Add(new TreeNode("Число") { Tag = typeof(Mathematic.Numeric) });
+            mathNode.Nodes.Add(new TreeNode("Число") { Tag = typeof(Mathematic.NUMERIC) });
             mathNode.Nodes.Add(new TreeNode("Ограничение значения") { Tag = typeof(Mathematic.LMT) });
             mathNode.Nodes.Add(new TreeNode("Абсолютное значение") { Tag = typeof(Mathematic.ABS) });
             mathNode.Nodes.Add(new TreeNode("Изменение знака") { Tag = typeof(Mathematic.NEG) });

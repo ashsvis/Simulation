@@ -1,23 +1,22 @@
 ﻿using Simulator.Model.Common;
 using Simulator.Model.Interfaces;
 using System.ComponentModel;
-using System.Globalization;
 using System.Xml.Linq;
 
-namespace Simulator.Model.Mathematic
+namespace Simulator.Model.Logic
 {
-    public class NUMERIC : CommonAnalog, IContextMenu, IManualCommand
+    public class FLAG : CommonLogic, IContextMenu, IManualCommand
     {
-        public NUMERIC() : base(LogicFunction.Numeric, 0, 1)
+        public FLAG() : base(LogicFunction.Flag, 0, 1)
         {
         }
 
         [Browsable(false)]
-        public double Value { get; set; }
+        public bool Value { get; set; }
 
         public override void Calculate()
         {
-            Project.WriteValue(ItemId, 0, ValueDirect.Output, ValueKind.Analog, Value);
+            Project.WriteValue(ItemId, 0, ValueDirect.Output, ValueKind.Digital, Value);
         }
 
         public object? GetValueFromOut(int outputIndex)
@@ -34,13 +33,13 @@ namespace Simulator.Model.Mathematic
             if (outputIndex != 0) return;
             if (value != null)
             {
-                if (Outputs[outputIndex] is AnalogOutput analog)
+                if (Outputs[outputIndex] is DigitalOutput digital)
                 {
-                    if (Value != (double)value)
+                    if (Value != (bool)value)
                     {
-                        Value = (double)value;
-                        Project.WriteValue(ItemId, 0, ValueDirect.Output, ValueKind.Analog, Value);
-                        analog.Value = (double)value;
+                        Value = (bool)value;
+                        Project.WriteValue(ItemId, 0, ValueDirect.Output, ValueKind.Digital, Value);
+                        digital.Value = (bool)value;
                         if (!Project.Running)
                             Project.Changed = true;
                     }
@@ -62,11 +61,11 @@ namespace Simulator.Model.Mathematic
         public override void Load(XElement? xtance)
         {
             base.Load(xtance);
-            if (double.TryParse(xtance?.Element("Value")?.Value, CultureInfo.GetCultureInfo("en-US"), out double value))
+            if (bool.TryParse(xtance?.Element("Value")?.Value, out bool value))
             {
                 Value = value;
                 SetValueToOut(0, Value);
-                ((AnalogOutput)Outputs[0]).Value = value;
+                ((DigitalOutput)Outputs[0]).Value = value;
             }
         }
 
@@ -74,9 +73,8 @@ namespace Simulator.Model.Mathematic
             int index, bool selected, CustomDraw? customDraw = null)
         {
             base.Draw(graphics, foreColor, backColor, location, size, index, selected, customDraw);
-            var fp = CultureInfo.GetCultureInfo("en-US");
-            var text = Math.Round(Value, 4).ToString("0.####", fp);
-            using var font = new System.Drawing.Font("Consolas", Element.Step + 2f);
+            var text = $"{Value}"[..1].ToUpper();
+            using var font = new Font("Consolas", Element.Step + 2f);
             using var fontbrush = new SolidBrush(selected ? Color.Magenta : foreColor);
             var ms = graphics.MeasureString(text, font);
             var step = Element.Step;

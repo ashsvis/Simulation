@@ -30,7 +30,9 @@
         <Element Id="073ba390-1465-4edb-bbf0-19b06d2a7378" X="616" Y="48">
           <Instance Type="Simulator.Model.Logic.OR3">
             <Inputs>
-              <Input Index="0" />
+              <Input Index="0">
+                <Source Id="ceb5cd85-cb64-48f6-91fb-dff0c784cbb6" />
+              </Input>
               <Input Index="1" />
               <Input Index="2">
                 <Source Id="532897b7-de73-4d78-8b86-cabd26f9a1ce" />
@@ -113,7 +115,7 @@
           </Instance>
         </Element>
         <Element Id="59cdef4f-be89-4fac-8c5d-4617c1404309" X="232" Y="416">
-          <Instance Type="Simulator.Model.Mathematic.Numeric">
+          <Instance Type="Simulator.Model.Mathematic.NUMERIC">
             <Outputs>
               <Output Index="0" />
             </Outputs>
@@ -127,6 +129,14 @@
             </Outputs>
             <Order>0</Order>
             <Description>Дискретный вход</Description>
+          </Instance>
+        </Element>
+        <Element Id="ceb5cd85-cb64-48f6-91fb-dff0c784cbb6" X="464" Y="48">
+          <Instance Type="Simulator.Model.Logic.FLAG">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Value>true</Value>
           </Instance>
         </Element>
       </Elements>
@@ -165,6 +175,11 @@
           <Source Id="59cdef4f-be89-4fac-8c5d-4617c1404309" PinIndex="0" />
           <Destination Id="1a9da378-60f0-475c-8ef2-f8a66deda08b" PinIndex="1" />
           <Points Array="288,440 288,440 656,440 656,400 688,400 688,400" />
+        </Link>
+        <Link Id="b19da34a-66c7-48e4-9327-68a0891defab">
+          <Source Id="ceb5cd85-cb64-48f6-91fb-dff0c784cbb6" PinIndex="0" />
+          <Destination Id="073ba390-1465-4edb-bbf0-19b06d2a7378" PinIndex="0" />
+          <Points Array="520,72 520,72 608,72 608,72" />
         </Link>
       </Links>
     </Module>

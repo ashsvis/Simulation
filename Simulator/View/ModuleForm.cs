@@ -842,7 +842,7 @@ namespace Simulator
                 if (TryGetPin(e.Location, out element, out pin, out _, out output) &&
                     element != null && pin != null && element.Instance is IManualCommand comm && output == true)
                 {
-                    if (Project.Running || element.Instance is Model.Mathematic.Numeric)
+                    if (Project.Running || element.Instance is Model.Mathematic.NUMERIC || element.Instance is Model.Logic.FLAG)
                     {
                         var value = comm.GetValueFromOut((int)pin) ?? false;
                         if (value is bool bval)
