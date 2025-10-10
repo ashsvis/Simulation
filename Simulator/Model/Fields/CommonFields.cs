@@ -5,11 +5,8 @@ using System.Xml.Linq;
 
 namespace Simulator.Model.Fields
 {
-    public class CommonFields : FilterablePropertyBase, ILoadSave, IDraw
+    public class CommonFields : FilterablePropertyBase, ILoadSave, IDraw, ILinkSupport
     {
-        //private readonly object[] getInputs;
-        //private readonly object[] getOutputs;
-        //private readonly (Guid, int, bool)[] getLinkSources;
         private readonly Input[] inputs;
         private readonly Output[] outputs;
 
@@ -32,75 +29,49 @@ namespace Simulator.Model.Fields
 
         public CommonFields(FieldFunction func)
         {
-            //getInputs = [];
-            //getOutputs = [];
-            //getLinkSources = [];
-            //Out = new object();
             var inputCount = 1;
             inputs = new Input[inputCount];
+            for (var i = 0; i < inputs.Length; i++)
+            {
+                inputs[i] = new DigitalInput(itemId, i);
+            }
             var outputCount = 1;
             outputs = new Output[outputCount];
-            //getInputs = new object[inputCount];
-            //getOutputs = new object[outputCount];
-            //getLinkSources = new (Guid, int, bool)[inputCount];
+            for (var i = 0; i < outputs.Length; i++)
+            {
+                outputs[i] = new DigitalOutput(itemId, i);
+            }
         }
 
-        //[Browsable(false)]
-        //public bool[] LinkedInputs
-        //{
-        //    get
-        //    {
-        //        List<bool> list = [];
-        //        for (var i = 0; i < getInputs.Length; i++)
-        //        {
-        //            (Guid id, int _, bool _) = getLinkSources[i];
-        //            list.Add(id != Guid.Empty);
-        //        }
-        //        return [.. list];
-        //    }
-        //}
-
-        //[Browsable(false)]
-        //public object[] LinkedOutputs => getOutputs;
-
-        //[Browsable(false)]
-        //public (Guid, int, bool)[] InputLinkSources => getLinkSources;
-
-        //public void UpdateInputLinkSources((Guid, int, bool) seek, Guid newId)
-        //{
-        //    for (var i = 0; i < getLinkSources.Length; i++)
-        //    {
-        //        (Guid id, int input, bool external) = getLinkSources[i];
-        //        if (id == seek.Item1 && input == seek.Item2)
-        //        {
-        //            getLinkSources[i].Item1 = newId;
-        //        }
-        //    }
-        //}
-
-        //[Browsable(false)]
-        //public object Out { get; set; }
-
-        //[Browsable(false)]
-        //public object[] InputValues => [];
-
-        //[Browsable(false)]
-        //public object[] OutputValues => [];
+        public void UpdateInputLinkSources((Guid, int, bool) seek, Guid newId)
+        {
+            for (var i = 0; i < Inputs.Length; i++)
+            {
+                var ls = Inputs[i].LinkSource;
+                if (ls != null &&  ls.Id == seek.Item1 && ls.PinIndex == seek.Item2)
+                {
+                    inputs[i].LinkSource = new LinkSource(newId, seek.Item2, seek.Item3);
+                }
+            }
+        }
 
         [Category(" Общие"), DisplayName("Имя тега")]
         public string? Name { get; set; }
 
-        //public void ResetValueLinkToInp(int inputIndex)
-        //{
-        //    if (inputIndex >= 0 && inputIndex < getLinkSources.Length)
-        //        getLinkSources[inputIndex] = (Guid.Empty, 0, false);
-        //}
+        public virtual void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog)
+        {
+            if (inputIndex < 0 || inputIndex >= inputs.Length) return;
+            if (sourceId == Guid.Empty)
+                inputs[inputIndex].LinkSource = null;
+            else
+                inputs[inputIndex].LinkSource = new LinkSource(sourceId, outputPinIndex, byDialog);
+        }
 
-        //public void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog)
-        //{
-        //    if (inputIndex >= 0 && inputIndex < getLinkSources.Length)
-        //        getLinkSources[inputIndex] = (sourceId, outputPinIndex, byDialog);
-        //}
+        public virtual void ResetValueLinkToInp(int inputIndex)
+        {
+            if (inputIndex < 0 || inputIndex >= inputs.Length) return;
+            inputs[inputIndex].LinkSource = null;
+        }
 
         public virtual void Load(XElement? xtance)
         {
@@ -127,23 +98,6 @@ namespace Simulator.Model.Fields
                 graphics.DrawRectangles(pen, [rect]);
             }
             customDraw?.Invoke(graphics, rect, pen, brush, font, fontbrush, 0, selected);
-            
-            //var step = Element.Step;
-            //var y = -step + location.Y;
-            //var x = location.X + size.Width / 2f;
-            //if (getInputs.Length > 0)
-            //{
-            //    // вход
-            //    // вертикальная риска сверху, напротив входа
-            //    graphics.DrawLine(pen, new PointF(x, y), new PointF(x, y + step));
-            //}
-            //y = location.Y + size.Height;
-            //if (getOutputs.Length > 0)
-            //{
-            //    // выход
-            //    // вертикальная риска снизу, напротив выхода
-            //    graphics.DrawLine(pen, new PointF(x, y), new PointF(x, y + step));
-            //}
         }
 
         public virtual void CalculateTargets(PointF location, ref SizeF size,

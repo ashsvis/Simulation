@@ -151,11 +151,6 @@ namespace Simulator.Model.Logic
             return null;
         }
 
-        /// <summary>
-        /// Для создания связи записывается ссылка на метод,
-        /// который потом вызывается для получения актуального значения
-        /// </summary>
-        /// <param name="inputIndex">номер входа</param>
         public virtual void SetValueLinkToInp(int inputIndex, Guid sourceId, int outputPinIndex, bool byDialog)
         {
             if (inputIndex < 0 || inputIndex >= inputs.Length) return;
