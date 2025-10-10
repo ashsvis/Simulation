@@ -10,7 +10,9 @@ namespace Simulator.Model.Fields
         private readonly Input[] inputs;
         private readonly Output[] outputs;
 
+        [Browsable(false)]
         public Input[] Inputs => inputs;
+        [Browsable(false)]
         public Output[] Outputs => outputs;
 
         private Guid itemId;

@@ -2,26 +2,14 @@
 
 namespace Simulator.Model.Logic
 {
-    public class AND : CommonLogic, IAddInput { public AND() : base(LogicFunction.And, 2) { }
+    public class AND : CommonLogic, ICanInversed, IAddInput { public AND() : base(LogicFunction.And, 2) { }
 
         public void AddInput(Element element)
         {
             this.AddInputAt(element);
         }
     }
-    public class AND3 : CommonLogic, IAddInput, IRemoveInput { public AND3() : base(LogicFunction.And, 3) { }
-
-        public void AddInput(Element element)
-        {
-            this.AddInputAt(element);
-        }
-
-        public void RemoveInput(Element element)
-        {
-            this.RemoveInputAt(element);
-        }
-    }
-    public class AND4 : CommonLogic, IAddInput, IRemoveInput { public AND4() : base(LogicFunction.And, 4) { }
+    public class AND3 : CommonLogic, ICanInversed, IAddInput, IRemoveInput { public AND3() : base(LogicFunction.And, 3) { }
 
         public void AddInput(Element element)
         {
@@ -33,7 +21,7 @@ namespace Simulator.Model.Logic
             this.RemoveInputAt(element);
         }
     }
-    public class AND5 : CommonLogic, IAddInput, IRemoveInput { public AND5() : base(LogicFunction.And, 5) { }
+    public class AND4 : CommonLogic, ICanInversed, IAddInput, IRemoveInput { public AND4() : base(LogicFunction.And, 4) { }
 
         public void AddInput(Element element)
         {
@@ -45,7 +33,7 @@ namespace Simulator.Model.Logic
             this.RemoveInputAt(element);
         }
     }
-    public class AND6 : CommonLogic, IAddInput, IRemoveInput { public AND6() : base(LogicFunction.And, 6) { }
+    public class AND5 : CommonLogic, ICanInversed, IAddInput, IRemoveInput { public AND5() : base(LogicFunction.And, 5) { }
 
         public void AddInput(Element element)
         {
@@ -57,7 +45,7 @@ namespace Simulator.Model.Logic
             this.RemoveInputAt(element);
         }
     }
-    public class AND7 : CommonLogic, IAddInput, IRemoveInput { public AND7() : base(LogicFunction.And, 7) { }
+    public class AND6 : CommonLogic, ICanInversed, IAddInput, IRemoveInput { public AND6() : base(LogicFunction.And, 6) { }
 
         public void AddInput(Element element)
         {
@@ -69,7 +57,19 @@ namespace Simulator.Model.Logic
             this.RemoveInputAt(element);
         }
     }
-    public class AND8 : CommonLogic, IRemoveInput { public AND8() : base(LogicFunction.And, 8) { }
+    public class AND7 : CommonLogic, ICanInversed, IAddInput, IRemoveInput { public AND7() : base(LogicFunction.And, 7) { }
+
+        public void AddInput(Element element)
+        {
+            this.AddInputAt(element);
+        }
+
+        public void RemoveInput(Element element)
+        {
+            this.RemoveInputAt(element);
+        }
+    }
+    public class AND8 : CommonLogic, ICanInversed, IRemoveInput { public AND8() : base(LogicFunction.And, 8) { }
 
         public void RemoveInput(Element element)
         {

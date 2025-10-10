@@ -14,6 +14,7 @@ namespace Simulator.Model.Outputs
     {
         private (Guid, int, bool) linkSource = (Guid.Empty, 0, false);
 
+        [Browsable(false)]
         public (Guid, int, bool) LinkSource => linkSource;
 
         public AO() : base(LogicFunction.AnaOut, 1, 0)

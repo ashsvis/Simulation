@@ -2,7 +2,7 @@
 
 namespace Simulator.Model.Logic
 {
-    public class OR : CommonLogic, IAddInput { public OR() : base(LogicFunction.Or, 2) { }
+    public class OR : CommonLogic, ICanInversed, IAddInput { public OR() : base(LogicFunction.Or, 2) { }
 
         public void AddInput(Element element)
         {
@@ -10,20 +10,7 @@ namespace Simulator.Model.Logic
         }
     }
 
-    public class OR3 : CommonLogic, IAddInput, IRemoveInput { public OR3() : base(LogicFunction.Or, 3) { }
-
-        public void AddInput(Element element)
-        {
-            this.AddInputAt(element);
-        }
-
-        public void RemoveInput(Element element)
-        {
-            this.RemoveInputAt(element);
-        }
-    }
-
-    public class OR4 : CommonLogic, IAddInput, IRemoveInput { public OR4() : base(LogicFunction.Or, 4) { }
+    public class OR3 : CommonLogic, ICanInversed, IAddInput, IRemoveInput { public OR3() : base(LogicFunction.Or, 3) { }
 
         public void AddInput(Element element)
         {
@@ -36,7 +23,7 @@ namespace Simulator.Model.Logic
         }
     }
 
-    public class OR5 : CommonLogic, IAddInput, IRemoveInput { public OR5() : base(LogicFunction.Or, 5) { }
+    public class OR4 : CommonLogic, ICanInversed, IAddInput, IRemoveInput { public OR4() : base(LogicFunction.Or, 4) { }
 
         public void AddInput(Element element)
         {
@@ -49,7 +36,7 @@ namespace Simulator.Model.Logic
         }
     }
 
-    public class OR6 : CommonLogic, IAddInput, IRemoveInput { public OR6() : base(LogicFunction.Or, 6) { }
+    public class OR5 : CommonLogic, ICanInversed, IAddInput, IRemoveInput { public OR5() : base(LogicFunction.Or, 5) { }
 
         public void AddInput(Element element)
         {
@@ -62,7 +49,7 @@ namespace Simulator.Model.Logic
         }
     }
 
-    public class OR7 : CommonLogic, IAddInput, IRemoveInput { public OR7() : base(LogicFunction.Or, 7) { }
+    public class OR6 : CommonLogic, ICanInversed, IAddInput, IRemoveInput { public OR6() : base(LogicFunction.Or, 6) { }
 
         public void AddInput(Element element)
         {
@@ -75,7 +62,20 @@ namespace Simulator.Model.Logic
         }
     }
 
-    public class OR8 : CommonLogic, IRemoveInput { public OR8() : base(LogicFunction.Or, 8) { }
+    public class OR7 : CommonLogic, ICanInversed, IAddInput, IRemoveInput { public OR7() : base(LogicFunction.Or, 7) { }
+
+        public void AddInput(Element element)
+        {
+            this.AddInputAt(element);
+        }
+
+        public void RemoveInput(Element element)
+        {
+            this.RemoveInputAt(element);
+        }
+    }
+
+    public class OR8 : CommonLogic, ICanInversed, IRemoveInput { public OR8() : base(LogicFunction.Or, 8) { }
 
         public void RemoveInput(Element element)
         {

@@ -14,7 +14,9 @@ namespace Simulator.Model.Logic
         private readonly Input[] inputs;
         private readonly Output[] outputs;
 
+        [Browsable(false)]
         public Input[] Inputs => inputs;
+        [Browsable(false)]
         public Output[] Outputs => outputs;
 
         protected Guid itemId;

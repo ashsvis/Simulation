@@ -66,11 +66,6 @@ namespace Simulator
             Project.Changed = false;
             items = Module.Elements;
             links = Module.Links;
-            //items.ForEach(item =>
-            //{
-                //if (item.Instance is IFunction instance)
-                //    instance.ResultChanged += Item_ResultChanged;
-            //});
             panelForm.SimulationTick += Module_SimulationTick;
         }
 
@@ -90,11 +85,6 @@ namespace Simulator
         private void ModuleForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             timerInterface.Enabled = false;
-            //items.ForEach(item =>
-            //{
-            //    if (item.Instance is IFunction instance)
-            //        instance.ResultChanged -= Item_ResultChanged;
-            //});
             panelForm.SimulationTick -= Module_SimulationTick;
         }
 
@@ -147,8 +137,6 @@ namespace Simulator
                     if (item.Instance is IBlock block)
                         block.ConnectToLibrary();
                     item.Location = SnapToGrid(PrepareMousePosition(zoomPad.PointToClient(new Point(e.X, e.Y))));
-                    //if (item.Instance is IFunction instance)
-                    //    instance.ResultChanged += Item_ResultChanged;
                     if (item.Instance is ILinkSupport link)
                     {
                         link.SetItemId(item.Id);
@@ -566,6 +554,23 @@ namespace Simulator
                     {
                         if (TryGetPin(e.Location, out element, out pin, out _, out output) && output == false && pin != null)
                         {
+                            if (func.Inputs[(int)pin] is DigitalInput digital && element?.Instance is ICanInversed)
+                            {
+                                item = new ToolStripMenuItem() { Text = digital.Inverse ? "Убрать инверсию входа" : "Добавить инверсию входа", Tag = digital };
+                                item.Click += (s, e) => 
+                                {
+                                    var menuItem = (ToolStripMenuItem?)s;
+                                    if (menuItem?.Tag is DigitalInput digital)
+                                    {
+                                        digital.Inverse = !digital.Inverse;
+                                        Project.Changed = true;
+                                        zoomPad.Invalidate();
+                                        panelForm.RefreshPanels();
+                                    }
+                                };
+                                cmZoomPad.Items.Add(item);
+                            }
+
                             var ls = func.Inputs[(int)pin].LinkSource;
                             if (ls == null || ls != null && ls.External)
                             {
@@ -613,6 +618,22 @@ namespace Simulator
                         else if (TryGetPin(e.Location, out element, out pin, out _, out output) && element != null && output == true && pin != null)
                         {
                             // выбор выхода по правой кнопке
+                            if (func.Outputs[(int)pin] is DigitalOutput digital && element?.Instance is ICanInversed)
+                            {
+                                item = new ToolStripMenuItem() { Text = digital.Inverse ? "Убрать инверсию выхода" : "Добавить инверсию выхода", Tag = digital };
+                                item.Click += (s, e) =>
+                                {
+                                    var menuItem = (ToolStripMenuItem?)s;
+                                    if (menuItem?.Tag is DigitalOutput digital)
+                                    {
+                                        digital.Inverse = !digital.Inverse;
+                                        Project.Changed = true;
+                                        zoomPad.Invalidate();
+                                        panelForm.RefreshPanels();
+                                    }
+                                };
+                                cmZoomPad.Items.Add(item);
+                            }
                         }
                         else if (TryGetModule(e.Location, out element) && output == null)
                         {

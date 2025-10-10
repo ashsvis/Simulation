@@ -13,6 +13,7 @@ namespace Simulator.Model.Inputs
     {
         private (Guid, int, bool) linkSource = (Guid.Empty, 0, false);
 
+        [Browsable(false)]
         public (Guid, int, bool) LinkSource => linkSource;
 
         public DI() : base(LogicFunction.DigInp, 0, 1)
