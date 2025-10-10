@@ -74,6 +74,61 @@
             <Description>Аналоговый выход</Description>
           </Instance>
         </Element>
+        <Element Id="e283f49f-8859-46dc-9014-8b903a24cbd7" X="560" Y="312">
+          <Instance Type="Simulator.Model.Selector.SELA">
+            <Inputs>
+              <Input Index="0" Name="A/B" />
+              <Input Index="1" Name="A">
+                <Source Id="5aec772b-a92d-4ebb-b19b-518a496a0953" />
+              </Input>
+              <Input Index="2" Name="B" />
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="36acd162-4fea-4c82-a998-8a43a802d547" X="816" Y="280">
+          <Instance Type="Simulator.Model.Outputs.AO">
+            <Inputs>
+              <Input Index="0" />
+            </Inputs>
+            <Order>1</Order>
+            <Description>Аналоговый выход</Description>
+          </Instance>
+        </Element>
+        <Element Id="1a9da378-60f0-475c-8ef2-f8a66deda08b" X="696" Y="344">
+          <Instance Type="Simulator.Model.Mathematic.SUB">
+            <Inputs>
+              <Input Index="0">
+                <Source Id="e283f49f-8859-46dc-9014-8b903a24cbd7" />
+              </Input>
+              <Input Index="1">
+                <Source Id="59cdef4f-be89-4fac-8c5d-4617c1404309" />
+              </Input>
+            </Inputs>
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+          </Instance>
+        </Element>
+        <Element Id="59cdef4f-be89-4fac-8c5d-4617c1404309" X="232" Y="416">
+          <Instance Type="Simulator.Model.Mathematic.Numeric">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Value>7.8</Value>
+          </Instance>
+        </Element>
+        <Element Id="e076bd8b-a8c6-4e76-ad74-5bc80ef7c426" X="232" Y="488">
+          <Instance Type="Simulator.Model.Inputs.DI">
+            <Outputs>
+              <Output Index="0" />
+            </Outputs>
+            <Order>0</Order>
+            <Description>Дискретный вход</Description>
+          </Instance>
+        </Element>
       </Elements>
       <Links>
         <Link Id="6234a1a8-e559-4986-a93f-58ba035603b1">
@@ -95,6 +150,21 @@
           <Source Id="62f27a36-322b-4d09-8dae-15afbb7413f9" PinIndex="0" />
           <Destination Id="f6473f9b-4874-4928-9290-0b526e33725c" PinIndex="0" />
           <Points Array="520,240 520,240 608,240 608,240" />
+        </Link>
+        <Link Id="58b6b7ba-8580-47f9-98f1-611e58cd1f0c">
+          <Source Id="5aec772b-a92d-4ebb-b19b-518a496a0953" PinIndex="0" />
+          <Destination Id="e283f49f-8859-46dc-9014-8b903a24cbd7" PinIndex="1" />
+          <Points Array="352,232 352,232 400,232 400,368 552,368 552,368" />
+        </Link>
+        <Link Id="c0ee8ecc-01a7-49cc-aee1-c25273284725">
+          <Source Id="e283f49f-8859-46dc-9014-8b903a24cbd7" PinIndex="0" />
+          <Destination Id="1a9da378-60f0-475c-8ef2-f8a66deda08b" PinIndex="0" />
+          <Points Array="616,368 616,368 688,368 688,368" />
+        </Link>
+        <Link Id="a5a2017a-fc57-4871-9df2-4bf0b6fb7580">
+          <Source Id="59cdef4f-be89-4fac-8c5d-4617c1404309" PinIndex="0" />
+          <Destination Id="1a9da378-60f0-475c-8ef2-f8a66deda08b" PinIndex="1" />
+          <Points Array="288,440 288,440 656,440 656,400 688,400 688,400" />
         </Link>
       </Links>
     </Module>

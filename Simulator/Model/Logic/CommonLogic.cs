@@ -1,5 +1,6 @@
 ﻿using Simulator.Model.Common;
 using Simulator.Model.Interfaces;
+using Simulator.View;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -319,7 +320,7 @@ namespace Simulator.Model.Logic
             }
         }
 
-        public void Draw(Graphics graphics, Color foreColor, Color backColor, PointF location, SizeF size, 
+        public virtual void Draw(Graphics graphics, Color foreColor, Color backColor, PointF location, SizeF size, 
             int index, bool selected, CustomDraw? customDraw = null)
         {
             try

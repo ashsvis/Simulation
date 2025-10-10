@@ -47,6 +47,8 @@
         Gt,
         Ge,
         SelD,
-        SelA
+        SelA,
+        Numeric,
+        Flag,
     }
 }

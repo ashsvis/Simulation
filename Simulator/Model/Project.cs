@@ -373,6 +373,7 @@ namespace Simulator.Model
             rootNode.Nodes.Add(logicaNode);
             var mathNode = new TreeNode("Математика");
             rootNode.Nodes.Add(mathNode);
+            mathNode.Nodes.Add(new TreeNode("Число") { Tag = typeof(Mathematic.Numeric) });
             mathNode.Nodes.Add(new TreeNode("Ограничение значения") { Tag = typeof(Mathematic.LMT) });
             mathNode.Nodes.Add(new TreeNode("Абсолютное значение") { Tag = typeof(Mathematic.ABS) });
             mathNode.Nodes.Add(new TreeNode("Изменение знака") { Tag = typeof(Mathematic.NEG) });
