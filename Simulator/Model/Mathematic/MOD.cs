@@ -7,6 +7,7 @@ namespace Simulator.Model.Mathematic
     {
         public MOD() : base(LogicFunction.Mod, 2)
         {
+            Inputs[1].Name = "\\";
             SetValueToInp(1, 1.0);
             SetValueToOut(0, 0.0);
         }

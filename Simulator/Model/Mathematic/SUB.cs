@@ -7,6 +7,7 @@ namespace Simulator.Model.Mathematic
     {
         public SUB() : base(LogicFunction.Sub, 2)
         {
+            Inputs[1].Name = "-";
             SetValueToOut(0, 0.0);
         }
 

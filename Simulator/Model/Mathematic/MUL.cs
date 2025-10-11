@@ -7,6 +7,7 @@ namespace Simulator.Model.Mathematic
     {
         public MUL() : base(LogicFunction.Mul, 2)
         {
+            Inputs[1].Name = "*";
             SetValueToOut(0, 0.0);
         }
 
