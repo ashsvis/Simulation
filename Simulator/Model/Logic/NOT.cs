@@ -7,6 +7,8 @@ namespace Simulator.Model.Logic
     {
         public NOT() : base(LogicFunction.Not, 1) 
         {
+            ((DigitalInput)Inputs[0]).Inverse = false;
+            ((DigitalOutput)Outputs[0]).Inverse = true;
             SetValueToOut(0, true);
         }
 

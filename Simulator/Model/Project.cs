@@ -411,6 +411,7 @@ namespace Simulator.Model
             generatorNode.Nodes.Add(new TreeNode("Задержка включения") { Tag = typeof(Timer.ONDLY) });
             generatorNode.Nodes.Add(new TreeNode("Задержка выключения") { Tag = typeof(Timer.OFFDLY) });
             generatorNode.Nodes.Add(new TreeNode("Формирователь импульса") { Tag = typeof(Timer.PULSE) });
+            generatorNode.Nodes.Add(new TreeNode("Мультивибратор") { Tag = typeof(Timer.GEN) });
             var compareNode = new TreeNode("Компараторы");
             rootNode.Nodes.Add(compareNode);
             compareNode.Nodes.Add(new TreeNode("Вход равен уставке") { Tag = typeof(Compare.EQ) });
@@ -457,6 +458,32 @@ namespace Simulator.Model
             Changed = false;
             OnChanged?.Invoke(null, new ProjectEventArgs(ProjectChangeKind.Clear));
         }
+
+        public static bool IsAllIdUnique()
+        {
+            foreach (var module in Modules)
+            {
+                if (Modules.Where(x => x.Id != module.Id).Any(x => x.Id == module.Id))
+                    return false;
+                foreach (var link in module.Links)
+                {
+                    if (module.Links.Where(x => x.Id != link.Id).Any(x => x.Id == link.Id))
+                        return false;
+                }
+            }
+            foreach (var unit in Equipment)
+            {
+                if (Equipment.Where(x => x.Id != unit.Id).Any(x => x.Id == unit.Id))
+                    return false;
+                foreach (var link in unit.Links)
+                {
+                    if (unit.Links.Where(x => x.Id != link.Id).Any(x => x.Id == link.Id))
+                        return false;
+                }
+            }
+            return true;
+        }
+
 
         public static Module AddModuleToProject(Module? newModule = null)
         {

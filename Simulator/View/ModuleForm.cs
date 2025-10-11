@@ -1065,6 +1065,7 @@ namespace Simulator
                     }
                     Project.Changed = true;
                     UpdateView();
+                    //var check = Project.IsAllIdUnique();
                 }
             }
         }

@@ -11,6 +11,7 @@
         Sr,
         Fe,
         Pulse,
+        Generator,
         OnDelay,
         OffDelay,
         Lamp,
