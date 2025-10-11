@@ -1018,7 +1018,7 @@ namespace Simulator
                     Dictionary<Guid, Guid> guids = [];
                     XDocument doc = XDocument.Load(xmlStream);
                     Module.LoadElements(doc.Root, elements);
-                    var makedCopy = items.Any(x => elements.Any(y => y.Id == x.Id));
+                    var makedCopy = true; // items.Any(x => elements.Any(y => y.Id == x.Id));
                     if (makedCopy)
                     {
                         // замена Id на новый, сохранение уникальности Id для копии элемента
@@ -1034,6 +1034,7 @@ namespace Simulator
                         {
                             if (element.Instance is ILinkSupport link)
                             {
+                                link.SetItemId(element.Id);
                                 foreach (var input in link.Inputs)
                                 {
                                     var ls = input.LinkSource;
@@ -1072,6 +1073,56 @@ namespace Simulator
 
         internal void CopySelectedElementsAndLinkToClipboard()
         {
+            Dictionary<Guid, Guid> guids = [];
+            var root = new XElement("Clipboard");
+            XDocument doc = new(new XComment("Выборка"), root);
+            XElement xitems = new("Elements");
+            root.Add(xitems);
+            foreach (var element in items.Where(x => x.Selected))
+            {
+                //var newId = Guid.NewGuid();
+                //guids.Add(element.Id, newId);
+                //element.Id = newId;
+                //if (element.Instance is ILinkSupport link)
+                //{
+                //    foreach (var input in link.Inputs)
+                //    {
+                //        var ls = input.LinkSource;
+                //        var seek = ls != null
+                //               ? (ls.Id, ls.PinIndex, ls.External)
+                //               : (Guid.Empty, 0, false);
+                //        link.UpdateInputLinkSources(seek,
+                //            guids.TryGetValue(seek.Item1, out Guid value) ? value : Guid.Empty);
+                //    }
+                //}
+
+                var holder = new XElement("Element");
+                element.Save(holder);
+                xitems.Add(holder);
+            }
+            if (items.Any(x => x.Selected))
+            {
+                XElement xlinks = new("Links");
+                root.Add(xlinks);
+                foreach (var link in links.Where(x => x.Selected))
+                {
+                    //if (!guids.ContainsKey(link.SourceId) || !guids.ContainsKey(link.DestinationId)) continue;
+                    //link.SetSourceId(guids[link.SourceId]);
+                    //link.SetDestinationId(guids[link.DestinationId]);
+
+                    var holder = new XElement("Link");
+                    link.Save(holder);
+                    xlinks.Add(holder);
+                }
+            }
+            string xml = root.ToString();
+            byte[] bytes = Encoding.UTF8.GetBytes(xml);
+            using var xmlStream = new MemoryStream(bytes);
+            Clipboard.SetData("XML Spreadsheet", xmlStream);
+        }
+
+        internal void CutSelectedElementsAndLinkToClipboard()
+        {
             var root = new XElement("Clipboard");
             XDocument doc = new(new XComment("Выборка"), root);
             XElement xitems = new("Elements");
@@ -1097,11 +1148,6 @@ namespace Simulator
             byte[] bytes = Encoding.UTF8.GetBytes(xml);
             using var xmlStream = new MemoryStream(bytes);
             Clipboard.SetData("XML Spreadsheet", xmlStream);
-        }
-
-        internal void CutSelectedElementsAndLinkToClipboard()
-        {
-            CopySelectedElementsAndLinkToClipboard();
             DeleteAllSelectedElements();
         }
 
