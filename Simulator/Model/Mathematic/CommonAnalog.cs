@@ -52,7 +52,7 @@ namespace Simulator.Model.Mathematic
                     LogicFunction.Le => "<=",
                     LogicFunction.Gt => ">",
                     LogicFunction.Ge => ">=",
-                    LogicFunction.SelA => "SEL",
+                    LogicFunction.SelA => "SELA",
                     LogicFunction.Numeric => "NUM",
                     LogicFunction.Flag => "FL",
                     _ => "",
